@@ -1,0 +1,3 @@
+script.play_cartoons:
+  friendly_name: Living Room Cartoons
+  icon: mdi:playlist-play

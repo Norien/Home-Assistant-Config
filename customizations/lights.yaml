@@ -1,0 +1,13 @@
+light.hue_color_lamp_1:
+  hidden: true
+light.hue_color_lamp_2:
+  hidden: true
+light.hue_color_lamp_3:
+  hidden: true
+light.living_room:
+  friendly_name: Living Room Lights
+light.findlay_lamp:
+  friendly_name: Findlay's Lamp
+  icon: mdi:lamp
+input_select.scene_lr:
+  hidden: true

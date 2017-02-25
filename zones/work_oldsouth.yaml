@@ -1,0 +1,5 @@
+name: Work - Old South
+latitude: !secret latitude_work_oldsouth
+longitude: !secret longitude_work_oldsouth
+radius: 250
+icon: mdi:worker

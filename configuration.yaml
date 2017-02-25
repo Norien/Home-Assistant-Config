@@ -1,0 +1,94 @@
+homeassistant:
+
+  name: Home
+  latitude: !secret latitude
+  longitude: !secret longitude
+  elevation: 264
+  unit_system: metric
+  time_zone: America/Toronto
+
+  customize: !include_dir_merge_named customizations
+
+group: !include groups.yaml
+
+# Enables the frontend
+frontend:
+
+# Frontend password and URL
+http:
+   api_password: !secret api_password
+   base_url: !secret base_url
+
+# Checks for available updates
+updater:
+
+# Discover some devices automatically
+#discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time.
+history:
+
+# View all events in a logbook
+logbook:
+
+#purge the home-assistant_v2.db otherwise system will crash.
+recorder:
+  db_url: postgres://@/homeassistant
+  #purge_days: 3
+
+# Make some errors go away!
+logger:
+  default: error
+  logs:
+    homeassistant.components.switch.template: fatal
+    homeassistant.components.switch.command_line: fatal
+
+# Track the sun
+sun:
+
+# Text to speech
+tts:
+  platform: google
+
+mqtt:
+  broker: 192.168.1.11
+  port: 1883
+  client_id: home-assistant-1
+  keepalive: 60
+  username: !secret mqtt_user
+  password: !secret mqtt_password
+
+# Components
+sensor: !include sensors.yaml
+nest: !include nest.yaml
+light: !include light.yaml
+media_player: !include media_player.yaml
+camera: !include camera.yaml
+wemo: !include wemo.yaml
+device_tracker: !include device_tracker.yaml
+zone: !include_dir_list zones/
+
+# Controls
+input_select: !include input-selects.yaml
+
+# Automation
+scene: !include_dir_list scenes
+script: !include scripts.yaml
+shell_command: !include shell_commands.yaml
+notify: !include notify.yaml
+automation: !include_dir_list automation/
+
+# PC On / OFF switches
+switch 2: !include switch_pc_livingroom.yaml
+switch 3: !include switch_pc_bedroom.yaml
+switch 4: !include switch_pc_office.yaml
+
+#testing the netowrk graph
+panel_iframe:
+  graph:
+    title: Graph
+    icon: mdi:vector-polyline
+    url: "http://bigdrakar.duckdns.org:8123/local/graph.html"

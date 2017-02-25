@@ -1,0 +1,195 @@
+#Views------------------------------------------------------------------
+default_view:
+  name: DEFAULT
+  view: yes
+  icon: mdi:home
+  entities:
+    - group.livingroom
+    - group.bedroom
+    - group.findlays_room
+    - group.office
+    - group.backyard
+sensor_view:
+  name: Sensors
+  view: yes
+  icon: mdi:gauge
+  entities:
+    - group.presence
+    - group.motion_sensors
+    - group.thermostat
+    - group.smoke_gas
+    - group.all_temps
+media_view:
+  name: Media Players
+  view: yes
+  icon: mdi:kodi
+  entities:
+    - group.media_player_all
+    - group.playlist
+camera_view:
+  name: Cameras
+  view: yes
+  icon: mdi:camera
+  entities:
+    - group.all_cameras
+weather_view:
+  name: Weather
+  view: yes
+  icon: mdi:white-balance-sunny
+  entities:
+    - group.weather
+misc_view:
+  name: Misc
+  view: yes
+  icon: mdi:power
+  entities:
+    - group.sensor_battery_levels
+    - group.sensor_pi
+    - group.server_status
+#Groups------------------------------------------------------------------
+livingroom:
+  name: Living Room
+  entities:
+   - switch.copy
+   - light.living_room
+  # - input_select.scene_lr
+  # - scene.lr_off
+   - scene.lr_concentrate
+   - scene.lr_read
+   - scene.lr_relax
+   - scene.lr_dimmed
+   - scene.lr_nightlight
+   #- media_player.kodi_livingroom
+bedroom:
+  name: Master Bedroom
+  entities:
+   - switch.copy3
+   - switch.bedroom_lamps_
+   - switch.bedroom_fan
+   #- media_player.kodi_bedroom
+findlays_room:
+  name: Findlay's Room
+  entities:
+    #- camera.generic_camera
+    - light.findlay_lamp
+    - sensor.findlay_room_temperature
+    - sensor.findlay_room_lux
+    - sensor.findlay_room_motion
+office:
+  name: Office
+  entities:
+   - switch.copy4
+   - switch.office_lightswitch
+   - switch.office_lightstrip
+backyard:
+  name: Backyard
+  entities:
+    - light.deck_lights
+    #- media_player.kitchen
+presence:
+  name: Presence
+  entities:
+   #- device_tracker.android262071b676d4d855
+   #- device_tracker.androidc3a6fa8dea348d9e
+   - device_tracker.bigdrakar_justin
+   - device_tracker.bigdrakar_nicole
+weather:
+  name: Weather
+  entities:
+    - sensor.dark_sky_temperature
+    - sensor.dark_sky_humidity
+    - sensor.dark_sky_daily_summary
+  # - sensor.dark_sky_apparent_temperature
+  # - sensor.dark_sky_cloud_coverage
+  # - sensor.dark_sky_daily_high_apparent_temperature
+  # - sensor.dark_sky_daily_high_temperature
+  # - sensor.dark_sky_daily_low_apparent_temperature
+  # - sensor.dark_sky_daily_low_temperature
+  # - sensor.dark_sky_daily_max_precip_intensity
+  # - sensor.dark_sky_dew_point
+  # - sensor.dark_sky_hourly_summary
+  # - sensor.dark_sky_icon
+  # - sensor.dark_sky_minutely_summary
+  # - sensor.dark_sky_nearest_storm_bearing
+  # - sensor.dark_sky_nearest_storm_distance
+  # - sensor.dark_sky_ozone
+  # - sensor.dark_sky_precip
+  # - sensor.dark_sky_precip_intensity
+  # - sensor.dark_sky_pressure
+  # - sensor.dark_sky_summary
+  # - sensor.dark_sky_visibility
+  # - sensor.dark_sky_wind_bearing
+    - sensor.dark_sky_wind_speed
+    - sun.sun
+  # - sensor.yr_symbol
+  # - sensor.dark_sky_precip_probability
+thermostat:
+  name: Thermostat
+  entities:
+   - climate.hallway
+   - sensor.hallway_thermostat_humidity
+   - binary_sensor.hallway_thermostat_fan
+   - sensor.hallway_thermostat_hvac_state
+   - sensor.hallway_thermostat_operation_mode
+  # - sensor.hallway_thermostat_target
+  # - sensor.hallway_thermostat_temperature
+motion_sensors:
+  name: Motion Sensors
+  entities:
+   - sensor.findlay_room_motion
+all_temps:
+  name: Temperature
+  entities:
+   - sensor.hallway_thermostat_temperature
+   - sensor.findlay_room_temperature
+all_cameras:
+  name: Cameras
+  entities:
+   - camera.generic_camera
+   - camera.driveway
+smoke_gas:
+  name: "Smoke & CO"
+  entities:
+    - binary_sensor.kitchen_nest_protect_online
+    - sensor.kitchen_nest_protect_co_status
+    - sensor.kitchen_nest_protect_smoke_status
+sensor_battery_levels:
+  name: Battery Levels
+  entities:
+   - script.refresh_devices
+   - sensor.findlay_room_motion_sensor_battery_level
+   - sensor.findlays_room_dimmer_switch
+   - sensor.living_room_dimmer_switch
+   - sensor.kitchen_nest_protect_battery_health
+   - sensor.justins_g5_battery
+   - sensor.nicoles_s7_battery
+sensor_pi:
+  name: Raspberry Pi
+  entities:
+    - sensor.cpu_use
+    - sensor.cpu_temperature
+    - sensor.disk_use_
+    - sensor.disk_use_varlog
+    - sensor.ram_use
+    - sensor.ram_free
+    - sensor.swap_use
+    - sensor.swap_free
+    - sensor.last_boot
+    - sensor.since_last_boot
+    - sensor.ipv4_address_eth0
+    - sensor.received_eth0
+    - sensor.sent_eth0
+server_status:
+  name: Server Status
+  entities:
+    - sensor.process_mosquitto
+media_player_all:
+  name: Media Players
+  entities:
+    - media_player.kodi_livingroom
+    - media_player.kodi_bedroom
+    - media_player.kitchen
+playlist:
+  name: Playlists
+  entities:
+    - script.play_cartoons

@@ -1,0 +1,2 @@
+generate_graph: "/srv/homeassistant/homeassistant_venv/bin/python -m hagraph -i /home/homeassistant/.homeassistant/configuration.yaml -o /home/homeassistant/.homeassistant/www/graph.svg"
+play_cartoons: '/home/homeassistant/.homeassistant/kodi/cartoons.sh'

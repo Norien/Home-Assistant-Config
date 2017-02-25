@@ -1,0 +1,33 @@
+#Nest
+climate.hallway:
+  friendly_name: Nest Thermostat
+  entity_picture: /local/nest.png
+binary_sensor.hallway_thermostat_fan:
+  friendly_name: Thermostat Fan
+  icon: mdi:fan
+binary_sensor.hallway_thermostat_has_leaf:
+  hidden: true
+binary_sensor.hallway_thermostat_is_locked:
+  hidden: true
+binary_sensor.hallway_thermostat_is_using_emergency_heat:
+  hidden: true
+binary_sensor.hallway_thermostat_online:
+  hidden: true
+binary_sensor.kitchen_nest_protect_online:
+  hidden: true
+#Nest sensors
+sensor.hallway_thermostat_humidity:
+  friendly_name: Indoor Humidity
+  entity_picture: /local/nest.png
+sensor.hallway_thermostat_temperature:
+  friendly_name: Hallway Temperature
+sensor.kitchen_nest_protect_battery_health:
+  icon: mdi:battery
+sensor.hallway_thermostat_hvac_state:
+  friendly_name: Thermostat HVAC State
+sensor.hallway_thermostat_operation_mode:
+  friendly_name: Thermostat Operation Mode
+sensor.kitchen_nest_protect_co_status:
+  entity_picture: /local/nestprotect.png
+sensor.kitchen_nest_protect_smoke_status:
+  entity_picture: /local/nestprotect.png

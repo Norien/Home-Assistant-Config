@@ -1,0 +1,11 @@
+
+sequence:
+- service: mqtt.publish
+  data:
+    topic: "owntracks/bigdrakar/justin/cmd"
+    payload_template: '{"_type":"cmd","action":"reportLocation"}'
+
+- service: mqtt.publish
+  data:
+    topic: "owntracks/bigdrakar/nicole/cmd"
+    payload_template: '{"_type":"cmd","action":"reportLocation"}'

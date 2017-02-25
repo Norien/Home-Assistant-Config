@@ -1,0 +1,18 @@
+scene.lr_nightlight:
+  friendly_name: 'Nightlight'
+  icon: mdi:brightness-4
+scene.lr_dimmed:
+  friendly_name: 'Dimmed'
+  icon: mdi:brightness-7
+scene.lr_relax:
+  friendly_name: 'Relax'
+  icon: mdi:brightness-6
+scene.lr_read:
+  friendly_name: 'Read'
+  icon: mdi:brightness-5
+scene.lr_concentrate:
+  friendly_name: 'Bright'
+  icon: mdi:star-circle
+scene.lr_off:
+  friendly_name: 'Off'
+  icon: mdi:flashlight-off

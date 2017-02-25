@@ -1,0 +1,8 @@
+name: LR Off
+entities:
+  light.hue_color_lamp_1:
+    state: off
+  light.hue_color_lamp_2:
+    state: off
+  light.hue_color_lamp_3:
+    state: off

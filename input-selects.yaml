@@ -1,0 +1,11 @@
+scene_lr:
+  name: Scene
+  icon: mdi:brightness-auto
+  initial: "-"
+  options:
+    - "-"
+    - "Off"
+    - Nightlight
+    - Dimmed
+    - Relax
+    - Read

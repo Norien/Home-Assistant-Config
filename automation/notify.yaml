@@ -1,0 +1,10 @@
+alias: Notify Presence - Westmount
+trigger:
+  platform: state
+  entity_id: device_tracker.bigdrakar_nicole
+  from: 'Work - Westmount'
+  to: 'not_home'
+action:
+  service: notify.justin
+  data:
+    message: 'Nicole has left Work - Westmount'

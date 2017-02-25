@@ -1,0 +1,37 @@
+#Livingroom computer Switch
+switch.copy:
+  icon: mdi:monitor
+  friendly_name: Living Room PC
+switch.pc:
+  hidden: true
+switch.wol:
+  hidden: true
+#Bedroom computer Switch
+switch.copy3:
+  icon: mdi:monitor
+  friendly_name: Bedroom PC
+switch.pc2:
+  hidden: true
+switch.wol_bedroom:
+  hidden: true
+#Office computer Switch
+switch.copy4:
+  icon: mdi:monitor
+  friendly_name: Office PC
+switch.office_pc:
+  hidden: true
+switch.wol_office:
+  hidden: true
+
+switch.bedroom_fan:
+  icon: mdi:fan
+switch.bedroom_lamps_:
+  icon: mdi:lamp
+  friendly_name: Bedroom Lamps
+
+switch.office_lightswitch:
+  friendly_name: Office Light Switch
+  icon: mdi:lightbulb
+switch.office_lightstrip:
+  friendly_name: Office Light Strip
+  icon: mdi:lightbulb

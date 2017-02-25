@@ -1,0 +1,14 @@
+name: LR Read
+entities:
+  light.hue_color_lamp_1:
+    state: on
+    brightness: 255
+    color_temp: 343
+  light.hue_color_lamp_2:
+    state: on
+    brightness: 255
+    color_temp: 343
+  light.hue_color_lamp_3:
+    state: on
+    brightness: 255
+    color_temp: 343
