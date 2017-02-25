@@ -6,5 +6,5 @@
 - platform: generic
   name: Driveway
   still_image_url: !secret andriod_camera_link
-  username: andriod_camera_username
-  password: andriod_camera_link
+  username: !secret andriod_camera_username
+  password: !secret andriod_camera_password
