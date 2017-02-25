@@ -19,6 +19,7 @@ sensor_view:
     - group.thermostat
     - group.smoke_gas
     - group.all_temps
+    - group.all_humidity
 media_view:
   name: Media Players
   view: yes
@@ -32,12 +33,6 @@ camera_view:
   icon: mdi:camera
   entities:
     - group.all_cameras
-weather_view:
-  name: Weather
-  view: yes
-  icon: mdi:white-balance-sunny
-  entities:
-    - group.weather
 misc_view:
   name: Misc
   view: yes
@@ -98,7 +93,7 @@ weather:
   entities:
     - sensor.dark_sky_temperature
     - sensor.dark_sky_humidity
-    - sensor.dark_sky_daily_summary
+  #  - sensor.dark_sky_daily_summary
   # - sensor.dark_sky_apparent_temperature
   # - sensor.dark_sky_cloud_coverage
   # - sensor.dark_sky_daily_high_apparent_temperature
@@ -119,15 +114,15 @@ weather:
   # - sensor.dark_sky_summary
   # - sensor.dark_sky_visibility
   # - sensor.dark_sky_wind_bearing
-    - sensor.dark_sky_wind_speed
-    - sun.sun
+  #  - sensor.dark_sky_wind_speed
+  #  - sun.sun
   # - sensor.yr_symbol
   # - sensor.dark_sky_precip_probability
 thermostat:
   name: Thermostat
   entities:
    - climate.hallway
-   - sensor.hallway_thermostat_humidity
+  # - sensor.hallway_thermostat_humidity
    - binary_sensor.hallway_thermostat_fan
    - sensor.hallway_thermostat_hvac_state
    - sensor.hallway_thermostat_operation_mode
@@ -140,8 +135,13 @@ motion_sensors:
 all_temps:
   name: Temperature
   entities:
+   - sensor.dark_sky_temperature
    - sensor.hallway_thermostat_temperature
    - sensor.findlay_room_temperature
+all_humidity:
+  name: Humidity
+  entities:
+    - sensor.hallway_thermostat_humidity
 all_cameras:
   name: Cameras
   entities:
@@ -189,7 +189,11 @@ media_player_all:
     - media_player.kodi_livingroom
     - media_player.kodi_bedroom
     - media_player.kitchen
+    - media_player.backyard
 playlist:
   name: Playlists
   entities:
     - script.play_cartoons
+    #- script.radio_station_108
+    #- script.radio_station_3FM
+    - input_select.radio_station
