@@ -9,3 +9,11 @@ scene_lr:
     - Dimmed
     - Relax
     - Read
+
+radio_station:
+  name: Kitchen Radio
+  options:
+    - Hot108
+    - The Beat
+  initial: Hot108
+  icon: mdi:radio

@@ -1,0 +1,19 @@
+alias: Kitchen Radio
+trigger:
+  platform: state
+  entity_id: input_select.radio_station
+action:
+  - service: script.turn_on
+    data_template:
+      entity_id: >
+        {% if trigger.to_state.state == 'Hot108' %}
+          script.radio_station_108
+        {%-elif trigger.to_state.state == 'The Beat' %}
+          script.radio_station_thebeat
+        {%-elif trigger.to_state.state == '3FM' %}
+          script.radio_station_3fm
+        {% endif %}
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.radio_station
+      option: "-"

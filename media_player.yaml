@@ -7,6 +7,8 @@
   name: kodi_livingroom
 - platform: cast
   host: 192.168.1.230
+- platform: cast
+  host: 192.168.1.231
 - platform: kodi
   host: !secret kodi_bedroom_ip
   port: !secret kodi_bedroom_port
