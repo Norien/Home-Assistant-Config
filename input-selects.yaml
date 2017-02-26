@@ -1,9 +1,10 @@
 radio_station:
   name: Radio Station
   options:
+    - "-"
     - Hot108
     - The Beat
-  initial: "Hot108"
+  initial: "-"
   icon: mdi:radio
 
 radio_station_location:

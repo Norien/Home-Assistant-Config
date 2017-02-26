@@ -141,6 +141,7 @@ all_temps:
 all_humidity:
   name: Humidity
   entities:
+    - sensor.dark_sky_humidity
     - sensor.hallway_thermostat_humidity
 all_cameras:
   name: Cameras
@@ -194,7 +195,5 @@ playlist:
   name: Playlists
   entities:
     - script.play_cartoons
-    #- script.radio_station_108
-    #- script.radio_station_3FM
-    - input_select.radio_station_kitchen
     - input_select.radio_station_location
+    - input_select.radio_station

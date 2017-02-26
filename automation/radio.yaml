@@ -1,0 +1,20 @@
+alias: Radio
+trigger:
+  platform: state
+  entity_id: input_select.radio_station
+action:
+  - service: media_player.play_media
+    data_template:
+      entity_id: >
+        {% if is_state('input_select.radio_station_location', 'Kitchen') %}
+          media_player.kitchen
+        {% elif is_state('input_select.radio_station_location', 'Backyard') %}
+          media_player.backyard
+        {% endif %}
+      media_content_id: >
+        {% if is_state('input_select.radio_station', 'Hot108') %}
+          http://jbmedia-edge1.cdnstream.com:80/hot108
+        {% elif is_state('input_select.radio_station', 'The Beat') %}
+          http://live.leanstream.co/CKBTFM-MP3
+        {% endif %}
+      media_content_type: 'audio/mp3'
