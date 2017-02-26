@@ -1,5 +1,2 @@
 refresh_devices: !include scripts/refresh_devices.yaml
 play_cartoons: !include scripts/play_cartoons.yaml
-radio_station_108: !include scripts/radio_station_108.yaml
-radio_station_3fm: !include scripts/radio_station_3fm.yaml
-radio_station_thebeat: !include scripts/radio_station_thebeat.yaml

@@ -13,7 +13,9 @@ scene_lr:
 radio_station:
   name: Kitchen Radio
   options:
+    - Select Station
     - Hot108
     - The Beat
-  initial: Hot108
+    - 3FM
+  initial: Select Station
   icon: mdi:radio

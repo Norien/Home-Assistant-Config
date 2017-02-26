@@ -1,6 +1,0 @@
-sequence:
-- service: media_player.play_media
-  data_template:
-    entity_id: media_player.kitchen
-    media_content_id: "http://jbmedia-edge1.cdnstream.com:80/hot108"
-    media_content_type: 'audio/mp3'
