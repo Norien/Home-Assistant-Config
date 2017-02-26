@@ -3,21 +3,21 @@ trigger:
   platform: state
   entity_id: input_select.radio_station
 action:
-  - service: script.turn_on
+  service: script.turn_on
+  data_template:
+    entity_id: >
+    service: media_player.play_media
     data_template:
       entity_id: >
-        - service: media_player.play_media
-            data_template:
-                entity_id: media_player.kitchen
-              {% if trigger.to_state.state == 'Hot108' %}
-                media_content_id: "http://jbmedia-edge1.cdnstream.com:80/hot108"
-              {%-elif trigger.to_state.state == 'The Beat' %}
-                media_content_id: "http://live.leanstream.co/CKBTFM-MP3"
-              {%-elif trigger.to_state.state == '3FM' %}
-                media_content_id: "http://icecast.omroep.nl/3fm-bb-mp3"
-              {% endif %}
-                media_content_type: 'audio/mp3'
-  - service: input_select.select_option
-    data:
-      entity_id: input_select.radio_station
-      option: "-"
+        {% if input_select.location == 'Kitchen' %}
+          media_player.kitchen
+        {%-elif input_select.location == 'Backyard' %}
+          media_player.backyard
+        {% endif %}
+      media_content_id: >
+        {% if input_select.radio_station == 'Hot108' %}
+          "http://jbmedia-edge1.cdnstream.com:80/hot108"
+        {%-elif input_select.radio_station == 'The Beat' %}
+          "http://live.leanstream.co/CKBTFM-MP3"
+        {% endif %}
+      media_content_type: 'audio/mp3'

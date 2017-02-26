@@ -1,21 +1,15 @@
-scene_lr:
-  name: Scene
-  icon: mdi:brightness-auto
-  initial: "-"
-  options:
-    - "-"
-    - "Off"
-    - Nightlight
-    - Dimmed
-    - Relax
-    - Read
-
 radio_station:
-  name: Kitchen Radio
+  name: Radio Station
   options:
-    - Select Station
     - Hot108
     - The Beat
-    - 3FM
-  initial: Select Station
+  initial: "Hot108"
+  icon: mdi:radio
+
+radio_station_location:
+  name: Radio Location
+  options:
+    - Kitchen
+    - Backyard
+  initial: "Kitchen"
   icon: mdi:radio

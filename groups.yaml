@@ -196,4 +196,5 @@ playlist:
     - script.play_cartoons
     #- script.radio_station_108
     #- script.radio_station_3FM
-    - input_select.radio_station
+    - input_select.radio_station_kitchen
+    - input_select.radio_station_location

@@ -1,0 +1,21 @@
+alias: Kitchen Radio
+trigger:
+  platform: state
+  entity_id: input_select.radio_station_kitchen
+action:
+  - service: script.turn_on
+    data_template:
+      entity_id: >
+        - service: media_player.play_media
+            data_template:
+                entity_id: media_player.kitchen
+              {% if trigger.to_state.state == 'Hot108' %}
+                media_content_id: "http://jbmedia-edge1.cdnstream.com:80/hot108"
+              {%-elif trigger.to_state.state == 'The Beat' %}
+                media_content_id: "http://live.leanstream.co/CKBTFM-MP3"
+              {% endif %}
+                media_content_type: 'audio/mp3'
+#  - service: input_select.select_option
+#    data:
+#      entity_id: input_select.radio_station_kitchen
+#      option: "-"
