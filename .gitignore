@@ -17,6 +17,5 @@ config
 switch_pc_bedroom.yaml
 switch_pc_livingroom.yaml
 switch_pc_office.yaml
-sensors.yaml
 .uuid
 .HA_VERSION

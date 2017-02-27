@@ -1,0 +1,128 @@
+- platform: rest
+  resource: !secret finn_room_lux
+  value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+  unit_of_measurement: Lux
+  name: 'Findlay Room Lux'
+  scan_interval: 600
+
+- platform: rest
+  resource: !secret finn_room_motion
+  value_template: '{{ value_json.state.presence }}'
+  name: 'Findlay Room Motion'
+  scan_interval: 2
+
+- platform: rest
+  resource: !secret finn_room_temp
+  value_template: '{{ value_json.state.temperature | float / 100 }}'
+  unit_of_measurement: °C
+  name: 'Findlay Room Temperature'
+  scan_interval: 120
+
+- platform: rest
+  resource: !secret finn_room_sensor_battery
+  value_template: '{{ value_json.config.battery }}'
+  unit_of_measurement: '%'
+  scan_interval: 1800
+  name: 'Findlay Room Motion Sensor Battery Level'
+
+- platform: rest
+  resource: !secret livingroom_switch_battery
+  value_template: '{{ value_json.config.battery }}'
+  unit_of_measurement: '%'
+  scan_interval: 1800
+  name: 'Living Room Dimmer Switch'
+
+- platform: rest
+  resource: !secret finn_room_switch_battery
+  value_template: '{{ value_json.config.battery }}'
+  unit_of_measurement: '%'
+  scan_interval: 1800
+  name: 'Findlays Room Dimmer Switch'
+
+- platform: yr
+- platform: time_date
+  display_options:
+    - "date_time"
+- platform: darksky
+  api_key: !secret darksky_api_key
+  monitored_conditions:
+    - summary
+    - icon
+    - nearest_storm_distance
+    - nearest_storm_bearing
+    - precip_type
+    - precip_intensity
+    - precip_probability
+    - temperature
+    - apparent_temperature
+    - dew_point
+    - wind_speed
+    - wind_bearing
+    - cloud_cover
+    - humidity
+    - pressure
+    - visibility
+    - ozone
+    - minutely_summary
+    - hourly_summary
+    - daily_summary
+    - temperature_max
+    - temperature_min
+    - apparent_temperature_max
+    - apparent_temperature_min
+    - precip_intensity_max
+#rasp pi sensors
+- platform: cpuspeed
+  name: CPU
+- platform: systemmonitor
+  resources:
+    - type: disk_use_percent
+      arg: /
+    - type: disk_use_percent
+      arg: /var/log
+    - type: memory_use_percent
+    - type: memory_use
+    - type: memory_free
+    - type: processor_use
+    - type: swap_use_percent
+    - type: swap_use
+    - type: swap_free
+    - type: last_boot
+    - type: since_last_boot
+    - type: network_in
+      arg: eth0
+    - type: network_out
+      arg: eth0
+    - type: packets_in
+      arg: eth0
+    - type: packets_out
+      arg: eth0
+    - type: ipv4_address
+      arg: eth0
+    - type: process
+      arg: mosquitto
+- platform: command_line
+  name: CPU Temperature
+  command: "cat /sys/class/thermal/thermal_zone0/temp"
+  unit_of_measurement: "°C"
+  value_template: '{{ value|int // 1000 }}'
+
+# Owntracks Battery Tracker for Cell Phones
+- platform: mqtt
+  state_topic: "owntracks/bigdrakar/justin"
+  name: "Justin's G5 Battery"
+  unit_of_measurement: "%"
+  value_template: '{{ value_json.batt }}'
+- platform: mqtt
+  state_topic: "owntracks/bigdrakar/nicole"
+  name: "Nicole's S7 Battery"
+  unit_of_measurement: "%"
+  value_template: '{{ value_json.batt }}'
+
+- platform: template
+  name: "Average Temp"
+  sensors:
+    average_house_temp:
+          unit_of_measurement: "°C"
+          value_template: >-
+            {{ ((float(states.sensor.findlay_room_temperature.state) + float(states.sensor.hallway_thermostat_temperature.state)) / 2) | round(1) }}

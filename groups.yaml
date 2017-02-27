@@ -137,6 +137,7 @@ all_temps:
    - sensor.dark_sky_temperature
    - sensor.hallway_thermostat_temperature
    - sensor.findlay_room_temperature
+   - sensor.average_house_temp
 all_humidity:
   name: Humidity
   entities:

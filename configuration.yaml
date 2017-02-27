@@ -86,9 +86,9 @@ switch 2: !include switch_pc_livingroom.yaml
 switch 3: !include switch_pc_bedroom.yaml
 switch 4: !include switch_pc_office.yaml
 
-#testing the netowrk graph
+#HAgraph
 panel_iframe:
   graph:
     title: Graph
     icon: mdi:vector-polyline
-    url: "http://bigdrakar.duckdns.org:8123/local/graph.html"
+    url: !secret graph_url
