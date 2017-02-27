@@ -1,4 +1,4 @@
-alias: Notify Presence - Westmount
+alias: Notify If Nicole Left Work
 trigger:
   platform: state
   entity_id: device_tracker.bigdrakar_nicole
@@ -7,4 +7,4 @@ trigger:
 action:
   service: notify.justin
   data:
-    message: 'Nicole has left Work - Westmount'
+    message: 'Nicole has left Work'

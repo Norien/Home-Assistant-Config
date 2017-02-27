@@ -80,7 +80,6 @@ backyard:
   name: Backyard
   entities:
     - light.deck_lights
-    #- media_player.kitchen
 presence:
   name: Presence
   entities:
@@ -192,7 +191,7 @@ media_player_all:
     - media_player.kitchen
     - media_player.backyard
 playlist:
-  name: Playlists
+  name: Playlists & Radio
   entities:
     - script.play_cartoons
     - input_select.radio_station_location
