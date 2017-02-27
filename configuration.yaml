@@ -86,9 +86,13 @@ switch 2: !include switch_pc_livingroom.yaml
 switch 3: !include switch_pc_bedroom.yaml
 switch 4: !include switch_pc_office.yaml
 
-#HAgraph
+#Side Panels
 panel_iframe:
   graph:
     title: Graph
     icon: mdi:vector-polyline
     url: !secret graph_url
+  router:
+    title: Router
+    icon: mdi:router-wireless
+    url: !secret router_url
