@@ -33,3 +33,8 @@ sensor.nicoles_s7_battery:
   icon: mdi:battery
 sensor.justins_g5_battery:
   icon: mdi:battery
+
+#Custom data template sensor
+sensor.average_house_temp:
+  friendly_name: Average Whole Home
+  icon: mdi:thermometer
