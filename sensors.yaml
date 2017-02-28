@@ -13,7 +13,7 @@
 
 - platform: rest
   resource: !secret finn_room_temp
-  value_template: '{{ value_json.state.temperature | float / 100 }}'
+  value_template: '{{ value_json.state.temperature | float / 100 | round(1) }}'
   unit_of_measurement: °C
   name: 'Findlay Room Temperature'
   scan_interval: 120
