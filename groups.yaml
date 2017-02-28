@@ -15,11 +15,11 @@ sensor_view:
   icon: mdi:gauge
   entities:
     - group.presence
-    - group.motion_sensors
     - group.thermostat
-    - group.smoke_gas
     - group.all_temps
     - group.all_humidity
+    - group.smoke_gas
+    - group.motion_sensors
 media_view:
   name: Media Players
   view: yes

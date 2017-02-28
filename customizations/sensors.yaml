@@ -19,6 +19,8 @@ sensor.findlay_room_temperature:
 sensor.findlay_room_motion_sensor_battery_level:
   friendly_name: Findlay's Room Sensor
   icon: mdi:battery
+sensor.findlay_room_motion:
+  icon: mdi:run
 
 #Philips Hue Switches
 sensor.living_room_dimmer_switch:
