@@ -1,2 +1,3 @@
 refresh_devices: !include scripts/refresh_devices.yaml
 play_cartoons: !include scripts/play_cartoons.yaml
+play_all_tv: !include scripts/play_all_tv.yaml

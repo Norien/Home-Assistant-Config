@@ -195,5 +195,6 @@ playlist:
   name: Playlists & Radio
   entities:
     - script.play_cartoons
+    - script.play_all_tv
     - input_select.radio_station_location
     - input_select.radio_station

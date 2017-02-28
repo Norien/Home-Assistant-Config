@@ -1,3 +1,6 @@
 script.play_cartoons:
-  friendly_name: Living Room Cartoons
+  friendly_name: Cartoons
+  icon: mdi:playlist-play
+script.play_all_tv:
+  friendly_name: All TV
   icon: mdi:playlist-play
