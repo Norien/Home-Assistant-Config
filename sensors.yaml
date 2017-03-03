@@ -71,42 +71,25 @@
     - apparent_temperature_max
     - apparent_temperature_min
     - precip_intensity_max
-#rasp pi sensors
-- platform: cpuspeed
-  name: CPU
-- platform: systemmonitor
-  resources:
-    - type: disk_use_percent
-      arg: /
-    - type: disk_use_percent
-      arg: /var/log
-    - type: memory_use_percent
-    - type: memory_use
-    - type: memory_free
-    - type: processor_use
-    - type: swap_use_percent
-    - type: swap_use
-    - type: swap_free
-    - type: last_boot
-    - type: since_last_boot
-    - type: network_in
-      arg: eth0
-    - type: network_out
-      arg: eth0
-    - type: packets_in
-      arg: eth0
-    - type: packets_out
-      arg: eth0
-    - type: ipv4_address
-      arg: eth0
-    - type: process
-      arg: mosquitto
-- platform: command_line
-  name: CPU Temperature
-  command: "cat /sys/class/thermal/thermal_zone0/temp"
-  unit_of_measurement: "°C"
-  value_template: '{{ value|int // 1000 }}'
 
+- platform: glances
+  host: 192.168.1.250
+  resources:
+    - 'disk_use_percent'
+    - 'disk_use'
+    - 'disk_free'
+    - 'memory_use_percent'
+    - 'memory_use'
+    - 'memory_free'
+    - 'swap_use_percent'
+    - 'swap_use'
+    - 'swap_free'
+    - 'processor_load'
+    - 'process_running'
+    - 'process_total'
+    - 'process_thread'
+    - 'process_sleeping'
+    
 # Owntracks Battery Tracker for Cell Phones
 - platform: mqtt
   state_topic: "owntracks/bigdrakar/justin"

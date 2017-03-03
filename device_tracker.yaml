@@ -1,4 +1,4 @@
-- platform: netgear
-  username: !secret netgear_username
-  password: !secret netgear_password
+#- platform: netgear
+#  username: !secret netgear_username
+#  password: !secret netgear_password
 - platform: owntracks
