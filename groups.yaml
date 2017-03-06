@@ -39,8 +39,7 @@ misc_view:
   icon: mdi:power
   entities:
     - group.sensor_battery_levels
-    - group.sensor_pi
-    - group.server_status
+    - group.sensor_homeserver
 #Groups------------------------------------------------------------------
 livingroom:
   name: Living Room
@@ -164,26 +163,21 @@ sensor_battery_levels:
    - sensor.kitchen_nest_protect_battery_health
    - sensor.justins_g5_battery
    - sensor.nicoles_s7_battery
-sensor_pi:
-  name: Raspberry Pi
+sensor_homeserver:
+  name: HomeServer
   entities:
-    - sensor.cpu_use
-    - sensor.cpu_temperature
-    - sensor.disk_use_
-    - sensor.disk_use_varlog
-    - sensor.ram_use
-    - sensor.ram_free
-    - sensor.swap_use
-    - sensor.swap_free
-    - sensor.last_boot
-    - sensor.since_last_boot
-    - sensor.ipv4_address_eth0
-    - sensor.received_eth0
-    - sensor.sent_eth0
-server_status:
-  name: Server Status
-  entities:
-    - sensor.process_mosquitto
+    - sensor.glances_cpu_load
+    - sensor.glances_disk_free
+    - sensor.glances_disk_use
+    - sensor.glances_disk_use_2
+    - sensor.glances_ram_free
+    - sensor.glances_ram_use
+    - sensor.glances_ram_use_2
+    - sensor.glances_swap_free
+    - sensor.glances_swap_use
+    - sensor.glances_swap_use_2
+    - sensor.glances_thread
+    - sensor.glances_total
 media_player_all:
   name: Media Players
   entities:
@@ -194,7 +188,8 @@ media_player_all:
 playlist:
   name: Playlists & Radio
   entities:
-    - script.play_cartoons
-    - script.play_all_tv
     - input_select.radio_station_location
     - input_select.radio_station
+    - input_slider.volume_radio
+    - script.play_cartoons
+    - script.play_all_tv

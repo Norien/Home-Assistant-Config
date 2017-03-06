@@ -23,7 +23,9 @@ http:
 updater:
 
 # Discover some devices automatically
-#discovery:
+discovery:
+  ignore:
+    - netgear_router
 
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
@@ -36,8 +38,8 @@ logbook:
 
 #purge the home-assistant_v2.db otherwise system will crash.
 recorder:
-  db_url: postgres://@/homeassistant
-  #purge_days: 3
+ # db_url: postgres://@/homeassistant
+  purge_days: 3
 
 # Make some errors go away!
 logger:
@@ -54,7 +56,7 @@ tts:
   platform: google
 
 mqtt:
-  broker: 192.168.1.11
+  broker: 192.168.1.250
   port: 1883
   client_id: home-assistant-1
   keepalive: 60
@@ -70,9 +72,16 @@ camera: !include camera.yaml
 wemo: !include wemo.yaml
 device_tracker: !include device_tracker.yaml
 zone: !include_dir_list zones/
+#zoneminder:
+#  host: localhost
+#  path: /zm/
+#  path_zms: /zm/cgi-bin/nph-zms
+#  username: !secret zoneminder_user
+#  password: !secret zoneminder_pass
 
 # Controls
 input_select: !include input-selects.yaml
+input_slider: !include input-sliders.yaml
 
 # Automation
 scene: !include_dir_list scenes

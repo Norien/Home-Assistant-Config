@@ -6,7 +6,11 @@ trigger:
   to: 'not_home'
 - platform: state
   entity_id: device_tracker.bigdrakar_nicole
-  from: 'Work - oldsouth'
+  from: 'Work - Old South'
+  to: 'not_home'
+- platform: state
+  entity_id: device_tracker.bigdrakar_nicole
+  from: 'Work - Whitehills'
   to: 'not_home'
 action:
 - service: notify.justin
