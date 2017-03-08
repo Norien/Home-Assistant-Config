@@ -101,7 +101,11 @@ panel_iframe:
     title: Graph
     icon: mdi:vector-polyline
     url: !secret graph_url
-  router:
-    title: Router
-    icon: mdi:router-wireless
-    url: !secret router_url
+  zoneminder:
+    title: Zoneminder
+    icon: mdi:camera
+    url: !secret zm_url
+  glances:
+    title: System Monitor
+    icon: mdi:biohazard
+    url: !secret glances_url

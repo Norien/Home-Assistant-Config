@@ -4,3 +4,6 @@ script.play_cartoons:
 script.play_all_tv:
   friendly_name: All TV
   icon: mdi:playlist-play
+script.good_morning:
+  friendly_name: Good Morning
+  icon: mdi:emoticon-poop

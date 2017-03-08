@@ -1,0 +1,10 @@
+sequence:
+  #turn on computer/tv/reciever
+  - service: switch.turn_on
+    entity_id: switch.copy
+  #wait the time it takes to boot computer and load KODI
+  - delay:
+      minutes: 1
+      seconds: 30
+  # json curl to play all cartoons smart playlist
+  - service: shell_command.play_cartoons

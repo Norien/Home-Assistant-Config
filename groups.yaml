@@ -54,6 +54,7 @@ livingroom:
    - scene.lr_dimmed
    - scene.lr_nightlight
    #- media_player.kodi_livingroom
+   - script.good_morning
 bedroom:
   name: Master Bedroom
   entities:

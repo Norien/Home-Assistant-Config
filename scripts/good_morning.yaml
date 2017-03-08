@@ -1,0 +1,8 @@
+sequence:
+  - service: script.morning_livingroom_lights
+  - service: script.auto_cartoons
+  - service: tts.google_say
+    data_template:
+      entity_id: media_player.kitchen
+      message: "Good Morning, the weather looks like {{states('sensor.dark_sky_daily_summary')}}.... Let me Play some cartoons for you findlay!"
+      cache: false

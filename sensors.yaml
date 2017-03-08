@@ -72,24 +72,24 @@
     - apparent_temperature_min
     - precip_intensity_max
 
-- platform: glances
-  host: 192.168.1.250
-  resources:
-    - 'disk_use_percent'
-    - 'disk_use'
-    - 'disk_free'
-    - 'memory_use_percent'
-    - 'memory_use'
-    - 'memory_free'
-    - 'swap_use_percent'
-    - 'swap_use'
-    - 'swap_free'
-    - 'processor_load'
-    - 'process_running'
-    - 'process_total'
-    - 'process_thread'
-    - 'process_sleeping'
-    
+#- platform: glances
+#  host: 192.168.1.250
+#  resources:
+#    - 'disk_use_percent'
+#    - 'disk_use'
+#    - 'disk_free'
+#    - 'memory_use_percent'
+#    - 'memory_use'
+#    - 'memory_free'
+#    - 'swap_use_percent'
+#    - 'swap_use'
+#    - 'swap_free'
+#    - 'processor_load'
+#    - 'process_running'
+#    - 'process_total'
+#    - 'process_thread'
+#    - 'process_sleeping'
+
 # Owntracks Battery Tracker for Cell Phones
 - platform: mqtt
   state_topic: "owntracks/bigdrakar/justin"
