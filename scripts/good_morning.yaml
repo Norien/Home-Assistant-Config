@@ -4,5 +4,6 @@ sequence:
   - service: tts.google_say
     data_template:
       entity_id: media_player.kitchen
-      message: "Good Morning, the weather looks like {{states('sensor.dark_sky_daily_summary')}}.... Let me Play some cartoons for you findlay!"
+      #volume_level: '0.65'
+      message: "Good Morning, the weather looks like {{states('sensor.dark_sky_daily_summary')}}."
       cache: false

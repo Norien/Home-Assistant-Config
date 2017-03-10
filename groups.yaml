@@ -87,6 +87,7 @@ presence:
    #- device_tracker.androidc3a6fa8dea348d9e
    - device_tracker.bigdrakar_justin
    - device_tracker.bigdrakar_nicole
+   - input_boolean.guest
 weather:
   name: Weather
   entities:

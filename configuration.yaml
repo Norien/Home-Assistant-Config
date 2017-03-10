@@ -82,6 +82,7 @@ zone: !include_dir_list zones/
 # Controls
 input_select: !include input-selects.yaml
 input_slider: !include input-sliders.yaml
+input_boolean: !include input-boolean.yaml
 
 # Automation
 scene: !include_dir_list scenes

@@ -1,0 +1,4 @@
+guest:
+  name: Guest
+  icon: mdi:account-box
+  initial: off
