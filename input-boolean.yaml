@@ -2,3 +2,11 @@ guest:
   name: Guest
   icon: mdi:account-box
   initial: off
+vacation:
+  name: Vacation
+  icon: mdi:sunglasses
+  initial: off
+away:
+  name: Away
+  icon: mdi:account-off
+  initial: off

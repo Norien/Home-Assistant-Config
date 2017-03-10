@@ -1,0 +1,19 @@
+alias: Trigger Alarm
+trigger:
+- platform: state
+  entity_id: sensor.findlay_room_motion
+  #from: 'False'
+  to: 'True'
+condition:
+  condition: or
+  conditions:
+    - condition: state
+      entity_id: 'input_boolean.away'
+      state: 'on'
+    - condition: state
+      entity_id: 'input_boolean.vacation'
+      state: 'on'
+action:
+- service: notify.justin
+  data_template:
+    message: Motion was detected while away. Possible Intruder!!!
