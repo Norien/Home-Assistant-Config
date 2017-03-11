@@ -53,6 +53,7 @@ livingroom:
    - scene.lr_relax
    - scene.lr_dimmed
    - scene.lr_nightlight
+   #- scene.lr_alarm
    #- media_player.kodi_livingroom
    - script.good_morning
 bedroom:

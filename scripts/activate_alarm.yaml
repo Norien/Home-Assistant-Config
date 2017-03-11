@@ -1,0 +1,17 @@
+sequence:
+  - service: scene.turn_on
+    entity_id: scene.alarm
+
+  - service: switch.turn_on
+    entity_id: switch.office_lightstrip
+
+  - service: notify.justin
+    data:
+      message: 'An alarm has been Triggered!'
+
+  - service: tts.google_say
+    data_template:
+      entity_id: media_player.kitchen
+      #volume_level: '0.65'
+      message: "INTRUDER ALERT.THE POLICE HAVE BEEN CALLED AND ARE ON THE WAY"
+      cache: false

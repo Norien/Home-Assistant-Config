@@ -4,3 +4,4 @@ play_cartoons: !include scripts/play_cartoons.yaml
 play_all_tv: !include scripts/play_all_tv.yaml
 good_morning: !include scripts/good_morning.yaml
 morning_livingroom_lights: !include scripts/morning_livingroom_lights.yaml
+activate_alarm: !include scripts/activate_alarm.yaml

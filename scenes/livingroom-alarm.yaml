@@ -1,0 +1,11 @@
+name: Alarm
+entities:
+  light.hue_color_lamp_1:
+    state: on
+    rgb_color: [255,0,0]
+  light.hue_color_lamp_2:
+    state: on
+    rgb_color: [255,0,0]
+  light.hue_color_lamp_3:
+    state: on
+    rgb_color: [255,0,0]

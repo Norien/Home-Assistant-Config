@@ -16,3 +16,6 @@ scene.lr_concentrate:
 scene.lr_off:
   friendly_name: 'Off'
   icon: mdi:flashlight-off
+scene.alarm:
+  friendly_name: 'Alarm'
+  icon: mdi:flashlight-off

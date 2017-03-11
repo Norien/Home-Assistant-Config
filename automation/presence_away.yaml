@@ -1,0 +1,26 @@
+alias: Set Away Mode on
+condition:
+- condition: and
+  conditions:
+    - condition: state
+      entity_id: 'device_tracker.bigdrakar_justin'
+      state: 'not_home'
+    - condition: state
+      entity_id: 'device_tracker.bigdrakar_nicole'
+      state: 'not_home'
+    - condition: state
+      entity_id: 'input_boolean.guest'
+      state: 'off'
+    - condition: state
+      entity_id: 'input_boolean.away'
+      state: 'off'
+trigger:
+- platform: state
+  entity_id: device_tracker.bigdrakar_justin, device_tracker.bigdrakar_nicole
+  to: 'not_home'
+action:
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.away
+  - service: notify.justin
+    data:
+      message: 'Nobody is home, switching to away mode! The alarm is armed'

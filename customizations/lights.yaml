@@ -9,5 +9,3 @@ light.living_room:
 light.findlay_lamp:
   friendly_name: Findlay's Lamp
   icon: mdi:lamp
-input_select.scene_lr:
-  hidden: true
