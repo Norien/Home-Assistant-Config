@@ -10,3 +10,9 @@ away:
   name: Away
   icon: mdi:account-off
   initial: off
+justin:
+  name: Justin
+  initial: off
+nicole:
+  name: Nicole
+  initial: off

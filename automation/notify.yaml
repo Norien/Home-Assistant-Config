@@ -1,3 +1,4 @@
+###### NOTIFY IF NICOLE HAS LEFT ONE OF HER WORKPLACES
 - alias: Notify If Left Work
   trigger:
     - platform: state
@@ -17,3 +18,13 @@
       data_template:
         message: >
           {{ trigger.to_state.attributes.friendly_name }} has left work.
+
+###### NOTIFY IF UPDATE TO HOME ASSISTANT IS Available
+- alias: 'Update Available Notifications'
+  trigger:
+    - platform: state
+      entity_id: updater.updater
+  action:
+    - service: notify.justin
+      data:
+        message: 'Update for Home Assistant is available.'
