@@ -6,3 +6,5 @@ entities:
     state: off
   light.hue_color_lamp_3:
     state: off
+  light.kitchen_sink:
+    state: off

@@ -89,6 +89,7 @@ presence:
    - device_tracker.bigdrakar_justin
    - device_tracker.bigdrakar_nicole
    - input_boolean.guest
+   - input_boolean.away
    - input_boolean.vacation
 weather:
   name: Weather
@@ -134,12 +135,14 @@ motion_sensors:
   name: Motion Sensors
   entities:
    - sensor.findlay_room_motion
+   - sensor.living_room_motion
 all_temps:
   name: Temperature
   entities:
    - sensor.dark_sky_temperature
    - sensor.hallway_thermostat_temperature
    - sensor.findlay_room_temperature
+   - sensor.living_room_temperature
    - sensor.average_house_temp
 all_humidity:
   name: Humidity
@@ -162,6 +165,7 @@ sensor_battery_levels:
   entities:
    - script.refresh_devices
    - sensor.findlay_room_motion_sensor_battery_level
+   - sensor.living_room_motion_sensor_battery_level
    - sensor.findlays_room_dimmer_switch
    - sensor.living_room_dimmer_switch
    - sensor.kitchen_nest_protect_battery_health

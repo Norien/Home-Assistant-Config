@@ -9,3 +9,6 @@ entities:
   light.hue_color_lamp_3:
     state: on
     rgb_color: [255,0,0]
+  light.kitchen_sink:
+    state: on
+    rgb_color: [255,0,0]

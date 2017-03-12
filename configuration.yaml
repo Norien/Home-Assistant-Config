@@ -1,5 +1,4 @@
 homeassistant:
-
   name: Home
   latitude: !secret latitude
   longitude: !secret longitude
@@ -89,7 +88,7 @@ scene: !include_dir_list scenes
 script: !include scripts.yaml
 shell_command: !include shell_commands.yaml
 notify: !include notify.yaml
-automation: !include_dir_list automation/
+automation: !include_dir_merge_list automation
 
 # PC On / OFF switches
 switch 2: !include switch_pc_livingroom.yaml

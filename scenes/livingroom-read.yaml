@@ -12,3 +12,7 @@ entities:
     state: on
     brightness: 255
     color_temp: 343
+  light.kitchen_sink:
+    state: on
+    brightness: 255
+    color_temp: 343

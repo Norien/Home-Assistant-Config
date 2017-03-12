@@ -1,3 +1,4 @@
+# FINDLAYS ROOM SENSOR & DIMMER
 - platform: rest
   resource: !secret finn_room_lux
   value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
@@ -26,18 +27,46 @@
   name: 'Findlay Room Motion Sensor Battery Level'
 
 - platform: rest
-  resource: !secret livingroom_switch_battery
-  value_template: '{{ value_json.config.battery }}'
-  unit_of_measurement: '%'
-  scan_interval: 1800
-  name: 'Living Room Dimmer Switch'
-
-- platform: rest
   resource: !secret finn_room_switch_battery
   value_template: '{{ value_json.config.battery }}'
   unit_of_measurement: '%'
   scan_interval: 1800
   name: 'Findlays Room Dimmer Switch'
+
+#LIVING ROOM SENSOR & DIMMER
+- platform: rest
+  resource: !secret livingroom_lux
+  value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+  unit_of_measurement: Lux
+  name: 'Living Room Lux'
+  scan_interval: 600
+
+- platform: rest
+  resource: !secret livingroom_motion
+  value_template: '{{ value_json.state.presence }}'
+  name: 'Living Room Motion'
+  scan_interval: 2
+
+- platform: rest
+  resource: !secret livingroom_temp
+  value_template: '{{ value_json.state.temperature | float / 100 | round(1) }}'
+  unit_of_measurement: °C
+  name: 'Living Room Temperature'
+  scan_interval: 120
+
+- platform: rest
+  resource: !secret livingroom_sensor_battery
+  value_template: '{{ value_json.config.battery }}'
+  unit_of_measurement: '%'
+  scan_interval: 1800
+  name: 'Living Room Motion Sensor Battery Level'
+
+- platform: rest
+  resource: !secret livingroom_switch_battery
+  value_template: '{{ value_json.config.battery }}'
+  unit_of_measurement: '%'
+  scan_interval: 1800
+  name: 'Living Room Dimmer Switch'
 
 - platform: yr
 - platform: time_date
@@ -108,4 +137,4 @@
     average_house_temp:
           unit_of_measurement: "°C"
           value_template: >-
-            {{ ((float(states.sensor.findlay_room_temperature.state) + float(states.sensor.hallway_thermostat_temperature.state)) / 2) | round(1) }}
+            {{ ((float(states.sensor.findlay_room_temperature.state) + float(states.sensor.hallway_thermostat_temperature.state) + float(states.sensor.living_room_temperature.state)) / 3) | round(1) }}

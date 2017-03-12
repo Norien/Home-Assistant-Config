@@ -1,19 +1,19 @@
-alias: Notify If Left Work
-trigger:
-- platform: state
-  entity_id: device_tracker.bigdrakar_nicole
-  from: 'Work - Westmount'
-  to: 'not_home'
-- platform: state
-  entity_id: device_tracker.bigdrakar_nicole
-  from: 'Work - Old South'
-  to: 'not_home'
-- platform: state
-  entity_id: device_tracker.bigdrakar_nicole
-  from: 'Work - Whitehills'
-  to: 'not_home'
-action:
-- service: notify.justin
-  data_template:
-    message: >
-      {{ trigger.to_state.attributes.friendly_name }} has left work.
+- alias: Notify If Left Work
+  trigger:
+    - platform: state
+      entity_id: device_tracker.bigdrakar_nicole
+      from: 'Work - Westmount'
+      to: 'not_home'
+    - platform: state
+      entity_id: device_tracker.bigdrakar_nicole
+      from: 'Work - Old South'
+      to: 'not_home'
+    - platform: state
+      entity_id: device_tracker.bigdrakar_nicole
+      from: 'Work - Whitehills'
+      to: 'not_home'
+  action:
+    - service: notify.justin
+      data_template:
+        message: >
+          {{ trigger.to_state.attributes.friendly_name }} has left work.
