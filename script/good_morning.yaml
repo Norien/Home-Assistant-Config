@@ -1,0 +1,10 @@
+good_morning:
+  sequence:
+    - service: script.morning_livingroom_lights
+    - service: script.auto_cartoons
+    - service: tts.google_say
+      data_template:
+        entity_id: media_player.kitchen
+        #volume_level: '0.65'
+        message: "Good Morning, the weather looks like {{states('sensor.dark_sky_daily_summary')}}."
+        cache: false

@@ -1,0 +1,3 @@
+play_cartoons:
+  sequence:
+    - service: shell_command.play_cartoons
