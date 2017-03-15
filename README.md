@@ -25,4 +25,5 @@ Software on the server:
 * [WeMo Switch](http://a.co/iqSGwpO)
 * [WeMo Light Switch](http://a.co/d2HZ753)
 * [H801 Wifi RGB Controller](http://a.co/ej6LvjZ)
+* ORDERED ** [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html)
 * [Kodi](https://kodi.tv/)
