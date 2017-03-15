@@ -77,8 +77,6 @@ office:
    - switch.copy4
    - switch.office_lightswitch
    - switch.office_lightstrip
-   - script.led_power_on
-   - script.led_power_off
    - input_select.led_scene
    - input_select.led_color
 backyard:

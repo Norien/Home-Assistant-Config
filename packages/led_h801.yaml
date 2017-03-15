@@ -1,45 +1,67 @@
+# Description:
+#   Home Assistant Package for H801 LED Controller
+#
+# Written for:
+#   @Norien
+#
+# Components:
+#   homeassistant
+#   automation
+#   input_select
+#   script
+#   shell_command
+#
+# License:
+#   MIT
+#
+# Author:
+#   Dale Higgs <@dale3h>
+#
+# THE ABOVE COPYRIGHT NOTICE AND THIS PERMISSION NOTICE SHALL BE INCLUDED
+# IN ALL COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
+#
+# PLEASE NOTE: THIS CONFIGURATION IS UNTESTED AND MAY CONTAIN ERRORS
+
 ################################################################
 ## Packages / H801 LED Controller
 ################################################################
+
 homeassistant:
   customize:
     automation.select_led_color:
-      friendly_name: Select LED Color
+      friendly_name: "Select LED Color"
 
     automation.select_led_scene:
-      friendly_name: Select LED Scene
+      friendly_name: "Select LED Scene"
 
     input_select.led_color:
-      friendly_name: LED Color
+      friendly_name: "LED Color"
 
     input_select.led_scene:
-      friendly_name: LED Scene
+      friendly_name: "LED Scene"
 
     script.led_power_on:
-      friendly_name: LED Power On
+      friendly_name: "LED Power On"
 
     script.led_power_off:
-      friendly_name: LED Power Off
+      friendly_name: "LED Power Off"
 
     script.led_set_color:
-      friendly_name: LED Set Color
+      friendly_name: "LED Set Color"
 
     script.led_set_scene:
-      friendly_name: LED Set Scene
+      friendly_name: "LED Set Scene"
 
 automation:
   - alias: select_led_color
     trigger:
       - platform: state
         entity_id: input_select.led_color
-    condition:
-      - condition: template
-        value_template: "{{ trigger.to_state.state != 'Off' }}"
     action:
       - service: input_select.select_option
         data:
           entity_id: input_select.led_scene
-          option: Solid Color
+          option: "Solid Color"
       - service: script.led_set_color
         data_template:
           rgb_hex: >-
@@ -54,6 +76,7 @@ automation:
               'white':  'ffffff',
             } %}
             {{ color_map[trigger.to_state.state|replace(' ', '')|lower]|default('ffffff') }}
+
   - alias: select_led_scene
     trigger:
       - platform: state
@@ -62,7 +85,7 @@ automation:
       - service: input_select.select_option
         data:
           entity_id: input_select.led_color
-          option: Scene
+          option: "Scene"
       - service: script.led_set_scene
         data_template:
           scene: >-
@@ -83,41 +106,40 @@ automation:
               'sevencolortransistion': '0d',
             } %}
             {{ scene_map[trigger.to_state.state|replace(' ', '')|lower]|default('01') }}
+
 input_select:
   led_color:
-    name: LED Color
     icon: mdi:format-color-fill
-    initial: Red
+    initial: "Off"
     options:
-      - Off
-      - Red
-      - Orange
-      - Yellow
-      - Green
-      - Blue
-      - Purple
-      - White
-      - Scene
+      - "Off"
+      - "Red"
+      - "Orange"
+      - "Yellow"
+      - "Green"
+      - "Blue"
+      - "Purple"
+      - "White"
+      - "Scene"
 
   led_scene:
-    name: LED Scene
     icon: mdi:spotlight
-    initial: Solid Color
+    initial: "Solid Color"
     options:
-      - Solid Color
-      - Full Color
-      - Monochrome Shade
-      - Monochrome Fade
-      - Monochrome Light
-      - Mixed Color Shade
-      - Mixed Color Fade
-      - Mixed Color Light
-      - Red Fade
-      - Green Fade
-      - Blue Fade
-      - Monochrome Transition
-      - Mixed Color Transistion
-      - Seven Color Transistion
+      - "Solid Color"
+      - "Full Color"
+      - "Monochrome Shade"
+      - "Monochrome Fade"
+      - "Monochrome Light"
+      - "Mixed Color Shade"
+      - "Mixed Color Fade"
+      - "Mixed Color Light"
+      - "Red Fade"
+      - "Green Fade"
+      - "Blue Fade"
+      - "Monochrome Transition"
+      - "Mixed Color Transistion"
+      - "Seven Color Transistion"
 
 script:
   led_power_on:
@@ -125,11 +147,11 @@ script:
       - service: input_select.select_option
         data:
           entity_id: input_select.led_color
-          option: White
+          option: "White"
       - service: input_select.select_option
         data:
           entity_id: input_select.led_scene
-          option: Solid Color
+          option: "Solid Color"
       - service: script.led_set_color
         data_template:
           rgb_hex: 'ffffff'
@@ -139,11 +161,11 @@ script:
       - service: input_select.select_option
         data:
           entity_id: input_select.led_color
-          option: Off
+          option: "Off"
       - service: input_select.select_option
         data:
           entity_id: input_select.led_scene
-          option: Solid Color
+          option: "Solid Color"
       - service: script.led_set_color
         data_template:
           rgb_hex: '000000'
@@ -153,7 +175,7 @@ script:
       - service: input_select.select_option
         data:
           entity_id: input_select.led_scene
-          option: Solid Color
+          option: "Solid Color"
       - service: shell_command.led_send_payload
         data_template:
           scene: '00'
@@ -166,11 +188,11 @@ script:
       - service: input_select.select_option
         data:
           entity_id: input_select.led_color
-          option: Scene
+          option: "Scene"
       - service: shell_command.led_send_payload
         data_template:
           scene: "{{ scene }}"
 
 shell_command:
   led_send_payload: >-
-    sudo /usr/bin/sendip -p ipv4 -is 192.168.1.2 -p udp -us 30978 -ud 30977 -d {{ payload|default('0x' ~ ('fbec' if scene is defined else 'fbeb') ~ ((scene ~ '01000000') if scene is defined else (rgb_hex|default('000000') ~ '0000')) ~ (mac|default('4c5499') ~ '00'))|lower }} -v {{ host|default('192.168.1.249') }} && sudo /usr/bin/sendip -p ipv4 -is 192.168.1.2 -p udp -us 30978 -ud 30977 -d {{ payload|default('0x' ~ ('fbec' if scene is defined else 'fbeb') ~ ((scene ~ '01000000') if scene is defined else (rgb_hex|default('000000') ~ '0000')) ~ (mac|default('4c5499') ~ '00'))|lower }} -v {{ host|default('192.168.1.249') }}
+    sudo /usr/bin/sendip -p ipv4 -is 192.168.1.2 -p udp -us 30978 -ud 30977 -d {{ payload|default('0x' ~ ('fbec' if scene is defined else 'fbeb') ~ ((scene ~ '01000000') if scene is defined else (rgb_hex|default('000000') ~ '0000')) ~ (mac|default('4c5499') ~ '00'))|lower }} -v {{ host|default('192.168.1.249') }}
