@@ -77,10 +77,15 @@ office:
    - switch.copy4
    - switch.office_lightswitch
    - switch.office_lightstrip
+   - script.led_power_on
+   - script.led_power_off
+   - input_select.led_scene
+   - input_select.led_color
 backyard:
   name: Backyard
   entities:
     - light.deck_lights
+    - script.backyard_party
 presence:
   name: Presence
   entities:
@@ -136,6 +141,7 @@ motion_sensors:
   entities:
    - sensor.findlay_room_motion
    - sensor.living_room_motion
+   - sensor.dining_room_motion
 all_temps:
   name: Temperature
   entities:
@@ -143,6 +149,7 @@ all_temps:
    - sensor.hallway_thermostat_temperature
    - sensor.findlay_room_temperature
    - sensor.living_room_temperature
+   - sensor.dining_room_temperature
    - sensor.average_house_temp
 all_humidity:
   name: Humidity
@@ -166,26 +173,12 @@ sensor_battery_levels:
    - script.refresh_devices
    - sensor.findlay_room_motion_sensor_battery_level
    - sensor.living_room_motion_sensor_battery_level
+   - sensor.dining_room_motion_sensor_battery_level
    - sensor.findlays_room_dimmer_switch
    - sensor.living_room_dimmer_switch
    - sensor.kitchen_nest_protect_battery_health
    - sensor.justins_g5_battery
    - sensor.nicoles_s7_battery
-sensor_homeserver:
-  name: HomeServer
-  entities:
-    - sensor.glances_cpu_load
-    - sensor.glances_disk_free
-    - sensor.glances_disk_use
-    - sensor.glances_disk_use_2
-    - sensor.glances_ram_free
-    - sensor.glances_ram_use
-    - sensor.glances_ram_use_2
-    - sensor.glances_swap_free
-    - sensor.glances_swap_use
-    - sensor.glances_swap_use_2
-    - sensor.glances_thread
-    - sensor.glances_total
 media_player_all:
   name: Media Players
   entities:
@@ -193,6 +186,7 @@ media_player_all:
     - media_player.kodi_bedroom
     - media_player.kitchen
     - media_player.backyard
+    - media_player.home_group
 playlist:
   name: Playlists & Radio
   entities:
@@ -201,3 +195,19 @@ playlist:
     - input_slider.volume_radio
     - script.play_cartoons
     - script.play_all_tv
+
+#sensor_homeserver:
+#  name: HomeServer
+#  entities:
+#    - sensor.glances_cpu_load
+#    - sensor.glances_disk_free
+#    - sensor.glances_disk_use
+#    - sensor.glances_disk_use_2
+#    - sensor.glances_ram_free
+#    - sensor.glances_ram_use
+#    - sensor.glances_ram_use_2
+#    - sensor.glances_swap_free
+#    - sensor.glances_swap_use
+#    - sensor.glances_swap_use_2
+#    - sensor.glances_thread
+#    - sensor.glances_total

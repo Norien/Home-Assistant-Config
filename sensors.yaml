@@ -1,4 +1,4 @@
-# FINDLAYS ROOM SENSOR & DIMMER
+#####FINDLAYS ROOM SENSOR & DIMMER
 - platform: rest
   resource: !secret finn_room_lux
   value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
@@ -14,7 +14,7 @@
 
 - platform: rest
   resource: !secret finn_room_temp
-  value_template: '{{ value_json.state.temperature | float / 100 | round(1) }}'
+  value_template: '{{ (value_json.state.temperature | float / 100 + 1.6) | round(1) }}'
   unit_of_measurement: °C
   name: 'Findlay Room Temperature'
   scan_interval: 120
@@ -33,7 +33,7 @@
   scan_interval: 1800
   name: 'Findlays Room Dimmer Switch'
 
-#LIVING ROOM SENSOR & DIMMER
+#####LIVING ROOM SENSOR & DIMMER
 - platform: rest
   resource: !secret livingroom_lux
   value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
@@ -49,7 +49,7 @@
 
 - platform: rest
   resource: !secret livingroom_temp
-  value_template: '{{ value_json.state.temperature | float / 100 | round(1) }}'
+  value_template: '{{ (value_json.state.temperature | float / 100 + 0.35) | round(1) }}'
   unit_of_measurement: °C
   name: 'Living Room Temperature'
   scan_interval: 120
@@ -62,12 +62,41 @@
   name: 'Living Room Motion Sensor Battery Level'
 
 - platform: rest
-  resource: !secret livingroom_switch_battery
+  resource: !secret livingroom_sensor_battery
   value_template: '{{ value_json.config.battery }}'
   unit_of_measurement: '%'
   scan_interval: 1800
   name: 'Living Room Dimmer Switch'
 
+#####DINING ROOM SENSOR
+- platform: rest
+  resource: !secret dining_room_lux
+  value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+  unit_of_measurement: Lux
+  name: 'Dining Room Lux'
+  scan_interval: 600
+
+- platform: rest
+  resource: !secret dining_room_motion
+  value_template: '{{ value_json.state.presence }}'
+  name: 'Dining Room Motion'
+  scan_interval: 2
+
+- platform: rest
+  resource: !secret dining_room_temp
+  value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
+  unit_of_measurement: °C
+  name: 'Dining Room Temperature'
+  scan_interval: 120
+
+- platform: rest
+  resource: !secret dining_room_sensor_battery
+  value_template: '{{ value_json.config.battery }}'
+  unit_of_measurement: '%'
+  scan_interval: 1800
+  name: 'Dining Room Motion Sensor Battery Level'
+
+######DATE TIME & WEATHER
 - platform: yr
 - platform: time_date
   display_options:
@@ -119,7 +148,7 @@
 #    - 'process_thread'
 #    - 'process_sleeping'
 
-# Owntracks Battery Tracker for Cell Phones
+##### Owntracks Battery Tracker for Cell Phones
 - platform: mqtt
   state_topic: "owntracks/bigdrakar/justin"
   name: "Justin's G5 Battery"
@@ -131,10 +160,11 @@
   unit_of_measurement: "%"
   value_template: '{{ value_json.batt }}'
 
+###### CUSTOM AVERAGE TEMP
 - platform: template
   name: "Average Temp"
   sensors:
     average_house_temp:
           unit_of_measurement: "°C"
           value_template: >-
-            {{ ((float(states.sensor.findlay_room_temperature.state) + float(states.sensor.hallway_thermostat_temperature.state) + float(states.sensor.living_room_temperature.state)) / 3) | round(1) }}
+            {{ ((float(states.sensor.findlay_room_temperature.state) + float(states.sensor.hallway_thermostat_temperature.state) + float(states.sensor.living_room_temperature.state) + float(states.sensor.dining_room_temperature.state)) / 4) | round(1) }}

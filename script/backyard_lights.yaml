@@ -1,0 +1,7 @@
+morning_livingroom_lights:
+  sequence:
+    - condition: state
+      entity_id: 'sun.sun'
+      state: 'below_horizon'
+    - service: scene.turn_on
+      entity_id: scene.backyard

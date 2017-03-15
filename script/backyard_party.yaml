@@ -1,0 +1,17 @@
+backyard_party:
+  sequence:
+    - service: script.backyard_lights
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.backyard
+        volume_level: '0.70'
+    - service: tts.google_say
+      data_template:
+        entity_id: media_player.backyard
+        message: "It's Party Time."
+        cache: false
+    - service: media_player.play_media
+      data_template:
+        entity_id: media_player.backyard
+        media_content_id: http://149.56.23.7:20254/stream
+        media_content_type: 'audio/mp3'

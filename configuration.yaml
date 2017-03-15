@@ -1,40 +1,27 @@
 homeassistant:
-  name: Home
+  name: -H-
   latitude: !secret latitude
   longitude: !secret longitude
   elevation: 264
   unit_system: metric
   time_zone: America/Toronto
-
   customize: !include_dir_merge_named customizations
-
+  packages: !include_dir_named packages
 group: !include groups.yaml
-
-# Enables the frontend
 frontend:
-
-# Frontend password and URL
 http:
    api_password: !secret api_password
    base_url: !secret base_url
-
-# Checks for available updates
 updater:
-
-# Discover some devices automatically
 discovery:
   ignore:
     - netgear_router
-
-# Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
-
-# Enables support for tracking state changes over time.
 history:
-
-# View all events in a logbook
 logbook:
-
+sun:
+tts:
+  platform: google
 #purge the home-assistant_v2.db otherwise system will crash.
 recorder:
  # db_url: postgres://@/homeassistant
@@ -46,13 +33,6 @@ logger:
   logs:
     homeassistant.components.switch.template: fatal
     homeassistant.components.switch.command_line: fatal
-
-# Track the sun
-sun:
-
-# Text to speech
-tts:
-  platform: google
 
 mqtt:
   broker: 192.168.1.250
@@ -79,17 +59,15 @@ zone: !include_dir_list zones/
 #  password: !secret zoneminder_pass
 
 # Controls
-input_select: !include input-selects.yaml
-input_slider: !include input-sliders.yaml
+#input_select: !include input-selects.yaml
+#input_slider: !include input-sliders.yaml
 input_boolean: !include input-boolean.yaml
-
 # Automation
 scene: !include_dir_list scenes
 script: !include_dir_merge_named script
 shell_command: !include shell_commands.yaml
 notify: !include notify.yaml
 automation: !include_dir_merge_list automation
-
 # PC On / OFF switches
 switch 2: !include switch_pc_livingroom.yaml
 switch 3: !include switch_pc_bedroom.yaml

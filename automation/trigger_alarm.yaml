@@ -1,7 +1,7 @@
 - alias: 'Trigger Alarm'
   trigger:
     - platform: state
-      entity_id: sensor.findlay_room_motion
+      entity_id: sensor.findlay_room_motion, sensor.living_room_motion, sensor.dining_room_motion
       to: 'True'
   condition:
     condition: or

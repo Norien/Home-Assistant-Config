@@ -1,3 +1,8 @@
 generate_graph: "/srv/homeassistant/bin/python -m hagraph -i /home/homeassistant/.homeassistant/configuration.yaml -o /home/homeassistant/.homeassistant/www/graph.svg"
 play_cartoons: 'bash /home/homeassistant/.homeassistant/shell/cartoons.sh'
 play_all_tv: 'bash /home/homeassistant/.homeassistant/shell/all.sh'
+
+#h801_off: 'sudo /home/homeassistant/.homeassistant/shell/h801_off.sh'
+
+#led_send_payload: >-
+#  sudo /usr/bin/sendip -p ipv4 -is 192.168.1.2 -p udp -us 30978 -ud 30977 -d {{ payload }} -v {{ host|default('192.168.1.249') }}

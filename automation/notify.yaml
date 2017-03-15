@@ -19,6 +19,30 @@
         message: >
           {{ trigger.to_state.attributes.friendly_name }} has left work.
 
+###### NOTIFY IF VACATION MODE IS ACTIVATED
+- alias: 'Notify if Vacation is On'
+  trigger:
+    - platform: state
+      entity_id: input_boolean.vacation
+      from: 'off'
+      to: 'on'
+  action:
+    - service: notify.justin
+      data:
+        message: 'Vacation Mode has been Activated'
+
+###### NOTIFY IF VACATION MODE IS DEACTIVATED
+- alias: 'Notify if Vacation is Off'
+  trigger:
+    - platform: state
+      entity_id: input_boolean.vacation
+      from: 'on'
+      to: 'off'
+  action:
+    - service: notify.justin
+      data:
+        message: 'Vacation Mode has been Deactivated'
+
 ###### NOTIFY IF UPDATE TO HOME ASSISTANT IS Available
 - alias: 'Update Available Notifications'
   trigger:

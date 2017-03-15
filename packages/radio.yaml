@@ -1,0 +1,76 @@
+################################################################
+## Packages / Radio
+################################################################
+#homeassistant:
+automation:
+  - alias: "Radio"
+    trigger:
+      - platform: state
+        entity_id: input_select.radio_station
+    action:
+      - service: media_player.play_media
+        data_template:
+          entity_id: >
+            {% if is_state('input_select.radio_station_location', 'Kitchen') %} media_player.kitchen
+            {% elif is_state('input_select.radio_station_location', 'Backyard') %} media_player.backyard
+            {% elif is_state('input_select.radio_station_location', 'All Zones') %} media_player.home_group
+            {% endif %}
+          media_content_id: >
+            {% if is_state('input_select.radio_station', 'Hot 108') %} http://jbmedia-edge1.cdnstream.com:80/hot108
+            {% elif is_state('input_select.radio_station', 'The Beat') %} http://live.leanstream.co/CKBTFM-MP3
+            {% elif is_state('input_select.radio_station', 'Alt Rock') %} http://149.56.23.7:20254/stream
+            {% elif is_state('input_select.radio_station', 'Energy 98') %} http://174.127.85.10:8800
+            {% elif is_state('input_select.radio_station', 'Hit Remixes') %} http://149.56.23.7:20252/stream
+            {% elif is_state('input_select.radio_station', 'Rock Radio') %} http://91.121.75.155:8000
+            {% elif is_state('input_select.radio_station', 'Play Radio') %} http://176.9.31.78:8222
+            {% elif is_state('input_select.radio_station', 'GD UP RADIO') %} http://50.7.70.66:8577
+            {% elif is_state('input_select.radio_station', 'Elium-Rock') %} http://listen.radionomy.com/Elium-Rock
+            {% endif %}
+          media_content_type: 'audio/mp3'
+  ###### VOLUME SLIDER CONTROL (LOCATION BASED)
+  - alias: 'Set Radio Volume'
+    trigger:
+      - platform: state
+        entity_id: input_slider.volume_radio
+    action:
+      - service: media_player.volume_set
+        data_template:
+          entity_id: >
+            {% if is_state("input_select.radio_station_location", "Kitchen") %} media_player.kitchen
+            {% elif is_state("input_select.radio_station_location", "Backyard") %} media_player.backyard
+            {% elif is_state("input_select.radio_station_location", "All Zones") %} media_player.home_group
+            {% endif %}
+          volume_level: '{{  states.input_slider.volume_radio.state  }}'
+
+input_select:
+  radio_station:
+    name: Radio Station
+    options:
+      - "-"
+      - Hot 108
+      - The Beat
+      - Alt Rock
+      - Rock Radio
+      - Energy 98
+      - Hit Remixes
+      - Play Radio
+      - GD UP RADIO
+      - Elium-Rock
+    initial: "-"
+    icon: mdi:radio
+  radio_station_location:
+    name: Radio Location
+    options:
+      - Kitchen
+      - Backyard
+      - All Zones
+    initial: "Kitchen"
+    icon: mdi:radio
+
+input_slider:
+  volume_radio:
+    name: Volume
+    icon: mdi:volume-high
+    min: 0
+    max: 1
+    step: 0.05

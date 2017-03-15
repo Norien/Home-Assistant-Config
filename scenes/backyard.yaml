@@ -1,0 +1,5 @@
+name: Backyard
+entities:
+  light.deck_lights:
+    state: on
+    rgb_color: [255,0,255]

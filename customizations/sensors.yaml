@@ -11,24 +11,40 @@ sensor.dark_sky_daily_summary:
   friendly_name: Daily Summary
 
 #philips hue motion sensors
+######Findlays Room
+sensor.findlay_room_motion:
+  icon: mdi:run
 sensor.findlay_room_lux:
   icon: mdi:theme-light-dark
 sensor.findlay_room_temperature:
   icon: mdi:thermometer
   friendly_name: Findlay's Room
-sensor.living_room_temperature:
-  icon: mdi:thermometer
-  friendly_name: Living Room
 sensor.findlay_room_motion_sensor_battery_level:
   friendly_name: Findlay's Room Sensor
   icon: mdi:battery
+######Living room
+sensor.living_room_motion:
+  icon: mdi:run
+sensor.living_room_lux:
+  icon: mdi:theme-light-dark
+sensor.living_room_temperature:
+  icon: mdi:thermometer
+  friendly_name: Living Room
 sensor.living_room_motion_sensor_battery_level:
   friendly_name: Living Room Sensor
   icon: mdi:battery
-sensor.findlay_room_motion:
+######Dining Room
+sensor.dining_room_motion:
   icon: mdi:run
-sensor.living_room_motion:
-  icon: mdi:run
+sensor.dining_room_lux:
+  icon: mdi:theme-light-dark
+sensor.dining_room_temperature:
+  icon: mdi:thermometer
+  friendly_name: Dining Room
+sensor.dining_room_motion_sensor_battery_level:
+  friendly_name: Dining Room Sensor
+  icon: mdi:battery
+
 
 #Philips Hue Switches
 sensor.living_room_dimmer_switch:
