@@ -1,9 +1,9 @@
-# Home Assistant Configuration by [@norien](https://gitter.im/norien) 
+# Home Assistant Configuration by [@Norien](https://gitter.im/norien) 
 [Home Assistant](https://home-assistant.io/) configuration files (YAMLs)
 
 This is my Home Assistant Configuration.
 
-I have Home Assistant running on a [DFI LANPARTY UT nF4](https://www.newegg.com/Product/Product.aspx?Item=N82E16813136152) with [AMD 64 3800X2](https://en.wikipedia.org/wiki/Athlon_64_X2).
+I have Home Assistant running on a [Custom Server](https://ca.pcpartpicker.com/list/pNPQxY)
 
 Software on the server:
 * [Ubuntu Server 16.10](https://wiki.ubuntu.com/YakketyYak/ReleaseNotes?_ga=1.71415184.261384355.1488387707)
