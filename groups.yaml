@@ -76,13 +76,14 @@ office:
   entities:
    - switch.copy4
    - switch.office_lightswitch
-   - switch.office_lightstrip
+   #- switch.office_lightstrip
    - input_select.led_scene
    - input_select.led_color
 backyard:
   name: Backyard
   entities:
     - light.deck_lights
+    - switch.patio_amplifier
     - script.backyard_party
 presence:
   name: Presence

@@ -16,6 +16,7 @@ Software on the server:
 * [Nest Thermostat - 2nd Gen](http://a.co/6BsUg19)
 * [Nest Protect - 1st Gen](http://a.co/5p5p97O)
 * [Echo Dot Gen 2](http://amzn.to/2hvCexj)
+* [Chromecast Audio](http://www.bestbuy.ca/en-CA/product/google-google-chromecast-audio-ga3a00153-a03-z01/10392132.aspx?icmp=googlestore_chromecastaudio_footer_shopnow&fromBrandStore=google)
 * [D-Link DCS 933L](http://a.co/aA0add8)
 * [Android IP Webcam](https://play.google.com/store/apps/details?id=com.pas.webcam)
 * [Philips Hue A19](http://a.co/i7IHr5e)

@@ -32,6 +32,6 @@ switch.bedroom_lamps_:
 switch.office_lightswitch:
   friendly_name: Office Light Switch
   icon: mdi:lightbulb
-switch.office_lightstrip:
-  friendly_name: Office Light Strip
-  icon: mdi:lightbulb
+switch.patio_amplifier:
+  friendly_name: Patio Amplifier
+  icon: mdi:amplifier
