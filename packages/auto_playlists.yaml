@@ -1,0 +1,64 @@
+################################################################
+## Packages / Alarm system
+################################################################
+homeassistant:
+  customize:
+    script.auto_cartoons:
+      friendly_name: Cartoons
+      icon: mdi:playlist-play
+    script.auto_all_tv:
+      friendly_name: All TV
+      icon: mdi:playlist-play
+
+script:
+###### LIVING ROOM KODI CARTOONS
+  auto_cartoons:
+    sequence:
+      - service: script.turn_on
+        data_template:
+          entity_id: >
+            {% if is_state('switch.copy', 'off') %} script.auto_cartoons_off
+            {% elif is_state('switch.copy', 'on') %} script.auto_cartoons_on
+            {% endif %}
+  auto_cartoons_off:
+    sequence:
+      #turn on computer/tv/reciever
+      - service: switch.turn_on
+        entity_id: switch.copy
+      #wait the time it takes to boot computer and load KODI
+      - delay:
+          minutes: 1
+          seconds: 30
+      # json curl to play all cartoons smart playlist
+      - service: shell_command.play_cartoons
+  auto_cartoons_on:
+    sequence:
+      - service: shell_command.play_cartoons
+
+###### LIVING ROOM ALL TV
+  auto_all_tv:
+    sequence:
+      - service: script.turn_on
+        data_template:
+          entity_id: >
+            {% if is_state('switch.copy', 'off') %} script.all_tv_off
+            {% elif is_state('switch.copy', 'on') %} script.all_tv_on
+            {% endif %}
+  all_tv_off:
+    sequence:
+      #turn on computer/tv/reciever
+      - service: switch.turn_on
+        entity_id: switch.copy
+      #wait the time it takes to boot computer and load KODI
+      - delay:
+          minutes: 1
+          seconds: 30
+      # json curl to play all cartoons smart playlist
+      - service: shell_command.play_all_tv
+  all_tv_on:
+    sequence:
+      - service: shell_command.play_all_tv
+
+shell_command:
+  play_cartoons: 'bash /home/homeassistant/.homeassistant/shell/cartoons.sh'
+  play_all_tv: 'bash /home/homeassistant/.homeassistant/shell/all.sh'

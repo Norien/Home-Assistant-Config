@@ -17,3 +17,11 @@ backyard_party:
         entity_id: media_player.backyard
         media_content_id: http://149.56.23.7:20254/stream
         media_content_type: 'audio/mp3'
+
+backyard_lights:
+  sequence:
+    - condition: state
+      entity_id: 'sun.sun'
+      state: 'below_horizon'
+    - service: scene.turn_on
+      entity_id: scene.backyard

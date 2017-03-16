@@ -1,9 +1,3 @@
-script.play_cartoons:
-  friendly_name: Cartoons
-  icon: mdi:playlist-play
-script.play_all_tv:
-  friendly_name: All TV
-  icon: mdi:playlist-play
 script.good_morning:
   friendly_name: Good Morning
   icon: mdi:emoticon-poop

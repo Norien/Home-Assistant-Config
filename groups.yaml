@@ -170,6 +170,7 @@ sensor_battery_levels:
   name: Battery Levels
   entities:
    - script.refresh_devices
+   - sensor.driveway_battery_level
    - sensor.findlay_room_motion_sensor_battery_level
    - sensor.living_room_motion_sensor_battery_level
    - sensor.dining_room_motion_sensor_battery_level
@@ -192,8 +193,8 @@ playlist:
     - input_select.radio_station_location
     - input_select.radio_station
     - input_slider.volume_radio
-    - script.play_cartoons
-    - script.play_all_tv
+    - script.auto_cartoons
+    - script.auto_all_tv
 
 #sensor_homeserver:
 #  name: HomeServer

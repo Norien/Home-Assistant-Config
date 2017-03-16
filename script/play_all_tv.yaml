@@ -1,3 +1,0 @@
-play_all_tv:
-  sequence:
-    - service: shell_command.play_all_tv

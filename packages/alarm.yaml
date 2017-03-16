@@ -1,0 +1,52 @@
+################################################################
+## Packages / Alarm system
+################################################################
+homeassistant:
+  customize:
+    scene.alarm:
+      friendly_name: 'Alarm'
+      icon: mdi:flashlight-off
+
+automation:
+  - alias: 'Trigger Alarm'
+    trigger:
+      - platform: state
+        entity_id: sensor.findlay_room_motion, sensor.living_room_motion, sensor.dining_room_motion
+        to: 'True'
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: 'input_boolean.away'
+          state: 'on'
+        - condition: state
+          entity_id: 'input_boolean.vacation'
+          state: 'on'
+    action:
+      - service: script.activate_alarm
+
+script:
+  activate_alarm:
+    sequence:
+      - service: scene.turn_on
+        entity_id: scene.alarm
+  # OFFICE LIGHT STRIP - RED
+      - service: shell_command.led_send_payload
+        data:
+          rgb_hex: 'ff0000'
+          host: !secret H801WIFI_url
+
+      - service: notify.justin
+        data:
+          message: 'An alarm has been Triggered!'
+
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.kitchen
+          volume_level: '1'
+
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.kitchen
+          message: "INTRUDER ALERT.THE POLICE HAVE BEEN CALLED AND ARE ON THE WAY"
+          cache: false
