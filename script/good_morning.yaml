@@ -11,3 +11,25 @@ good_morning:
         entity_id: media_player.kitchen
         message: "Good Morning, the weather looks like {{states('sensor.dark_sky_daily_summary')}}."
         cache: false
+
+morning_livingroom_lights:
+  sequence:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: 'sun.sun'
+          state: 'below_horizon'
+        - condition: state
+          entity_id: 'sensor.dark_sky_summary'
+          state: 'Cloudy'
+        - condition: state
+          entity_id: 'sensor.dark_sky_summary'
+          state: 'Mostly Cloudy'
+        - condition: state
+          entity_id: 'sensor.dark_sky_summary'
+          state: 'Overcast'
+        - condition: state
+          entity_id: 'sensor.dark_sky_summary'
+          state: 'Breezy and Overcast'
+    - service: scene.turn_on
+      entity_id: scene.lr_concentrate

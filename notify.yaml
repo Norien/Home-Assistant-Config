@@ -1,3 +1,0 @@
-- platform: pushbullet
-  name: justin
-  api_key: !secret pushbullet_api_key

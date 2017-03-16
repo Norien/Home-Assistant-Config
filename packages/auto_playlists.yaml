@@ -11,7 +11,7 @@ homeassistant:
       icon: mdi:playlist-play
 
 script:
-###### LIVING ROOM KODI CARTOONS
+###### LIVING ROOM CARTOONS
   auto_cartoons:
     sequence:
       - service: script.turn_on
