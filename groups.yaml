@@ -179,14 +179,6 @@ sensor_battery_levels:
    - sensor.kitchen_nest_protect_battery_health
    - sensor.justins_g5_battery
    - sensor.nicoles_s7_battery
-media_player_all:
-  name: Media Players
-  entities:
-    - media_player.kodi_livingroom
-    - media_player.kodi_bedroom
-    - media_player.kitchen
-    - media_player.backyard
-    - media_player.home_group
 playlist:
   name: Playlists & Radio
   entities:
@@ -195,6 +187,15 @@ playlist:
     - input_slider.volume_radio
     - script.auto_cartoons
     - script.auto_all_tv
+    - script.auto_pawpatrol
+media_player_all:
+  name: Media Players
+  entities:
+    - media_player.kodi_livingroom
+    - media_player.kodi_bedroom
+    - media_player.kitchen
+    - media_player.backyard
+    - media_player.home_group
 
 #sensor_homeserver:
 #  name: HomeServer

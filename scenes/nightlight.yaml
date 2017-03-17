@@ -1,0 +1,18 @@
+name: Nightlight
+entities:
+  light.hue_color_lamp_1:
+    state: on
+    brightness: 1
+    color_temp: 450
+  light.hue_color_lamp_2:
+    state: on
+    brightness: 1
+    color_temp: 450
+  light.hue_color_lamp_3:
+    state: on
+    brightness: 1
+    color_temp: 450
+  light.kitchen_sink:
+    state: on
+    brightness: 1
+    color_temp: 450

@@ -1,0 +1,33 @@
+################################################################
+## Packages / Night Light
+################################################################
+homeassistant:
+  customize:
+    scene.nightlight:
+      friendly_name: 'Night Light'
+      icon: mdi:brightness-2
+
+automation:
+  - alias: 'Night Light'
+    trigger:
+      - platform: state
+        entity_id: sensor.living_room_motion, sensor.dining_room_motion
+        to: 'True'
+    condition:
+      - condition: state
+        entity_id: 'sun.sun'
+        state: 'below_horizon'
+      - condition: time
+        after: '11:59:00'
+    action:
+      - service: script.nightlight
+
+script:
+  nightlight:
+    sequence:
+     - service: scene.turn_on
+       entity_id: scene.nightlight
+     - delay:
+          minutes: 10
+     - service: scene.turn_off
+       entity_id: scene.nightlight

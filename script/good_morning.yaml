@@ -1,6 +1,8 @@
 good_morning:
   sequence:
     - service: script.morning_livingroom_lights
+    - service: switch.turn_off
+      entity_id: switch.bedroom_fan
     - service: script.auto_cartoons
     - service: media_player.volume_set
       data:

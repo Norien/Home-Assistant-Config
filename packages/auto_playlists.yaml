@@ -9,6 +9,9 @@ homeassistant:
     script.auto_all_tv:
       friendly_name: All TV
       icon: mdi:playlist-play
+    script.auto_pawpatrol:
+      friendly_name: Paw Partol
+      icon: mdi:playlist-play
 
 script:
 ###### LIVING ROOM CARTOONS
@@ -59,6 +62,31 @@ script:
     sequence:
       - service: shell_command.play_all_tv
 
+###### LIVINGROOM PAW PATROLL
+  auto_pawpatrol:
+    sequence:
+      - service: script.turn_on
+        data_template:
+          entity_id: >
+            {% if is_state('switch.copy', 'off') %} script.auto_pawpatrol_off
+            {% elif is_state('switch.copy', 'on') %} script.auto_pawpatrol_on
+            {% endif %}
+  auto_pawpatrol_off:
+    sequence:
+      #turn on computer/tv/reciever
+      - service: switch.turn_on
+        entity_id: switch.copy
+      #wait the time it takes to boot computer and load KODI
+      - delay:
+          minutes: 1
+          seconds: 30
+      # json curl to play all cartoons smart playlist
+      - service: shell_command.play_pawpatrol
+  auto_pawpatrol_on:
+    sequence:
+      - service: shell_command.play_pawpatrol
+
 shell_command:
   play_cartoons: 'bash /home/homeassistant/.homeassistant/shell/cartoons.sh'
   play_all_tv: 'bash /home/homeassistant/.homeassistant/shell/all.sh'
+  play_pawpatrol: 'bash /home/homeassistant/.homeassistant/shell/pawpatrol.sh'
