@@ -25,9 +25,31 @@ automation:
 script:
   nightlight:
     sequence:
-     - service: scene.turn_on
-       entity_id: scene.nightlight
+     - service: light.turn_on
+       data:
+         entities:
+           light.hue_color_lamp_1:
+             brightness: 1
+             color_temp: 450
+           light.hue_color_lamp_2:
+             brightness: 1
+             color_temp: 450
+           light.hue_color_lamp_3:
+             brightness: 1
+             color_temp: 450
+           light.kitchen_sink:
+             brightness: 1
+             color_temp: 450
      - delay:
           minutes: 10
-     - service: scene.turn_off
-       entity_id: scene.nightlight
+     - service: light.turn_off
+       data:
+         entities:
+           light.hue_color_lamp_1:
+             state: off
+           light.hue_color_lamp_2:
+             state: off
+           light.hue_color_lamp_3:
+             state: off
+           light.kitchen_sink:
+             state: off
