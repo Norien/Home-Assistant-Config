@@ -52,3 +52,15 @@
     - service: notify.justin
       data:
         message: 'Update for Home Assistant is available.'
+
+###### NOTIFY IF MOLD SENSOR IS GREATER OR EQUAL TO 70%
+- alias: 'Notify if Mold sensor is too high'
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.mold_indicator
+      above: 69
+  action:
+    - service: notify.justin
+      data_template:
+        title: "Possible Mold Growth"
+        message: "It's possible to have mold growth because the mold indicator is {{ states.sensor.mold_indicator }}"

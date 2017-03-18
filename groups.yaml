@@ -155,6 +155,7 @@ all_humidity:
   entities:
     - sensor.dark_sky_humidity
     - sensor.hallway_thermostat_humidity
+    - sensor.mold_indicator
 all_cameras:
   name: Cameras
   entities:

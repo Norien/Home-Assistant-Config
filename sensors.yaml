@@ -1,3 +1,9 @@
+- platform: mold_indicator
+  indoor_temp_sensor: sensor.average_house_temp
+  indoor_humidity_sensor: sensor.hallway_thermostat_humidity
+  outdoor_temp_sensor: sensor.dark_sky_apparent_temperature
+  calibration_factor: 1.2
+
 #####FINDLAYS ROOM SENSOR & DIMMER
 - platform: rest
   resource: !secret finn_room_lux
