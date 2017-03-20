@@ -1,7 +1,0 @@
-- alias: "Owntracks Refresh"
-  trigger:
-    - platform: time
-      minutes: '/5'
-      seconds: 0
-  action:
-    - service: script.refresh_devices

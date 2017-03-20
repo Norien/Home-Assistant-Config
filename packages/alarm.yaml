@@ -28,23 +28,27 @@ automation:
 script:
   activate_alarm:
     sequence:
-      - service: scene.turn_on
-        entity_id: scene.alarm
+      - service: light.turn_on
+        data:
+          entity_id:
+            - light.hue_color_lamp_1:
+            - light.hue_color_lamp_2:
+            - light.hue_color_lamp_3:
+            - light.kitchen_sink:
+          brightness: 100
+          rgb_color: [255,0,0]
   # OFFICE LIGHT STRIP - RED
       - service: shell_command.led_send_payload
         data:
           rgb_hex: 'ff0000'
           host: !secret H801WIFI_url
-
       - service: notify.justin
         data:
           message: 'An alarm has been Triggered!'
-
       - service: media_player.volume_set
         data:
           entity_id: media_player.kitchen
           volume_level: '1'
-
       - service: tts.google_say
         data_template:
           entity_id: media_player.kitchen

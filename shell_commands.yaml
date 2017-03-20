@@ -1,1 +1,0 @@
-generate_graph: "/srv/homeassistant/bin/python -m hagraph -i /home/homeassistant/.homeassistant/configuration.yaml -o /home/homeassistant/.homeassistant/www/graph.svg"

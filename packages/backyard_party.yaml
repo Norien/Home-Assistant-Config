@@ -1,0 +1,41 @@
+################################################################
+## Packages / BackYard Party Time
+################################################################
+homeassistant:
+  customize:
+    script.backyard_party:
+      friendly_name: Party Time
+      icon: mdi:pizza
+
+script:
+  backyard_party:
+    sequence:
+      - service: script.backyard_lights
+      - service: switch.turn_on
+        entity_id: switch.patio_amplifier
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.backyard
+          volume_level: '0.60'
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.backyard
+          message: "It's Party Time."
+          cache: false
+      - service: media_player.play_media
+        data_template:
+          entity_id: media_player.backyard
+          media_content_id: http://149.56.23.7:20254/stream
+          media_content_type: 'audio/mp3'
+
+  backyard_lights:
+    sequence:
+      - condition: state
+        entity_id: 'sun.sun'
+        state: 'below_horizon'
+      - service: light.turn_on
+        data:
+          entity_id:
+            - light.deck_lights:
+          brightness: 100
+          rgb_color: [255,0,255]

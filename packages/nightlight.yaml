@@ -3,9 +3,9 @@
 ################################################################
 homeassistant:
   customize:
-    scene.nightlight:
+    automation.night_light:
       friendly_name: 'Night Light'
-      icon: mdi:brightness-2
+      icon: mdi:brightness-4
 
 automation:
   - alias: 'Night Light'
@@ -24,7 +24,8 @@ automation:
         entity_id: 'input_boolean.away'
         state: 'off'
       - condition: time
-        after: '22:00:00'
+        after: '20:00:00'
+        before: '08:00:00'
       - condition: state
         entity_id: 'light.living_room'
         state: 'off'
@@ -48,7 +49,7 @@ script:
              brightness: 1
              color_temp: 450
      - delay:
-          minutes: 8
+          minutes: 6
      - service: light.turn_off
        data:
          entity_id:

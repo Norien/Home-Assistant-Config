@@ -1,5 +1,15 @@
-good_morning:
-  sequence:
+################################################################
+## Packages / Good Morning
+################################################################
+homeassistant:
+  customize:
+    script.good_morning:
+      friendly_name: Good Morning
+      icon: mdi:emoticon-poop
+
+script:
+  good_morning:
+    sequence:
     - service: script.morning_livingroom_lights
     - service: switch.turn_off
       entity_id: switch.bedroom_fan
@@ -14,8 +24,8 @@ good_morning:
         message: "Good Morning, the weather looks like {{states('sensor.dark_sky_daily_summary')}}."
         cache: false
 
-morning_livingroom_lights:
-  sequence:
+  morning_livingroom_lights:
+    sequence:
     - condition: or
       conditions:
         - condition: state
@@ -33,5 +43,13 @@ morning_livingroom_lights:
         - condition: state
           entity_id: 'sensor.dark_sky_summary'
           state: 'Breezy and Overcast'
-    - service: scene.turn_on
-      entity_id: scene.lr_concentrate
+
+    - service: light.turn_on
+      data:
+        entity_id:
+          - light.hue_color_lamp_1:
+          - light.hue_color_lamp_2:
+          - light.hue_color_lamp_3:
+          - light.kitchen_sink:
+        brightness: 100
+        color_temp: 230

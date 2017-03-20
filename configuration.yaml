@@ -1,3 +1,4 @@
+###### Configuration
 homeassistant:
   name: -H-
   latitude: !secret latitude
@@ -9,58 +10,50 @@ homeassistant:
   packages: !include_dir_named packages
 group: !include groups.yaml
 frontend:
-http:
-   api_password: !secret api_password
-   base_url: !secret base_url
-discovery:
-  ignore:
-    - netgear_router
 conversation:
 updater:
 history:
 logbook:
 sun:
-tts:
-  platform: google
-#purge the home-assistant_v2.db otherwise system will crash.
-recorder:
- # db_url: postgres://@/homeassistant
-  purge_days: 3
 
-# Make some errors go away!
+# Single Line Includes
+scene: !include_dir_list scenes
+sensor: !include sensors.yaml
+zone: !include_dir_list zones
+
+#Components
 logger:
   default: error
   logs:
     homeassistant.components.switch.template: fatal
     homeassistant.components.switch.command_line: fatal
 
-#zoneminder:
-#  host: localhost
-#  path: /zm/
-#  path_zms: /zm/cgi-bin/nph-zms
-#  username: !secret zoneminder_user
-#  password: !secret zoneminder_pass
+http:
+   api_password: !secret api_password
+   base_url: !secret base_url
 
-# Single Line Includes
-input_boolean: !include input-boolean.yaml
-scene: !include_dir_list scenes
-script: !include_dir_merge_named script
-shell_command: !include shell_commands.yaml
-automation: !include_dir_merge_list automation
-sensor: !include sensors.yaml
-media_player: !include media_player.yaml
-camera: !include camera.yaml
-wemo: !include wemo.yaml
-device_tracker: !include device_tracker.yaml
-zone: !include_dir_list zones
+discovery:
+  ignore:
+    - netgear_router
 
-#Components
+tts:
+  platform: google
+
+recorder:
+  purge_days: 3
+
 android_ip_webcam:
 - host: !secret android_ip_webcam_url
   name: Driveway
   port: 8036
   username: !secret andriod_camera_username
   password: !secret andriod_camera_password
+
+camera:
+  - platform: generic
+    still_image_url: !secret dlink_camera_link
+    username: !secret dlink_camera_username
+    password: !secret dlink_camera_password
 
 nest:
   client_id: !secret nest_client_id
@@ -83,6 +76,38 @@ mqtt:
   username: !secret mqtt_user
   password: !secret mqtt_password
 
+device_tracker:
+  - platform: netgear
+    username: !secret netgear_username
+    password: !secret netgear_password
+  - platform: owntracks
+
+wemo:
+  static:
+    - 192.168.1.200
+    - 192.168.1.202
+    - 192.168.1.6
+    - 192.168.1.204
+    - 192.168.1.205
+
+media_player:
+  - platform: kodi
+    host: !secret kodi_livingroom_ip
+    port: !secret kodi_livingroom_port
+    username: !secret kodi_livingroom_username
+    password: !secret kodi_livingroom_password
+    turn_off_action: shutdown
+    name: kodi_livingroom
+  - platform: cast
+    host: 192.168.1.230
+  - platform: cast
+    host: 192.168.1.231
+  - platform: kodi
+    host: !secret kodi_bedroom_ip
+    port: !secret kodi_bedroom_port
+    name: kodi_bedroom
+    turn_off_action: hibernate
+
 # PC On / OFF switches
 switch 2: !include switch_pc_livingroom.yaml
 switch 3: !include switch_pc_bedroom.yaml
@@ -90,10 +115,6 @@ switch 4: !include switch_pc_office.yaml
 
 #Side Panels
 panel_iframe:
-  graph:
-    title: Graph
-    icon: mdi:vector-polyline
-    url: !secret graph_url
   zoneminder:
     title: Zoneminder
     icon: mdi:camera

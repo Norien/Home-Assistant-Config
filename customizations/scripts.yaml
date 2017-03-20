@@ -1,6 +1,0 @@
-script.good_morning:
-  friendly_name: Good Morning
-  icon: mdi:emoticon-poop
-script.backyard_party:
-  friendly_name: Party Time
-  icon: mdi:pizza

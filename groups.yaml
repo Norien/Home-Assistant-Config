@@ -9,6 +9,7 @@ default_view:
     - group.findlays_room
     - group.office
     - group.backyard
+    - group.automation
 sensor_view:
   name: Sensors
   view: yes
@@ -46,16 +47,11 @@ livingroom:
   entities:
    - switch.copy
    - light.living_room
-  # - input_select.scene_lr
-  # - scene.lr_off
    - scene.lr_concentrate
    - scene.lr_read
    - scene.lr_relax
    - scene.lr_dimmed
    - scene.lr_nightlight
-   #- scene.lr_alarm
-   #- media_player.kodi_livingroom
-   - script.good_morning
 bedroom:
   name: Master Bedroom
   entities:
@@ -85,6 +81,14 @@ backyard:
     - light.deck_lights
     - switch.patio_amplifier
     - script.backyard_party
+automation:
+  name: Automations
+  entities:
+    - automation.night_light
+    - script.good_morning
+    - script.auto_all_tv
+    - script.auto_cartoons
+    - script.auto_pawpatrol
 presence:
   name: Presence
   entities:
@@ -181,14 +185,11 @@ sensor_battery_levels:
    - sensor.justins_g5_battery
    - sensor.nicoles_s7_battery
 playlist:
-  name: Playlists & Radio
+  name: Radio
   entities:
     - input_select.radio_station_location
     - input_select.radio_station
     - input_slider.volume_radio
-    - script.auto_cartoons
-    - script.auto_all_tv
-    - script.auto_pawpatrol
 media_player_all:
   name: Media Players
   entities:

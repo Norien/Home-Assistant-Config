@@ -7,7 +7,6 @@ binary_sensor.hallway_thermostat_fan:
   icon: mdi:fan
 sensor.hallway_thermostat_humidity:
   friendly_name: Indoor Humidity
-  #entity_picture: /local/nest.png
   icon: mdi:water-percent
 sensor.hallway_thermostat_temperature:
   friendly_name: Hallway

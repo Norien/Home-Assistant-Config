@@ -1,0 +1,29 @@
+################################################################
+## Packages / OwnTracks Auto Refresh
+################################################################
+homeassistant:
+  customize:
+    script.refresh_devices:
+      friendly_name: Refresh Devices
+      icon: mdi:account-convert
+
+automation:
+  - alias: "Owntracks Refresh"
+    trigger:
+      - platform: time
+        minutes: '/5'
+        seconds: 0
+    action:
+      - service: script.refresh_devices
+
+script:
+  refresh_devices:
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: owntracks/bigdrakar/justin/cmd
+          payload: '{"_type":"cmd","action":"reportLocation"}"'
+      - service: mqtt.publish
+        data:
+          topic: owntracks/bigdrakar/nicole/cmd
+          payload: '{"_type":"cmd","action":"reportLocation"}"'

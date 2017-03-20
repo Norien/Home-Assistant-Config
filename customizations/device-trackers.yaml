@@ -1,8 +1,0 @@
-device_tracker.findlaysipad:
-  hidden: true
-device_tracker.nicolesiphone:
-  hidden: true
-device_tracker.bigdrakar_justin:
-  friendly_name: Justin
-device_tracker.bigdrakar_nicole:
-  friendly_name: Nicole

@@ -1,0 +1,91 @@
+################################################################
+## Packages / Presence
+################################################################
+homeassistant:
+  customize:
+    device_tracker.bigdrakar_justin:
+      friendly_name: Justin Owntracks
+    device_tracker.bigdrakar_nicole:
+      friendly_name: Nicole Owntracks
+    device_tracker.android262071b676d4d855:
+      friendly_name: Justin Netgear
+    device_tracker.androidc3a6fa8dea348d9e:
+      friendly_name: Nicole Netgear
+
+automation:
+############# AWAY
+  - alias: Set Away Mode on
+    condition:
+    - condition: and
+      conditions:
+        - condition: state
+          entity_id: 'device_tracker.bigdrakar_justin'
+          state: 'not_home'
+        - condition: state
+          entity_id: 'device_tracker.bigdrakar_nicole'
+          state: 'not_home'
+        - condition: state
+          entity_id: 'input_boolean.guest'
+          state: 'off'
+        - condition: state
+          entity_id: 'input_boolean.away'
+          state: 'off'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.bigdrakar_justin, device_tracker.bigdrakar_nicole
+        to: 'not_home'
+    action:
+      - service: homeassistant.turn_on
+        entity_id: input_boolean.away
+      - service: notify.justin
+        data:
+          message: 'Nobody is home, switching to away mode! The alarm is armed'
+
+############# HOME
+  - alias: 'Set Away Mode off'
+    condition:
+    - condition: state
+      entity_id: input_boolean.away
+      state: 'on'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: 'device_tracker.bigdrakar_justin'
+          state: 'home'
+        - condition: state
+          entity_id: 'device_tracker.bigdrakar_nicole'
+          state: 'home'
+        - condition: state
+          entity_id: 'input_boolean.guest'
+          state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.bigdrakar_justin, device_tracker.bigdrakar_nicole
+        to: 'home'
+    action:
+      - service: homeassistant.turn_off
+        entity_id: input_boolean.away
+      - service: notify.justin
+        data:
+          message: 'Alarm is disarmed, Welcome Home'
+
+###### MODES / PEOPLE
+input_boolean:
+  guest:
+    name: Guest
+    icon: mdi:account-box
+    initial: off
+  vacation:
+    name: Vacation
+    icon: mdi:sunglasses
+    initial: off
+  away:
+    name: Away
+    icon: mdi:account-off
+    initial: off
+  justin:
+    name: Justin
+    initial: off
+  nicole:
+    name: Nicole
+    initial: off
