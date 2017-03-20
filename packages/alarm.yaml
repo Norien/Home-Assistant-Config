@@ -28,15 +28,10 @@ automation:
 script:
   activate_alarm:
     sequence:
-      - service: light.turn_on
+      - service: light.hue_activate_scene
         data:
-          entity_id:
-            - light.hue_color_lamp_1:
-            - light.hue_color_lamp_2:
-            - light.hue_color_lamp_3:
-            - light.kitchen_sink:
-          brightness: 100
-          rgb_color: [255,0,0]
+          group_name: "Living Room"
+          scene_name: "Alarm"
   # OFFICE LIGHT STRIP - RED
       - service: shell_command.led_send_payload
         data:

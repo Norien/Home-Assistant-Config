@@ -13,6 +13,7 @@ Software on the server:
 * [Mosquitto](https://mosquitto.org/)
 
 **Devices in Use:**
+* [Netgear R6300](http://a.co/hKI7tOr)
 * [Nest Thermostat - 2nd Gen](http://a.co/6BsUg19)
 * [Nest Protect - 1st Gen](http://a.co/5p5p97O)
 * [Echo Dot Gen 2](http://amzn.to/2hvCexj)

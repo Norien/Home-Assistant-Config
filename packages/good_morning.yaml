@@ -44,12 +44,4 @@ script:
           entity_id: 'sensor.dark_sky_summary'
           state: 'Breezy and Overcast'
 
-    - service: light.turn_on
-      data:
-        entity_id:
-          - light.hue_color_lamp_1:
-          - light.hue_color_lamp_2:
-          - light.hue_color_lamp_3:
-          - light.kitchen_sink:
-        brightness: 100
-        color_temp: 230
+    - service: script.lr_concentrate

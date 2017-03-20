@@ -40,20 +40,17 @@ automation:
 script:
   nightlight:
     sequence:
-     - service: light.turn_on
-       data:
-         entity_id:
-           light.hue_color_lamp_1:
-           light.hue_color_lamp_3:
-           light.kitchen_sink:
-             brightness: 1
-             color_temp: 450
-     - delay:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "nightlight"
+      - delay:
           minutes: 6
-     - service: light.turn_off
-       data:
-         entity_id:
-           light.hue_color_lamp_1:
-           light.hue_color_lamp_3:
-           light.kitchen_sink:
-             state: off
+      - service: light.turn_off
+        data:
+          entity_id:
+            light.hue_color_lamp_1:
+            light.hue_color_lamp_2:
+            light.hue_color_lamp_3:
+            light.kitchen_sink:
+              state: off

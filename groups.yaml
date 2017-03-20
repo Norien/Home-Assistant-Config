@@ -47,11 +47,12 @@ livingroom:
   entities:
    - switch.copy
    - light.living_room
-   - scene.lr_concentrate
-   - scene.lr_read
-   - scene.lr_relax
-   - scene.lr_dimmed
-   - scene.lr_nightlight
+   - script.lr_concentrate
+   - script.lr_read
+   - script.lr_relax
+   - script.lr_dimmed
+   - script.lr_nightlight
+   - script.lr_springblossom
 bedroom:
   name: Master Bedroom
   entities:
