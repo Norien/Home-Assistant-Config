@@ -16,7 +16,7 @@ script:
       - service: media_player.volume_set
         data:
           entity_id: media_player.backyard
-          volume_level: '0.60'
+          volume_level: '0.30'
       - service: tts.google_say
         data_template:
           entity_id: media_player.backyard
@@ -36,6 +36,6 @@ script:
       - service: light.turn_on
         data:
           entity_id:
-            - light.deck_lights:
-          brightness: 100
+            light.deck_lights:
+          brightness: 120
           rgb_color: [255,0,255]
