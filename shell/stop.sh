@@ -1,0 +1,1 @@
+curl --header 'Content-Type: application/json' --data-binary '{ "jsonrpc":"2.0", "method":"Player.Stop","params":{ "playerid":1},"id":1}' 'http://192.168.1.76:8099/jsonrpc'

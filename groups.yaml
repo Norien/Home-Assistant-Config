@@ -73,7 +73,7 @@ office:
   entities:
    - switch.copy4
    - switch.office_lightswitch
-   #- switch.office_lightstrip
+   - switch.office_led_strip
    - input_select.led_scene
    - input_select.led_color
 backyard:

@@ -85,8 +85,24 @@ script:
   auto_pawpatrol_on:
     sequence:
       - service: shell_command.play_pawpatrol
+  play:
+    sequence:
+      - service: shell_command.play
+  stop:
+    sequence:
+      - service: shell_command.stop
+  next:
+    sequence:
+      - service: shell_command.next
+  pause:
+    sequence:
+      - service: shell_command.pause
 
 shell_command:
   play_cartoons: 'bash /home/homeassistant/.homeassistant/shell/cartoons.sh'
   play_all_tv: 'bash /home/homeassistant/.homeassistant/shell/all.sh'
   play_pawpatrol: 'bash /home/homeassistant/.homeassistant/shell/pawpatrol.sh'
+  play: 'bash /home/homeassistant/.homeassistant/shell/play.sh'
+  stop: 'bash /home/homeassistant/.homeassistant/shell/stop.sh'
+  next: 'bash /home/homeassistant/.homeassistant/shell/next.sh'
+  pause: 'bash /home/homeassistant/.homeassistant/shell/pause.sh'

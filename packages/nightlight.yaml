@@ -43,7 +43,7 @@ script:
       - service: light.hue_activate_scene
         data:
           group_name: "Living Room"
-          scene_name: "nightlight"
+          scene_name: "Nightlight"
       - delay:
           minutes: 6
       - service: light.turn_off

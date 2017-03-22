@@ -22,7 +22,7 @@ automation:
             {% elif is_state('input_select.radio_station', 'Hit Remixes') %} http://149.56.23.7:20252/stream
             {% elif is_state('input_select.radio_station', 'Rock Radio') %} http://91.121.75.155:8000
             {% elif is_state('input_select.radio_station', 'Play Radio') %} http://176.9.31.78:8222
-            {% elif is_state('input_select.radio_station', 'GD UP RADIO') %} http://50.7.70.66:8577
+            {% elif is_state('input_select.radio_station', '90s Hits') %} http://rfcmedia.streamguys1.com/90hits.mp3
             {% elif is_state('input_select.radio_station', 'Elium-Rock') %} http://listen.radionomy.com/Elium-Rock
             {% endif %}
           media_content_type: 'audio/mp3'
@@ -53,7 +53,7 @@ input_select:
       - Energy 98
       - Hit Remixes
       - Play Radio
-      - GD UP RADIO
+      - 90s Hits
       - Elium-Rock
     initial: "-"
     icon: mdi:radio

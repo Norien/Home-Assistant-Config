@@ -52,6 +52,10 @@ homeassistant:
     script.led_set_scene:
       friendly_name: "LED Set Scene"
 
+    switch.office_led_strip:
+      friendly_name: "Office Led Strip"
+      icon: mdi:led-outline
+
 automation:
   - alias: select_led_color
     trigger:
@@ -140,6 +144,18 @@ input_select:
       - "Monochrome Transition"
       - "Mixed Color Transistion"
       - "Seven Color Transistion"
+
+switch:
+  - platform: template
+    switches:
+      office_led_strip:
+        value_template: "{{ not is_state('input_select.led_color', 'Off') }}"
+        turn_on:
+          service: script.turn_on
+          entity_id: script.led_power_on
+        turn_off:
+          service: script.turn_on
+          entity_id: script.led_power_off
 
 script:
   led_power_on:
