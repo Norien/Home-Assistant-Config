@@ -1,7 +1,7 @@
 #Nest
 climate.hallway:
   friendly_name: Nest Thermostat
-  entity_picture: /local/nest.png
+  entity_picture: !secret nest
 binary_sensor.hallway_thermostat_fan:
   friendly_name: Thermostat Fan
   icon: mdi:fan
@@ -18,6 +18,6 @@ sensor.hallway_thermostat_hvac_state:
 sensor.hallway_thermostat_operation_mode:
   friendly_name: Thermostat Operation Mode
 sensor.kitchen_nest_protect_co_status:
-  entity_picture: /local/nestprotect.png
+  entity_picture: !secret nestprotect
 sensor.kitchen_nest_protect_smoke_status:
-  entity_picture: /local/nestprotect.png
+  entity_picture: !secret nestprotect

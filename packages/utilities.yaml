@@ -1,0 +1,14 @@
+################################################################
+## Packages / Utilities
+################################################################
+homeassistant:
+  customize:
+    script.update_ha:
+      friendly_name: Update Home Assistant
+      icon: mdi:package-variant
+script:
+  update_ha:
+    sequence:
+      - service: shell_command.update_ha
+shell_command:
+  update_ha: 'nohup home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'

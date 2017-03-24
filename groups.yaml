@@ -40,7 +40,8 @@ misc_view:
   icon: mdi:power
   entities:
     - group.sensor_battery_levels
-    - group.sensor_homeserver
+    #- group.sensor_homeserver
+    - group.utilities
 #Groups------------------------------------------------------------------
 livingroom:
   name: Living Room
@@ -199,7 +200,10 @@ media_player_all:
     - media_player.kitchen
     - media_player.backyard
     - media_player.home_group
-
+utilities:
+  name: Utilities
+  entities:
+    - script.update_ha
 #sensor_homeserver:
 #  name: HomeServer
 #  entities:

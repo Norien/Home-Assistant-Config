@@ -15,6 +15,8 @@ updater:
 history:
 logbook:
 sun:
+discovery:
+
 emulated_hue:
   #host_ip: 192.168.1.129
   #expose_by_default: false
@@ -39,10 +41,6 @@ logger:
 http:
    api_password: !secret api_password
    base_url: !secret base_url
-
-discovery:
-  ignore:
-    - netgear_router
 
 tts:
   platform: google
@@ -85,9 +83,6 @@ mqtt:
   password: !secret mqtt_password
 
 device_tracker:
-  - platform: netgear
-    username: !secret netgear_username
-    password: !secret netgear_password
   - platform: owntracks
 
 wemo:

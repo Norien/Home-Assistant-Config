@@ -1,0 +1,5 @@
+su: must be run from a terminal
+home/homeassistant/.homeassistant/shell/update_ha.sh: 2: home/homeassistant/.homeassistant/shell/update_ha.sh: source: not found
+home/homeassistant/.homeassistant/shell/update_ha.sh: 3: home/homeassistant/.homeassistant/shell/update_ha.sh: pip3: not found
+Failed to restart home-assistant@homeserver.service: Interactive authentication required.
+See system logs and 'systemctl status home-assistant@homeserver.service' for details.
