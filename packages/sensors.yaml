@@ -1,0 +1,277 @@
+################################################################
+## Packages / Sensors
+################################################################
+homeassistant:
+  customize:
+    #Weather
+    sun.sun:
+      hidden: true
+    sensor.yr_symbol:
+      hidden: true
+    sensor.dark_sky_humidity:
+      friendly_name: Current Humidity
+    sensor.dark_sky_temperature:
+      friendly_name: Current Temperature
+    sensor.dark_sky_daily_summary:
+      friendly_name: Daily Summary
+
+    #philips hue motion sensors
+    ######Findlays Room
+    sensor.findlay_room_motion:
+      icon: mdi:run
+    sensor.findlay_room_lux:
+      icon: mdi:theme-light-dark
+    sensor.findlay_room_temperature:
+      icon: mdi:thermometer
+      friendly_name: Findlay's Room
+    sensor.findlay_room_motion_sensor_battery_level:
+      friendly_name: Findlay's Room Sensor
+      icon: mdi:battery
+
+    ######Living room
+    sensor.living_room_motion:
+      icon: mdi:run
+    sensor.living_room_lux:
+      icon: mdi:theme-light-dark
+    sensor.living_room_temperature:
+      icon: mdi:thermometer
+      friendly_name: Living Room
+    sensor.living_room_motion_sensor_battery_level:
+      friendly_name: Living Room Sensor
+      icon: mdi:battery
+
+    ######Dining Room
+    sensor.dining_room_motion:
+      icon: mdi:run
+    sensor.dining_room_lux:
+      icon: mdi:theme-light-dark
+    sensor.dining_room_temperature:
+      icon: mdi:thermometer
+      friendly_name: Dining Room
+    sensor.dining_room_motion_sensor_battery_level:
+      friendly_name: Dining Room Sensor
+      icon: mdi:battery
+
+    #Philips Hue Switches
+    sensor.living_room_dimmer_switch:
+      friendly_name: Living Room Dimmer Switch
+      icon: mdi:battery
+    sensor.findlays_room_dimmer_switch:
+      friendly_name: Findlay's Dimmer Switch
+      icon: mdi:battery
+
+    #Cell phone battery
+    sensor.nicoles_s7_battery:
+      icon: mdi:battery
+    sensor.justins_g5_battery:
+      icon: mdi:battery
+
+    #Custom data template sensor
+    sensor.average_house_temp:
+      friendly_name: Average Whole Home
+      icon: mdi:thermometer
+
+    #ONLINE / OFFLINE Device Tracker
+    sensor.wemo_link:
+      friendly_name: Wemo Link
+      entity_picture: /local/wemo.png
+    sensor.philips_hue_hub:
+      friendly_name: Philips Hue Hub
+      entity_picture: /local/huebridge.png
+    sensor.chromecast_kitchen:
+      friendly_name: Chromecast Kitchen
+      entity_picture: /local/chromecast.png
+    sensor.chromecast_backyard:
+      friendly_name: Chromecast Backyard
+      entity_picture: /local/chromecast.png
+      
+###### SENSORS -------------------------------------------------
+sensor:
+  - platform: mold_indicator
+    indoor_temp_sensor: sensor.average_house_temp
+    indoor_humidity_sensor: sensor.hallway_thermostat_humidity
+    outdoor_temp_sensor: sensor.dark_sky_apparent_temperature
+    calibration_factor: 1.2
+
+  #####FINDLAYS ROOM SENSOR & DIMMER
+  - platform: rest
+    resource: !secret finn_room_lux
+    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+    unit_of_measurement: Lux
+    name: 'Findlay Room Lux'
+    scan_interval: 600
+
+  - platform: rest
+    resource: !secret finn_room_motion
+    value_template: '{{ value_json.state.presence }}'
+    name: 'Findlay Room Motion'
+    scan_interval: 2
+
+  - platform: rest
+    resource: !secret finn_room_temp
+    value_template: '{{ (value_json.state.temperature | float / 100 + 1.6) | round(1) }}'
+    unit_of_measurement: °C
+    name: 'Findlay Room Temperature'
+    scan_interval: 120
+
+  - platform: rest
+    resource: !secret finn_room_sensor_battery
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Findlay Room Motion Sensor Battery Level'
+
+  - platform: rest
+    resource: !secret finn_room_switch_battery
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Findlays Room Dimmer Switch'
+
+  #####LIVING ROOM SENSOR & DIMMER
+  - platform: rest
+    resource: !secret livingroom_lux
+    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+    unit_of_measurement: Lux
+    name: 'Living Room Lux'
+    scan_interval: 600
+
+  - platform: rest
+    resource: !secret livingroom_motion
+    value_template: '{{ value_json.state.presence }}'
+    name: 'Living Room Motion'
+    scan_interval: 2
+
+  - platform: rest
+    resource: !secret livingroom_temp
+    value_template: '{{ (value_json.state.temperature | float / 100 + 0.35) | round(1) }}'
+    unit_of_measurement: °C
+    name: 'Living Room Temperature'
+    scan_interval: 120
+
+  - platform: rest
+    resource: !secret livingroom_sensor_battery
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Living Room Motion Sensor Battery Level'
+
+  - platform: rest
+    resource: !secret livingroom_sensor_battery
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Living Room Dimmer Switch'
+
+  #####DINING ROOM SENSOR
+  - platform: rest
+    resource: !secret dining_room_lux
+    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+    unit_of_measurement: Lux
+    name: 'Dining Room Lux'
+    scan_interval: 600
+
+  - platform: rest
+    resource: !secret dining_room_motion
+    value_template: '{{ value_json.state.presence }}'
+    name: 'Dining Room Motion'
+    scan_interval: 2
+
+  - platform: rest
+    resource: !secret dining_room_temp
+    value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
+    unit_of_measurement: °C
+    name: 'Dining Room Temperature'
+    scan_interval: 120
+
+  - platform: rest
+    resource: !secret dining_room_sensor_battery
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Dining Room Motion Sensor Battery Level'
+
+  ######DATE TIME & WEATHER
+  - platform: yr
+  - platform: time_date
+    display_options:
+      - "date_time"
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    monitored_conditions:
+      - summary
+      - icon
+      - nearest_storm_distance
+      - nearest_storm_bearing
+      - precip_type
+      - precip_intensity
+      - precip_probability
+      - temperature
+      - apparent_temperature
+      - dew_point
+      - wind_speed
+      - wind_bearing
+      - cloud_cover
+      - humidity
+      - pressure
+      - visibility
+      - ozone
+      - minutely_summary
+      - hourly_summary
+      - daily_summary
+      - temperature_max
+      - temperature_min
+      - apparent_temperature_max
+      - apparent_temperature_min
+      - precip_intensity_max
+
+  #- platform: glances
+  #  host: 192.168.1.250
+  #  resources:
+  #    - 'disk_use_percent'
+  #    - 'disk_use'
+  #    - 'disk_free'
+  #    - 'memory_use_percent'
+  #    - 'memory_use'
+  #    - 'memory_free'
+  #    - 'swap_use_percent'
+  #    - 'swap_use'
+  #    - 'swap_free'
+  #    - 'processor_load'
+  #    - 'process_running'
+  #    - 'process_total'
+  #    - 'process_thread'
+  #    - 'process_sleeping'
+
+  ##### Owntracks Battery Tracker for Cell Phones
+  - platform: mqtt
+    state_topic: "owntracks/bigdrakar/justin"
+    name: "Justin's G5 Battery"
+    unit_of_measurement: "%"
+    value_template: '{{ value_json.batt }}'
+  - platform: mqtt
+    state_topic: "owntracks/bigdrakar/nicole"
+    name: "Nicole's S7 Battery"
+    unit_of_measurement: "%"
+    value_template: '{{ value_json.batt }}'
+
+  ###### CUSTOM AVERAGE TEMP
+  - platform: template
+    name: "Average Temp"
+    sensors:
+      average_house_temp:
+            unit_of_measurement: "°C"
+            value_template: >-
+              {{ ((float(states.sensor.findlay_room_temperature.state) + float(states.sensor.hallway_thermostat_temperature.state) + float(states.sensor.living_room_temperature.state) + float(states.sensor.dining_room_temperature.state)) / 4) | round(1) }}
+
+  ###### CUSTOM ONLINE // OFFLINE TEXT FOR device_tracker
+  - platform: template
+    sensors:
+      wemo_link:
+        value_template: "{% if is_state('device_tracker.c056277dafbd', 'home') %}Online{% else %}Offline{% endif %}"
+      philips_hue_hub:
+        value_template: "{% if is_state('device_tracker.0017882694bf', 'home') %}Online{% else %}Offline{% endif %}"
+      chromecast_kitchen:
+        value_template: "{% if is_state('device_tracker.chromecast', 'home') %}Online{% else %}Offline{% endif %}"
+      chromecast_backyard:
+        value_template: "{% if is_state('device_tracker.chromecast2', 'home') %}Online{% else %}Offline{% endif %}"

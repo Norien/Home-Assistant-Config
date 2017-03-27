@@ -6,6 +6,9 @@ homeassistant:
     script.backyard_party:
       friendly_name: Party Time
       icon: mdi:pizza
+    switch.patio_amplifier:
+      friendly_name: Patio Amplifier
+      icon: mdi:amplifier
 
 script:
   backyard_party:

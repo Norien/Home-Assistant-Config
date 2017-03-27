@@ -14,8 +14,8 @@ tts
 secrets.yaml
 known_devices.yaml
 config
-switch_pc_bedroom.yaml
-switch_pc_livingroom.yaml
-switch_pc_office.yaml
+pc_switches.yaml
 .uuid
+.gitignore
+.gitattributes
 .HA_VERSION

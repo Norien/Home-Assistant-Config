@@ -7,6 +7,8 @@ homeassistant:
       emulated_hue_name: "Good Morning"
       friendly_name: Good Morning
       icon: mdi:emoticon-poop
+    switch.bedroom_fan:
+      icon: mdi:fan
 
 script:
   good_morning:

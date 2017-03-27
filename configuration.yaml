@@ -16,7 +16,11 @@ history:
 logbook:
 sun:
 discovery:
+# Single Line Includes
+scene: !include_dir_list scenes
+zone: !include_dir_list zones
 
+#Components
 emulated_hue:
   #host_ip: 192.168.1.129
   #expose_by_default: false
@@ -26,12 +30,6 @@ emulated_hue:
     #- light
     #- input_boolean
 
-# Single Line Includes
-scene: !include_dir_list scenes
-sensor: !include sensors.yaml
-zone: !include_dir_list zones
-
-#Components
 logger:
   default: error
   logs:
@@ -84,10 +82,20 @@ mqtt:
 
 device_tracker:
   - platform: owntracks
+  - platform: nmap_tracker
+    hosts:
+      - 192.168.1.129
+      - 192.168.1.202
+      - 192.168.1.13
+      - 192.168.1.15
+      - 192.168.1.99
+      - 192.168.1.230
+      - 192.168.1.231
 
 wemo:
   static:
     - 192.168.1.200
+    - 192.168.1.201
     - 192.168.1.202
     - 192.168.1.6
     - 192.168.1.204
@@ -110,11 +118,6 @@ media_player:
     port: !secret kodi_bedroom_port
     name: kodi_bedroom
     turn_off_action: hibernate
-
-# PC On / OFF switches
-switch 2: !include switch_pc_livingroom.yaml
-switch 3: !include switch_pc_bedroom.yaml
-switch 4: !include switch_pc_office.yaml
 
 #Side Panels
 panel_iframe:

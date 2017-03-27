@@ -42,6 +42,7 @@ misc_view:
     - group.sensor_battery_levels
     #- group.sensor_homeserver
     - group.utilities
+    - group.device_status
 #Groups------------------------------------------------------------------
 livingroom:
   name: Living Room
@@ -162,6 +163,8 @@ all_humidity:
     - sensor.dark_sky_humidity
     - sensor.hallway_thermostat_humidity
     - sensor.mold_indicator
+    - switch.dehumidifier
+    - automation.turn_on_dehumidifier_if_mold_sensor_is_too_high
 all_cameras:
   name: Cameras
   entities:
@@ -176,7 +179,6 @@ smoke_gas:
 sensor_battery_levels:
   name: Battery Levels
   entities:
-   - script.refresh_devices
    - sensor.driveway_battery_level
    - sensor.findlay_room_motion_sensor_battery_level
    - sensor.living_room_motion_sensor_battery_level
@@ -203,7 +205,16 @@ media_player_all:
 utilities:
   name: Utilities
   entities:
+    - script.refresh_devices
+    - script.restart_ha
     - script.update_ha
+device_status:
+  name: Device Status
+  entities:
+    - sensor.wemo_link
+    - sensor.philips_hue_hub
+    - sensor.chromecast_backyard
+    - sensor.chromecast_kitchen
 #sensor_homeserver:
 #  name: HomeServer
 #  entities:

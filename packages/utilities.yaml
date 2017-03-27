@@ -6,9 +6,17 @@ homeassistant:
     script.update_ha:
       friendly_name: Update Home Assistant
       icon: mdi:package-variant
+    script.restart_ha:
+      friendly_name: Restart Home Assistant
+      icon: mdi:package-variant
 script:
   update_ha:
     sequence:
       - service: shell_command.update_ha
+  restart_ha:
+    sequence:
+      - service: shell_command.restart_ha
+
 shell_command:
-  update_ha: 'nohup home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'
+  update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'
+  restart_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/restart_ha.sh'

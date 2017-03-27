@@ -1,0 +1,36 @@
+################################################################
+## Packages / Humidity Control
+################################################################
+homeassistant:
+  customize:
+    switch.dehumidifier:
+      friendly_name: Dehumidifier
+      entity_picture: /local/dehumidifier.png
+    sensor.mold_indicator:
+      friendly_name: Mold Indicator
+      entity_picture: /local/mold.png
+    automation.turn_on_dehumidifier_if_mold_sensor_is_too_high:
+      friendly_name: Automatic Dehumidifier
+      icon: mdi:water-percent
+
+automation:
+  - alias: 'Turn on dehumidifier if Mold sensor is too high'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.mold_indicator
+        above: 69
+    action:
+      - service: switch.turn_on
+        entity_id: switch.dehumidifier
+
+###### NOTIFY IF MOLD SENSOR IS GREATER OR EQUAL TO 70%
+  - alias: 'Notify if Mold sensor is too high'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.mold_indicator
+        above: 69
+    action:
+      - service: notify.justin
+        data_template:
+          title: "Possible Mold Growth"
+          message: "It's possible to have mold growth because the mold indicator is {{ states.sensor.mold_indicator }}"

@@ -26,6 +26,12 @@ homeassistant:
     script.lr_springblossom:
       friendly_name: 'Spring blossom'
       icon: mdi:flower
+    switch.bedroom_lamps_:
+      icon: mdi:lamp
+      friendly_name: Bedroom Lamps
+    switch.office_lightswitch:
+      friendly_name: Office Light Switch
+      icon: mdi:lightbulb
 
 script:
   lr_nightlight:

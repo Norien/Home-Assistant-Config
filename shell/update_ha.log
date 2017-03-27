@@ -3,3 +3,16 @@ home/homeassistant/.homeassistant/shell/update_ha.sh: 2: home/homeassistant/.hom
 home/homeassistant/.homeassistant/shell/update_ha.sh: 3: home/homeassistant/.homeassistant/shell/update_ha.sh: pip3: not found
 Failed to restart home-assistant@homeserver.service: Interactive authentication required.
 See system logs and 'systemctl status home-assistant@homeserver.service' for details.
+su: must be run from a terminal
+home/homeassistant/.homeassistant/shell/update_ha.sh: 2: home/homeassistant/.homeassistant/shell/update_ha.sh: source: not found
+home/homeassistant/.homeassistant/shell/update_ha.sh: 3: home/homeassistant/.homeassistant/shell/update_ha.sh: pip3: not found
+Failed to restart home-assistant@homeserver.service: Interactive authentication required.
+See system logs and 'systemctl status home-assistant@homeserver.service' for details.
+nohup: failed to run command 'home/homeassistant/.homeassistant/shell/update_ha.sh': No such file or directory
+nohup: failed to run command 'home/homeassistant/.homeassistant/shell/update_ha.sh': No such file or directory
+nohup: failed to run command 'home/homeassistant/.homeassistant/shell/update_ha.sh': No such file or directory
+/home/homeassistant/.homeassistant/shell/update_ha.sh: line 2: $'\r': command not found
+bash: line 2: /srv/homeassistant/bin/activate: No such file or directory
+bash: line 4: pip3: command not found
+bash: line 5: $'exit\r': command not found
+/home/homeassistant/.homeassistant/shell/update_ha.sh: line 11: $'\r': command not found
