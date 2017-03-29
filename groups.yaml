@@ -164,7 +164,7 @@ all_humidity:
     - sensor.hallway_thermostat_humidity
     - sensor.mold_indicator
     - switch.dehumidifier
-    - automation.turn_on_dehumidifier_if_mold_sensor_is_too_high
+    - automation.turn_on_dehumidifier_if_mold_sensor_is_high
 all_cameras:
   name: Cameras
   entities:
@@ -215,6 +215,8 @@ device_status:
     - sensor.philips_hue_hub
     - sensor.chromecast_backyard
     - sensor.chromecast_kitchen
+    - sensor.dlink_camera
+    - sensor.driveway_camera
 #sensor_homeserver:
 #  name: HomeServer
 #  entities:

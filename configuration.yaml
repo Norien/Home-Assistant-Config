@@ -16,8 +16,6 @@ history:
 logbook:
 sun:
 discovery:
-# Single Line Includes
-scene: !include_dir_list scenes
 zone: !include_dir_list zones
 
 #Components

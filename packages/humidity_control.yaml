@@ -9,12 +9,12 @@ homeassistant:
     sensor.mold_indicator:
       friendly_name: Mold Indicator
       entity_picture: /local/mold.png
-    automation.turn_on_dehumidifier_if_mold_sensor_is_too_high:
+    automation.turn_on_dehumidifier_if_mold_sensor_is_high:
       friendly_name: Automatic Dehumidifier
       icon: mdi:water-percent
 
 automation:
-  - alias: 'Turn on dehumidifier if Mold sensor is too high'
+  - alias: 'Turn on dehumidifier if Mold sensor is high'
     trigger:
       - platform: numeric_state
         entity_id: sensor.mold_indicator
@@ -22,6 +22,23 @@ automation:
     action:
       - service: switch.turn_on
         entity_id: switch.dehumidifier
+      - service: climate.set_fan_mode
+        data:
+          entity_id: climate.hallway
+          fan_mode: 'on'
+
+  - alias: 'Turn off dehumidifier if Mold sensor is low'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.mold_indicator
+        below: 67
+    action:
+      - service: switch.turn_off
+        entity_id: switch.dehumidifier
+      - service: climate.set_fan_mode
+        data:
+          entity_id: climate.hallway
+          fan_mode: 'auto'
 
 ###### NOTIFY IF MOLD SENSOR IS GREATER OR EQUAL TO 70%
   - alias: 'Notify if Mold sensor is too high'

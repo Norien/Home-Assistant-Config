@@ -4,10 +4,6 @@
 homeassistant:
   customize:
     #Weather
-    sun.sun:
-      hidden: true
-    sensor.yr_symbol:
-      hidden: true
     sensor.dark_sky_humidity:
       friendly_name: Current Humidity
     sensor.dark_sky_temperature:
@@ -84,7 +80,13 @@ homeassistant:
     sensor.chromecast_backyard:
       friendly_name: Chromecast Backyard
       entity_picture: /local/chromecast.png
-      
+    sensor.dlink_camera:
+      friendly_name: Baby Monitor
+      icon: mdi:camera
+    sensor.driveway_camera:
+      friendly_name: Driveway Camera
+      icon: mdi:camera
+
 ###### SENSORS -------------------------------------------------
 sensor:
   - platform: mold_indicator
@@ -275,3 +277,7 @@ sensor:
         value_template: "{% if is_state('device_tracker.chromecast', 'home') %}Online{% else %}Offline{% endif %}"
       chromecast_backyard:
         value_template: "{% if is_state('device_tracker.chromecast2', 'home') %}Online{% else %}Offline{% endif %}"
+      dlink_camera:
+        value_template: "{% if is_state('device_tracker.b0c5540c14e4', 'home') %}Online{% else %}Offline{% endif %}"
+      driveway_camera:
+        value_template: "{% if is_state('device_tracker.androidffacd8b307230a17', 'home') %}Online{% else %}Offline{% endif %}"
