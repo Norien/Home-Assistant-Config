@@ -68,6 +68,9 @@ homeassistant:
       icon: mdi:thermometer
 
     #ONLINE / OFFLINE Device Tracker
+    sensor.access_point:
+      friendly_name: Access Point
+      icon: mdi:router-wireless
     sensor.wemo_link:
       friendly_name: Wemo Link
       entity_picture: /local/wemo.png
@@ -269,15 +272,17 @@ sensor:
   ###### CUSTOM ONLINE // OFFLINE TEXT FOR device_tracker
   - platform: template
     sensors:
+      access_point:
+        value_template: "{% if is_state('device_tracker.access_point', 'home') %}Online{% else %}Offline{% endif %}"
       wemo_link:
-        value_template: "{% if is_state('device_tracker.c056277dafbd', 'home') %}Online{% else %}Offline{% endif %}"
+        value_template: "{% if is_state('device_tracker.wemo_link', 'home') %}Online{% else %}Offline{% endif %}"
       philips_hue_hub:
-        value_template: "{% if is_state('device_tracker.0017882694bf', 'home') %}Online{% else %}Offline{% endif %}"
+        value_template: "{% if is_state('device_tracker.philips_hue_hub', 'home') %}Online{% else %}Offline{% endif %}"
       chromecast_kitchen:
         value_template: "{% if is_state('device_tracker.chromecast', 'home') %}Online{% else %}Offline{% endif %}"
       chromecast_backyard:
-        value_template: "{% if is_state('device_tracker.chromecast2', 'home') %}Online{% else %}Offline{% endif %}"
+        value_template: "{% if is_state('device_tracker.chromecast_2', 'home') %}Online{% else %}Offline{% endif %}"
       dlink_camera:
-        value_template: "{% if is_state('device_tracker.b0c5540c14e4', 'home') %}Online{% else %}Offline{% endif %}"
+        value_template: "{% if is_state('device_tracker.baby_monitor', 'home') %}Online{% else %}Offline{% endif %}"
       driveway_camera:
-        value_template: "{% if is_state('device_tracker.androidffacd8b307230a17', 'home') %}Online{% else %}Offline{% endif %}"
+        value_template: "{% if is_state('device_tracker.camera_driveway', 'home') %}Online{% else %}Offline{% endif %}"

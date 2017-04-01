@@ -8,6 +8,8 @@ homeassistant:
       icon: mdi:music-note
 
 script:
+
+###### ALEXA TURN ON KITCHEN RADIO
   kitchen_radio:
     sequence:
       - service: media_player.volume_set
@@ -19,3 +21,11 @@ script:
           entity_id: media_player.kitchen
           media_content_id: http://rfcmedia.streamguys1.com/90hits.mp3
           media_content_type: 'audio/mp3'
+
+###### ALEXA TURN ON BABY CAM
+  baby_cam:
+    sequence:
+      - service: shell_command.baby_cam
+
+shell_command:
+  baby_cam: 'bash /home/homeassistant/.homeassistant/shell/baby_cam.sh'

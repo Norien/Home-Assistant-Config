@@ -19,3 +19,5 @@ pc_switches.yaml
 .gitignore
 .gitattributes
 .HA_VERSION
+.db-shm
+.db-wal

@@ -53,7 +53,6 @@ livingroom:
    - script.lr_read
    - script.lr_relax
    - script.lr_dimmed
-   - script.lr_nightlight
    - script.lr_springblossom
 bedroom:
   name: Master Bedroom
@@ -61,11 +60,9 @@ bedroom:
    - switch.copy3
    - switch.bedroom_lamps_
    - switch.bedroom_fan
-   #- media_player.kodi_bedroom
 findlays_room:
   name: Findlay's Room
   entities:
-    #- camera.generic_camera
     - light.findlay_lamp
     - sensor.findlay_room_temperature
     - sensor.findlay_room_lux
@@ -95,8 +92,6 @@ automation:
 presence:
   name: Presence
   entities:
-   #- device_tracker.android262071b676d4d855
-   #- device_tracker.androidc3a6fa8dea348d9e
    - device_tracker.bigdrakar_justin
    - device_tracker.bigdrakar_nicole
    - input_boolean.guest
@@ -136,12 +131,9 @@ thermostat:
   name: Thermostat
   entities:
    - climate.hallway
-  # - sensor.hallway_thermostat_humidity
    - binary_sensor.hallway_thermostat_fan
    - sensor.hallway_thermostat_hvac_state
    - sensor.hallway_thermostat_operation_mode
-  # - sensor.hallway_thermostat_target
-  # - sensor.hallway_thermostat_temperature
 motion_sensors:
   name: Motion Sensors
   entities:
@@ -168,7 +160,7 @@ all_humidity:
 all_cameras:
   name: Cameras
   entities:
-   - camera.generic_camera
+   - camera.baby_monitor
    - camera.driveway
 smoke_gas:
   name: "Smoke & CO"
@@ -179,7 +171,6 @@ smoke_gas:
 sensor_battery_levels:
   name: Battery Levels
   entities:
-   - sensor.driveway_battery_level
    - sensor.findlay_room_motion_sensor_battery_level
    - sensor.living_room_motion_sensor_battery_level
    - sensor.dining_room_motion_sensor_battery_level
@@ -211,24 +202,10 @@ utilities:
 device_status:
   name: Device Status
   entities:
+    - sensor.access_point
     - sensor.wemo_link
     - sensor.philips_hue_hub
     - sensor.chromecast_backyard
     - sensor.chromecast_kitchen
     - sensor.dlink_camera
     - sensor.driveway_camera
-#sensor_homeserver:
-#  name: HomeServer
-#  entities:
-#    - sensor.glances_cpu_load
-#    - sensor.glances_disk_free
-#    - sensor.glances_disk_use
-#    - sensor.glances_disk_use_2
-#    - sensor.glances_ram_free
-#    - sensor.glances_ram_use
-#    - sensor.glances_ram_use_2
-#    - sensor.glances_swap_free
-#    - sensor.glances_swap_use
-#    - sensor.glances_swap_use_2
-#    - sensor.glances_thread
-#    - sensor.glances_total

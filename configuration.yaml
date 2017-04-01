@@ -44,18 +44,23 @@ tts:
 recorder:
   purge_days: 3
 
-android_ip_webcam:
-- host: !secret android_ip_webcam_url
-  name: Driveway
-  port: 8036
-  username: !secret andriod_camera_username
-  password: !secret andriod_camera_password
+#android_ip_webcam:
+#- host: !secret android_ip_webcam_url
+#  name: Driveway
+#  port: 8036
+#  username: !secret andriod_camera_username
+#  password: !secret andriod_camera_password
+zoneminder:
+  host: localhost
+  username: !secret zoneminder_user
+  password: !secret zoneminder_pass
 
 camera:
-  - platform: generic
-    still_image_url: !secret dlink_camera_link
-    username: !secret dlink_camera_username
-    password: !secret dlink_camera_password
+  #- platform: generic
+  #  still_image_url: !secret dlink_camera_link
+  #  username: !secret dlink_camera_username
+  #  password: !secret dlink_camera_password
+  - platform: zoneminder
 
 nest:
   client_id: !secret nest_client_id
@@ -85,11 +90,13 @@ device_tracker:
       - 192.168.1.129
       - 192.168.1.202
       - 192.168.1.13
-      - 192.168.1.15
       - 192.168.1.99
       - 192.168.1.230
-      - 192.168.1.231
-
+  - platform: ping
+    hosts:
+      chromecast_2: 192.168.1.231
+      camera_driveway: 192.168.1.15
+      access_point: 192.168.1.59
 wemo:
   static:
     - 192.168.1.200

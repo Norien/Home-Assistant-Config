@@ -18,7 +18,7 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.mold_indicator
-        above: 68
+        above: 65
     action:
       - service: switch.turn_on
         entity_id: switch.dehumidifier
@@ -31,7 +31,7 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.mold_indicator
-        below: 66
+        below: 63
     action:
       - service: switch.turn_off
         entity_id: switch.dehumidifier

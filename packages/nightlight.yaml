@@ -46,6 +46,15 @@ script:
           scene_name: "Nightlight"
       - delay:
           minutes: 6
+      - service_template: >
+          {% if is_state_attr('light.living_room', 'rgb_color', (21, 8, 0)) %}
+            script.nightlight_off
+          {% else %}
+            script.nightlight
+          {% endif %}
+
+  nightlight_off:
+    sequence:
       - service: light.turn_off
         data:
           entity_id:
@@ -53,4 +62,3 @@ script:
             light.hue_color_lamp_2:
             light.hue_color_lamp_3:
             light.kitchen_sink:
-              state: off

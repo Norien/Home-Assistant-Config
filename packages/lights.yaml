@@ -8,9 +8,6 @@ homeassistant:
     light.findlay_lamp:
       friendly_name: Findlay's Lamp
       icon: mdi:lamp
-    script.lr_nightlight:
-      friendly_name: 'Nightlight'
-      icon: mdi:brightness-4
     script.lr_dimmed:
       friendly_name: 'Dimmed'
       icon: mdi:brightness-7
@@ -34,12 +31,6 @@ homeassistant:
       icon: mdi:lightbulb
 
 script:
-  lr_nightlight:
-    sequence:
-      - service: light.hue_activate_scene
-        data:
-          group_name: "Living Room"
-          scene_name: "Nightlight"
   lr_dimmed:
     sequence:
       - service: light.hue_activate_scene
