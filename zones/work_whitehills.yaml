@@ -1,5 +1,0 @@
-name: Work - Whitehills
-latitude: !secret latitude_work_whitehills
-longitude: !secret longitude_work_whitehills
-radius: 250
-icon: mdi:worker

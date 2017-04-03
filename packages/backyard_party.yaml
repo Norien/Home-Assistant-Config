@@ -10,6 +10,18 @@ homeassistant:
       friendly_name: Patio Amplifier
       icon: mdi:amplifier
 
+automation:
+  - alias: "Backyard Auto Amp Off"
+    trigger:
+      - platform: state
+        entity_id: media_player.backyard
+        to: 'idle'
+        for:
+          minutes: 10
+    action:
+      - service: switch.turn_off
+        entity_id: switch.patio_amplifier
+
 script:
   backyard_party:
     sequence:

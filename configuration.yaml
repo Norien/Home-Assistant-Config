@@ -16,7 +16,7 @@ history:
 logbook:
 sun:
 discovery:
-zone: !include_dir_list zones
+#zone: !include_dir_list zones
 
 #Components
 emulated_hue:

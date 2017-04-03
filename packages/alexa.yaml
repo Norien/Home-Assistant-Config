@@ -27,5 +27,19 @@ script:
     sequence:
       - service: shell_command.baby_cam
 
+###### TURN UP OR DOWN THERMOSTAT
+  hotter:
+    sequence:
+      - service: climate.set_temperature
+        data_template:
+          entity_id: climate.hallway
+          temperature: "{{ (states.climate.hallway.attributes.temperature | float) +1 }}"
+  colder:
+    sequence:
+      - service: climate.set_temperature
+        data_template:
+          entity_id: climate.hallway
+          temperature: "{{ (states.climate.hallway.attributes.temperature | float) -1 }}"
+
 shell_command:
   baby_cam: 'bash /home/homeassistant/.homeassistant/shell/baby_cam.sh'

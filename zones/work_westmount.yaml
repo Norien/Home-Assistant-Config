@@ -1,5 +1,0 @@
-name: Work - Westmount
-latitude: !secret latitude_work_westmount
-longitude: !secret longitude_work_westmount
-radius: 250
-icon: mdi:worker
