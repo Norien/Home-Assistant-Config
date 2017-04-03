@@ -1,0 +1,35 @@
+################################################################
+## Packages / customizations
+################################################################
+
+homeassistant:
+  customize:
+    #Media Players
+    media_player.kodi_livingroom:
+      friendly_name: Living Room KODI
+    media_player.kodi_bedroom:
+      friendly_name: Bedroom KODI
+
+    #Nest
+    climate.hallway:
+      friendly_name: Nest Thermostat
+      entity_picture: /local/nest.png
+    binary_sensor.hallway_thermostat_fan:
+      friendly_name: Thermostat Fan
+      icon: mdi:fan
+    sensor.hallway_thermostat_humidity:
+      friendly_name: Indoor Humidity
+      icon: mdi:water-percent
+    sensor.hallway_thermostat_temperature:
+      friendly_name: Hallway
+    sensor.kitchen_nest_protect_battery_health:
+      friendly_name: Kitchen Nest Protect Battery
+      icon: mdi:battery
+    sensor.hallway_thermostat_hvac_state:
+      friendly_name: Thermostat HVAC State
+    sensor.hallway_thermostat_operation_mode:
+      friendly_name: Thermostat Operation Mode
+    sensor.kitchen_nest_protect_co_status:
+      entity_picture: /local/nestprotect.png
+    sensor.kitchen_nest_protect_smoke_status:
+      entity_picture: /local/nestprotect.png
