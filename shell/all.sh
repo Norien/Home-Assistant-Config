@@ -1,1 +1,0 @@
-curl --header 'Content-Type: application/json' --data-binary '{ "jsonrpc":"2.0","id":"1","method":"Player.Open","params":{"item":{"file":"c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/all.xsp"}}}' 'http://192.168.1.76:8099/jsonrpc'

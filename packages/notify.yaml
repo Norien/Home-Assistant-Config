@@ -48,7 +48,7 @@ automation:
           message: 'Vacation Mode has been Deactivated'
 
 ###### NOTIFY IF UPDATE TO HOME ASSISTANT IS Available
-  - alias: 'Update Available Notifications'
+  - alias: 'notify if update available'
     trigger:
       - platform: state
         entity_id: updater.updater

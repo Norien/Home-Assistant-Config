@@ -21,3 +21,4 @@ pc_switches.yaml
 .HA_VERSION
 .db-shm
 .db-wal
+*.db-wal

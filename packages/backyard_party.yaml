@@ -1,5 +1,5 @@
 ################################################################
-## Packages / BackYard Party Time
+## Packages / Backyard
 ################################################################
 homeassistant:
   customize:
@@ -11,16 +11,37 @@ homeassistant:
       icon: mdi:amplifier
 
 automation:
-  - alias: "Backyard Auto Amp Off"
+  - alias: "Backyard Amp Off"
     trigger:
       - platform: state
         entity_id: media_player.backyard
         to: 'idle'
         for:
-          minutes: 10
+          minutes: 1
     action:
       - service: switch.turn_off
         entity_id: switch.patio_amplifier
+      - service: media_player.turn_off
+        entity_id: media_player.backyard
+
+  - alias: "Backyard Amp On"
+    trigger:
+      - platform: state
+        entity_id: media_player.backyard
+        to: 'playing'
+    action:
+      - service: switch.turn_on
+        entity_id: switch.patio_amplifier
+
+  - alias: "Backyard media player Off"
+    trigger:
+      - platform: state
+        entity_id: switch.patio_amplifier
+        from: 'on'
+        to: 'off'
+    action:
+      - service: media_player.turn_off
+        entity_id: media_player.backyard
 
 script:
   backyard_party:

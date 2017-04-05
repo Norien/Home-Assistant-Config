@@ -33,10 +33,34 @@ script:
           minutes: 1
           seconds: 30
       # json curl to play all cartoons smart playlist
-      - service: shell_command.play_cartoons
+      - service: shell_command.curl
+        data:
+          url: "http://192.168.1.76:8099/jsonrpc"
+          method: "post"
+          headers:
+            content-type: "application/json"
+          payload:
+            jsonrpc: "2.0"
+            id: "1"
+            method: "Player.Open"
+            params:
+              item:
+                file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/cartoon2.xsp"
   auto_cartoons_on:
     sequence:
-      - service: shell_command.play_cartoons
+      - service: shell_command.curl
+        data:
+          url: "http://192.168.1.76:8099/jsonrpc"
+          method: "post"
+          headers:
+            content-type: "application/json"
+          payload:
+            jsonrpc: "2.0"
+            id: "1"
+            method: "Player.Open"
+            params:
+              item:
+                file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/cartoon2.xsp"
 
 ###### LIVING ROOM ALL TV
   auto_all_tv:
@@ -57,10 +81,34 @@ script:
           minutes: 1
           seconds: 30
       # json curl to play all cartoons smart playlist
-      - service: shell_command.play_all_tv
+      - service: shell_command.curl
+        data:
+          url: "http://192.168.1.76:8099/jsonrpc"
+          method: "post"
+          headers:
+            content-type: "application/json"
+          payload:
+            jsonrpc: "2.0"
+            id: "1"
+            method: "Player.Open"
+            params:
+              item:
+                file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/all.xsp"
   all_tv_on:
     sequence:
-      - service: shell_command.play_all_tv
+      - service: shell_command.curl
+        data:
+          url: "http://192.168.1.76:8099/jsonrpc"
+          method: "post"
+          headers:
+            content-type: "application/json"
+          payload:
+            jsonrpc: "2.0"
+            id: "1"
+            method: "Player.Open"
+            params:
+              item:
+                file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/all.xsp"
 
 ###### LIVINGROOM PAW PATROLL
   auto_pawpatrol:
@@ -81,10 +129,34 @@ script:
           minutes: 1
           seconds: 30
       # json curl to play all cartoons smart playlist
-      - service: shell_command.play_pawpatrol
+      - service: shell_command.curl
+        data:
+          url: "http://192.168.1.76:8099/jsonrpc"
+          method: "post"
+          headers:
+            content-type: "application/json"
+          payload:
+            jsonrpc: "2.0"
+            id: "1"
+            method: "Player.Open"
+            params:
+              item:
+                file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/pawpatrol.xsp"
   auto_pawpatrol_on:
     sequence:
-      - service: shell_command.play_pawpatrol
+      - service: shell_command.curl
+        data:
+          url: "http://192.168.1.76:8099/jsonrpc"
+          method: "post"
+          headers:
+            content-type: "application/json"
+          payload:
+            jsonrpc: "2.0"
+            id: "1"
+            method: "Player.Open"
+            params:
+              item:
+                file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/pawpatrol.xsp"
   play:
     sequence:
       - service: shell_command.play
@@ -96,13 +168,24 @@ script:
       - service: shell_command.next
   pause:
     sequence:
-      - service: shell_command.pause
+      - service: shell_command.curl
+        data:
+          url: "http://192.168.1.76:8099/jsonrpc"
+          method: "post"
+          headers:
+            content-type: "application/json"
+          payload:
+            jsonrpc: "2.0"
+            id: "1"
+            method: "Player.PlayPause"
+            params:
+              playerid: "1"
+              play: "true"
+
+
 
 shell_command:
-  play_cartoons: 'bash /home/homeassistant/.homeassistant/shell/cartoons.sh'
-  play_all_tv: 'bash /home/homeassistant/.homeassistant/shell/all.sh'
-  play_pawpatrol: 'bash /home/homeassistant/.homeassistant/shell/pawpatrol.sh'
   play: 'bash /home/homeassistant/.homeassistant/shell/play.sh'
   stop: 'bash /home/homeassistant/.homeassistant/shell/stop.sh'
   next: 'bash /home/homeassistant/.homeassistant/shell/next.sh'
-  pause: 'bash /home/homeassistant/.homeassistant/shell/pause.sh'
+  #pause: 'bash /home/homeassistant/.homeassistant/shell/pause.sh'
