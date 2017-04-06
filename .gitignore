@@ -22,3 +22,4 @@ pc_switches.yaml
 .db-shm
 .db-wal
 *.db-wal
+shell/del_log.sh

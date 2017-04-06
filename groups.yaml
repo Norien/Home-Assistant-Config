@@ -176,14 +176,14 @@ smoke_gas:
 sensor_battery_levels:
   name: Battery Levels
   entities:
+   - sensor.kitchen_nest_protect_battery_health
    - sensor.findlay_room_motion_sensor_battery_level
    - sensor.living_room_motion_sensor_battery_level
    - sensor.dining_room_motion_sensor_battery_level
    - sensor.findlays_room_dimmer_switch
    - sensor.living_room_dimmer_switch
-   - sensor.kitchen_nest_protect_battery_health
-   - sensor.justins_g5_battery
-   - sensor.nicoles_s7_battery
+   - sensor.justins_g5_battery_dynamic
+   - sensor.nicoles_s7_battery_dynamic
 playlist:
   name: Radio
   entities:

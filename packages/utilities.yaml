@@ -15,8 +15,10 @@ script:
       - service: shell_command.update_ha
   restart_ha:
     sequence:
+      - service: shell_command.del_log
       - service: shell_command.restart_ha
 
 shell_command:
   update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'
   restart_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/restart_ha.sh'
+  del_log: 'sudo bash /home/homeassistant/.homeassistant/shell/sel_log.sh'

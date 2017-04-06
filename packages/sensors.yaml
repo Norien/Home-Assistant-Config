@@ -56,12 +56,6 @@ homeassistant:
       friendly_name: Findlay's Dimmer Switch
       icon: mdi:battery
 
-    #Cell phone battery
-    sensor.nicoles_s7_battery:
-      icon: mdi:battery
-    sensor.justins_g5_battery:
-      icon: mdi:battery
-
     #Custom data template sensor
     sensor.average_house_temp:
       friendly_name: Average Whole Home
@@ -254,11 +248,53 @@ sensor:
     name: "Justin's G5 Battery"
     unit_of_measurement: "%"
     value_template: '{{ value_json.batt }}'
+  - platform: template
+    sensors:
+      justins_g5_battery_dynamic:
+        unit_of_measurement: '%'
+        entity_id: sensor.justins_g5_battery
+        value_template: "{{ (states.sensor.justins_g5_battery.state)|int|default('unknown') }}"
+        icon_template: >-
+          {% set battery_level = states('sensor.justins_g5_battery')|int('unknown') %}
+          {% set battery_round = (battery_level|int / 10)|int * 10 %}
+          {% if battery_level == 'unknown' %}
+            mdi:battery-unknown
+          {% else %}
+            {% if battery_round >= 100 %}
+              mdi:battery
+            {% elif battery_round > 0 %}
+              mdi:battery-{{ battery_round }}
+            {% else %}
+              mdi:battery-alert
+            {% endif %}
+          {% endif %}
+
+
   - platform: mqtt
     state_topic: "owntracks/bigdrakar/nicole"
     name: "Nicole's S7 Battery"
     unit_of_measurement: "%"
     value_template: '{{ value_json.batt }}'
+  - platform: template
+    sensors:
+      nicoles_s7_battery_dynamic:
+        unit_of_measurement: '%'
+        entity_id: sensor.nicoles_s7_battery
+        value_template: "{{ (states.sensor.nicoles_s7_battery.state)|int|default('unknown') }}"
+        icon_template: >-
+          {% set battery_level = states('sensor.nicoles_s7_battery')|int('unknown') %}
+          {% set battery_round = (battery_level|int / 10)|int * 10 %}
+          {% if battery_level == 'unknown' %}
+            mdi:battery-unknown
+          {% else %}
+            {% if battery_round >= 100 %}
+              mdi:battery
+            {% elif battery_round > 0 %}
+              mdi:battery-{{ battery_round }}
+            {% else %}
+              mdi:battery-alert
+            {% endif %}
+          {% endif %}
 
   ###### CUSTOM AVERAGE TEMP
   - platform: template

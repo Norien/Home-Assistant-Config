@@ -8,7 +8,6 @@ homeassistant:
       icon: mdi:music-note
 
 script:
-
 ###### ALEXA TURN ON KITCHEN RADIO
   kitchen_radio:
     sequence:
@@ -41,9 +40,6 @@ script:
           entity_id: climate.hallway
           temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) -1 }}"
 
-shell_command:
-  baby_cam: 'bash /home/homeassistant/.homeassistant/shell/baby_cam.sh'
-
 ###### ALEXA TURN OFF CHROMECAST
   chromecast:
     sequence:
@@ -51,3 +47,6 @@ shell_command:
         entity_id: media_player.backyard
       - service: media_player.turn_off
         entity_id: media_player.kitchen
+
+shell_command:
+  baby_cam: 'bash /home/homeassistant/.homeassistant/shell/baby_cam.sh'
