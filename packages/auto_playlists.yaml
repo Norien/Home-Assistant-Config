@@ -176,13 +176,10 @@ script:
             content-type: "application/json"
           payload:
             jsonrpc: "2.0"
-            id: "1"
             method: "Player.PlayPause"
+            id: 1
             params:
-              playerid: "1"
-              play: "true"
-
-
+              playerid: 1
 
 shell_command:
   play: 'bash /home/homeassistant/.homeassistant/shell/play.sh'
