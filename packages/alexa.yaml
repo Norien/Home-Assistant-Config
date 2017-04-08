@@ -48,5 +48,23 @@ script:
       - service: media_player.turn_off
         entity_id: media_player.kitchen
 
+###### ALEXA TURN ON or OFF PC (Living Room)
+  pc:
+    sequence:
+      - service: switch.toggle
+        entity_id: switch.living_room_pc
+
+###### ALEXA TURN ON or OFF BEDROOM PC
+  bedroom_pc:
+    sequence:
+      - service: switch.toggle
+        entity_id: switch.bedroom_pc
+
+###### ALEXA TURN ON or OFF OFFICE PC
+  office_pc:
+    sequence:
+      - service: switch.toggle
+        entity_id: switch.office_pc
+
 shell_command:
   baby_cam: 'bash /home/homeassistant/.homeassistant/shell/baby_cam.sh'

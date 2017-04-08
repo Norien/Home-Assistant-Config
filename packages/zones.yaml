@@ -8,19 +8,19 @@ zone:
   radius: 150
   icon: mdi:account-multiple
 
-- name: Work - Old South
+- name: Work Old South
   latitude: !secret latitude_work_oldsouth
   longitude: !secret longitude_work_oldsouth
   radius: 250
   icon: mdi:worker
 
-- name: Work - Westmount
+- name: Work Westmount
   latitude: !secret latitude_work_westmount
   longitude: !secret longitude_work_westmount
   radius: 250
   icon: mdi:worker
 
-- name: Work - Whitehills
+- name: Work Whitehills
   latitude: !secret latitude_work_whitehills
   longitude: !secret longitude_work_whitehills
   radius: 250

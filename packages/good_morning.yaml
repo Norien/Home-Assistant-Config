@@ -21,11 +21,26 @@ script:
       data:
         entity_id: media_player.kitchen
         volume_level: '0.70'
-    - service: tts.google_say
+    - service: script.turn_on
       data_template:
-        entity_id: media_player.kitchen
-        message: "Good Morning, the weather looks like {{states('sensor.dark_sky_daily_summary')}}."
-        cache: false
+        entity_id: >
+          {% if is_state('binary_sensor.workday_sensor', 'off') %} script.good_morning_weekend
+          {% elif is_state('binary_sensor.workday_sensor', 'on') %} script.good_morning_workday
+          {% endif %}
+
+  good_morning_workday:
+    sequence:
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.kitchen
+          message: "Good Morning, the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_daily_high_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}. Travel time this morning is {{states('sensor.nicole_home_to_work')}} minutes, Have a nice day at work."
+
+  good_morning_weekend:
+    sequence:
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.kitchen
+          message: "Good Morning, the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_daily_high_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}. Enjoy your Weekend!"
 
   morning_livingroom_lights:
     sequence:
@@ -46,5 +61,4 @@ script:
         - condition: state
           entity_id: 'sensor.dark_sky_summary'
           state: 'Breezy and Overcast'
-
     - service: script.lr_concentrate

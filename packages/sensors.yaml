@@ -56,6 +56,12 @@ homeassistant:
       friendly_name: Findlay's Dimmer Switch
       icon: mdi:battery
 
+    # dynamic battery names
+    sensor.justins_g5_battery_dynamic:
+      friendly_name: Justin's Cellphone
+    sensor.nicoles_s7_battery_dynamic:
+      friendly_name: Nicole's Cellphone
+
     #Custom data template sensor
     sensor.average_house_temp:
       friendly_name: Average Whole Home
@@ -84,6 +90,18 @@ homeassistant:
       friendly_name: Driveway Camera
       icon: mdi:camera
 
+    # GOOGLE TRAVEL TIME SENSORS
+    sensor.nicole_phone_to_home:
+      friendly_name: 'Nicole Phone to Home'
+      icon: mdi:car
+    sensor.nicole_home_to_work:
+      friendly_name: 'Nicole Home to Work'
+      icon: mdi:car
+
+###### BINARY SENSORS ------------------------------------------
+binary_sensor:
+  - platform: workday
+    country: CA
 ###### SENSORS -------------------------------------------------
 sensor:
   - platform: mold_indicator
@@ -224,24 +242,6 @@ sensor:
       - apparent_temperature_min
       - precip_intensity_max
 
-  #- platform: glances
-  #  host: 192.168.1.250
-  #  resources:
-  #    - 'disk_use_percent'
-  #    - 'disk_use'
-  #    - 'disk_free'
-  #    - 'memory_use_percent'
-  #    - 'memory_use'
-  #    - 'memory_free'
-  #    - 'swap_use_percent'
-  #    - 'swap_use'
-  #    - 'swap_free'
-  #    - 'processor_load'
-  #    - 'process_running'
-  #    - 'process_total'
-  #    - 'process_thread'
-  #    - 'process_sleeping'
-
   ##### Owntracks Battery Tracker for Cell Phones
   - platform: mqtt
     state_topic: "owntracks/bigdrakar/justin"
@@ -268,7 +268,6 @@ sensor:
               mdi:battery-alert
             {% endif %}
           {% endif %}
-
 
   - platform: mqtt
     state_topic: "owntracks/bigdrakar/nicole"
@@ -322,3 +321,53 @@ sensor:
         value_template: "{% if is_state('device_tracker.baby_monitor', 'home') %}Online{% else %}Offline{% endif %}"
       driveway_camera:
         value_template: "{% if is_state('device_tracker.camera_driveway', 'home') %}Online{% else %}Offline{% endif %}"
+
+###### DAY OF THE WEEK
+  - platform: template
+    sensors:
+      date_weekday:
+        value_template: "{{as_timestamp(now())|timestamp_custom('%A', True)}}"
+
+###### MONTH OF THE YEAR
+  - platform: template
+    sensors:
+      date_month:
+        value_template: "{{as_timestamp(now())|timestamp_custom('%B', True)}}"
+
+###### DAY OF THE MONTH
+  - platform: template
+    sensors:
+      date_day:
+        value_template: "{{as_timestamp(now())|timestamp_custom('%C', True)}}"
+
+###### DAY TO ZONE
+  - platform: template
+    sensors:
+      todays_zone:
+        value_template: >
+          {% if is_state('sensor.date_weekday', 'Monday') %}
+            {{ states.zone.work_westmount.attributes.latitude | string + ', ' | string + states.zone.work_westmount.attributes.longitude | string }}
+          {% elif is_state('sensor.date_weekday', 'Tuesday') %}
+            {{ states.zone.work_old_south.attributes.latitude | string + ', ' | string + states.zone.work_old_south.attributes.longitude | string }}
+          {% elif is_state('sensor.date_weekday', 'Wednesday') %}
+            {{ states.zone.work_westmount.attributes.latitude | string + ', ' | string + states.zone.work_westmount.attributes.longitude | string }}
+          {% elif is_state('sensor.date_weekday', 'Thursday') %}
+            {{ states.zone.work_whitehills.attributes.latitude | string + ', ' | string + states.zone.work_whitehills.attributes.longitude | string }}
+          {% elif is_state('sensor.date_weekday', 'Friday') %}
+            {{ states.zone.work_westmount.attributes.latitude | string + ', ' | string + states.zone.work_westmount.attributes.longitude | string }}
+          {% else %}
+            {{ states.zone.home.attributes.latitude | string + ', ' | string + states.zone.home.attributes.longitude | string }}
+          {% endif %}
+
+###### GOOGLE TRAVEL TIME
+  - platform: google_travel_time
+    name: Nicole Phone To Home
+    api_key: !secret google_secret
+    origin: device_tracker.bigdrakar_nicole
+    destination: zone.home
+
+  - platform: google_travel_time
+    name: Nicole Home to Work
+    api_key: !secret google_secret
+    origin: zone.home
+    destination: sensor.todays_zone

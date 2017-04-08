@@ -52,7 +52,7 @@ misc_view:
 livingroom:
   name: Living Room
   entities:
-   - switch.copy
+   - switch.living_room_pc
    - light.living_room
    - script.lr_concentrate
    - script.lr_read
@@ -62,9 +62,12 @@ livingroom:
 bedroom:
   name: Master Bedroom
   entities:
-   - switch.copy3
+   - switch.bedroom_pc
    - switch.bedroom_lamps_
    - switch.bedroom_fan
+   - switch.office_led_strip
+   - input_select.led_scene
+   - input_select.led_color
 findlays_room:
   name: Findlay's Room
   entities:
@@ -75,11 +78,8 @@ findlays_room:
 office:
   name: Office
   entities:
-   - switch.copy4
+   - switch.office_pc
    - switch.office_lightswitch
-   - switch.office_led_strip
-   - input_select.led_scene
-   - input_select.led_color
 backyard:
   name: Backyard
   entities:
@@ -99,6 +99,8 @@ presence:
   entities:
    - device_tracker.bigdrakar_justin
    - device_tracker.bigdrakar_nicole
+   - sensor.nicole_phone_to_home
+   - sensor.nicole_home_to_work
    - input_boolean.guest
    - input_boolean.away
    - input_boolean.vacation

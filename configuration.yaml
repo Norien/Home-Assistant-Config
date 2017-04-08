@@ -15,9 +15,13 @@ updater:
 history:
 logbook:
 sun:
-discovery:
+#discovery:
 
 #Components
+#google:
+#  client_id: !secret google_client_id
+#  client_secret: !secret google_secret
+
 emulated_hue:
   #host_ip: 192.168.1.129
   #expose_by_default: false
@@ -32,6 +36,7 @@ logger:
   logs:
     homeassistant.components.switch.template: fatal
     homeassistant.components.switch.command_line: fatal
+    homeassistant.pywemo.ssdp: fatal
 
 http:
    api_password: !secret api_password
