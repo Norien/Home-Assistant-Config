@@ -63,7 +63,7 @@ group:
      - switch.bedroom_pc
      - switch.bedroom_lamps_
      - switch.bedroom_fan
-     - switch.office_led_strip
+     - switch.led_strip
      - input_select.led_scene
      - input_select.led_color
   findlays_room:
@@ -198,6 +198,7 @@ group:
       - media_player.kitchen
       - media_player.backyard
       - media_player.home_group
+      - script.play1
   utilities:
     name: Utilities
     entities:

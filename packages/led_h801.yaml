@@ -52,7 +52,7 @@ homeassistant:
     script.led_set_scene:
       friendly_name: "LED Set Scene"
 
-    switch.office_led_strip:
+    switch.led_strip:
       friendly_name: "Led Strip"
       icon: mdi:led-outline
 
@@ -148,7 +148,7 @@ input_select:
 switch:
   - platform: template
     switches:
-      office_led_strip:
+      led_strip:
         value_template: "{{ not is_state('input_select.led_color', 'Off') }}"
         turn_on:
           service: script.turn_on

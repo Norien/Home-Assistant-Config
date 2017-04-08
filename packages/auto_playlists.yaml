@@ -110,7 +110,7 @@ script:
               item:
                 file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/all.xsp"
 
-###### LIVINGROOM PAW PATROLL
+###### LIVINGROOM PAW PATROL
   auto_pawpatrol:
     sequence:
       - service: script.turn_on
