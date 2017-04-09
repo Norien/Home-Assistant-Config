@@ -4,6 +4,7 @@
 homeassistant:
   customize:
     script.backyard_party:
+      emulated_hue: true
       friendly_name: Party Time
       icon: mdi:pizza
     switch.patio_amplifier:

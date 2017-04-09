@@ -9,19 +9,28 @@ homeassistant:
       friendly_name: Findlay's Lamp
       icon: mdi:lamp
     script.lr_dimmed:
+      emulated_hue: true
       friendly_name: 'Dimmed'
       icon: mdi:brightness-7
     script.lr_relax:
+      emulated_hue: true
       friendly_name: 'Relax'
       icon: mdi:brightness-6
     script.lr_read:
+      emulated_hue: true
       friendly_name: 'Read'
       icon: mdi:brightness-5
     script.lr_concentrate:
+      emulated_hue: true
       friendly_name: 'Bright'
       icon: mdi:star-circle
     script.lr_springblossom:
+      emulated_hue: true
       friendly_name: 'Spring blossom'
+      icon: mdi:flower
+    script.kitchen_sink_bright:
+      emulated_hue: true
+      friendly_name: 'Kitchen Sink Bright'
       icon: mdi:flower
     switch.bedroom_lamps_:
       icon: mdi:lamp
@@ -31,6 +40,15 @@ homeassistant:
       icon: mdi:lightbulb
 
 script:
+  kitchen_sink_bright:
+    sequence:
+      - service: light.turn_on
+        data:
+          entity_id:
+            light.kitchen_sink:
+          brightness: 254
+          rgb_color: [255,241,199]
+
   lr_dimmed:
     sequence:
       - service: light.hue_activate_scene

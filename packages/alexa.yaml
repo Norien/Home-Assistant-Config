@@ -4,12 +4,38 @@
 homeassistant:
   customize:
     script.kitchen_radio:
+      emulated_hue: true
       friendly_name: Kitchen Radio
-      icon: mdi:music-note
+    script.baby_cam:
+      emulated_hue: true
+      friendly_name: Baby Cam
+    script.hotter:
+      emulated_hue: true
+      friendly_name: Hotter
+    script.colder:
+      emulated_hue: true
+      friendly_name: Colder
+    script.pc:
+      emulated_hue: true
+      friendly_name: PC
+    script.bedroom_pc:
+      emulated_hue: true
+      friendly_name: Bedroom PC
+    script.office_pc:
+      emulated_hue: true
+      friendly_name: Office PC
 
 script:
-###### ALEXA TURN ON KITCHEN RADIO
+###### ALEXA TURN ON/OFF KITCHEN RADIO
   kitchen_radio:
+    sequence:
+      - service: script.turn_on
+        data_template:
+          entity_id: >
+            {% if is_state('media_player.kitchen', 'off') %} script.kitchen_radio_off
+            {% elif not is_state('media_player.kitchen', 'off') %} script.kitchen_radio_on
+            {% endif %}
+  kitchen_radio_off:
     sequence:
       - service: media_player.volume_set
         data:
@@ -20,6 +46,10 @@ script:
           entity_id: media_player.kitchen
           media_content_id: http://rfcmedia.streamguys1.com/90hits.mp3
           media_content_type: 'audio/mp3'
+  kitchen_radio_on:
+    sequence:
+      - service: media_player.turn_off
+        entity_id: media_player.kitchen
 
 ###### ALEXA TURN ON BABY CAM
   baby_cam:
@@ -39,14 +69,6 @@ script:
         data_template:
           entity_id: climate.hallway
           temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) -1 }}"
-
-###### ALEXA TURN OFF CHROMECAST
-  chromecast:
-    sequence:
-      - service: media_player.turn_off
-        entity_id: media_player.backyard
-      - service: media_player.turn_off
-        entity_id: media_player.kitchen
 
 ###### ALEXA TURN ON or OFF PC (Living Room)
   pc:

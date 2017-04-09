@@ -23,10 +23,10 @@ sun:
 
 emulated_hue:
   #host_ip: 192.168.1.129
-  #expose_by_default: false
+  expose_by_default: false
   exposed_domains:
     - switch
-    - script
+    #- script
     #- light
     #- input_boolean
 

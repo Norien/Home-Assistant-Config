@@ -1,18 +1,77 @@
-su: must be run from a terminal
-home/homeassistant/.homeassistant/shell/update_ha.sh: 2: home/homeassistant/.homeassistant/shell/update_ha.sh: source: not found
-home/homeassistant/.homeassistant/shell/update_ha.sh: 3: home/homeassistant/.homeassistant/shell/update_ha.sh: pip3: not found
-Failed to restart home-assistant@homeserver.service: Interactive authentication required.
-See system logs and 'systemctl status home-assistant@homeserver.service' for details.
-su: must be run from a terminal
-home/homeassistant/.homeassistant/shell/update_ha.sh: 2: home/homeassistant/.homeassistant/shell/update_ha.sh: source: not found
-home/homeassistant/.homeassistant/shell/update_ha.sh: 3: home/homeassistant/.homeassistant/shell/update_ha.sh: pip3: not found
-Failed to restart home-assistant@homeserver.service: Interactive authentication required.
-See system logs and 'systemctl status home-assistant@homeserver.service' for details.
-nohup: failed to run command 'home/homeassistant/.homeassistant/shell/update_ha.sh': No such file or directory
-nohup: failed to run command 'home/homeassistant/.homeassistant/shell/update_ha.sh': No such file or directory
-nohup: failed to run command 'home/homeassistant/.homeassistant/shell/update_ha.sh': No such file or directory
 /home/homeassistant/.homeassistant/shell/update_ha.sh: line 2: $'\r': command not found
-bash: line 2: /srv/homeassistant/bin/activate: No such file or directory
-bash: line 4: pip3: command not found
-bash: line 5: $'exit\r': command not found
-/home/homeassistant/.homeassistant/shell/update_ha.sh: line 11: $'\r': command not found
+Requirement already up-to-date: homeassistant in /srv/homeassistant/lib/python3.5/site-packages
+Requirement already up-to-date: requests<3,>=2 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: aiohttp==1.3.5 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: pyyaml<4,>=3.11 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: pip>=7.1.0 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Collecting jinja2>=2.9.5 (from homeassistant)
+  Downloading Jinja2-2.9.6-py2.py3-none-any.whl (340kB)
+Requirement already up-to-date: voluptuous==0.9.3 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: async-timeout==1.2.0 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Collecting typing<4,>=3 (from homeassistant)
+  Downloading typing-3.6.1.tar.gz (66kB)
+Collecting pytz>=2016.10 (from homeassistant)
+  Downloading pytz-2017.2-py2.py3-none-any.whl (484kB)
+Requirement already up-to-date: multidict>=2.1.4 in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==1.3.5->homeassistant)
+Requirement already up-to-date: chardet in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==1.3.5->homeassistant)
+Requirement already up-to-date: yarl<0.10,>=0.9.8 in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==1.3.5->homeassistant)
+Requirement already up-to-date: MarkupSafe>=0.23 in /srv/homeassistant/lib/python3.5/site-packages (from jinja2>=2.9.5->homeassistant)
+Collecting setuptools>=0.6b1 (from voluptuous==0.9.3->homeassistant)
+  Downloading setuptools-34.4.0-py2.py3-none-any.whl (389kB)
+Requirement already up-to-date: packaging>=16.8 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: six>=1.6.0 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+/home/homeassistant/.homeassistant/shell/update_ha.sh: line 2: $'\r': command not found
+Collecting homeassistant
+  Downloading homeassistant-0.42.0-py2.py3-none-any.whl (6.9MB)
+Requirement already up-to-date: pip>=7.1.0 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: voluptuous==0.9.3 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Collecting jinja2>=2.9.5 (from homeassistant)
+  Using cached Jinja2-2.9.6-py2.py3-none-any.whl
+Collecting typing<4,>=3 (from homeassistant)
+  Using cached typing-3.6.1.tar.gz
+Requirement already up-to-date: requests<3,>=2 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: async-timeout==1.2.0 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Collecting pytz>=2017.02 (from homeassistant)
+  Using cached pytz-2017.2-py2.py3-none-any.whl
+Collecting aiohttp==2.0.5 (from homeassistant)
+  Downloading aiohttp-2.0.5-cp35-cp35m-manylinux1_x86_64.whl (634kB)
+Requirement already up-to-date: pyyaml<4,>=3.11 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Collecting setuptools>=0.6b1 (from voluptuous==0.9.3->homeassistant)
+  Using cached setuptools-34.4.0-py2.py3-none-any.whl
+Requirement already up-to-date: MarkupSafe>=0.23 in /srv/homeassistant/lib/python3.5/site-packages (from jinja2>=2.9.5->homeassistant)
+Requirement already up-to-date: chardet in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==2.0.5->homeassistant)
+Collecting yarl<0.11,>=0.10.0 (from aiohttp==2.0.5->homeassistant)
+  Using cached yarl-0.10.0-cp35-cp35m-manylinux1_x86_64.whl
+Requirement already up-to-date: multidict>=2.1.4 in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==2.0.5->homeassistant)
+Requirement already up-to-date: packaging>=16.8 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: six>=1.6.0 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: appdirs>=1.4.0 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: pyparsing in /srv/homeassistant/lib/python3.5/site-packages (from packaging>=16.8->setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Building wheels for collected packages: typing
+  Running setup.py bdist_wheel for typing: started
+  Running setup.py bdist_wheel for typing: finished with status 'done'
+  Stored in directory: /home/homeassistant/.cache/pip/wheels/b3/54/d1/d7ad0895b6f57c608afdf3ec5d2339c5d18ffcf2c2e0e0d9aa
+Successfully built typing
+Installing collected packages: jinja2, typing, pytz, yarl, aiohttp, homeassistant, setuptools
+  Found existing installation: Jinja2 2.9.5
+    Uninstalling Jinja2-2.9.5:
+      Successfully uninstalled Jinja2-2.9.5
+  Found existing installation: typing 3.5.3.0
+    Uninstalling typing-3.5.3.0:
+      Successfully uninstalled typing-3.5.3.0
+  Found existing installation: pytz 2016.10
+    Uninstalling pytz-2016.10:
+      Successfully uninstalled pytz-2016.10
+  Found existing installation: yarl 0.9.8
+    Uninstalling yarl-0.9.8:
+      Successfully uninstalled yarl-0.9.8
+  Found existing installation: aiohttp 1.3.5
+    Uninstalling aiohttp-1.3.5:
+      Successfully uninstalled aiohttp-1.3.5
+  Found existing installation: homeassistant 0.41.0
+    Uninstalling homeassistant-0.41.0:
+      Successfully uninstalled homeassistant-0.41.0
+  Found existing installation: setuptools 34.3.2
+    Uninstalling setuptools-34.3.2:
+      Successfully uninstalled setuptools-34.3.2
+Successfully installed aiohttp-2.0.5 homeassistant-0.42.0 jinja2-2.9.6 pytz-2017.2 setuptools-34.4.0 typing-3.6.1 yarl-0.10.0

@@ -198,13 +198,14 @@ group:
       - media_player.kitchen
       - media_player.backyard
       - media_player.home_group
-      - script.play1
+      - script.kodi_playpause
   utilities:
     name: Utilities
     entities:
       - script.refresh_devices
       - script.restart_ha
       - script.update_ha
+      - script.clear_log
   device_status:
     name: Device Status
     entities:

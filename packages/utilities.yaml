@@ -8,7 +8,10 @@ homeassistant:
       icon: mdi:package-variant
     script.restart_ha:
       friendly_name: Restart Home Assistant
-      icon: mdi:package-variant
+      icon: mdi:restart
+    script.clear_log:
+      friendly_name: 'Clear Log File'
+      icon: mdi:eraser
 script:
   update_ha:
     sequence:
@@ -17,8 +20,11 @@ script:
     sequence:
       - service: shell_command.del_log
       - service: shell_command.restart_ha
+  clear_log:
+     sequence:
+       - service: shell_command.del_log
 
 shell_command:
   update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'
   restart_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/restart_ha.sh'
-  del_log: 'sudo bash /home/homeassistant/.homeassistant/shell/sel_log.sh'
+  del_log: 'sudo bash /home/homeassistant/.homeassistant/shell/del_log.sh'
