@@ -9,6 +9,7 @@ homeassistant:
 
 automation:
   - alias: 'Trigger Alarm'
+    initial_state: 'on'
     trigger:
       - platform: state
         entity_id: sensor.findlay_room_motion, sensor.living_room_motion, sensor.dining_room_motion

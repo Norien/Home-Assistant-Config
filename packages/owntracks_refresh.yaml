@@ -9,6 +9,7 @@ homeassistant:
 
 automation:
   - alias: "Owntracks Refresh"
+    initial_state: 'on'
     trigger:
       - platform: time
         minutes: '/5'

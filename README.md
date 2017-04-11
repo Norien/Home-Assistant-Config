@@ -12,6 +12,9 @@ Software on the server:
 * [Glances](https://nicolargo.github.io/glances/)
 * [Mosquitto](https://mosquitto.org/)
 
+Dependencies:
+* Wake on Lan - sudo apt-get install etherwake
+
 **Devices in Use:**
 * [Netgear R6300](http://a.co/hKI7tOr)
 * [Nest Thermostat - 2nd Gen](http://a.co/6BsUg19)

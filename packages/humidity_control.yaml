@@ -15,6 +15,7 @@ homeassistant:
 
 automation:
   - alias: 'Turn on dehumidifier if Mold sensor is high'
+    initial_state: 'on'
     trigger:
       - platform: numeric_state
         entity_id: sensor.mold_indicator
@@ -28,6 +29,7 @@ automation:
           fan_mode: 'on'
 
   - alias: 'Turn off dehumidifier if Mold sensor is low'
+    initial_state: 'on'
     trigger:
       - platform: numeric_state
         entity_id: sensor.mold_indicator
@@ -42,6 +44,7 @@ automation:
 
 ###### NOTIFY IF MOLD SENSOR IS GREATER OR EQUAL TO 70%
   - alias: 'Notify if Mold sensor is too high'
+    initial_state: 'on'
     trigger:
       - platform: numeric_state
         entity_id: sensor.mold_indicator

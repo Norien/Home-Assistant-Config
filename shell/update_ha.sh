@@ -1,3 +1,3 @@
 #!/bin/bash
 
-hassctl update-hass
+hassctl update-hass && hassctl restart 

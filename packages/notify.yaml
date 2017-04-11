@@ -4,6 +4,7 @@
 automation:
 ###### NOTIFY IF NICOLE HAS LEFT ONE OF HER WORKPLACES
   - alias: Notify If Left Work
+    initial_state: 'on'
     trigger:
       - platform: state
         entity_id: device_tracker.bigdrakar_nicole
@@ -25,6 +26,7 @@ automation:
 
 ###### NOTIFY IF VACATION MODE IS ACTIVATED
   - alias: 'Notify if Vacation is On'
+    initial_state: 'on'
     trigger:
       - platform: state
         entity_id: input_boolean.vacation
@@ -37,6 +39,7 @@ automation:
 
 ###### NOTIFY IF VACATION MODE IS DEACTIVATED
   - alias: 'Notify if Vacation is Off'
+    initial_state: 'on'
     trigger:
       - platform: state
         entity_id: input_boolean.vacation
@@ -49,6 +52,7 @@ automation:
 
 ###### NOTIFY IF UPDATE TO HOME ASSISTANT IS Available
   - alias: 'notify if update available'
+    initial_state: 'on'
     trigger:
       - platform: state
         entity_id: updater.updater

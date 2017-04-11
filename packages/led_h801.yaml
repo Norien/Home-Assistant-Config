@@ -58,6 +58,7 @@ homeassistant:
 
 automation:
   - alias: select_led_color
+    initial_state: 'on'
     trigger:
       - platform: state
         entity_id: input_select.led_color
@@ -82,6 +83,7 @@ automation:
             {{ color_map[trigger.to_state.state|replace(' ', '')|lower]|default('ffffff') }}
 
   - alias: select_led_scene
+    initial_state: 'on'
     trigger:
       - platform: state
         entity_id: input_select.led_scene

@@ -13,7 +13,7 @@ group:
       - group.findlays_room
       - group.office
       - group.backyard
-      - group.automation
+      - group.playlists
   sensor_view:
     name: Sensors
     view: yes
@@ -30,8 +30,10 @@ group:
     view: yes
     icon: mdi:kodi
     entities:
-      - group.playlist
-      - group.media_player_all
+      - group.radio
+      - group.media_player1
+      - group.media_player2
+      - group.media_player_chromecast
   camera_view:
     name: Cameras
     view: yes
@@ -57,6 +59,7 @@ group:
      - script.lr_relax
      - script.lr_dimmed
      - script.lr_springblossom
+     - automation.night_light
   bedroom:
     name: Master Bedroom
     entities:
@@ -84,10 +87,9 @@ group:
       - light.deck_lights
       - switch.patio_amplifier
       - script.backyard_party
-  automation:
-    name: Automations
+  playlists:
+    name: Playlists
     entities:
-      - automation.night_light
       - script.good_morning
       - script.auto_all_tv
       - script.auto_cartoons
@@ -184,21 +186,27 @@ group:
      - sensor.living_room_dimmer_switch
      - sensor.justins_g5_battery_dynamic
      - sensor.nicoles_s7_battery_dynamic
-  playlist:
+  Radio:
     name: Radio
     entities:
       - input_select.radio_station_location
       - input_select.radio_station
       - input_slider.volume_radio
-  media_player_all:
-    name: Media Players
+      - script.radio
+  media_player1:
+    name: Media Players Living Room
     entities:
       - media_player.kodi_livingroom
+  media_player2:
+    name: Media Player Bedroom
+    entities:
       - media_player.kodi_bedroom
+  media_player_chromecast:
+    name: Media Players Chromecast
+    entities:
       - media_player.kitchen
       - media_player.backyard
       - media_player.home_group
-      - script.kodi_playpause
   utilities:
     name: Utilities
     entities:
@@ -206,6 +214,9 @@ group:
       - script.restart_ha
       - script.update_ha
       - script.clear_log
+      - sensor.current_version
+      - sensor.installed_version
+      - sensor.ha_last_restart
   device_status:
     name: Device Status
     entities:

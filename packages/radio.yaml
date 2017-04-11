@@ -1,12 +1,23 @@
 ################################################################
 ## Packages / Radio
 ################################################################
-automation:
-  - alias: "Radio"
-    trigger:
-      - platform: state
-        entity_id: input_select.radio_station
-    action:
+homeassistant:
+  customize:
+    script.radio:
+      friendly_name: Start Radio
+      icon: mdi:radio
+
+script:
+  radio:
+    sequence:
+      - service: media_player.volume_set
+        data_template:
+          entity_id: >
+            {% if is_state("input_select.radio_station_location", "Kitchen") %} media_player.kitchen
+            {% elif is_state("input_select.radio_station_location", "Backyard") %} media_player.backyard
+            {% elif is_state("input_select.radio_station_location", "All Zones") %} media_player.home_group
+            {% endif %}
+          volume_level: '{{  states.input_slider.volume_radio.state  }}'
       - service: media_player.play_media
         data_template:
           entity_id: >
@@ -27,19 +38,8 @@ automation:
             {% endif %}
           media_content_type: 'audio/mp3'
   ###### VOLUME SLIDER CONTROL (LOCATION BASED)
-  - alias: 'Set Radio Volume'
-    trigger:
-      - platform: state
-        entity_id: input_slider.volume_radio
-    action:
-      - service: media_player.volume_set
-        data_template:
-          entity_id: >
-            {% if is_state("input_select.radio_station_location", "Kitchen") %} media_player.kitchen
-            {% elif is_state("input_select.radio_station_location", "Backyard") %} media_player.backyard
-            {% elif is_state("input_select.radio_station_location", "All Zones") %} media_player.home_group
-            {% endif %}
-          volume_level: '{{  states.input_slider.volume_radio.state  }}'
+#  radio_volume:
+
 
 input_select:
   radio_station:

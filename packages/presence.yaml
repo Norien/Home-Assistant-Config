@@ -15,6 +15,7 @@ homeassistant:
 automation:
 ############# AWAY
   - alias: Set Away Mode on
+    initial_state: 'on'
     condition:
     - condition: and
       conditions:
@@ -43,6 +44,7 @@ automation:
 
 ############# HOME
   - alias: 'Set Away Mode off'
+    initial_state: 'on'
     condition:
     - condition: state
       entity_id: input_boolean.away
