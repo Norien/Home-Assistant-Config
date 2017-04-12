@@ -7,17 +7,10 @@ homeassistant:
       friendly_name: Start Radio
       icon: mdi:radio
 
+###### SELECT LOCATION AND STATION
 script:
   radio:
     sequence:
-      - service: media_player.volume_set
-        data_template:
-          entity_id: >
-            {% if is_state("input_select.radio_station_location", "Kitchen") %} media_player.kitchen
-            {% elif is_state("input_select.radio_station_location", "Backyard") %} media_player.backyard
-            {% elif is_state("input_select.radio_station_location", "All Zones") %} media_player.home_group
-            {% endif %}
-          volume_level: '{{  states.input_slider.volume_radio.state  }}'
       - service: media_player.play_media
         data_template:
           entity_id: >
@@ -37,10 +30,32 @@ script:
             {% elif is_state('input_select.radio_station', 'Elium-Rock') %} http://listen.radionomy.com/Elium-Rock
             {% endif %}
           media_content_type: 'audio/mp3'
-  ###### VOLUME SLIDER CONTROL (LOCATION BASED)
-#  radio_volume:
 
+###### VOLUME SLIDER CONTROL (LOCATION BASED)
+automation:
+  - alias: 'Set Radio Volume'
+    trigger:
+      - platform: state
+        entity_id: input_slider.volume_radio
+    action:
+      - service: media_player.volume_set
+        data_template:
+          entity_id: >
+            {% if is_state("input_select.radio_station_location", "Kitchen") %} media_player.kitchen
+            {% elif is_state("input_select.radio_station_location", "Backyard") %} media_player.backyard
+            {% elif is_state("input_select.radio_station_location", "All Zones") %} media_player.home_group
+            {% endif %}
+          volume_level: '{{  states.input_slider.volume_radio.state  }}'
 
+input_slider:
+  volume_radio:
+    name: Volume
+    icon: mdi:volume-high
+    min: 0
+    max: 1
+    step: 0.05
+
+###### SELECTORS
 input_select:
   radio_station:
     name: Radio Station
@@ -65,11 +80,3 @@ input_select:
       - All Zones
     initial: "Kitchen"
     icon: mdi:radio
-
-input_slider:
-  volume_radio:
-    name: Volume
-    icon: mdi:volume-high
-    min: 0
-    max: 1
-    step: 0.05

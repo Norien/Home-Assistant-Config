@@ -11,9 +11,10 @@ Software on the server:
 * [ZoneMinder](https://zoneminder.com/)
 * [Glances](https://nicolargo.github.io/glances/)
 * [Mosquitto](https://mosquitto.org/)
+* [Pi-Hole](https://pi-hole.net/)
 
 Dependencies:
-* Wake on Lan - sudo apt-get install etherwake
+* [Wake on Lan - sudo apt-get install etherwake](https://launchpad.net/ubuntu/+source/etherwake)
 
 **Devices in Use:**
 * [Netgear R6300](http://a.co/hKI7tOr)

@@ -34,7 +34,7 @@ script:
       - service: tts.google_say
         data_template:
           entity_id: media_player.kitchen
-          message: "Good Morning, the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}. Travel time this morning is {{states('sensor.nicole_home_to_work')}} minutes, Have a nice day at work."
+          message: "Good Morning, the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}. Travel time this morning is {{states('sensor.nicole_home_to_work')}} minutes, Have a nice day at work Nicole, the love of my life."
 
   good_morning_weekend:
     sequence:

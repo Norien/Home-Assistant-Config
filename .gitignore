@@ -23,3 +23,8 @@ pc_switches.yaml
 .db-wal
 *.db-wal
 shell/del_log.sh
+*.db-shm
+shell/bedroom_pc_on.sh
+shell/living_room_pc_on.sh
+shell/update_ha.log
+shell/update_ha.log
