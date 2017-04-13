@@ -25,3 +25,5 @@ shell/bedroom_pc_on.sh
 shell/living_room_pc_on.sh
 shell/waste_pickup_yard_waste.py
 shell/waste_pickup_garbage_recycle.py
+shell/update_ha.log
+shell/update_ha.log

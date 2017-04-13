@@ -12,7 +12,7 @@ homeassistant:
     script.clear_log:
       friendly_name: 'Clear Log File'
       icon: mdi:eraser
-      
+
 script:
   update_ha:
     sequence:
@@ -27,6 +27,7 @@ script:
 
 automation:
   - alias: "Startup Notification"
+    initial_state: 'on'
     trigger:
       platform: event
       event_type: homeassistant_start

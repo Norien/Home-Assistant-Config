@@ -3,6 +3,8 @@
 ################################################################
 homeassistant:
   customize:
+    group.backyard:
+      order: 1
     script.backyard_party:
       emulated_hue: true
       friendly_name: Party Time
@@ -11,6 +13,16 @@ homeassistant:
       friendly_name: Patio Amplifier
       icon: mdi:amplifier
 
+###### STATE CARD
+group:
+  backyard:
+    name: Backyard
+    entities:
+      - light.deck_lights
+      - switch.patio_amplifier
+      - script.backyard_party
+
+###### AUTOMATIC CONTROL OF AMPLIFIER
 automation:
   - alias: "Backyard Amp Off"
     initial_state: 'on'
@@ -36,6 +48,7 @@ automation:
       - service: switch.turn_on
         entity_id: switch.patio_amplifier
 
+###### AUTOMATIC CONTROL OF CHROMECAST AUDIO
   - alias: "Backyard media player Off"
     initial_state: 'on'
     trigger:
@@ -47,6 +60,7 @@ automation:
       - service: media_player.turn_off
         entity_id: media_player.backyard
 
+###### 1 PRESS TO START MUSIC AND LIGHTS
 script:
   backyard_party:
     sequence:
@@ -68,6 +82,7 @@ script:
           media_content_id: http://149.56.23.7:20254/stream
           media_content_type: 'audio/mp3'
 
+###### TURN ON LIGHT IF DARK TO PURPLE
   backyard_lights:
     sequence:
       - condition: state

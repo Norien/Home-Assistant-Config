@@ -75,3 +75,85 @@ Installing collected packages: jinja2, typing, pytz, yarl, aiohttp, homeassistan
     Uninstalling setuptools-34.3.2:
       Successfully uninstalled setuptools-34.3.2
 Successfully installed aiohttp-2.0.5 homeassistant-0.42.0 jinja2-2.9.6 pytz-2017.2 setuptools-34.4.0 typing-3.6.1 yarl-0.10.0
+/home/homeassistant/.homeassistant/shell/update_ha.sh: line 2: $'\r': command not found
+Collecting homeassistant
+  Downloading homeassistant-0.42.2-py2.py3-none-any.whl (6.9MB)
+Requirement already up-to-date: pip>=7.1.0 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: pytz>=2017.02 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: typing<4,>=3 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: jinja2>=2.9.5 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: pyyaml<4,>=3.11 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: requests<3,>=2 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: aiohttp==2.0.5 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: async-timeout==1.2.0 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: voluptuous==0.9.3 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: MarkupSafe>=0.23 in /srv/homeassistant/lib/python3.5/site-packages (from jinja2>=2.9.5->homeassistant)
+Requirement already up-to-date: yarl<0.11,>=0.10.0 in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==2.0.5->homeassistant)
+Requirement already up-to-date: chardet in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==2.0.5->homeassistant)
+Requirement already up-to-date: multidict>=2.1.4 in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==2.0.5->homeassistant)
+Requirement already up-to-date: setuptools>=0.6b1 in /srv/homeassistant/lib/python3.5/site-packages (from voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: packaging>=16.8 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: appdirs>=1.4.0 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: six>=1.6.0 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: pyparsing in /srv/homeassistant/lib/python3.5/site-packages (from packaging>=16.8->setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Installing collected packages: homeassistant
+  Found existing installation: homeassistant 0.42.0
+    Uninstalling homeassistant-0.42.0:
+      Successfully uninstalled homeassistant-0.42.0
+Successfully installed homeassistant-0.42.2
+/home/homeassistant/.homeassistant/shell/update_ha.sh: line 2: $'\r': command not found
+Collecting homeassistant
+  Downloading homeassistant-0.42.3-py2.py3-none-any.whl (6.9MB)
+Requirement already up-to-date: jinja2>=2.9.5 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: pytz>=2017.02 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: requests<3,>=2 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: pyyaml<4,>=3.11 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: aiohttp==2.0.5 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: voluptuous==0.9.3 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: async-timeout==1.2.0 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: typing<4,>=3 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: pip>=7.1.0 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: MarkupSafe>=0.23 in /srv/homeassistant/lib/python3.5/site-packages (from jinja2>=2.9.5->homeassistant)
+Requirement already up-to-date: yarl<0.11,>=0.10.0 in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==2.0.5->homeassistant)
+Requirement already up-to-date: multidict>=2.1.4 in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==2.0.5->homeassistant)
+Requirement already up-to-date: chardet in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==2.0.5->homeassistant)
+Collecting setuptools>=0.6b1 (from voluptuous==0.9.3->homeassistant)
+  Downloading setuptools-34.4.1-py2.py3-none-any.whl (390kB)
+Requirement already up-to-date: packaging>=16.8 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: six>=1.6.0 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: appdirs>=1.4.0 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: pyparsing in /srv/homeassistant/lib/python3.5/site-packages (from packaging>=16.8->setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Installing collected packages: homeassistant, setuptools
+  Found existing installation: homeassistant 0.42.2
+    Uninstalling homeassistant-0.42.2:
+      Successfully uninstalled homeassistant-0.42.2
+  Found existing installation: setuptools 34.4.0
+    Uninstalling setuptools-34.4.0:
+      Successfully uninstalled setuptools-34.4.0
+Successfully installed homeassistant-0.42.3 setuptools-34.4.1
+/home/homeassistant/.homeassistant/shell/update_ha.sh: line 2: $'\r': command not found
+Requirement already up-to-date: homeassistant in /srv/homeassistant/lib/python3.5/site-packages
+Requirement already up-to-date: pyyaml<4,>=3.11 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: jinja2>=2.9.5 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: async-timeout==1.2.0 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: typing<4,>=3 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: requests<3,>=2 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: pip>=7.1.0 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: voluptuous==0.9.3 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: pytz>=2017.02 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: aiohttp==2.0.5 in /srv/homeassistant/lib/python3.5/site-packages (from homeassistant)
+Requirement already up-to-date: MarkupSafe>=0.23 in /srv/homeassistant/lib/python3.5/site-packages (from jinja2>=2.9.5->homeassistant)
+Requirement already up-to-date: setuptools>=0.6b1 in /srv/homeassistant/lib/python3.5/site-packages (from voluptuous==0.9.3->homeassistant)
+Collecting chardet (from aiohttp==2.0.5->homeassistant)
+  Downloading chardet-3.0.2-py2.py3-none-any.whl (133kB)
+Requirement already up-to-date: yarl<0.11,>=0.10.0 in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==2.0.5->homeassistant)
+Requirement already up-to-date: multidict>=2.1.4 in /srv/homeassistant/lib/python3.5/site-packages (from aiohttp==2.0.5->homeassistant)
+Requirement already up-to-date: packaging>=16.8 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: appdirs>=1.4.0 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: six>=1.6.0 in /srv/homeassistant/lib/python3.5/site-packages (from setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Requirement already up-to-date: pyparsing in /srv/homeassistant/lib/python3.5/site-packages (from packaging>=16.8->setuptools>=0.6b1->voluptuous==0.9.3->homeassistant)
+Installing collected packages: chardet
+  Found existing installation: chardet 2.3.0
+    Uninstalling chardet-2.3.0:
+      Successfully uninstalled chardet-2.3.0
+Successfully installed chardet-3.0.2
