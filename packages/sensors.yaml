@@ -359,6 +359,16 @@ sensor:
             {{ states.zone.home.attributes.latitude | string + ', ' | string + states.zone.home.attributes.longitude | string }}
           {% endif %}
 
+  - platform: template
+    sensors:
+      monday_flop:
+        value_template: >
+          {%- if "{{as_timestamp(now())|timestamp_custom('%W', true)|lower}} % 2 == 0"  -%}
+            {{states.zone.work_westmount.attributes.latitude | string + ', ' | string + states.zone.work_westmount.attributes.longitude | string}}
+          {%- else -%}
+            {{ states.zone.work_old_south.attributes.latitude | string + ', ' | string + states.zone.work_old_south.attributes.longitude | string }}
+          {%- endif %}
+
 ###### GOOGLE TRAVEL TIME
   - platform: google_travel_time
     name: Nicole Phone To Home

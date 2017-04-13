@@ -130,6 +130,11 @@ media_player:
     name: kodi_bedroom
     turn_off_action: hibernate
 
+switch:
+  - platform: tplink
+    host: 192.168.1.211
+    name: 'washing_machine'
+
 #Side Panels
 panel_iframe:
   zoneminder:

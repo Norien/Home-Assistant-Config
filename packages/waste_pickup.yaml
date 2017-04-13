@@ -1,0 +1,31 @@
+################################################################
+## Packages / Waste Pickup
+################################################################
+homeassistant:
+  customize:
+    sensor.waste_pickup_garbage_recycling:
+      friendly_name: Waste Pickup
+      icon: mdi:delete
+    sensor.waste_pickup_yard_waste:
+      friendly_name: Yard Waste Pickup
+      icon: mdi:delete
+
+###### STATE CARD
+group:
+  waste_pickup:
+    name: Waste Pickup
+    entities:
+      - sensor.waste_pickup_garbage_recycling
+      - sensor.waste_pickup_yard_waste
+
+sensor:
+######  GARBAGE AND RECYCLE
+  - platform: command_line
+    command: "python /home/homeassistant/.homeassistant/shell/waste_pickup_garbage_recycle.py"
+    name: 'Waste Pickup Garbage Recycling'
+    value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
+######  YARD WASTE
+  - platform: command_line
+    command: "python /home/homeassistant/.homeassistant/shell/waste_pickup_yard_waste.py"
+    name: 'Waste Pickup Yard Waste'
+    value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'

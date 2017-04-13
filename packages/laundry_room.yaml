@@ -1,0 +1,67 @@
+################################################################
+## Packages / Laundry Room
+################################################################
+homeassistant:
+  customize:
+###### ENERGY READINGS
+    sensor.washing_machine_amps:
+      friendly_name: Amps
+      icon: mdi:power-plug
+    sensor.washing_machine_watts:
+      friendly_name: Watts
+      icon: mdi:power-plug
+    sensor.washing_machine_kw:
+      friendly_name: KW
+      icon: mdi:power-plug
+    sensor.washing_machine_volts:
+      friendly_name: Volttage
+      icon: mdi:power-plug
+
+###### Switches
+    switch.washing_machine:
+      friendly_name: Washing Machine
+      icon: mdi:washing-machine
+
+###### STATE CARD
+group:
+  laundry_room:
+    name: Laundry Room
+    entities:
+      - switch.washing_machine
+      - sensor.washing_machine_amps
+      - sensor.washing_machine_watts
+      - sensor.washing_machine_kw
+      - sensor.washing_machine_volts
+
+###### WASHING MACHINE ENERGY SENSORS
+sensor:
+  - platform: template
+    sensors:
+      washing_machine_amps:
+        value_template: '{{ states.switch.washing_machine.attributes["Current"] | replace(" A", "") | float }}'
+        unit_of_measurement: 'A'
+      washing_machine_watts:
+        value_template: '{{ states.switch.washing_machine.attributes["Current consumption"] | replace(" W", "") | float }}'
+        unit_of_measurement: 'W'
+      washing_machine_kw:
+        value_template: '{{ states.switch.washing_machine.attributes["Total consumption"] | replace(" kW", "") | float }}'
+        unit_of_measurement: 'kW'
+      washing_machine_volts:
+        value_template: '{{ states.switch.washing_machine.attributes["Voltage"] | replace(" V", "") | float }}'
+        unit_of_measurement: 'V'
+
+###### NOTIFY IF WASH IS DONE ( AND TURN OFF SWITCH )
+automation:
+  - alias: 'washing machine is done'
+    initial_state: 'on'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.washing_machine_watts
+        below: 4.3
+    action:
+      - service: notify.justin
+        data:
+          message: 'The Wash has completed.'
+    #Verify first so that wash isn't turned off in the middle of a cycle.
+    #  - service: switch.turn_off
+    #    entity_id: switch.washing_machine

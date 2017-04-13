@@ -25,6 +25,8 @@ group:
       - group.all_humidity
       - group.smoke_gas
       - group.motion_sensors
+      - group.laundry_room
+      - group.waste_pickup
   media_view:
     name: Media Players
     view: yes
@@ -141,6 +143,7 @@ group:
      - binary_sensor.hallway_thermostat_fan
      - sensor.hallway_thermostat_hvac_state
      - sensor.hallway_thermostat_operation_mode
+
   motion_sensors:
     name: Motion Sensors
     entities:
