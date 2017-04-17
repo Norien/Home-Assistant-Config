@@ -25,6 +25,7 @@ homeassistant:
 ###### STATE CARD
 group:
   laundry_room:
+    control: hidden
     name: Laundry Room
     entities:
       - switch.washing_machine

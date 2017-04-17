@@ -53,6 +53,7 @@ group:
   #Groups------------------------------------------------------------------
   livingroom:
     name: Living Room
+    control: hidden
     entities:
      - switch.living_room_pc
      - light.living_room
@@ -81,16 +82,19 @@ group:
       - sensor.findlay_room_motion
   office:
     name: Office
+    control: hidden
     entities:
      - switch.office_pc
      - switch.office_lightswitch
   playlists:
+    control: hidden
     name: Playlists
     entities:
       - script.auto_all_tv
       - script.auto_cartoons
       - script.auto_pawpatrol
   presence:
+    control: hidden
     name: Presence
     entities:
      - device_tracker.bigdrakar_justin
@@ -101,6 +105,7 @@ group:
      - input_boolean.away
      - input_boolean.vacation
   weather:
+    control: hidden
     name: Weather
     entities:
       - sensor.dark_sky_temperature
@@ -153,6 +158,7 @@ group:
      - sensor.dining_room_temperature
      - sensor.average_house_temp
   all_humidity:
+    control: hidden
     name: Humidity
     entities:
       - sensor.dark_sky_humidity
@@ -203,16 +209,6 @@ group:
       - media_player.kitchen
       - media_player.backyard
       - media_player.home_group
-  utilities:
-    name: Utilities
-    entities:
-      - script.refresh_devices
-      - script.restart_ha
-      - script.update_ha
-      - script.clear_log
-      - sensor.current_version
-      - sensor.installed_version
-      - sensor.ha_last_restart
   device_status:
     name: Device Status
     entities:

@@ -1,0 +1,47 @@
+################################################################
+## Packages / Good Night
+################################################################
+homeassistant:
+  customize:
+    script.good_night:
+      emulated_hue: true
+      emulated_hue_name: "Good Night"
+      friendly_name: Good Night
+      icon: mdi:sleep
+
+script:
+  good_night:
+    sequence:
+##### BEDROOM
+    - service: switch.turn_off
+      entity_id: switch.bedroom_pc_off
+    - service: switch.turn_off
+      entity_id: switch.led_strip
+    - service: switch.turn_off
+      entity_id: switch.bedroom_lamps_
+    - service: switch.turn_on
+      entity_id: switch.bedroom_fan
+###### LIVINGROOM/KITCHEN
+    - service: switch.turn_off
+      entity_id: switch.living_room_pc_off
+    - service: light.turn_off
+      entity_id: light.living_room
+    - service: light.turn_off
+      entity_id: light.kitchen_sink
+    - service: media_player.turn_off
+      entity_id: media_player.kitchen
+###### BACKYARD
+    - service: light.turn_off
+      entity_id: light.deck_lights
+    - service: media_player.turn_off
+      entity_id: media_player.backyard
+    - service: switch.turn_off
+      entity_id: switch.patio_amplifier
+###### OFFICE
+    - service: switch.turn_off
+      entity_id: switch.office_lightswitch
+    - service: switch.turn_off
+      entity_id: switch.office_pc
+###### lAUNDRY ROOM
+    - service: switch.turn_off
+      entity_id: switch.washing_machine

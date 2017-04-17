@@ -3,8 +3,6 @@
 ################################################################
 homeassistant:
   customize:
-    group.backyard:
-      order: 1
     script.backyard_party:
       emulated_hue: true
       friendly_name: Party Time
@@ -16,6 +14,7 @@ homeassistant:
 ###### STATE CARD
 group:
   backyard:
+    control: hidden
     name: Backyard
     entities:
       - light.deck_lights

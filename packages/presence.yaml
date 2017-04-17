@@ -40,7 +40,13 @@ automation:
         entity_id: input_boolean.away
       - service: notify.justin
         data:
-          message: 'Nobody is home, switching to away mode! The alarm is armed'
+          message: 'Nobody is home, All switches and lights have been turned OFF. The alarm is armed'
+      - service: script.turn_on
+        entity_id: script.good_night
+      - service: switch.turn_off
+        entity_id: switch.bedroom_fan
+      - service: light.turn_off
+        entity_id: light.findlay_lamp
 
 ############# HOME
   - alias: 'Set Away Mode off'

@@ -9,6 +9,12 @@ homeassistant:
     sensor.waste_pickup_yard_waste:
       friendly_name: Yard Waste Pickup
       icon: mdi:delete
+    sensor.waste_pickup_container:
+      friendly_name: 3 Container Exemption
+      icon: mdi:delete
+    script.garbage_tracker:
+      friendly_name: Garbage Tracker
+      emulated_hue: true
 
 ###### STATE CARD
 group:
@@ -17,15 +23,38 @@ group:
     entities:
       - sensor.waste_pickup_garbage_recycling
       - sensor.waste_pickup_yard_waste
+      - sensor.waste_pickup_container
 
 sensor:
 ######  GARBAGE AND RECYCLE
   - platform: command_line
     command: "python /home/homeassistant/.homeassistant/shell/waste_pickup_garbage_recycle.py"
     name: 'Waste Pickup Garbage Recycling'
+    scan_interval: 43200
     value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
 ######  YARD WASTE
   - platform: command_line
     command: "python /home/homeassistant/.homeassistant/shell/waste_pickup_yard_waste.py"
     name: 'Waste Pickup Yard Waste'
+    scan_interval: 43200
     value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
+######  3 Container Exemption
+  - platform: command_line
+    command: "python /home/homeassistant/.homeassistant/shell/waste_pickup_container.py"
+    name: 'Waste Pickup Container'
+    scan_interval: 43200
+    value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
+###### TTS SCRIPT TO CALL FROM ALEXA
+script:
+  garbage_tracker:
+    sequence:
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.kitchen
+          message: >
+           {%- if states.sensor.waste_pickup_garbage_recycling.state == states.sensor.waste_pickup_container.state -%}
+           The next garbage pickup is {{states('sensor.waste_pickup_garbage_recycling')}} which also has a 3 container exemption.
+           {%- else -%}
+           The next garbage pickup is {{states('sensor.waste_pickup_garbage_recycling')}}
+           {%- endif %}
+           And The next yard waste pickup will be on {{states('sensor.waste_pickup_yard_waste')}}

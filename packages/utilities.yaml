@@ -12,6 +12,27 @@ homeassistant:
     script.clear_log:
       friendly_name: 'Clear Log File'
       icon: mdi:eraser
+    sensor.ha_uptime:
+      friendly_name: Home Assistant uptime
+      icon: mdi:timer
+    sensor.server_uptime:
+      friendly_name: Server uptime
+      icon: mdi:timer
+
+###### STATE CARD
+group:
+  utilities:
+    name: Utilities
+    control: hidden
+    entities:
+      - script.refresh_devices
+      - script.restart_ha
+      - script.update_ha
+      - script.clear_log
+      - sensor.current_version
+      - sensor.installed_version
+      - sensor.ha_uptime
+      - sensor.server_uptime
 
 script:
   update_ha:
@@ -25,18 +46,6 @@ script:
      sequence:
        - service: shell_command.del_log
 
-automation:
-  - alias: "Startup Notification"
-    initial_state: 'on'
-    trigger:
-      platform: event
-      event_type: homeassistant_start
-    action:
-      service: notify.justin
-      data:
-        title: "HomeAssistant Startup"
-        message: "Home Assistant restarted."
-
 sensor:
   - platform: command_line
     command: python3 -c "import requests; print(requests.get('https://pypi.python.org/pypi/homeassistant/json').json()['info']['version'])"
@@ -44,11 +53,31 @@ sensor:
   - platform: command_line
     name: Installed Version
     command: /srv/homeassistant/bin/hass --version
-  - platform: template
-    sensors:
-      ha_last_restart:
-        value_template: '{{ as_timestamp(states.automation.startup_notification.attributes.last_triggered) | timestamp_custom("%b %d %X") }}'
-        friendly_name: Last Restart
+  - platform: command_line
+    name: 'HA Uptime'
+    command: echo "$(($(date +%s) - $(date -d "$(head -n1 /home/homeassistant/.homeassistant/home-assistant.log | cut -d' ' -f-2)" +%s)))"
+    scan_interval: 720
+    value_template: >-
+      {% set uptime = value | int %}
+      {% set seconds = uptime % 60 %}
+      {% set minutes = ((uptime % 3600) / 60) | int %}
+      {% set hours = ((uptime % 86400) / 3600) | int %}
+      {% set days = (uptime / 86400) | int %}
+      {%- if days > 0 -%}
+        {%- if days == 1 -%}
+          1 day
+        {%- else -%}
+          {{ days }} days
+        {%- endif -%}
+        {{ ', ' }}
+      {%- endif -%}
+      {{ '%02d' % hours }}:{{ '%02d' % minutes }}
+  - platform: command_line
+    command: "uptime"
+    name: 'Server Uptime'
+    scan_interval: 240
+    #value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
+
 
 shell_command:
   update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'

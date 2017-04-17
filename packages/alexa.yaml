@@ -5,25 +5,28 @@ homeassistant:
   customize:
     script.kitchen_radio:
       emulated_hue: true
-      friendly_name: Kitchen Radio
+      friendly_name: 'Kitchen Radio'
     script.baby_cam:
       emulated_hue: true
-      friendly_name: Baby Cam
+      friendly_name: 'Baby Cam'
     script.hotter:
       emulated_hue: true
-      friendly_name: Hotter
+      friendly_name: 'Hotter'
     script.colder:
       emulated_hue: true
-      friendly_name: Colder
+      friendly_name: 'Colder'
+    script.fan:
+      emulated_hue: true
+      friendly_name: 'Fan'
     script.pc:
       emulated_hue: true
-      friendly_name: PC
+      friendly_name: 'PC'
     script.bedroom_pc:
       emulated_hue: true
-      friendly_name: Bedroom PC
+      friendly_name: 'Bedroom PC'
     script.office_pc:
       emulated_hue: true
-      friendly_name: Office PC
+      friendly_name: 'Office PC'
 
 script:
 ###### ALEXA TURN ON/OFF KITCHEN RADIO
@@ -56,7 +59,7 @@ script:
     sequence:
       - service: shell_command.baby_cam
 
-###### ALEXA TURN ON HOT / COLD
+###### ALEXA TURN ON HOT / COLD / FAN
   hotter:
     sequence:
       - service: climate.set_temperature
@@ -69,6 +72,13 @@ script:
         data_template:
           entity_id: climate.hallway
           temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) -1 }}"
+
+  fan:
+    sequence:
+      - service: climate.set_fan_mode
+        data:
+          entity_id: climate.hallway
+          fan_mode: 'auto'
 
 ###### ALEXA TURN ON or OFF PC (Living Room)
   pc:
