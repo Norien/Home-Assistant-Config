@@ -1,11 +1,21 @@
+
+
 ################################################################
 ## Packages / Radio
 ################################################################
 homeassistant:
   customize:
+###### DEFINE ANCHORS #####################################################
+###### EDIT MEDIA PLAYER ENTITIES IN THE BRACKETS##########################
+    MediaPlayer1: &media_player_1 "media_player.kitchen"
+    MediaPlayer2: &media_player_2 "media_player.backyard"
+    MediaPlayer3: &media_player_3 "media_player.home_group"
+###########################################################################
     script.radio:
       friendly_name: Start Radio
       icon: mdi:radio
+
+###### DEFINE MEDIA PLAYERS
 
 ###### SELECT LOCATION AND STATION
 script:
@@ -14,9 +24,9 @@ script:
       - service: media_player.play_media
         data_template:
           entity_id: >
-            {% if is_state('input_select.radio_station_location', 'Kitchen') %} media_player.kitchen
-            {% elif is_state('input_select.radio_station_location', 'Backyard') %} media_player.backyard
-            {% elif is_state('input_select.radio_station_location', 'All Zones') %} media_player.home_group
+            {% if is_state('input_select.radio_station_location', 'Kitchen') %} *media_player_1
+            {% elif is_state('input_select.radio_station_location', 'Backyard') %} *media_player_2
+            {% elif is_state('input_select.radio_station_location', 'All Zones') %} *media_player_3
             {% endif %}
           media_content_id: >
             {% if is_state('input_select.radio_station', 'Hot 108') %} http://jbmedia-edge1.cdnstream.com:80/hot108
@@ -42,9 +52,9 @@ automation:
       - service: media_player.volume_set
         data_template:
           entity_id: >
-            {% if is_state("input_select.radio_station_location", "Kitchen") %} media_player.kitchen
-            {% elif is_state("input_select.radio_station_location", "Backyard") %} media_player.backyard
-            {% elif is_state("input_select.radio_station_location", "All Zones") %} media_player.home_group
+            {% if is_state("input_select.radio_station_location", "Kitchen") %} *media_player_1
+            {% elif is_state("input_select.radio_station_location", "Backyard") %} *media_player_2
+            {% elif is_state("input_select.radio_station_location", "All Zones") %} *media_player_3
             {% endif %}
           volume_level: '{{  states.input_slider.volume_radio.state  }}'
 
