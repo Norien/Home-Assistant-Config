@@ -33,7 +33,11 @@ Dependencies:
 * [WeMo Light Switch](http://a.co/d2HZ753)
 * [H801 Wifi RGB Controller](http://a.co/ej6LvjZ)
 * [TP-Link HS110](http://a.co/2Z7Jq9k)
-* ARRIVED WAITING FOR FTDI USB TO TTL ** [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html)
+* [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html)
 * ON ORDER ** [Sonoff Dual WiFi Smart Switch](http://www.ebay.ca/itm/112266257555?_trksid=p2060353.m2749.l2649&ssPageName=STRK%3AMEBIDX%3AIT)
 * ON ORDER ** [WeMos D1 Mini](http://www.ebay.ca/itm/182035363514?_trksid=p2060353.m2749.l2649&ssPageName=STRK%3AMEBIDX%3AIT)
 * ON ORDER ** [NodeMcu ESP8266](https://geek.wish.com/search/1pc%20NodeMcu%20Lua%20ESP8266%20CH340G%20WIFI%20Internet%20Development%20Board%20Module#cid=58c646190b362f70c8bbeb10)
+
+**Wish List:**
+[ClearOne XAP800](http://www.ebay.ca/itm/CLEARONE-XAP800-Professional-Conferencing-System-910-151-101-Rev-2-5-0-/292069134421?hash=item4400ad5055:g:dYwAAOSwOgdYsjBk)
+[Kinter MA-180](http://a.co/3HSlurg)

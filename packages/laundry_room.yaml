@@ -53,7 +53,7 @@ sensor:
 
 ###### NOTIFY IF WASH IS DONE ( AND TURN OFF SWITCH )
 automation:
-  - alias: 'washing machine is done'
+  - alias: 'notify if washing machine is done'
     initial_state: 'on'
     trigger:
       - platform: numeric_state
@@ -63,6 +63,13 @@ automation:
       - service: notify.justin
         data:
           message: 'The Wash has completed.'
-    #Verify first so that wash isn't turned off in the middle of a cycle.
-    #  - service: switch.turn_off
-    #    entity_id: switch.washing_machine
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.kitchen
+          volume_level: '0.50'
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.kitchen
+          message: "The Washing machine has completed it's cycle."
+      - service: switch.turn_off
+        entity_id: switch.washing_machine
