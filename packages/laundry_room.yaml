@@ -60,16 +60,30 @@ automation:
         entity_id: sensor.washing_machine_watts
         below: 4.3
     action:
+      - service: script.laundry_tts
       - service: notify.justin
         data:
           message: 'The Wash has completed.'
-      - service: media_player.volume_set
-        data:
-          entity_id: media_player.kitchen
-          volume_level: '0.50'
-      - service: tts.google_say
-        data_template:
-          entity_id: media_player.kitchen
-          message: "The Washing machine has completed it's cycle."
       - service: switch.turn_off
         entity_id: switch.washing_machine
+
+script:
+  laundry_tts:
+    sequence:
+    - condition: and
+      conditions:
+        - condition: template
+          value_template: >
+            {% if is_state('media_player.kitchen', 'playing') %}
+            false
+            {% else %}
+            true
+            {% endif %}
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.kitchen
+        volume_level: '0.50'
+    - service: tts.google_say
+      data_template:
+        entity_id: media_player.kitchen
+        message: "The Washing machine has completed it's cycle."
