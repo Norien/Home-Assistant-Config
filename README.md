@@ -6,7 +6,7 @@ This is my Home Assistant Configuration.
 I have Home Assistant running on a [Custom Server](https://ca.pcpartpicker.com/list/pNPQxY)
 
 Software on the server:
-* [Ubuntu Server 16.10](https://wiki.ubuntu.com/YakketyYak/ReleaseNotes?_ga=1.71415184.261384355.1488387707)
+* [Ubuntu Server 17.04](https://wiki.ubuntu.com/ZestyZapus)
 * [Home Assistant](https://home-assistant.io/)
 * [ZoneMinder](https://zoneminder.com/)
 * [Glances](https://nicolargo.github.io/glances/)
@@ -33,11 +33,12 @@ Dependencies:
 * [WeMo Light Switch](http://a.co/d2HZ753)
 * [H801 Wifi RGB Controller](http://a.co/ej6LvjZ)
 * [TP-Link HS110](http://a.co/2Z7Jq9k)
-* [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html)
+* [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html) [Firmware](https://github.com/aneisch/Sonoff-Wemo-Home-Assistant)
 * ON ORDER ** [Sonoff Dual WiFi Smart Switch](http://www.ebay.ca/itm/112266257555?_trksid=p2060353.m2749.l2649&ssPageName=STRK%3AMEBIDX%3AIT)
 * ON ORDER ** [WeMos D1 Mini](http://www.ebay.ca/itm/182035363514?_trksid=p2060353.m2749.l2649&ssPageName=STRK%3AMEBIDX%3AIT)
 * ON ORDER ** [NodeMcu ESP8266](https://geek.wish.com/search/1pc%20NodeMcu%20Lua%20ESP8266%20CH340G%20WIFI%20Internet%20Development%20Board%20Module#cid=58c646190b362f70c8bbeb10)
 
 **Wish List:**
-[ClearOne XAP800](http://www.ebay.ca/itm/CLEARONE-XAP800-Professional-Conferencing-System-910-151-101-Rev-2-5-0-/292069134421?hash=item4400ad5055:g:dYwAAOSwOgdYsjBk)
-[Kinter MA-180](http://a.co/3HSlurg)
+* [ClearOne XAP800](http://www.ebay.ca/itm/CLEARONE-XAP800-Professional-Conferencing-System-910-151-101-Rev-2-5-0-/292069134421?hash=item4400ad5055:g:dYwAAOSwOgdYsjBk)
+* [Kinter MA-180](http://a.co/3HSlurg)
+* [Broadlink Black Bean](http://a.co/2RBPKni)

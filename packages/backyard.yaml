@@ -7,7 +7,7 @@ homeassistant:
       emulated_hue: true
       friendly_name: Party Time
       icon: mdi:pizza
-    switch.patio_amplifier:
+    switch.sonoff_1:
       friendly_name: Patio Amplifier
       icon: mdi:amplifier
 
@@ -18,10 +18,10 @@ group:
     name: Backyard
     entities:
       - light.deck_lights
-      - switch.patio_amplifier
+      - switch.sonoff_1
       - script.backyard_party
 
-###### AUTOMATIC CONTROL OF AMPLIFIER
+# ###### AUTOMATIC CONTROL OF AMPLIFIER
 automation:
   - alias: "Backyard Amp Off"
     initial_state: 'on'
@@ -33,9 +33,19 @@ automation:
           minutes: 1
     action:
       - service: switch.turn_off
-        entity_id: switch.patio_amplifier
+        entity_id: switch.sonoff_1
       - service: media_player.turn_off
         entity_id: media_player.backyard
+
+  - alias: "Backyard Amp Off2"
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: media_player.backyard
+        to: 'off'
+    action:
+      - service: switch.turn_off
+        entity_id: switch.sonoff_1
 
   - alias: "Backyard Amp On"
     initial_state: 'on'
@@ -45,14 +55,14 @@ automation:
         to: 'playing'
     action:
       - service: switch.turn_on
-        entity_id: switch.patio_amplifier
+        entity_id: switch.sonoff_1
 
 ###### AUTOMATIC CONTROL OF CHROMECAST AUDIO
   - alias: "Backyard media player Off"
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: switch.patio_amplifier
+        entity_id: switch.sonoff_1
         from: 'on'
         to: 'off'
     action:
@@ -65,7 +75,7 @@ script:
     sequence:
       - service: script.backyard_lights
       - service: switch.turn_on
-        entity_id: switch.patio_amplifier
+        entity_id: switch.sonoff_1
       - service: media_player.volume_set
         data:
           entity_id: media_player.backyard

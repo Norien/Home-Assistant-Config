@@ -1,0 +1,91 @@
+################################################################
+## Packages / live scenes
+################################################################
+homeassistant:
+  customize:
+    script.aquarium_scene:
+      friendly_name: 'Aquarium'
+      emulated_hue: true
+      icon: mdi:fish
+    script.sexy_time:
+      friendly_name: 'Sexy Time'
+      emulated_hue: true
+      icon: mdi:heart
+    script.river_scene:
+      friendly_name: 'River'
+      emulated_hue: true
+      icon: mdi:fire
+    script.beach_scene:
+      friendly_name: 'Beach'
+      emulated_hue: true
+      icon: mdi:tower-beach
+###### STATE CARD
+group:
+  live_scenes:
+    control: hidden
+    name: Live Scenes
+    entities:
+      - script.aquarium_scene
+      - script.river_scene
+      - script.beach_scene
+      - script.sexy_time
+
+script:
+  sexy_time:
+    sequence:
+      - service: script.kodi_stop
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "sexy time"
+      - service_template: >-
+          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+        data:
+          file: "c:/Users/Living Room/Videos/fireplace.mp4"
+      - service: media_player.turn_on
+        entity_id: media_player.kitchen
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.kitchen
+          volume_level: '0.20'
+      - service: media_player.play_media
+        data:
+          entity_id: media_player.kitchen
+          media_content_id: "http://192.168.1.250:8123/local/sexy_time.mp3"
+          media_content_type: "audio/mp3"
+
+  river_scene:
+    sequence:
+      - service: script.kodi_stop
+      - service_template: >-
+          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+        data:
+          file: "c:/Users/Living Room/Videos/river.mp4"
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "river"
+
+  aquarium_scene:
+    sequence:
+      - service: script.kodi_stop
+      - service_template: >-
+          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+        data:
+          file: "c:/Users/Living Room/Videos/aquarium.mp4"
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Arctic aurora"
+
+  beach_scene:
+    sequence:
+      - service: script.kodi_stop
+      - service_template: >-
+          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+        data:
+          file: "c:/Users/Living Room/Videos/beach.mp4"
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Beach"

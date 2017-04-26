@@ -10,6 +10,8 @@
 *.log
 *.db-journal
 *.db
+*.cfg
+*.mp3
 lib
 deps
 tts
@@ -25,6 +27,5 @@ shell/bedroom_pc_on.sh
 shell/living_room_pc_on.sh
 shell/waste_pickup_yard_waste.py
 shell/waste_pickup_garbage_recycle.py
-shell/update_ha.log
 shell/update_ha.log
 shell/waste_pickup_container.py

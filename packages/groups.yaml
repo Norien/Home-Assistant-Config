@@ -14,6 +14,7 @@ group:
       - group.office
       - group.backyard
       - group.laundry_room
+      - group.live_scenes
   sensor_view:
     name: Sensors
     view: yes
@@ -50,6 +51,7 @@ group:
       - group.sensor_battery_levels
       - group.utilities
       - group.device_status
+      - group.server_status
   #Groups------------------------------------------------------------------
   livingroom:
     name: Living Room
@@ -62,8 +64,9 @@ group:
      - script.lr_relax
      - script.lr_dimmed
      - script.lr_springblossom
-     - automation.night_light
+     - script.beach
      - script.good_morning
+     - automation.night_light
   bedroom:
     name: Master Bedroom
     entities:

@@ -28,6 +28,13 @@ homeassistant:
       emulated_hue: true
       friendly_name: 'Spring blossom'
       icon: mdi:flower
+    script.beach:
+      emulated_hue: true
+      friendly_name: 'Beach'
+      icon: mdi:beach
+    script.river:
+      friendly_name: 'River'
+      icon: mdi:fire      
     script.kitchen_sink_bright:
       emulated_hue: true
       friendly_name: 'Kitchen Sink Bright'
@@ -48,7 +55,6 @@ script:
             light.kitchen_sink:
           brightness: 254
           rgb_color: [255,241,199]
-
   lr_dimmed:
     sequence:
       - service: light.hue_activate_scene
@@ -79,3 +85,15 @@ script:
         data:
           group_name: "Living Room"
           scene_name: "Spring blossom"
+  beach:
+    sequence:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Beach"
+  river:
+    sequence:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "river"

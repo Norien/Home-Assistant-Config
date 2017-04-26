@@ -14,7 +14,7 @@ updater:
 history:
 logbook:
 sun:
-#discovery:
+discovery:
 
 #Components
 #google:
@@ -89,6 +89,10 @@ mqtt:
   password: !secret mqtt_password
 
 device_tracker:
+  - platform: netgear
+    host: !secret netgear_host
+    username: !secret netgear_username
+    password: !secret netgear_password
   - platform: owntracks
   - platform: nmap_tracker
     hosts:

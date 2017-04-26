@@ -8,15 +8,15 @@ automation:
     trigger:
       - platform: state
         entity_id: device_tracker.bigdrakar_nicole
-        from: 'Work - Westmount'
+        from: 'Work Westmount'
         to: 'not_home'
       - platform: state
         entity_id: device_tracker.bigdrakar_nicole
-        from: 'Work - Old South'
+        from: 'Work Old South'
         to: 'not_home'
       - platform: state
         entity_id: device_tracker.bigdrakar_nicole
-        from: 'Work - Whitehills'
+        from: 'Work Whitehills'
         to: 'not_home'
     action:
       - service: notify.justin
@@ -60,3 +60,16 @@ automation:
       - service: notify.justin
         data:
           message: 'Update for Home Assistant is available.'
+
+###### NOTIFY IF IP CHANGES
+  - alias: Notify Of New External IP
+    trigger:
+      platform: state
+      entity_id: sensor.external_ip
+    condition:
+      - condition: template
+        value_template: "{% if trigger.from_state and trigger.to_state %} True {% else %} False {% endif %}"
+    action:
+      - service: notify.justin
+        data_template:
+          message: "Your External IP changed from {{ trigger.from_state.state }} to {{ trigger.to_state.state }}"       

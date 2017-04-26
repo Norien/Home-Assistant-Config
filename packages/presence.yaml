@@ -41,12 +41,44 @@ automation:
       - service: notify.justin
         data:
           message: 'Nobody is home, All switches and lights have been turned OFF. The alarm is armed'
-      - service: script.turn_on
-        entity_id: script.good_night
+##### BEDROOM
+      - service: switch.turn_off
+        entity_id: switch.bedroom_pc_off
+      - service: switch.turn_off
+        entity_id: switch.led_strip
+      - service: switch.turn_off
+        entity_id: switch.bedroom_lamps_
       - service: switch.turn_off
         entity_id: switch.bedroom_fan
+  ###### LIVINGROOM/KITCHEN
+      - service: switch.turn_off
+        entity_id: switch.living_room_pc_off
+      - service: light.turn_off
+        entity_id: light.living_room
+      - service: light.turn_off
+        entity_id: light.kitchen_sink
+      - service: media_player.turn_off
+        entity_id: media_player.kitchen
+  ###### BACKYARD
+      - service: light.turn_off
+        entity_id: light.deck_lights
+      - service: media_player.turn_off
+        entity_id: media_player.backyard
+      - service: switch.turn_off
+        entity_id: switch.patio_amplifier
+  ###### OFFICE
+      - service: switch.turn_off
+        entity_id: switch.office_lightswitch
+      - service: switch.turn_off
+        entity_id: switch.office_pc
+ ###### FINDLAYS ROOM
       - service: light.turn_off
         entity_id: light.findlay_lamp
+###### SET NEST AWAY
+      - service: climate.set_away_mode
+        data:
+          entity_id: climate.hallway
+          away_mode: 'true'
 
 ############# HOME
   - alias: 'Set Away Mode off'
@@ -76,6 +108,11 @@ automation:
       - service: notify.justin
         data:
           message: 'Alarm is disarmed, Welcome Home'
+###### SET NEST HOME
+      - service: climate.set_away_mode
+        data:
+          entity_id: climate.hallway
+          away_mode: 'false'
 
 ###### MODES / PEOPLE
 input_boolean:

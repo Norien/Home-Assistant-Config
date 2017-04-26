@@ -49,10 +49,6 @@ homeassistant:
       icon: mdi:skip-previous
 
 script:
-  ################################################
-  ## Living Room Cartoons
-  ################################################
-
   auto_cartoons:
     sequence:
       - service_template: >-
@@ -63,7 +59,6 @@ script:
   ################################################
   ## Living Room - All TV
   ################################################
-
   auto_all_tv:
     sequence:
       - service_template: >-
@@ -74,7 +69,6 @@ script:
   ################################################
   ## Living Room - Paw Patrol
   ################################################
-
   auto_pawpatrol:
     sequence:
       - service_template: >-
@@ -85,7 +79,6 @@ script:
   ################################################
   ## Kodi Commands
   ################################################
-
   kodi_defaults:
     sequence:
       - service: shell_command.curl
