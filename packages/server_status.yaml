@@ -1,5 +1,6 @@
 ################################################################
 ## Packages / Server Status
+## Dependencies / Glances - https://nicolargo.github.io/glances/
 ################################################################
 homeassistant:
   customize:
@@ -14,18 +15,22 @@ homeassistant:
       icon: mdi:timer
     sensor.cpu_temperature:
       friendly_name: Temperature
-      icon: mdi:temperature-celsius
+      icon: mdi:thermometer
     sensor.ha_version:
       friendly_name: Home Assistant Version
     sensor.glances_cpu_load:
       friendly_name: CPU
-      icon: mdi:chip
+      icon: mdi:desktop-tower
     sensor.glances_disk_overview:
       friendly_name: Disk
       icon: mdi:harddisk
     sensor.glances_ram_overview:
       friendly_name: RAM
       icon: mdi:chip
+    sensor.glances_linux_distro:
+      friendly_name: Linux Distro
+      icon: mdi:ubuntu
+
 ###### STATE CARD
 group:
   server_status:
@@ -41,6 +46,7 @@ group:
       - sensor.server_uptime
       - sensor.ha_uptime
       - sensor.ha_version
+      - sensor.glances_linux_distro
 
 sensor:
 ###### VERSIONS
@@ -63,6 +69,13 @@ sensor:
           {% else %}
             mdi:checkbox-blank-outline
           {% endif %}
+
+###### CUSTOM LINUX VERSION
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/system
+    name: 'glances_linux_distro'
+    value_template: '{{ value_json.linux_distro }}'
+    scan_interval: 604800
 
 ###### UPTIMES
   - platform: command_line
@@ -110,7 +123,6 @@ sensor:
     resources:
       - 'disk_free'
       - 'disk_use'
-      - 'processor_load'
       - 'memory_use'
       - 'memory_free'
 
@@ -137,3 +149,10 @@ sensor:
     name: 'glances_ram_total'
     value_template: '{{ value_json.total }}'
     scan_interval: 604800
+
+###### CUSTOM CPU LOAD
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/load
+    name: 'glances_cpu_load'
+    value_template: '{{ value_json.min5 }} %'
+    scan_interval: 300
