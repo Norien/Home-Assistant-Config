@@ -1,0 +1,139 @@
+################################################################
+## Packages / Server Status
+################################################################
+homeassistant:
+  customize:
+    sensor.external_ip:
+      friendly_name: External IP
+      icon: mdi:earth
+    sensor.ha_uptime:
+      friendly_name: Home Assistant uptime
+      icon: mdi:timer
+    sensor.server_uptime:
+      friendly_name: Server uptime
+      icon: mdi:timer
+    sensor.cpu_temperature:
+      friendly_name: Temperature
+      icon: mdi:temperature-celsius
+    sensor.ha_version:
+      friendly_name: Home Assistant Version
+    sensor.glances_cpu_load:
+      friendly_name: CPU
+      icon: mdi:chip
+    sensor.glances_disk_overview:
+      friendly_name: Disk
+      icon: mdi:harddisk
+    sensor.glances_ram_overview:
+      friendly_name: RAM
+      icon: mdi:chip
+###### STATE CARD
+group:
+  server_status:
+    name: Server Status
+    control: hidden
+    entities:
+      - sensor.external_ip
+      - sensor.cpu_temperature
+      - sensor.cpu_temperature
+      - sensor.glances_cpu_load
+      - sensor.glances_disk_overview
+      - sensor.glances_ram_overview
+      - sensor.server_uptime
+      - sensor.ha_uptime
+      - sensor.ha_version
+
+sensor:
+###### VERSIONS
+  - platform: command_line
+    command: python3 -c "import requests; print(requests.get('https://pypi.python.org/pypi/homeassistant/json').json()['info']['version'])"
+    name: Current Version
+
+  - platform: command_line
+    name: Installed Version
+    command: /srv/homeassistant/bin/hass --version
+
+###### CUSTOM HA/Version
+  - platform: template
+    sensors:
+      ha_version:
+        value_template: "{%- if states.sensor.current_version | int == states.sensor.installed_version.state | int -%}{{states.sensor.installed_version.state}} {% else %}{{states.sensor.current_version.state}} Available{% endif %}"
+        icon_template: >-
+          {% if states.sensor.current_version | int == states.sensor.installed_version.state | int %}
+            mdi:checkbox-marked
+          {% else %}
+            mdi:checkbox-blank-outline
+          {% endif %}
+
+###### UPTIMES
+  - platform: command_line
+    name: 'HA Uptime'
+    command: echo "$(($(date +%s) - $(date -d "$(head -n1 /home/homeassistant/.homeassistant/home-assistant.log | cut -d' ' -f-2)" +%s)))"
+    scan_interval: 720
+    value_template: >-
+      {% set uptime = value | int %}
+      {% set seconds = uptime % 60 %}
+      {% set minutes = ((uptime % 3600) / 60) | int %}
+      {% set hours = ((uptime % 86400) / 3600) | int %}
+      {% set days = (uptime / 86400) | int %}
+      {%- if days > 0 -%}
+        {%- if days == 1 -%}
+          1 day
+        {%- else -%}
+          {{ days }} days
+        {%- endif -%}
+        {{ ', ' }}
+      {%- endif -%}
+      {{ '%02d' % hours }}:{{ '%02d' % minutes }}
+
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/uptime
+    name: 'Server Uptime'
+    value_template: '{{ value[1:-1] }}'
+    scan_interval: 720
+
+###### EXTERNAL IP FOR NOTIFY
+  - platform: rest
+    resource: http://ip.jsontest.com
+    name: external_ip
+    value_template: '{{ value_json.ip }}'
+
+###### CPU TEMP
+  - platform: command_line
+    name: CPU Temperature
+    command: cat /sys/class/thermal/thermal_zone0/temp
+    unit_of_measurement: 'C'
+    value_template: '{{ (value|int / 1000)|round(1) }}'
+
+###### GLANCES
+  - platform: glances
+    host: localhost
+    resources:
+      - 'disk_free'
+      - 'disk_use'
+      - 'processor_load'
+      - 'memory_use'
+      - 'memory_free'
+
+###### CUSTOM HARD DRIVE DISPLAY
+  - platform: template
+    sensors:
+      glances_disk_overview:
+        value_template: "{{states.sensor.glances_disk_use.state|float}} GB / {{(states.sensor.glances_disk_total.state|int/1024/1024/1024)|round(0)}} GB"
+
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/fs
+    name: 'glances_disk_total'
+    value_template: '{{ value_json[0].size }}'
+    scan_interval: 604800
+
+##### CUSTOM RAM DISPLAY
+  - platform: template
+    sensors:
+      glances_ram_overview:
+        value_template: "{{states.sensor.glances_ram_use.state|int}} MB / {{(states.sensor.glances_ram_total.state|int/1024/1024+1)|round(0)}} MB"
+
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/mem/total
+    name: 'glances_ram_total'
+    value_template: '{{ value_json.total }}'
+    scan_interval: 604800

@@ -3,6 +3,9 @@
 ################################################################
 homeassistant:
   customize:
+    script.backup_config:
+      friendly_name: Backup Configuration
+      icon: mdi:backup-restore
     script.update_ha:
       friendly_name: Update Home Assistant
       icon: mdi:package-variant
@@ -12,14 +15,13 @@ homeassistant:
     script.clear_log:
       friendly_name: 'Clear Log File'
       icon: mdi:eraser
-    sensor.ha_uptime:
-      friendly_name: Home Assistant uptime
-      icon: mdi:timer
-    sensor.server_uptime:
-      friendly_name: Server uptime
-      icon: mdi:timer
-
-###### STATE CARD
+    script.refresh_devices:
+      friendly_name: Refresh Devices
+      icon: mdi:account-convert
+    script.clear_tts_cache:
+      friendly_name: Clear TTS cache
+      icon: mdi:shredder
+###### STATE CARD #######################################################
 group:
   utilities:
     name: Utilities
@@ -29,57 +31,52 @@ group:
       - script.restart_ha
       - script.update_ha
       - script.clear_log
-      - sensor.current_version
-      - sensor.installed_version
-      - sensor.ha_uptime
-      - sensor.server_uptime
-
+      - script.clear_tts_cache
+      - script.backup_config
+#########################################################################
 script:
   update_ha:
     sequence:
+      - service: tts.clear_cache
       - service: shell_command.update_ha
   restart_ha:
     sequence:
+      - service: tts.clear_cache
       - service: shell_command.del_log
       - service: shell_command.restart_ha
   clear_log:
      sequence:
        - service: shell_command.del_log
-
-sensor:
-  - platform: command_line
-    command: python3 -c "import requests; print(requests.get('https://pypi.python.org/pypi/homeassistant/json').json()['info']['version'])"
-    name: Current Version
-  - platform: command_line
-    name: Installed Version
-    command: /srv/homeassistant/bin/hass --version
-  - platform: command_line
-    name: 'HA Uptime'
-    command: echo "$(($(date +%s) - $(date -d "$(head -n1 /home/homeassistant/.homeassistant/home-assistant.log | cut -d' ' -f-2)" +%s)))"
-    scan_interval: 720
-    value_template: >-
-      {% set uptime = value | int %}
-      {% set seconds = uptime % 60 %}
-      {% set minutes = ((uptime % 3600) / 60) | int %}
-      {% set hours = ((uptime % 86400) / 3600) | int %}
-      {% set days = (uptime / 86400) | int %}
-      {%- if days > 0 -%}
-        {%- if days == 1 -%}
-          1 day
-        {%- else -%}
-          {{ days }} days
-        {%- endif -%}
-        {{ ', ' }}
-      {%- endif -%}
-      {{ '%02d' % hours }}:{{ '%02d' % minutes }}
-  - platform: command_line
-    command: "uptime"
-    name: 'Server Uptime'
-    scan_interval: 240
-    #value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
-
-
+  backup_config:
+     sequence:
+       - service: tts.clear_cache
+       - service: shell_command.backup_config
+  refresh_devices:
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: owntracks/bigdrakar/justin/cmd
+          payload: '{"_type":"cmd","action":"reportLocation"}"'
+      - service: mqtt.publish
+        data:
+          topic: owntracks/bigdrakar/nicole/cmd
+          payload: '{"_type":"cmd","action":"reportLocation"}"'
+  clear_tts_cache:
+    sequence:
+      - service: tts.clear_cache
+#########################################################################
+automation:
+  - alias: "Owntracks Refresh"
+    initial_state: 'on'
+    trigger:
+      - platform: time
+        minutes: '/5'
+        seconds: 0
+    action:
+      - service: script.refresh_devices
+#########################################################################
 shell_command:
+  backup_config: 'sudo bash /home/homeassistant/.homeassistant/shell/backup_config.sh'
   update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'
   restart_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/restart_ha.sh'
   del_log: 'sudo bash /home/homeassistant/.homeassistant/shell/del_log.sh'
