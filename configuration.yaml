@@ -15,7 +15,8 @@ history:
 logbook:
 sun:
 discovery:
-
+    ignore:
+      - netgear_router
 #Components
 #google:
 #  client_id: !secret google_client_id
