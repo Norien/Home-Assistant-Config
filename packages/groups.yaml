@@ -27,6 +27,7 @@ group:
       - group.smoke_gas
       - group.motion_sensors
       - group.waste_pickup
+      - group.weather
   media_view:
     name: Media Players
     view: yes
@@ -107,37 +108,6 @@ group:
      - input_boolean.guest
      - input_boolean.away
      - input_boolean.vacation
-  weather:
-    control: hidden
-    name: Weather
-    entities:
-      - sensor.dark_sky_temperature
-      - sensor.dark_sky_humidity
-    #  - sensor.dark_sky_daily_summary
-    # - sensor.dark_sky_apparent_temperature
-    # - sensor.dark_sky_cloud_coverage
-    # - sensor.dark_sky_daily_high_apparent_temperature
-    # - sensor.dark_sky_daily_high_temperature
-    # - sensor.dark_sky_daily_low_apparent_temperature
-    # - sensor.dark_sky_daily_low_temperature
-    # - sensor.dark_sky_daily_max_precip_intensity
-    # - sensor.dark_sky_dew_point
-    # - sensor.dark_sky_hourly_summary
-    # - sensor.dark_sky_icon
-    # - sensor.dark_sky_minutely_summary
-    # - sensor.dark_sky_nearest_storm_bearing
-    # - sensor.dark_sky_nearest_storm_distance
-    # - sensor.dark_sky_ozone
-    # - sensor.dark_sky_precip
-    # - sensor.dark_sky_precip_intensity
-    # - sensor.dark_sky_pressure
-    # - sensor.dark_sky_summary
-    # - sensor.dark_sky_visibility
-    # - sensor.dark_sky_wind_bearing
-    #  - sensor.dark_sky_wind_speed
-    #  - sun.sun
-    # - sensor.yr_symbol
-    # - sensor.dark_sky_precip_probability
   thermostat:
     name: Thermostat
     entities:

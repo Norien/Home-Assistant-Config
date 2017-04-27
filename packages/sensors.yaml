@@ -3,14 +3,6 @@
 ################################################################
 homeassistant:
   customize:
-    #Weather
-    sensor.dark_sky_humidity:
-      friendly_name: Current Humidity
-    sensor.dark_sky_temperature:
-      friendly_name: Current Temperature
-    sensor.dark_sky_daily_summary:
-      friendly_name: Daily Summary
-
     #philips hue motion sensors
     ######Findlays Room
     sensor.findlay_room_motion:
@@ -208,39 +200,11 @@ sensor:
     scan_interval: 1800
     name: 'Dining Room Motion Sensor Battery Level'
 
-  ######DATE TIME & WEATHER
+  ######DATE TIME
   - platform: yr
   - platform: time_date
     display_options:
       - "date_time"
-  - platform: darksky
-    api_key: !secret darksky_api_key
-    monitored_conditions:
-      - summary
-      - icon
-      - nearest_storm_distance
-      - nearest_storm_bearing
-      - precip_type
-      - precip_intensity
-      - precip_probability
-      - temperature
-      - apparent_temperature
-      - dew_point
-      - wind_speed
-      - wind_bearing
-      - cloud_cover
-      - humidity
-      - pressure
-      - visibility
-      - ozone
-      - minutely_summary
-      - hourly_summary
-      - daily_summary
-      - temperature_max
-      - temperature_min
-      - apparent_temperature_max
-      - apparent_temperature_min
-      - precip_intensity_max
 
   ##### Owntracks Battery Tracker for Cell Phones
   - platform: mqtt

@@ -1,0 +1,132 @@
+################################################################
+## Packages / Weather
+## Dependencies: DARKSKY - https://darksky.net/dev/
+##               UVIMATE - https://uvimate.herokuapp.com/uvindex-api
+##                          !secret uv_mate_key: API KEY HERE
+##                          !secret uv_mate_resource: https://uvimate.herokuapp.com/api/getUVI/longitude/latitude
+################################################################
+homeassistant:
+  customize:
+    #DARKSKY
+    sensor.dark_sky_daily_high_apparent_temperature:
+      friendly_name: 'Daily High'
+      icon: mdi:thermometer
+    sensor.dark_sky_daily_low_apparent_temperature:
+      friendly_name: 'Daily Low'
+      icon: mdi:thermometer
+    sensor.dark_sky_humidity:
+      friendly_name: 'Current Humidity'
+    sensor.dark_sky_temperature:
+      friendly_name: 'Current Temperature'
+    sensor.dark_sky_daily_summary:
+      friendly_name: 'Daily Summary'
+    # UV
+    sensor.uv_index:
+      friendly_name: 'UV Index'
+      icon: mdi:white-balance-sunny
+    sensor.uv_peak:
+      friendly_name: 'Peak UV Index'
+      icon: mdi:white-balance-sunny
+    sensor.uv_burn_time:
+      friendly_name: 'Burn Time'
+      icon: mdi:fire
+    sensor.uv_sun_advice:
+      friendly_name: 'Sun advice'
+      icon: mdi:sunglasses
+   # WEATHER report
+    script.weather_report:
+      friendly_name: 'Weather Report'
+      emulated_hue: true
+
+###### STATE CARD
+group:
+  Weather:
+    name: Weather
+    control: hidden
+    entities:
+      - sensor.dark_sky_daily_high_apparent_temperature
+      - sensor.dark_sky_daily_low_apparent_temperature
+      - sensor.uv_index
+      - sensor.uv_peak
+      - sensor.uv_burn_time
+      - sensor.uv_sun_advice
+
+sensor:
+###### DARKSKY
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    monitored_conditions:
+      - summary
+      - icon
+      - nearest_storm_distance
+      - nearest_storm_bearing
+      - precip_type
+      - precip_intensity
+      - precip_probability
+      - temperature
+      - apparent_temperature
+      - dew_point
+      - wind_speed
+      - wind_bearing
+      - cloud_cover
+      - humidity
+      - pressure
+      - visibility
+      - ozone
+      - minutely_summary
+      - hourly_summary
+      - daily_summary
+      - temperature_max
+      - temperature_min
+      - apparent_temperature_max
+      - apparent_temperature_min
+      - precip_intensity_max
+
+######  UV
+  - platform: rest
+    name: uv_index
+    resource: !secret uv_mate_resource
+    method: GET
+    headers:
+      x-access-token: !secret uv_mate_key
+    value_template: '{{ value_json.result.uviData.uvi | round(2) }}'
+    scan_interval: 120
+
+  - platform: rest
+    name: uv_peak
+    resource: !secret uv_mate_resource
+    method: GET
+    headers:
+      x-access-token: !secret uv_mate_key
+    value_template: "{{ value_json.result.uviData.uviMax | round(2) }} at {{ as_timestamp(value_json.result.uviData.uviMaxTime) | timestamp_custom('%I:%M') }}"
+    scan_interval: 120
+
+  - platform: rest
+    name: uv_sun_advice
+    resource: !secret uv_mate_resource
+    method: GET
+    headers:
+      x-access-token: !secret uv_mate_key
+    value_template: '{{ value_json.result.sunAdvice.advice }}'
+    scan_interval: 600
+
+  - platform: rest
+    name: uv_burn_time
+    resource: !secret uv_mate_resource
+    method: GET
+    headers:
+      x-access-token: !secret uv_mate_key
+    value_template: '{{ value_json.result.burnTime.pale }} Minutes'
+    scan_interval: 60
+
+script:
+  weather_report:
+    sequence:
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.kitchen
+        volume_level: '0.70'
+    - service: tts.google_say
+      data_template:
+        entity_id: media_player.kitchen
+        message: "this is the weather report"
