@@ -31,7 +31,7 @@ homeassistant:
       friendly_name: 'Burn Time'
       icon: mdi:fire
     sensor.uv_sun_advice:
-      friendly_name: 'Sun advice'
+      friendly_name: 'Sun Advice'
       icon: mdi:sunglasses
    # WEATHER report
     script.weather_report:
@@ -116,7 +116,8 @@ sensor:
     method: GET
     headers:
       x-access-token: !secret uv_mate_key
-    value_template: '{{ value_json.result.burnTime.pale }} Minutes'
+    value_template: '{{ value_json.result.burnTime.pale }}'
+    unit_of_measurement: Minutes
     scan_interval: 60
 
 script:
