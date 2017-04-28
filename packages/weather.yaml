@@ -33,7 +33,7 @@ homeassistant:
     sensor.uv_sun_advice:
       friendly_name: 'Sun Advice'
       icon: mdi:sunglasses
-   # WEATHER report
+    # WEATHER report
     script.weather_report:
       friendly_name: 'Weather Report'
       emulated_hue: true
@@ -116,6 +116,7 @@ sensor:
     method: GET
     headers:
       x-access-token: !secret uv_mate_key
+    #OPTIONS FOR BURN TIME // celtic,pale,caucasian,mediterranean,southAfrican,negro
     value_template: '{{ value_json.result.burnTime.pale }}'
     unit_of_measurement: Minutes
     scan_interval: 60
@@ -130,4 +131,4 @@ script:
     - service: tts.google_say
       data_template:
         entity_id: media_player.kitchen
-        message: "this is the weather report"
+        message: "the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}. The current UV index is {{states('sensor.uv_index')}} with a burn time of {{states('sensor.uv_burn_time')}}."

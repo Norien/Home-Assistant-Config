@@ -59,7 +59,7 @@ automation:
     action:
       - service: notify.justin
         data:
-          message: 'Update for Home Assistant is available.'
+          message: 'Update for Home Assistant is available. Visit https://github.com/home-assistant/home-assistant/releases for details.'
 
 ###### NOTIFY IF IP CHANGES
   - alias: Notify Of New External IP
@@ -72,4 +72,4 @@ automation:
     action:
       - service: notify.justin
         data_template:
-          message: "Your External IP changed from {{ trigger.from_state.state }} to {{ trigger.to_state.state }}"       
+          message: "Your External IP changed from {{ trigger.from_state.state }} to {{ trigger.to_state.state }}"
