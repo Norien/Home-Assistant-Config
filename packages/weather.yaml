@@ -1,13 +1,14 @@
 ################################################################
 ## Packages / Weather
 ## Dependencies: DARKSKY - https://darksky.net/dev/
-##               UVIMATE - https://uvimate.herokuapp.com/uvindex-api
-##                          !secret uv_mate_key: API KEY HERE
-##                          !secret uv_mate_resource: https://uvimate.herokuapp.com/api/getUVI/longitude/latitude
+##               WUNDERGROUND - https://home-assistant.io/components/sensor.wunderground/
 ################################################################
 homeassistant:
   customize:
     #DARKSKY
+    sensor.dark_sky_apparent_temperature:
+      friendly_name: 'Current Temperature'
+      icon: mdi:thermometer
     sensor.dark_sky_daily_high_apparent_temperature:
       friendly_name: 'Daily High'
       icon: mdi:thermometer
@@ -21,18 +22,12 @@ homeassistant:
     sensor.dark_sky_daily_summary:
       friendly_name: 'Daily Summary'
     # UV
-    sensor.uv_index:
+    sensor.pws_uv:
       friendly_name: 'UV Index'
-      icon: mdi:white-balance-sunny
-    sensor.uv_peak:
-      friendly_name: 'Peak UV Index'
       icon: mdi:white-balance-sunny
     sensor.uv_burn_time:
       friendly_name: 'Burn Time'
       icon: mdi:fire
-    sensor.uv_sun_advice:
-      friendly_name: 'Sun Advice'
-      icon: mdi:sunglasses
     # WEATHER report
     script.weather_report:
       friendly_name: 'Weather Report'
@@ -44,12 +39,20 @@ group:
     name: Weather
     control: hidden
     entities:
+      - sensor.dark_sky_apparent_temperature
+      - sensor.dark_sky_humidity
       - sensor.dark_sky_daily_high_apparent_temperature
       - sensor.dark_sky_daily_low_apparent_temperature
-      - sensor.uv_index
-      - sensor.uv_peak
+      - sensor.dark_sky_precip_probability
+      - sensor.pws_uv
       - sensor.uv_burn_time
-      - sensor.uv_sun_advice
+      - camera.radar
+
+###### WEATHER MAP
+camera:
+  - platform: generic
+    still_image_url: !secret weather_radar
+    name: Radar
 
 sensor:
 ###### DARKSKY
@@ -82,44 +85,20 @@ sensor:
       - apparent_temperature_min
       - precip_intensity_max
 
-######  UV
-  - platform: rest
-    name: uv_index
-    resource: !secret uv_mate_resource
-    method: GET
-    headers:
-      x-access-token: !secret uv_mate_key
-    value_template: '{{ value_json.result.uviData.uvi | round(2) }}'
-    scan_interval: 120
+###### wunderground
+  - platform: wunderground
+    api_key: !secret wunderground_key
+    pws_id: !secret wunderground_station
+    monitored_conditions:
+      - UV
 
-  - platform: rest
-    name: uv_peak
-    resource: !secret uv_mate_resource
-    method: GET
-    headers:
-      x-access-token: !secret uv_mate_key
-    value_template: "{{ value_json.result.uviData.uviMax | round(2) }} at {{ as_timestamp(value_json.result.uviData.uviMaxTime) | timestamp_custom('%I:%M') }}"
-    scan_interval: 120
-
-  - platform: rest
-    name: uv_sun_advice
-    resource: !secret uv_mate_resource
-    method: GET
-    headers:
-      x-access-token: !secret uv_mate_key
-    value_template: '{{ value_json.result.sunAdvice.advice }}'
-    scan_interval: 600
-
-  - platform: rest
-    name: uv_burn_time
-    resource: !secret uv_mate_resource
-    method: GET
-    headers:
-      x-access-token: !secret uv_mate_key
-    #OPTIONS FOR BURN TIME // celtic,pale,caucasian,mediterranean,southAfrican,negro
-    value_template: '{{ value_json.result.burnTime.pale }}'
-    unit_of_measurement: Minutes
-    scan_interval: 60
+#######  UV
+# http://beautyinthebackcountry.com/2013/04/09/uv-index-and-spf-explained/
+  - platform: template
+    sensors:
+      uv_burn_time:
+### Celtic"all babies and children" = 67Min // caucasian = 100Min // Central Europe = 200Min // south american = 200Min // Middle Eastern = 400Min // African = 500Min
+        value_template: "{{ (67 / states.sensor.pws_uv.state | float) | round }} Minutes"
 
 script:
   weather_report:
@@ -131,4 +110,4 @@ script:
     - service: tts.google_say
       data_template:
         entity_id: media_player.kitchen
-        message: "the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}. The current UV index is {{states('sensor.uv_index')}} with a burn time of {{states('sensor.uv_burn_time')}}."
+        message: "the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}. The current UV index is {{states('sensor.pws_uv')}} with a burn time of {{states('sensor.uv_burn_time')}}."
