@@ -97,8 +97,9 @@ sensor:
   - platform: template
     sensors:
       uv_burn_time:
+### SUB IN CORRECT VALUE FOR YOUR SKIN#################################################################################################################################
 ### Celtic"all babies and children" = 67Min // caucasian = 100Min // Central Europe = 200Min // south american = 200Min // Middle Eastern = 400Min // African = 500Min
-        value_template: "{{ (67 / states.sensor.pws_uv.state | float) | round }} Minutes"
+        value_template: "{% if is_state('sensor.pws_uv', '0') %}0 Minutes{% else %}{{ (67 / states.sensor.pws_uv.state | float) | round }} Minutes{% endif %}"
 
 script:
   weather_report:
