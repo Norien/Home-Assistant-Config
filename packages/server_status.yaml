@@ -14,7 +14,7 @@ homeassistant:
       friendly_name: Server uptime
       icon: mdi:timer
     sensor.cpu_temperature:
-      friendly_name: Temperature
+      friendly_name: CPU Temperature
       icon: mdi:thermometer
     sensor.ha_version:
       friendly_name: Home Assistant Version
@@ -24,6 +24,9 @@ homeassistant:
     sensor.glances_disk_overview:
       friendly_name: Disk
       icon: mdi:harddisk
+    sensor.disk_temperature:
+      friendly_name: Disk Temperature
+      icon: mdi:thermometer
     sensor.glances_ram_overview:
       friendly_name: RAM
       icon: mdi:chip
@@ -38,10 +41,10 @@ group:
     control: hidden
     entities:
       - sensor.external_ip
-      - sensor.cpu_temperature
-      - sensor.cpu_temperature
       - sensor.glances_cpu_load
+      - sensor.cpu_temperature
       - sensor.glances_disk_overview
+      - sensor.disk_temperature
       - sensor.glances_ram_overview
       - sensor.server_uptime
       - sensor.ha_uptime
@@ -116,12 +119,18 @@ sensor:
     name: external_ip
     value_template: '{{ value_json.ip }}'
 
-###### CPU TEMP
+###### CPU & HDD TEMP
   - platform: command_line
+    command: sudo hddtemp /dev/sd*
+    name: 'Disk Temperature'
+    value_template: '{{ value[23:-87] }}'
+    scan_interval: 240
+
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/sensors
     name: CPU Temperature
-    command: cat /sys/class/thermal/thermal_zone0/temp
-    unit_of_measurement: 'C'
-    value_template: '{{ (value|int / 1000)|round(1) }}'
+    value_template: '{{ value_json[0].value }}°C'
+    scan_interval: 300
 
 ###### GLANCES
   - platform: glances
