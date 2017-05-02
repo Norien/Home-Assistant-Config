@@ -12,6 +12,20 @@ homeassistant:
     device_tracker.androidc3a6fa8dea348d9e:
       friendly_name: Nicole Netgear
 
+###### STATE CARD
+group:
+  presence:
+    control: hidden
+    name: Presence
+    entities:
+     - device_tracker.bigdrakar_justin
+     - device_tracker.bigdrakar_nicole
+     - sensor.nicole_phone_to_home
+     - sensor.nicole_home_to_work
+     - input_boolean.guest
+     - input_boolean.away
+     - input_boolean.vacation
+
 automation:
 ############# AWAY
   - alias: Set Away Mode on

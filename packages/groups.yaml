@@ -53,6 +53,7 @@ group:
       - group.utilities
       - group.device_status
       - group.server_status
+      - group.processes
   #Groups------------------------------------------------------------------
   livingroom:
     name: Living Room
@@ -97,17 +98,6 @@ group:
       - script.auto_all_tv
       - script.auto_cartoons
       - script.auto_pawpatrol
-  presence:
-    control: hidden
-    name: Presence
-    entities:
-     - device_tracker.bigdrakar_justin
-     - device_tracker.bigdrakar_nicole
-     - sensor.nicole_phone_to_home
-     - sensor.nicole_home_to_work
-     - input_boolean.guest
-     - input_boolean.away
-     - input_boolean.vacation
   thermostat:
     name: Thermostat
     entities:
@@ -161,13 +151,6 @@ group:
      - sensor.living_room_dimmer_switch
      - sensor.justins_g5_battery_dynamic
      - sensor.nicoles_s7_battery_dynamic
-  Radio:
-    name: Radio
-    entities:
-      - input_select.radio_station_location
-      - input_select.radio_station
-      - input_slider.volume_radio
-      - script.radio
   media_player1:
     name: Media Players Living Room
     entities:

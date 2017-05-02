@@ -6,6 +6,16 @@ homeassistant:
     script.radio:
       friendly_name: Start Radio
       icon: mdi:radio
+      
+###### STATE CARD
+group:
+  Radio:
+    name: Radio
+    entities:
+      - input_select.radio_station_location
+      - input_select.radio_station
+      - input_slider.volume_radio
+      - script.radio
 
 ###### SELECT LOCATION AND STATION
 script:
