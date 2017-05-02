@@ -1,0 +1,52 @@
+################################################################
+## Packages / Counters
+################################################################
+homeassistant:
+  customize:
+
+sensor:
+  - platform: template
+    sensors:
+      ha_restart_count:
+        value_template: '{{ states.input_slider.ha_restart_count.state | int }}'
+        friendly_name: HA Restarts this week
+
+automation:
+
+  - alias: "Startup Notification"
+    initial_state: 'on'
+    hide_entity: true
+    trigger:
+      platform: homeassistant
+      event: start
+    action:
+      - service: notify.pushbullet
+        data:
+          title: "HomeAssistant Startup"
+          message: "Home Assistant restarted."
+      - service: input_slider.select_value
+        data_template:
+          entity_id: input_slider.ha_restart_count
+          value: '{{ states.input_slider.ha_restart_count.state | int + 1 }}'
+
+
+  - alias: "Restart Count Reset"
+    initial_state: 'on'
+    hide_entity: true
+    trigger:
+      platform: time
+      after: '0:00:00'
+    condition:
+      - condition: template
+        value_template: '{{ as_timestamp(now())|timestamp_custom("%w", true) | int == 0 }}'
+    action:
+      - service: input_slider.select_value
+        data:
+          entity_id: input_slider.ha_restart_count
+          value: '0'
+
+input_slider:
+  ha_restart_count:
+    min: 0
+    max: 99
+    step: 1
