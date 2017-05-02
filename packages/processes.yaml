@@ -1,0 +1,36 @@
+################################################################
+## Packages / Processes
+## Dependencies / System Monitor
+################################################################
+homeassistant:
+  customize:
+    sensor.process_glances:
+      friendly_name: 'Glances'
+    sensor.process_mosquitto:
+      friendly_name: 'Mosquitto'
+    sensor.process_mysqld:
+      friendly_name: 'MySQL'
+    sensor.process_dnsmasq:
+      friendly_name: 'Pi-Hole'
+###### STATE CARD
+group:
+  processes:
+    name: Processes
+    control: hidden
+    entities:
+      - sensor.process_glances
+      - sensor.process_mosquitto
+      - sensor.process_mysqld
+      - sensor.process_dnsmasq
+
+sensor:
+  - platform: systemmonitor
+    resources:
+      - type: process
+        arg: glances
+      - type: process
+        arg: mosquitto
+      - type: process
+        arg: mysqld
+      - type: process
+        arg: dnsmasq
