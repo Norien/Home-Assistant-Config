@@ -59,13 +59,22 @@ automation:
       - platform: numeric_state
         entity_id: sensor.washing_machine_watts
         below: 4.3
+    condition:
+      - condition: state
+        entity_id: sensor.washing_machine_watts
+        state: '4.2'
+        for:
+          minutes: 3
     action:
       - service: script.laundry_tts
       - service: notify.justin
         data:
           message: 'The Wash has completed.'
-      - service: switch.turn_off
-        entity_id: switch.washing_machine
+      - service: notify.nicole
+        data:
+          message: 'The Wash has completed.'
+#      - service: switch.turn_off
+#        entity_id: switch.washing_machine
 
 script:
   laundry_tts:

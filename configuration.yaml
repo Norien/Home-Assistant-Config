@@ -47,8 +47,12 @@ tts:
   platform: google
 
 recorder:
-  purge_days: 3
+  db_url: !secret database
 
+# influxdb:
+#   host: 127.0.0.1
+#   username: !secret influx_user
+#   password: !secret influx_pass
 #android_ip_webcam:
 #- host: !secret android_ip_webcam_url
 #  name: Driveway
@@ -75,8 +79,10 @@ nest:
 notify:
   - platform: pushbullet
     name: justin
-    api_key: !secret pushbullet_api_key
-
+    api_key: !secret pushbullet_api_key_justin
+  - platform: pushbullet
+    name: nicole
+    api_key: !secret pushbullet_api_key_nicole
 light:
   - platform: hue
     host: !secret philips_hue_ip
