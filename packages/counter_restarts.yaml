@@ -12,19 +12,19 @@ sensor:
     sensors:
       ha_restart_count:
         value_template: '{{ states.input_slider.ha_restart_count.state | int }}'
-
+# broken for me using the restart script to trigger my counter for now
 automation:
-  - alias: "Startup Notification"
-    initial_state: 'on'
-    hide_entity: true
-    trigger:
-      platform: homeassistant
-      event: start
-    action:
-      - service: input_slider.select_value
-        data_template:
-          entity_id: input_slider.ha_restart_count
-          value: '{{ states.input_slider.ha_restart_count.state | int + 1 }}'
+#   - alias: "Startup Notification"
+#     initial_state: 'on'
+#     hide_entity: true
+#     trigger:
+#       platform: event
+#       event_type: homeassistant_start
+#     action:
+#       - service: input_slider.select_value
+#         data_template:
+#           entity_id: input_slider.ha_restart_count
+#           value: '{{ states.input_slider.ha_restart_count.state | int + 1 }}'
 
   - alias: "Restart Count Reset"
     initial_state: 'on'

@@ -51,6 +51,7 @@ group:
       - sensor.ha_version
       - weblink.release_log
       - sensor.glances_linux_distro
+      - sensor.ha_restart_count
 
 weblink:
   entities:
