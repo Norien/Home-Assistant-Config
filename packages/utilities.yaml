@@ -41,14 +41,11 @@ script:
       - service: shell_command.update_ha
   restart_ha:
     sequence:
-      - service: input_slider.select_value
-        data_template:
-          entity_id: input_slider.ha_restart_count
-          value: '{{ states.input_slider.ha_restart_count.state | int + 1 }}'      
+      - service: homeassistant.turn_on
+        entity_id: input_boolean.restarts
       - service: tts.clear_cache
       - service: shell_command.del_log
       - service: shell_command.restart_ha
-
   clear_log:
      sequence:
        - service: shell_command.del_log

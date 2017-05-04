@@ -51,7 +51,9 @@ group:
       - sensor.ha_version
       - weblink.release_log
       - sensor.glances_linux_distro
-      - sensor.ha_restart_count
+      - sensor.restarts_week
+      - sensor.restarts_month
+      - sensor.restarts_all_time
 
 weblink:
   entities:
@@ -59,6 +61,31 @@ weblink:
       url: https://github.com/home-assistant/home-assistant/releases
 
 sensor:
+###### RESTART COUNTERS
+  - platform: history_stats
+    name: Restarts Week
+    entity_id: input_boolean.restarts
+    state: 'on'
+    type: count
+    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+    end: '{{ now() }}'
+
+  - platform: history_stats
+    name: Restarts Month
+    entity_id: input_boolean.restarts
+    state: 'on'
+    type: count
+    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 345600 }}'
+    end: '{{ now() }}'
+
+  - platform: history_stats
+    name: Restarts All Time
+    entity_id: input_boolean.restarts
+    state: 'on'
+    type: count
+    start: '{{ 0 }}'
+    end: '{{ now() }}'
+
 ###### VERSIONS
   - platform: command_line
     command: python3 -c "import requests; print(requests.get('https://pypi.python.org/pypi/homeassistant/json').json()['info']['version'])"
@@ -172,3 +199,8 @@ sensor:
     name: 'glances_cpu_load'
     value_template: '{{ value_json.min5 }} %'
     scan_interval: 300
+
+input_boolean:
+  restarts:
+    name: restarts
+    initial: off
