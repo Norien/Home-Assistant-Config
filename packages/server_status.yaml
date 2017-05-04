@@ -51,9 +51,13 @@ group:
       - sensor.ha_version
       - weblink.release_log
       - sensor.glances_linux_distro
-      - sensor.restarts_week
-      - sensor.restarts_month
-      - sensor.restarts_all_time
+  restarts:
+    name: Restarts
+    control: hidden
+    entities:
+      - sensor.this_week
+      - sensor.this_month
+      - sensor.all_time
 
 weblink:
   entities:
@@ -63,7 +67,7 @@ weblink:
 sensor:
 ###### RESTART COUNTERS
   - platform: history_stats
-    name: Restarts Week
+    name: This Week
     entity_id: input_boolean.restarts
     state: 'on'
     type: count
@@ -71,7 +75,7 @@ sensor:
     end: '{{ now() }}'
 
   - platform: history_stats
-    name: Restarts Month
+    name: This Month
     entity_id: input_boolean.restarts
     state: 'on'
     type: count
@@ -79,7 +83,7 @@ sensor:
     end: '{{ now() }}'
 
   - platform: history_stats
-    name: Restarts All Time
+    name: All Time
     entity_id: input_boolean.restarts
     state: 'on'
     type: count

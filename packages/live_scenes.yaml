@@ -4,21 +4,25 @@
 homeassistant:
   customize:
     script.aquarium_scene:
-      friendly_name: 'Aquarium'
+      friendly_name: 'Aquarium Scene'
       emulated_hue: true
       icon: mdi:fish
     script.sexy_time:
-      friendly_name: 'Sexy Time'
+      friendly_name: 'Sexy Time Scene'
       emulated_hue: true
       icon: mdi:heart
     script.river_scene:
-      friendly_name: 'River'
+      friendly_name: 'River Scene'
       emulated_hue: true
       icon: mdi:fire
     script.beach_scene:
-      friendly_name: 'Beach'
+      friendly_name: 'Beach Scene'
       emulated_hue: true
       icon: mdi:tower-beach
+    script.jungle_scene:
+      friendly_name: 'Jungle Scene'
+      emulated_hue: true
+      icon: mdi:paw
 ###### STATE CARD
 group:
   live_scenes:
@@ -89,3 +93,15 @@ script:
         data:
           group_name: "Living Room"
           scene_name: "Beach"
+
+  jungle_scene:
+    sequence:
+      - service: script.kodi_stop
+      - service_template: >-
+          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+        data:
+          file: "c:/Users/Living Room/Videos/jungle.mp4"
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Jungle"

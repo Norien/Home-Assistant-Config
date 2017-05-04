@@ -54,6 +54,7 @@ group:
       - group.device_status
       - group.server_status
       - group.processes
+      - group.restarts
   #Groups------------------------------------------------------------------
   livingroom:
     name: Living Room
