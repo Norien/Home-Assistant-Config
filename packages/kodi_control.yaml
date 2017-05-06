@@ -1,12 +1,21 @@
 ################################################################
 ## Packages / Kodi Control
 ################################################################
-
 homeassistant:
   customize:
     packages.kodi_control: &customize
       emulated_hue: true
       package: 'kodi_control'
+
+    script.baby_cam:
+      <<: *customize
+      friendly_name: Baby Monitor
+      icon: mdi:baby-buggy
+
+    script.steam:
+      <<: *customize
+      friendly_name: Steam Launcher
+      icon: mdi:steam
 
     script.auto_cartoons:
       <<: *customize
@@ -33,6 +42,11 @@ homeassistant:
       friendly_name: Pause
       icon: mdi:pause
 
+    script.kodi_playpause:
+      <<: *customize
+      friendly_name: Play / Pause
+      icon: mdi:play-pause
+
     script.kodi_stop:
       <<: *customize
       friendly_name: Stop
@@ -48,7 +62,89 @@ homeassistant:
       friendly_name: Previous
       icon: mdi:skip-previous
 
+    script.kodi_nav_back:
+      <<: *customize
+      friendly_name: Back
+      icon: mdi:backspace
+
+    script.kodi_nav_up:
+      <<: *customize
+      friendly_name: Up
+      icon: mdi:arrow-up-bold-circle
+
+    script.kodi_nav_down:
+      <<: *customize
+      friendly_name: Down
+      icon: mdi:arrow-down-bold-circle
+
+    script.kodi_nav_left:
+      <<: *customize
+      friendly_name: Left
+      icon: mdi:arrow-left-bold-circle
+
+    script.kodi_nav_right:
+      <<: *customize
+      friendly_name: Right
+      icon: mdi:arrow-right-bold-circle
+
+    script.kodi_nav_select:
+      <<: *customize
+      friendly_name: Select
+      icon: mdi:circle
+
+    script.kodi_update_video_library:
+      <<: *customize
+      friendly_name: Update Video Library
+      icon: mdi:update
+
+    script.kodi_clean_video_library:
+      <<: *customize
+      friendly_name: Clean Video Library
+      icon: mdi:nuke
+
+    script.kodi_update_audio_library:
+      <<: *customize
+      friendly_name: Update Audio Library
+      icon: mdi:update
+
+    script.kodi_clean_audio_library:
+      <<: *customize
+      friendly_name: Clean Audio Library
+      icon: mdi:music
+
+###### STATE CARD
+group:
+  kodi_utilities:
+    control: hidden
+    name: Kodi Utilities
+    entities:
+      - script.kodi_update_video_library
+      - script.kodi_clean_video_library
+      - script.kodi_update_audio_library
+      - script.kodi_clean_audio_library
+      - script.baby_cam
+      - script.steam
+
+  kodi_control:
+    control: hidden
+    name: Kodi Control
+    entities:
+      - script.kodi_play
+      - script.kodi_playpause
+      - script.kodi_stop
+      - script.kodi_nav_back
+      - script.kodi_next
+      - script.kodi_previous
+      - script.kodi_nav_up
+      - script.kodi_nav_down
+      - script.kodi_nav_left
+      - script.kodi_nav_right
+      - script.kodi_nav_select
+
 script:
+  ################################################
+  ## Living Room -CARTOONS
+  ################################################
   auto_cartoons:
     sequence:
       - service_template: >-
@@ -83,7 +179,6 @@ script:
     sequence:
       - service: shell_command.curl
         data: &defaults
-      #    url: "http://192.168.1.76:8099/jsonrpc"
           url: !secret kodi_livingroom_json
           method: "post"
           headers:
@@ -94,7 +189,6 @@ script:
       - service: shell_command.curl
         # We need full config here since we're using data_template
         data_template:
-          #url: "http://192.168.1.76:8099/jsonrpc"
           url: !secret kodi_livingroom_json
           method: "post"
           headers:
@@ -115,6 +209,68 @@ script:
       - service: script.kodi_play_file
         data_template:
           file: "{{ file }}"
+
+###### ADDONS
+  baby_cam:
+    sequence:
+      - service: shell_command.curl
+        data:
+          <<: *defaults
+          payload:
+            jsonrpc: "2.0"
+            method: "Addons.ExecuteAddon"
+            params:
+              wait: false
+              addonid: "script.securitycam"
+
+  steam:
+    sequence:
+      - service: shell_command.curl
+        data:
+          <<: *defaults
+          payload:
+            jsonrpc: "2.0"
+            method: "Addons.ExecuteAddon"
+            params:
+              wait: false
+              addonid: "script.steam.launcher"
+
+###### MANAGE Library
+  kodi_update_video_library:
+    sequence:
+      - service: shell_command.curl
+        data:
+          <<: *defaults
+          payload:
+            jsonrpc: "2.0"
+            method: "VideoLibrary.Scan"
+
+  kodi_clean_video_library:
+    sequence:
+      - service: shell_command.curl
+        data:
+          <<: *defaults
+          payload:
+            jsonrpc: "2.0"
+            method: "VideoLibrary.Clean"
+
+  kodi_update_audio_library:
+    sequence:
+      - service: shell_command.curl
+        data:
+          <<: *defaults
+          payload:
+            jsonrpc: "2.0"
+            method: "AudioLibrary.Scan"
+
+  kodi_clean_audio_library:
+    sequence:
+      - service: shell_command.curl
+        data:
+          <<: *defaults
+          payload:
+            jsonrpc: "2.0"
+            method: "AudioLibrary.Clean"
 
   kodi_playpause:
     sequence:

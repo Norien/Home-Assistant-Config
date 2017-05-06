@@ -36,8 +36,11 @@ group:
       - group.radio
       - group.media_player1
       - group.media_player2
+      - group.media_player3
       - group.media_player_chromecast
       - group.playlists
+      - group.kodi_utilities
+      - group.kodi_control
   camera_view:
     name: Cameras
     view: yes
@@ -55,6 +58,7 @@ group:
       - group.server_status
       - group.processes
       - group.restarts
+      - group.ads_blocked
   #Groups------------------------------------------------------------------
   livingroom:
     name: Living Room
@@ -62,6 +66,7 @@ group:
     entities:
      - switch.living_room_pc
      - light.living_room
+     - automation.night_light
      - script.lr_concentrate
      - script.lr_read
      - script.lr_relax
@@ -69,16 +74,6 @@ group:
      - script.lr_springblossom
      - script.beach
      - script.good_morning
-     - automation.night_light
-  bedroom:
-    name: Master Bedroom
-    entities:
-     - switch.bedroom_pc
-     - switch.bedroom_lamps_
-     - switch.bedroom_fan
-     - switch.led_strip
-     - input_select.led_scene
-     - input_select.led_color
   findlays_room:
     name: Findlay's Room
     entities:
@@ -160,6 +155,10 @@ group:
     name: Media Player Bedroom
     entities:
       - media_player.kodi_bedroom
+  media_player3:
+    name: Media Player Bedroom Pi
+    entities:
+      - media_player.kodi_bedroom_pi
   media_player_chromecast:
     name: Media Players Chromecast
     entities:

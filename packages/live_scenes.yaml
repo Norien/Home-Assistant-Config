@@ -33,6 +33,7 @@ group:
       - script.river_scene
       - script.beach_scene
       - script.sexy_time
+      - script.jungle_scene
 
 script:
   sexy_time:

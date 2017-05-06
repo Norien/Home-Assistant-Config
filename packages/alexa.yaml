@@ -6,9 +6,6 @@ homeassistant:
     script.kitchen_radio:
       emulated_hue: true
       friendly_name: 'Kitchen Radio'
-    script.baby_cam:
-      emulated_hue: true
-      friendly_name: 'Baby Cam'
     script.hotter:
       emulated_hue: true
       friendly_name: 'Hotter'
@@ -53,11 +50,6 @@ script:
     sequence:
       - service: media_player.turn_off
         entity_id: media_player.kitchen
-
-###### ALEXA TURN ON BABY CAM
-  baby_cam:
-    sequence:
-      - service: shell_command.baby_cam
 
 ###### ALEXA TURN ON HOT / COLD / FAN
   hotter:

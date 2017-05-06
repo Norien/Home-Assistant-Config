@@ -115,6 +115,7 @@ device_tracker:
       access_point: 192.168.1.59
       living_room_pc: 192.168.1.76
       bedroom_pc: 192.168.1.96
+      bedroom_pi: 192.168.1.21
 wemo:
   static:
     - 192.168.1.200
@@ -141,11 +142,11 @@ media_player:
     port: !secret kodi_bedroom_port
     name: kodi_bedroom
     turn_off_action: hibernate
-
-switch:
-  - platform: tplink
-    host: 192.168.1.211
-    name: 'washing_machine'
+  - platform: kodi
+    host: !secret kodi_bedroom_pi_ip
+    port: !secret kodi_bedroom_pi_port
+    name: kodi_bedroom_pi
+    turn_off_action: hibernate
 
 #Side Panels
 panel_iframe:
@@ -157,7 +158,3 @@ panel_iframe:
     title: System Monitor
     icon: mdi:biohazard
     url: !secret glances_url
-  pihole:
-    title: 'Pi-hole'
-    icon: mdi:chart-pie
-    url: !secret pi-hole_url

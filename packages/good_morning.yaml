@@ -22,6 +22,8 @@ script:
     - service: switch.turn_off
       entity_id: switch.bedroom_fan
     - service: script.auto_cartoons
+    - service: media_player.media_Stop
+      entity_id: media_player.kodi_bedroom_pi
     - service: media_player.volume_set
       data:
         entity_id: media_player.kitchen

@@ -7,8 +7,7 @@ homeassistant:
     #Media Players
     media_player.kodi_livingroom:
       friendly_name: Living Room KODI
-    media_player.kodi_bedroom:
-      friendly_name: Bedroom KODI
+
 
     #Nest
     climate.hallway:
