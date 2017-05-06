@@ -10,21 +10,24 @@ homeassistant:
       friendly_name: Bedroom KODI
     media_player.kodi_bedroom_pi:
       friendly_name: Bedroom KODI PI
+    #Bedroom computer Switch
+    switch.bedroom_media:
+      emulated_hue: true
+      icon: mdi:monitor
+      friendly_name: Bedroom Media
 
 ###### STATE CARD
 group:
   bedroom:
     name: Master Bedroom
     entities:
-     - switch.bedroom_pc
+     - switch.bedroom_media
      - switch.bedroom_lamps_
      - switch.bedroom_fan
      - switch.white_noise
      - switch.led_strip
      - input_select.led_scene
      - input_select.led_color
-     - switch.bedroom_tv
-     - switch.bedroom_media
 
 sensor:
   - platform: template
@@ -33,6 +36,7 @@ sensor:
         value_template: "{% if is_state('media_player.kodi_bedroom_pi', 'playing') %}on{% else %}Off{% endif %}"
 
 switch:
+###### Switch for White Noise
   - platform: template
     switches:
       white_noise:
@@ -44,6 +48,26 @@ switch:
           service: media_player.media_Stop
           entity_id: media_player.kodi_bedroom_pi
 
+###### BEDROOM PC SWITCH with TV
+  - platform: wake_on_lan
+    mac_address: "00-1F-D0-9B-93-9A"
+    name: "bedroom_pc"
+    host: "192.168.1.96"
+    broadcast_address: 255.255.255.255
+    turn_off:
+      service: script.bedroom_kodi_off
+
+  - platform: template
+    switches:
+      bedroom_media:
+        value_template: '{{ states.switch.bedroom_pc.state }}'
+        turn_on:
+          service: script.turn_on
+          entity_id: script.bedroom_media_on
+        turn_off:
+          service: script.turn_on
+          entity_id: script.bedroom_media_off
+
 script:
   blizzard:
     sequence:
@@ -52,3 +76,34 @@ script:
           entity_id: media_player.kodi_bedroom_pi
           media_content_id: "http://192.168.1.250:8123/local/blizzard.mp3"
           media_content_type: "audio/mp3"
+
+  bedroom_media_on:
+    sequence:
+      - service: switch.turn_on
+        entity_id: switch.bedroom_tv
+      - delay: '00:00:10'
+      - service: switch.turn_on
+        entity_id: switch.bedroom_pc
+      - service: shell_command.bedroom_tv_cec
+
+  bedroom_media_off:
+    sequence:
+      - service: switch.turn_off
+        entity_id: switch.bedroom_tv
+      - service: switch.turn_off
+        entity_id: switch.bedroom_pc
+
+  bedroom_kodi_off:
+    sequence:
+      - service: shell_command.curl
+        data_template:
+          url: !secret kodi_bedroom_json
+          method: "post"
+          headers:
+            content-type: "application/json"
+          payload:
+            jsonrpc: "2.0"
+            method: "System.Hibernate"
+
+shell_command:
+  bedroom_tv_cec: 'bash /home/homeassistant/.homeassistant/shell/cec.sh'

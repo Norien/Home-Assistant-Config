@@ -12,9 +12,7 @@ homeassistant:
       friendly_name: 'MySQL'
     sensor.process_dnsmasq:
       friendly_name: 'Pi-Hole'
-    sensor.raspberry_pi:
-      friendly_name: 'Raspberry Pi'
-      icon: mdi:chip
+
 ###### STATE CARD
 group:
   processes:
@@ -25,7 +23,6 @@ group:
       - sensor.process_mosquitto
       - sensor.process_mysqld
       - sensor.process_dnsmasq
-      - sensor.raspberry_pi
 
 sensor:
   - platform: systemmonitor
@@ -38,9 +35,3 @@ sensor:
         arg: mysqld
       - type: process
         arg: dnsmasq
-
-  ###### CUSTOM ON // OFF TEXT FOR device_tracker
-  - platform: template
-    sensors:
-      raspberry_pi:
-        value_template: "{% if is_state('device_tracker.raspberrypi', 'home') %}on{% else %}off{% endif %}"
