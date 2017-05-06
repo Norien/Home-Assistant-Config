@@ -102,3 +102,19 @@ script:
       data_template:
         entity_id: media_player.kitchen
         message: "The Washing machine has completed it's cycle."
+
+  laundry_tts_bedroom:
+    sequence:
+    - condition: and
+      conditions:
+        - condition: template
+          value_template: >
+            {% if is_state('media_player.kodi_bedroom_pi', 'playing') %}
+            false
+            {% else %}
+            true
+            {% endif %}
+    - service: tts.google_say
+      data_template:
+        entity_id: media_player.kodi_bedroom_pi
+        message: "The Washing machine has completed it's cycle."

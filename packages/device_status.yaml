@@ -61,4 +61,4 @@ sensor:
       driveway_camera:
         value_template: "{% if is_state('device_tracker.camera_driveway', 'home') %}Online{% else %}Offline{% endif %}"
       raspberry_pi:
-        value_template: "{% if is_state('device_tracker.raspberrypi', 'home') %}on{% else %}off{% endif %}"
+        value_template: "{% if is_state('device_tracker.raspberrypi', 'home') %}Online{% else %}Offline{% endif %}"
