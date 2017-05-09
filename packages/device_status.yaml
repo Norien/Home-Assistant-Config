@@ -28,6 +28,9 @@ homeassistant:
     sensor.raspberry_pi:
       friendly_name: 'Raspberry Pi'
       icon: mdi:chip
+    sensor.tracker_doorbell:
+      friendly_name: 'Doorbell'
+      icon: mdi:chip
 ###### STATE CARD
 group:
   device_status:
@@ -41,11 +44,14 @@ group:
       - sensor.dlink_camera
       - sensor.driveway_camera
       - sensor.raspberry_pi
+      - sensor.tracker_doorbell
 
 sensor:
   ###### CUSTOM ONLINE // OFFLINE TEXT FOR device_tracker
   - platform: template
     sensors:
+      tracker_doorbell:
+        value_template: "{% if is_state('device_tracker.doorbell', 'home') %}Online{% else %}Offline{% endif %}"
       access_point:
         value_template: "{% if is_state('device_tracker.access_point', 'home') %}Online{% else %}Offline{% endif %}"
       wemo_link:

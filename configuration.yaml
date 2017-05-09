@@ -94,6 +94,8 @@ mqtt:
   keepalive: 60
   username: !secret mqtt_user
   password: !secret mqtt_password
+  discovery: true
+  discovery_prefix: homeassistant
 
 device_tracker:
   - platform: netgear
@@ -108,6 +110,7 @@ device_tracker:
       - 192.168.1.13
       - 192.168.1.99
       - 192.168.1.230
+      - 192.168.1.252
   - platform: ping
     hosts:
       chromecast_2: 192.168.1.231

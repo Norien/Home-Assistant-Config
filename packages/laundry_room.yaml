@@ -16,6 +16,9 @@ homeassistant:
     sensor.washing_machine_volts:
       friendly_name: Volttage
       icon: mdi:power-plug
+    sensor.washing_machine_status:
+      friendly_name: Status
+      icon: mdi:clipboard-outline
 
 ###### Switches
     switch.washing_machine:
@@ -33,6 +36,7 @@ group:
       - sensor.washing_machine_watts
       - sensor.washing_machine_kw
       - sensor.washing_machine_volts
+      - sensor.washing_machine_status
 
 ###### TP LINK SWITCH
 switch:
@@ -56,21 +60,25 @@ sensor:
       washing_machine_volts:
         value_template: '{{ states.switch.washing_machine.attributes["Voltage"] | replace(" V", "") | float }}'
         unit_of_measurement: 'V'
+      washing_machine_status:
+        value_template: >-
+          {%- if states.sensor.washing_machine_watts.state|int <= 4.3 -%}
+            Off
+          {% else %}
+            Running
+          {% endif %}
 
 ###### NOTIFY IF WASH IS DONE ( AND TURN OFF SWITCH )
 automation:
   - alias: 'notify if washing machine is done'
     initial_state: 'on'
     trigger:
-      - platform: numeric_state
-        entity_id: sensor.washing_machine_watts
-        below: 4.3
-    condition:
-      - condition: state
-        entity_id: sensor.washing_machine_watts
-        state: '4.2'
+      - platform: state
+        entity_id: sensor.washing_machine_status
+        from: 'Running'
+        to: 'Off'
         for:
-          minutes: 3
+          minutes: 4
     action:
       - service: script.laundry_tts
       - service: notify.justin
