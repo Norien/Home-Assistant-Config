@@ -41,9 +41,9 @@ automation:
       - service: notify.justin
         data:
           message: 'Someone is at the front door.'
-      # - service: notify.nicole
-      #   data:
-      #     message: 'Someone is at the front door.'
+      - service: notify.nicole
+        data:
+          message: 'Someone is at the front door.'
 
   - alias: 'guard dog'
     initial_state: 'on'
@@ -62,12 +62,19 @@ automation:
         from: 'off'
         to: 'on'
     action:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.kitchen
+          volume_level: '1.00'
       - service: media_player.play_media
         data_template:
           entity_id: media_player.kitchen
           media_content_id: http://192.168.1.250:8123/local/dog-barking-2-bullmastiff.mp3
           media_content_type: 'audio/mp3'
       - service: notify.justin
+        data:
+          message: 'Someone is at the front door, Release the Hounds!'
+      - service: notify.nicole
         data:
           message: 'Someone is at the front door, Release the Hounds!'
 
@@ -83,16 +90,15 @@ script:
             {% else %}
             true
             {% endif %}
-    # - service: media_player.volume_set
-    #   data:
-    #     entity_id: media_player.kitchen
-    #     volume_level: '0.50'
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.kitchen
+        volume_level: '0.50'
     - service: media_player.play_media
       data_template:
         entity_id: media_player.kitchen
         media_content_id: http://192.168.1.250:8123/local/door1.mp3
         media_content_type: 'audio/mp3'
-
 
 binary_sensor:
   - platform: mqtt
