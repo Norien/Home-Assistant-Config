@@ -41,6 +41,9 @@ script:
       - service: notify.justin
         data:
           message: 'An alarm has been Triggered!'
+      - service: notify.nicole
+        data:
+          message: 'An alarm has been Triggered!'
       - service: media_player.volume_set
         data:
           entity_id: media_player.kitchen
