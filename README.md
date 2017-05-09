@@ -35,7 +35,7 @@ Dependencies:
 * [H801 Wifi RGB Controller](http://a.co/ej6LvjZ)
 * [Carlon RC3105R Modded to NodeMcu for Doorbell](https://github.com/Norien/Home-Assistant-Config/issues/25)
 * [TP-Link HS110](http://a.co/2Z7Jq9k)
-* [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html) [Firmware](https://github.com/aneisch/Sonoff-Wemo-Home-Assistant)
+* [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html) -  [Firmware](https://github.com/aneisch/Sonoff-Wemo-Home-Assistant)
 * ON ORDER ** [Sonoff Dual WiFi Smart Switch](http://www.ebay.ca/itm/112266257555?_trksid=p2060353.m2749.l2649&ssPageName=STRK%3AMEBIDX%3AIT)
 * ON ORDER ** [WeMos D1 Mini](http://www.ebay.ca/itm/182035363514?_trksid=p2060353.m2749.l2649&ssPageName=STRK%3AMEBIDX%3AIT)
 * ON ORDER ** [NodeMcu ESP8266](https://geek.wish.com/search/1pc%20NodeMcu%20Lua%20ESP8266%20CH340G%20WIFI%20Internet%20Development%20Board%20Module#cid=58c646190b362f70c8bbeb10)
