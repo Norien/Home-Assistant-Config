@@ -1,0 +1,33 @@
+################################################################
+## Packages / Camera
+################################################################
+homeassistant:
+  customize:
+
+###### STATE CARD
+group:
+  all_cameras:
+    name: Cameras
+    entities:
+     - camera.baby_monitor
+     - camera.driveway
+
+camera:
+  - platform: generic
+    name: Baby Monitor
+    still_image_url: !secret dlink_camera_link
+    username: !secret dlink_camera_username
+    password: !secret dlink_camera_password
+  # - platform: zoneminder
+
+#android_ip_webcam:
+#- host: !secret android_ip_webcam_url
+#  name: Driveway
+#  port: 8036
+#  username: !secret andriod_camera_username
+#  password: !secret andriod_camera_password
+
+# zoneminder:
+#   host: localhost
+#   username: !secret zoneminder_user
+#   password: !secret zoneminder_pass

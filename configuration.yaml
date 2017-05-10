@@ -53,28 +53,6 @@ recorder:
 #   host: 127.0.0.1
 #   username: !secret influx_user
 #   password: !secret influx_pass
-#android_ip_webcam:
-#- host: !secret android_ip_webcam_url
-#  name: Driveway
-#  port: 8036
-#  username: !secret andriod_camera_username
-#  password: !secret andriod_camera_password
-# zoneminder:
-#   host: localhost
-#   username: !secret zoneminder_user
-#   password: !secret zoneminder_pass
-
-camera:
-  - platform: generic
-    name: Baby Monitor
-    still_image_url: !secret dlink_camera_link
-    username: !secret dlink_camera_username
-    password: !secret dlink_camera_password
-  # - platform: zoneminder
-
-nest:
-  client_id: !secret nest_client_id
-  client_secret: !secret nest_client_secret
 
 notify:
   - platform: pushbullet
@@ -83,6 +61,7 @@ notify:
   - platform: pushbullet
     name: nicole
     api_key: !secret pushbullet_api_key_nicole
+
 light:
   - platform: hue
     host: !secret philips_hue_ip

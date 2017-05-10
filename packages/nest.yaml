@@ -44,6 +44,10 @@ group:
       - sensor.kitchen_nest_protect_co_status
       - sensor.kitchen_nest_protect_smoke_status
 
+nest:
+  client_id: !secret nest_client_id
+  client_secret: !secret nest_client_secret
+
 script:
 ###### ALEXA TURN ON HOT / COLD / FAN
   hotter:
