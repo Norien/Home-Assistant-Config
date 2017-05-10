@@ -33,7 +33,7 @@ script:
         data:
           group_name: "Living Room"
           scene_name: "Alarm"
-  # OFFICE LIGHT STRIP - RED
+  # bedroom LIGHT STRIP - RED
       - service: shell_command.led_send_payload
         data:
           rgb_hex: 'ff0000'

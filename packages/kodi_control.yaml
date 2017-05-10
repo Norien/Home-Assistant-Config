@@ -144,6 +144,15 @@ group:
       - script.kodi_nav_right
       - script.kodi_nav_select
 
+  playlists:
+    control: hidden
+    name: Playlists
+    entities:
+      - script.auto_all_tv
+      - script.auto_cartoons
+      - script.auto_pawpatrol
+      - script.kodi_youtbe
+
 script:
   ################################################
   ## Living Room -CARTOONS

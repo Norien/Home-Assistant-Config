@@ -1,10 +1,9 @@
 ################################################################
 ## Packages / Nest
 ################################################################
-
 homeassistant:
   customize:
-    #Nest
+#Nest Thermostat
     climate.hallway:
       friendly_name: Nest Thermostat
       entity_picture: /local/custom_icons/nest.png
@@ -16,17 +15,34 @@ homeassistant:
       icon: mdi:water-percent
     sensor.hallway_thermostat_temperature:
       friendly_name: Hallway
-    sensor.kitchen_nest_protect_battery_health:
-      friendly_name: Kitchen Nest Protect Battery
-      icon: mdi:battery
     sensor.hallway_thermostat_hvac_state:
       friendly_name: Thermostat HVAC State
     sensor.hallway_thermostat_operation_mode:
       friendly_name: Thermostat Operation Mode
+#Nest Protect
     sensor.kitchen_nest_protect_co_status:
       entity_picture: /local/custom_icons/nestprotect.png
     sensor.kitchen_nest_protect_smoke_status:
       entity_picture: /local/custom_icons/nestprotect.png
+    sensor.kitchen_nest_protect_battery_health:
+      friendly_name: Kitchen Nest Protect Battery
+      icon: mdi:battery
+
+###### STATE CARD
+group:
+  thermostat:
+    name: Thermostat
+    entities:
+     - climate.hallway
+     - binary_sensor.hallway_thermostat_fan
+     - sensor.hallway_thermostat_hvac_state
+     - sensor.hallway_thermostat_operation_mode
+  smoke_gas:
+    name: "Smoke & CO"
+    entities:
+      - binary_sensor.kitchen_nest_protect_online
+      - sensor.kitchen_nest_protect_co_status
+      - sensor.kitchen_nest_protect_smoke_status
 
 script:
 ###### ALEXA TURN ON HOT / COLD / FAN
@@ -47,4 +63,29 @@ script:
       - service: climate.set_fan_mode
         data:
           entity_id: climate.hallway
-          fan_mode: 'auto'      
+          fan_mode: 'on'
+
+automation:
+  ###### Nest protect states are - ok warning emergency
+  - alias: 'notify if nest protect is not ok'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.kitchen_nest_protect_co_status,sensor.kitchen_nest_protect_smoke_status
+        to: 'emergency'
+    action:
+      - service: notify.justin
+        data:
+          message: 'Nest has detected Smoke or CO in the Kitchen.'
+      - service: notify.nicole
+        data:
+          message: 'Nest has detected Smoke or CO in the Kitchen.'
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Alarm"
+  # bedroom LIGHT STRIP - RED
+      - service: shell_command.led_send_payload
+        data:
+          rgb_hex: 'ff0000'
+          host: !secret H801WIFI_url

@@ -13,6 +13,18 @@ homeassistant:
       friendly_name: Automatic Dehumidifier
       icon: mdi:water-percent
 
+###### STATE CARD
+group:
+  all_humidity:
+    control: hidden
+    name: Humidity
+    entities:
+      - sensor.dark_sky_humidity
+      - sensor.hallway_thermostat_humidity
+      - sensor.mold_indicator
+      - switch.dehumidifier
+      - automation.turn_on_dehumidifier_if_mold_sensor_is_high
+
 automation:
   - alias: 'Turn on dehumidifier if Mold sensor is high'
     initial_state: 'on'

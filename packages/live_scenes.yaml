@@ -4,25 +4,33 @@
 homeassistant:
   customize:
     script.aquarium_scene:
-      friendly_name: 'Aquarium Scene'
+      friendly_name: 'Aquarium'
       emulated_hue: true
       icon: mdi:fish
     script.sexy_time:
-      friendly_name: 'Sexy Time Scene'
+      friendly_name: 'Sexy Time'
       emulated_hue: true
       icon: mdi:heart
     script.river_scene:
-      friendly_name: 'River Scene'
+      friendly_name: 'River'
       emulated_hue: true
-      icon: mdi:fire
+      icon: mdi:hook
     script.beach_scene:
-      friendly_name: 'Beach Scene'
+      friendly_name: 'Beach'
       emulated_hue: true
       icon: mdi:tower-beach
     script.jungle_scene:
-      friendly_name: 'Jungle Scene'
+      friendly_name: 'Jungle'
       emulated_hue: true
       icon: mdi:paw
+    script.fireplace_scene:
+      friendly_name: 'Fire Place'
+      emulated_hue: true
+      icon: mdi:fire
+    script.space_scene:
+      friendly_name: 'Space'
+      emulated_hue: true
+      icon: mdi:earth
 ###### STATE CARD
 group:
   live_scenes:
@@ -34,8 +42,32 @@ group:
       - script.beach_scene
       - script.sexy_time
       - script.jungle_scene
+      - script.fireplace_scene
+      - script.space_scene
 
 script:
+  space_scene:
+    sequence:
+      - service_template: >-
+          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+        data:
+          file: "plugin://plugin.video.youtube/?action=play_video&videoid=NM2wtte1JRE"
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "space"
+
+  fireplace_scene:
+    sequence:
+      - service_template: >-
+          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+        data:
+          file: "c:/Users/Living Room/Videos/fireplace.mp4"
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "fire"
+
   sexy_time:
     sequence:
       - service: script.kodi_stop

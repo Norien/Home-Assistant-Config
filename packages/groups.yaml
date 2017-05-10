@@ -88,20 +88,6 @@ group:
     entities:
      - switch.office_pc
      - switch.office_lightswitch
-  playlists:
-    control: hidden
-    name: Playlists
-    entities:
-      - script.auto_all_tv
-      - script.auto_cartoons
-      - script.auto_pawpatrol
-  thermostat:
-    name: Thermostat
-    entities:
-     - climate.hallway
-     - binary_sensor.hallway_thermostat_fan
-     - sensor.hallway_thermostat_hvac_state
-     - sensor.hallway_thermostat_operation_mode
   motion_sensors:
     name: Motion
     entities:
@@ -117,26 +103,11 @@ group:
      - sensor.living_room_temperature
      - sensor.dining_room_temperature
      - sensor.average_house_temp
-  all_humidity:
-    control: hidden
-    name: Humidity
-    entities:
-      - sensor.dark_sky_humidity
-      - sensor.hallway_thermostat_humidity
-      - sensor.mold_indicator
-      - switch.dehumidifier
-      - automation.turn_on_dehumidifier_if_mold_sensor_is_high
   all_cameras:
     name: Cameras
     entities:
      - camera.baby_monitor
      - camera.driveway
-  smoke_gas:
-    name: "Smoke & CO"
-    entities:
-      - binary_sensor.kitchen_nest_protect_online
-      - sensor.kitchen_nest_protect_co_status
-      - sensor.kitchen_nest_protect_smoke_status
   sensor_battery_levels:
     name: Battery Levels
     entities:
