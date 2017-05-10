@@ -3,6 +3,9 @@
 ################################################################
 homeassistant:
   customize:
+    media_player.kodi_livingroom:
+      friendly_name: Living Room KODI
+
     packages.kodi_control: &customize
       emulated_hue: true
       package: 'kodi_control'

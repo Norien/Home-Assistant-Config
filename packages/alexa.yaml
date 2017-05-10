@@ -51,26 +51,6 @@ script:
       - service: media_player.turn_off
         entity_id: media_player.kitchen
 
-###### ALEXA TURN ON HOT / COLD / FAN
-  hotter:
-    sequence:
-      - service: climate.set_temperature
-        data_template:
-          entity_id: climate.hallway
-          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) +1 }}"
-  colder:
-    sequence:
-      - service: climate.set_temperature
-        data_template:
-          entity_id: climate.hallway
-          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) -1 }}"
-
-  fan:
-    sequence:
-      - service: climate.set_fan_mode
-        data:
-          entity_id: climate.hallway
-          fan_mode: 'auto'
 
 ###### ALEXA TURN ON or OFF PC (Living Room)
   pc:

@@ -5,10 +5,10 @@ homeassistant:
   customize:
     switch.dehumidifier:
       friendly_name: Dehumidifier
-      entity_picture: /local/dehumidifier.png
+      entity_picture: /local/custom_icons/dehumidifier.png
     sensor.mold_indicator:
       friendly_name: Mold Indicator
-      entity_picture: /local/mold.png
+      entity_picture: /local/custom_icons/mold.png
     automation.turn_on_dehumidifier_if_mold_sensor_is_high:
       friendly_name: Automatic Dehumidifier
       icon: mdi:water-percent

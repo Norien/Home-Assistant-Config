@@ -1,18 +1,13 @@
 ################################################################
-## Packages / customizations
+## Packages / Nest
 ################################################################
 
 homeassistant:
   customize:
-    #Media Players
-    media_player.kodi_livingroom:
-      friendly_name: Living Room KODI
-
-
     #Nest
     climate.hallway:
       friendly_name: Nest Thermostat
-      entity_picture: /local/nest.png
+      entity_picture: /local/custom_icons/nest.png
     binary_sensor.hallway_thermostat_fan:
       friendly_name: Thermostat Fan
       icon: mdi:fan
@@ -29,6 +24,27 @@ homeassistant:
     sensor.hallway_thermostat_operation_mode:
       friendly_name: Thermostat Operation Mode
     sensor.kitchen_nest_protect_co_status:
-      entity_picture: /local/nestprotect.png
+      entity_picture: /local/custom_icons/nestprotect.png
     sensor.kitchen_nest_protect_smoke_status:
-      entity_picture: /local/nestprotect.png
+      entity_picture: /local/custom_icons/nestprotect.png
+
+script:
+###### ALEXA TURN ON HOT / COLD / FAN
+  hotter:
+    sequence:
+      - service: climate.set_temperature
+        data_template:
+          entity_id: climate.hallway
+          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) +1 }}"
+  colder:
+    sequence:
+      - service: climate.set_temperature
+        data_template:
+          entity_id: climate.hallway
+          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) -1 }}"
+  fan:
+    sequence:
+      - service: climate.set_fan_mode
+        data:
+          entity_id: climate.hallway
+          fan_mode: 'auto'      

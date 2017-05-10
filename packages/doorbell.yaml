@@ -69,7 +69,7 @@ automation:
       - service: media_player.play_media
         data_template:
           entity_id: media_player.kitchen
-          media_content_id: http://192.168.1.250:8123/local/dog-barking-2-bullmastiff.mp3
+          media_content_id: http://192.168.1.250:8123/local/misc_sound/dog-barking-2-bullmastiff.mp3
           media_content_type: 'audio/mp3'
       - service: notify.justin
         data:
@@ -97,7 +97,7 @@ script:
     - service: media_player.play_media
       data_template:
         entity_id: media_player.kitchen
-        media_content_id: http://192.168.1.250:8123/local/door1.mp3
+        media_content_id: http://192.168.1.250:8123/local/doorbell_tones/door1.mp3
         media_content_type: 'audio/mp3'
 
 binary_sensor:

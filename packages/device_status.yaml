@@ -9,16 +9,16 @@ homeassistant:
       icon: mdi:router-wireless
     sensor.wemo_link:
       friendly_name: Wemo Link
-      entity_picture: /local/wemo.png
+      entity_picture: /local/custom_icons/wemo.png
     sensor.philips_hue_hub:
       friendly_name: Philips Hue Hub
-      entity_picture: /local/huebridge.png
+      entity_picture: /local/custom_icons/huebridge.png
     sensor.chromecast_kitchen:
       friendly_name: Chromecast Kitchen
-      entity_picture: /local/chromecast.png
+      entity_picture: /local/custom_icons/chromecast.png
     sensor.chromecast_backyard:
       friendly_name: Chromecast Backyard
-      entity_picture: /local/chromecast.png
+      entity_picture: /local/custom_icons/chromecast.png
     sensor.dlink_camera:
       friendly_name: Baby Monitor
       icon: mdi:camera
