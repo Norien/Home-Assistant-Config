@@ -3,14 +3,25 @@
 ################################################################
 homeassistant:
   customize:
+    sensor.driveway_battery_level:
+      friendly_name: Driveway Camera
 
 ###### STATE CARD
 group:
   all_cameras:
     name: Cameras
+    control: hidden
     entities:
      - camera.baby_monitor
      - camera.driveway
+  camera_control:
+    name: Camera Controls
+    control: hidden
+    entities:
+     - sensor.driveway_battery_level
+     - sensor.driveway_motion
+     - switch.driveway_night_vision
+     - switch.driveway_video_recording
 
 camera:
   - platform: generic
@@ -20,12 +31,58 @@ camera:
     password: !secret dlink_camera_password
   # - platform: zoneminder
 
-#android_ip_webcam:
-#- host: !secret android_ip_webcam_url
-#  name: Driveway
-#  port: 8036
-#  username: !secret andriod_camera_username
-#  password: !secret andriod_camera_password
+android_ip_webcam:
+  - name: Driveway
+    host: !secret android_ip_webcam_url
+    port: 8036
+    username: !secret andriod_camera_username
+    password: !secret andriod_camera_password
+    sensors:
+      - battery_level
+      - motion
+    switches:
+      - night_vision
+      - video_recording
+
+automation:
+  - alias: 'Camera Night Vision Dusk/Dawn'
+    initial_state: 'on'
+    trigger:
+      - platform: sun
+        event: sunset
+        offset: '+00:45:00'
+      - platform: sun
+        event: sunrise
+    action:
+      service_template: >
+        {% if trigger.event == "sunset" %}
+        homeassistant.turn_on
+        {% elif trigger.event == "sunrise" %}
+        homeassistant.turn_off
+        {% endif %}
+      entity_id: switch.driveway_night_vision
+
+  # - alias: 'Send IP Cam photo'
+  #   trigger:
+  #     platform: time
+  #     hours: '/1'
+  #     minutes: '0'
+  #     seconds: '0'
+  #   condition:
+  #     condition: state
+  #     entity_id: group.all_devices
+  #     state: 'not_home'
+  #   action:
+  #     service: notify.galaxy_s6_edge
+  #     data:
+  #       title: 'Home Assistant'
+  #       message: 'Photo'
+  #       data:
+  #         photo:
+  #           url: http://10.0.0.160:8080/photo.jpg
+  #           username: ##USERNAME##
+  #           password: ##PASSWORD##
+  #           caption: Live from de Residentie
 
 # zoneminder:
 #   host: localhost

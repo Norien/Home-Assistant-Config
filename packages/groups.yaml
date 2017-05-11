@@ -48,6 +48,7 @@ group:
     icon: mdi:camera
     entities:
       - group.all_cameras
+      - group.camera_control
   misc_view:
     name: Misc
     view: yes
@@ -94,6 +95,7 @@ group:
      - sensor.findlay_room_motion
      - sensor.living_room_motion
      - sensor.dining_room_motion
+     - sensor.driveway_motion
   all_temps:
     name: Temperature
     entities:
@@ -112,6 +114,7 @@ group:
      - sensor.dining_room_motion_sensor_battery_level
      - sensor.findlays_room_dimmer_switch
      - sensor.living_room_dimmer_switch
+     - sensor.driveway_battery_level
      - sensor.justins_g5_battery_dynamic
      - sensor.nicoles_s7_battery_dynamic
   media_player1:
