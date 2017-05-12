@@ -5,6 +5,8 @@ homeassistant:
   customize:
     sensor.driveway_battery_level:
       friendly_name: Driveway Camera
+    script.notify_camera:
+      friendly_name: Email Camera Photo
 
 ###### STATE CARD
 group:
@@ -22,6 +24,7 @@ group:
      - sensor.driveway_motion
      - switch.driveway_night_vision
      - switch.driveway_video_recording
+     - script.notify_camera
 
 camera:
   - platform: generic
@@ -62,6 +65,20 @@ automation:
         {% endif %}
       entity_id: switch.driveway_night_vision
 
+script:
+  notify_camera:
+    sequence:
+      - service: shell_command.driveway
+      - service: notify.email
+        data:
+            title: 'Alert'
+            message: 'Someone is at our home and we are not!'
+            data:
+                images:
+                    - !secret driveway_camera_photo_path
+shell_command:
+  driveway: >-
+    !secret driveway_camera_photo_url
   # - alias: 'Send IP Cam photo'
   #   trigger:
   #     platform: time

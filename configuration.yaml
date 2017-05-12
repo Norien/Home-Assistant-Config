@@ -54,14 +54,6 @@ recorder:
 #   username: !secret influx_user
 #   password: !secret influx_pass
 
-notify:
-  - platform: pushbullet
-    name: justin
-    api_key: !secret pushbullet_api_key_justin
-  - platform: pushbullet
-    name: nicole
-    api_key: !secret pushbullet_api_key_nicole
-
 light:
   - platform: hue
     host: !secret philips_hue_ip
@@ -129,14 +121,3 @@ media_player:
     port: !secret kodi_bedroom_pi_port
     name: kodi_bedroom_pi
     turn_off_action: hibernate
-
-#Side Panels
-panel_iframe:
-  zoneminder:
-    title: Zoneminder
-    icon: mdi:camera
-    url: !secret zm_url
-  glances:
-    title: System Monitor
-    icon: mdi:biohazard
-    url: !secret glances_url

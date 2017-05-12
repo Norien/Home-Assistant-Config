@@ -44,6 +44,7 @@ automation:
       - service: notify.nicole
         data:
           message: 'Someone is at the front door.'
+      - service: script.notify_camera
 
   - alias: 'guard dog'
     initial_state: 'on'

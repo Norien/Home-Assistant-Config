@@ -53,3 +53,4 @@ script:
           entity_id: media_player.kitchen
           message: "INTRUDER ALERT.THE POLICE HAVE BEEN CALLED AND ARE ON THE WAY"
           cache: false
+      - service: script.notify_camera
