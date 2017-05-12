@@ -20,6 +20,7 @@ notify:
     password: !secret email_pass
     recipient:
       - !secret email
+      - !secret her_email
 
 automation:
 ###### NOTIFY IF NICOLE HAS LEFT ONE OF HER WORKPLACES
@@ -70,13 +71,14 @@ automation:
         data:
           message: 'Vacation Mode has been Deactivated'
 
-###### NOTIFY IF UPDATE TO HOME ASSISTANT IS Available
+###### NOTIFY IF UPDATE TO HOME ASSISTANT IS Available and then POST an issue to github to update it
   - alias: 'notify if update available'
     initial_state: 'on'
     trigger:
       - platform: state
         entity_id: sensor.current_version
     action:
+      - service: shell_command.post_git_issue
       - service: notify.justin
         data:
           message: 'Update for Home Assistant is available. Visit https://github.com/home-assistant/home-assistant/releases for details.'
@@ -93,3 +95,6 @@ automation:
       - service: notify.justin
         data_template:
           message: "Your External IP changed from {{ trigger.from_state.state }} to {{ trigger.to_state.state }}"
+
+shell_command:
+  post_git_issue: 'python /home/homeassistant/.homeassistant/shell/make_github_issue.py'

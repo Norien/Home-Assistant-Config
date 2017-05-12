@@ -77,8 +77,7 @@ script:
                 images:
                     - !secret driveway_camera_photo_path
 shell_command:
-  driveway: >-
-    !secret driveway_camera_photo_url
+  driveway: !secret driveway_camera_photo_url
   # - alias: 'Send IP Cam photo'
   #   trigger:
   #     platform: time
