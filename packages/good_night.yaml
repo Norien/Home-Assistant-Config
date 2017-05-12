@@ -14,7 +14,7 @@ script:
     sequence:
 ##### BEDROOM
     - service: switch.turn_off
-      entity_id: switch.bedroom_pc_off
+      entity_id: switch.bedroom_media
     - service: switch.turn_off
       entity_id: switch.led_strip
     - service: switch.turn_off
@@ -22,7 +22,7 @@ script:
     - service: switch.turn_on
       entity_id: switch.bedroom_fan
     - service: script.turn_on
-      entity_id: script.blizzard
+      entity_id: switch.white_noise
 ###### LIVINGROOM/KITCHEN
     - service: switch.turn_off
       entity_id: switch.living_room_pc_off
