@@ -39,11 +39,13 @@ script:
           rgb_hex: 'ff0000'
           host: !secret H801WIFI_url
       - service: notify.justin
-        data:
-          message: 'An alarm has been Triggered!'
+        data_template:
+          message: >
+            An alarm has been Triggered in the {% if is_state('sensor.findlay_room_motion', 'True') %}Findlay's Room{% elif is_state('sensor.living_room_motion', 'True') %}Living Room{% elif is_state('sensor.dining_room_motion', 'True') %}Dining Room{% endif %}
       - service: notify.nicole
-        data:
-          message: 'An alarm has been Triggered!'
+        data_template:
+          message: >
+            An alarm has been Triggered in the {% if is_state('sensor.findlay_room_motion', 'True') %}Findlay's Room{% elif is_state('sensor.living_room_motion', 'True') %}Living Room{% elif is_state('sensor.dining_room_motion', 'True') %}Dining Room{% endif %}
       - service: media_player.volume_set
         data:
           entity_id: media_player.kitchen
