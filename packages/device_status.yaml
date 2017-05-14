@@ -68,3 +68,17 @@ sensor:
         value_template: "{% if is_state('device_tracker.camera_driveway', 'home') %}Online{% else %}Offline{% endif %}"
       raspberry_pi:
         value_template: "{% if is_state('device_tracker.raspberrypi', 'home') %}Online{% else %}Offline{% endif %}"
+
+automation:
+###### NOTIFY IF device goes Offline
+  - alias: Notify if Device Goes Offline
+    trigger:
+      platform: state
+      entity_id: sensor.tracker_doorbell, sensor.access_point, sensor.wemo_link, sensor.philips_hue_hub, sensor.chromecast_kitchen, sensor.chromecast_backyard, sensor.dlink_camera, sensor.driveway_camera, sensor.raspberry_pi
+    condition:
+      - condition: template
+        value_template: "{% if trigger.from_state and trigger.to_state %} True {% else %} False {% endif %}"
+    action:
+      - service: notify.justin
+        data_template:
+          message: "{% if is_state('sensor.tracker_doorbell', 'Offline') %}Doorbell{% elif is_state('sensor.access_point', 'Offline') %}Access Pooint{% elif is_state('sensor.wemo_link', 'Offline') %}Wemo Link{% elif is_state('sensor.philips_hue_hub', 'Offline') %}Philips Hue Hub{% elif is_state('sensor.chromecast_kitchen', 'Offline') %}Chromecast Kitchen{% elif is_state('sensor.chromecast_backyard', 'Offline') %}Chromecast Backyard{% elif is_state('sensor.dlink_camera', 'Offline') %}Dlink Camera{% elif is_state('sensor.driveway_camera', 'Offline') %}Driveway Camera{% elif is_state('sensor.raspberry_pi', 'Offline') %}Bedroom PI{% endif %} Has gone Offline"
