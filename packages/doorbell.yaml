@@ -14,6 +14,7 @@ group:
     name: Door Bell
     entities:
       - binary_sensor.front_doorbell
+      - input_select.doorbell
       - automation.guard_dog
 
 automation:
@@ -98,8 +99,21 @@ script:
     - service: media_player.play_media
       data_template:
         entity_id: media_player.kitchen
-        media_content_id: http://192.168.1.250:8123/local/doorbell_tones/door1.mp3
+        media_content_id: >
+          {% if is_state('input_select.doorbell', 'door_1') %} http://192.168.1.250:8123/local/doorbell_tones/door_1.mp3
+          {% elif is_state('input_select.doorbell', 'door_ff7') %} http://192.168.1.250:8123/local/doorbell_tones/door_ff7.mp3
+          {% elif is_state('input_select.doorbell', 'xmas') %} http://192.168.1.250:8123/local/doorbell_tones/xmas.mp3
+          {% endif %}
         media_content_type: 'audio/mp3'
+
+input_select:
+  doorbell:
+    name: Tones
+    options:
+      - door_1
+      - door_ff7
+      - xmas
+    icon: mdi:bookmark-music
 
 binary_sensor:
   - platform: mqtt

@@ -25,6 +25,7 @@ group:
      - input_boolean.guest
      - input_boolean.away
      - input_boolean.vacation
+     - input_boolean.nap
 
 automation:
 ############# AWAY
@@ -146,7 +147,10 @@ input_boolean:
     name: Away
     icon: mdi:account-off
     initial: off
-
+  nap:
+    name: Nap
+    icon: mdi:sleep
+    initial: off
 ###### Sensors
 sensor:
   - platform: template

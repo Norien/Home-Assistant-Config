@@ -89,34 +89,6 @@ group:
     entities:
      - switch.office_pc
      - switch.office_lightswitch
-  motion_sensors:
-    name: Motion
-    entities:
-     - sensor.findlay_room_motion
-     - sensor.living_room_motion
-     - sensor.dining_room_motion
-     - sensor.driveway_motion
-  all_temps:
-    name: Temperature
-    entities:
-     - sensor.dark_sky_temperature
-     - sensor.hallway_thermostat_temperature
-     - sensor.findlay_room_temperature
-     - sensor.living_room_temperature
-     - sensor.dining_room_temperature
-     - sensor.average_house_temp
-  sensor_battery_levels:
-    name: Battery Levels
-    entities:
-     - sensor.kitchen_nest_protect_battery_health
-     - sensor.findlay_room_motion_sensor_battery_level
-     - sensor.living_room_motion_sensor_battery_level
-     - sensor.dining_room_motion_sensor_battery_level
-     - sensor.findlays_room_dimmer_switch
-     - sensor.living_room_dimmer_switch
-     - sensor.driveway_battery_level
-     - sensor.justins_g5_battery_dynamic
-     - sensor.nicoles_s7_battery_dynamic
   media_player1:
     name: Media Players Living Room
     entities:
