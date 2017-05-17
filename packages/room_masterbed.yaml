@@ -99,6 +99,14 @@ script:
             jsonrpc: "2.0"
             method: "System.Hibernate"
 
+  white_noise:
+    sequence:
+      - service: media_player.play_media
+        data:
+          entity_id: media_player.kodi_bedroom_pi
+          media_content_id: "http://192.168.1.250:8123/local/white_noise/blizzard.mp3"
+          media_content_type: "audio/mp3"
+
 automation:
   - alias: 'white_noise'
     initial_state: 'on'

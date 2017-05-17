@@ -14,11 +14,9 @@ updater:
 history:
 logbook:
 sun:
-discovery:
-    ignore:
-      - netgear_router
+#discovery:
 #Components
-#google:
+# google:
 #  client_id: !secret google_client_id
 #  client_secret: !secret google_secret
 
@@ -48,16 +46,16 @@ tts:
 
 recorder:
   db_url: !secret database
-
-# influxdb:
-#   host: 127.0.0.1
-#   username: !secret influx_user
-#   password: !secret influx_pass
-
+#
+# # influxdb:
+# #   host: 127.0.0.1
+# #   username: !secret influx_user
+# #   password: !secret influx_pass
+#
 light:
   - platform: hue
     host: !secret philips_hue_ip
-
+#
 mqtt:
   broker: !secret mqtt_url
   port: !secret mqtt_port
@@ -69,10 +67,11 @@ mqtt:
   discovery_prefix: homeassistant
 
 device_tracker:
-  - platform: netgear
-    host: !secret netgear_host
-    username: !secret netgear_username
-    password: !secret netgear_password
+  # - platform: tomato
+  #   host: !secret tomato_host
+  #   username: !secret tomato_username
+  #   password: !secret tomato_password
+  #   http_id: !secret tomato_id
   - platform: owntracks
   - platform: nmap_tracker
     hosts:
@@ -98,7 +97,8 @@ wemo:
     - 192.168.1.203
     - 192.168.1.204
     - 192.168.1.205
-
+    - 192.168.1.206
+#
 media_player:
   - platform: kodi
     host: !secret kodi_livingroom_ip

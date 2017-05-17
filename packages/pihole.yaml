@@ -23,7 +23,8 @@ homeassistant:
 
     sensor.ads_blocked_today:
       friendly_name: Ads Blocked Today
-      icon: mdi:do-not-disturb
+      entity_picture: /local/custom_icons/pihole.png
+    #  icon: mdi:do-not-disturb
 
     sensor.dns_queries_today:
       friendly_name: DNS Queries Today
@@ -44,13 +45,14 @@ homeassistant:
 group:
   Ads Blocked:
     entities:
+      - sensor.ads_blocked_today
       - sensor.dns_queries_today
       - sensor.domains_being_blocked
       - sensor.ads_blocked_today
-      - sensor.ads_percentage_today
       - sensor.unique_domains
       - sensor.queries_forwarded
       - sensor.queries_cached
+      - switch.pihole
 
 ###############################################################################
 #  Sensors
@@ -90,3 +92,15 @@ sensor:
     name: queries_cached
     resource: !secret pi_hole_url
     value_template: '{{ value_json.queries_cached }}'
+
+switch:
+  platform: command_line
+  switches:
+    pihole:
+      command_on: >-
+        !secret pi_hole_switch_on
+      command_off: >-
+        !secret pi_hole_switch_off
+      command_state: >-
+        !secret pi_hole_switch_on
+      value_template: "{{ value_json.statue == 'enabled' }}"

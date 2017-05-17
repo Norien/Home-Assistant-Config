@@ -14,11 +14,8 @@ Software on the server:
 * [Pi-Hole](https://pi-hole.net/)
 * [Kodi](https://kodi.tv/)
 
-Dependencies:
-* [Wake on Lan - sudo apt-get install etherwake](https://launchpad.net/ubuntu/+source/etherwake)
-
 **Devices in Use:**
-* [Netgear R6300](http://a.co/hKI7tOr)
+* [Netgear R6300](http://a.co/hKI7tOr) - [Tomato Firmware](http://tomato.groov.pl/download/K26RT-AC/140-MultiWAN/)
 * [Nest Thermostat - 2nd Gen](http://a.co/6BsUg19)
 * [Nest Protect - 1st Gen](http://a.co/5p5p97O)
 * [Echo Dot Gen 2](http://amzn.to/2hvCexj)
@@ -36,7 +33,8 @@ Dependencies:
 * [Carlon RC3105R Modded to NodeMcu for Doorbell](https://github.com/Norien/Home-Assistant-Config/issues/25)
 * [TP-Link HS110](http://a.co/2Z7Jq9k)
 * [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html) -  [Firmware](https://github.com/aneisch/Sonoff-Wemo-Home-Assistant)
-* ON ORDER ** [Sonoff Dual WiFi Smart Switch](http://www.ebay.ca/itm/112266257555?_trksid=p2060353.m2749.l2649&ssPageName=STRK%3AMEBIDX%3AIT)
+* [Sonoff Dual WiFi Smart Switch](https://www.itead.cc/smart-home/sonoff-dual.html)
+* ON ORDER ** [Sonoff POW](https://www.itead.cc/smart-home/sonoff-pow.html)
 * ON ORDER ** [WeMos D1 Mini](http://www.ebay.ca/itm/182035363514?_trksid=p2060353.m2749.l2649&ssPageName=STRK%3AMEBIDX%3AIT)
 * ON ORDER ** [NodeMcu ESP8266](https://geek.wish.com/search/1pc%20NodeMcu%20Lua%20ESP8266%20CH340G%20WIFI%20Internet%20Development%20Board%20Module#cid=58c646190b362f70c8bbeb10)
 

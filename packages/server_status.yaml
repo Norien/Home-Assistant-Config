@@ -150,6 +150,7 @@ sensor:
     resource: http://ip.jsontest.com
     name: external_ip
     value_template: '{{ value_json.ip }}'
+    scan_interval: 10800
 
 ###### CPU & HDD TEMP
   - platform: command_line
