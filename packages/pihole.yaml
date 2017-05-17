@@ -42,6 +42,14 @@ homeassistant:
       friendly_name: Queries Cached
       icon: mdi:animation
 
+    script.pihole_off:
+      friendly_name: Turn Pi-Hole Off
+      icon: mdi:do-not-disturb
+
+    script.pihole_on:
+      friendly_name: Turn Pi-Hole On
+      icon: mdi:power
+
 group:
   Ads Blocked:
     entities:
@@ -52,7 +60,8 @@ group:
       - sensor.unique_domains
       - sensor.queries_forwarded
       - sensor.queries_cached
-      - switch.pihole
+      - script.pihole_on
+      - script.pihole_off
 
 ###############################################################################
 #  Sensors
@@ -93,14 +102,19 @@ sensor:
     resource: !secret pi_hole_url
     value_template: '{{ value_json.queries_cached }}'
 
-switch:
-  platform: command_line
-  switches:
-    pihole:
-      command_on: >-
-        !secret pi_hole_switch_on
-      command_off: >-
-        !secret pi_hole_switch_off
-      command_state: >-
-        !secret pi_hole_switch_on
-      value_template: "{{ value_json.statue == 'enabled' }}"
+script:
+  pihole_on:
+    sequence:
+       - service: shell_command.pihole_on
+  pihole_off:
+    sequence:
+       - service: shell_command.pihole_off
+
+shell_command:
+  pihole_on: !secret pi_hole_switch_on
+  pihole_off: !secret pi_hole_switch_off
+
+#!secret_example
+#Authorization & Token required (see WEBPASSWORD in /etc/pihole/setupVars.conf)
+#pi_hole_switch_on: /usr/bin/curl -k "localhost/admin/api.php?enable&auth=webkey"
+#pi_hole_switch_off: /usr/bin/curl -k "localhost/admin/api.php?disable=600&auth=webkey"
