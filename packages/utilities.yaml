@@ -32,7 +32,14 @@ group:
       - script.update_ha
       - script.clear_log
       - script.clear_tts_cache
+  backup:
+    name: Backup
+    control: hidden
+    entities:
+      - automation.auto_backup
       - script.backup_config
+      - sensor.latest_github_commit
+      - sensor.latest_backup
 #########################################################################
 script:
   update_ha:
@@ -76,7 +83,28 @@ automation:
         seconds: 0
     action:
       - service: script.refresh_devices
+
+  - alias: "Auto Backup"
+    initial_state: 'on'
+    trigger:
+      platform: template
+      value_template: "{{ states('sensor.latest_github_commit') < states('sensor.latest_backup') }}"
+    action:
+      - service: script.backup_config
 #########################################################################
+sensor:
+###### Latest github Commit
+  - platform: command_line
+    command: "python /home/homeassistant/.homeassistant/shell/latest_commit.py"
+    name: 'Latest Github Commit'
+    scan_interval: 3600
+
+###### Latest config backup
+  - platform: command_line
+    command: "python /home/homeassistant/.homeassistant/shell/latest_backup.py"
+    name: 'Latest Backup'
+    scan_interval: 3600
+
 shell_command:
   backup_config: 'sudo bash /home/homeassistant/.homeassistant/shell/backup_config.sh'
   update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'

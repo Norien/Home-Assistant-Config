@@ -54,6 +54,7 @@ group:
   Ads Blocked:
     entities:
       - sensor.ads_blocked_today
+      - sensor.ads_percentage_today
       - sensor.dns_queries_today
       - sensor.domains_being_blocked
       - sensor.ads_blocked_today
