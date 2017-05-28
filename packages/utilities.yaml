@@ -38,8 +38,8 @@ group:
     entities:
       - automation.auto_backup
       - script.backup_config
-      - sensor.latest_github_commit
-      - sensor.latest_backup
+      - sensor.last_commit
+      - sensor.last_backup
 #########################################################################
 script:
   update_ha:
@@ -88,7 +88,7 @@ automation:
     initial_state: 'on'
     trigger:
       platform: template
-      value_template: "{{ states('sensor.latest_github_commit') < states('sensor.latest_backup') }}"
+      value_template: "{{ states('sensor.latest_github_commit') > states('sensor.latest_backup') }}"
     action:
       - service: script.backup_config
 #########################################################################
@@ -96,14 +96,14 @@ sensor:
 ###### Latest github Commit
   - platform: command_line
     command: "python /home/homeassistant/.homeassistant/shell/latest_commit.py"
-    name: 'Latest Github Commit'
-    scan_interval: 3600
+    name: 'Last Commit'
+    scan_interval: 60
 
 ###### Latest config backup
   - platform: command_line
     command: "python /home/homeassistant/.homeassistant/shell/latest_backup.py"
-    name: 'Latest Backup'
-    scan_interval: 3600
+    name: 'Last Backup'
+    scan_interval: 60
 
 shell_command:
   backup_config: 'sudo bash /home/homeassistant/.homeassistant/shell/backup_config.sh'

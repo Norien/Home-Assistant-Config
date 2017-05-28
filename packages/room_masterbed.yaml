@@ -25,11 +25,13 @@ group:
      - switch.bedroom_media
      - switch.bedroom_lamps_
      - switch.bedroom_fan
+     - switch.bedroom_tv
      - switch.white_noise
      - input_select.white_noise
      - switch.led_strip
      - input_select.led_scene
      - input_select.led_color
+     - binary_sensor.flic_80e4da71b68e
 
 sensor:
   - platform: template
@@ -123,6 +125,52 @@ automation:
             {% elif is_state('input_select.white_noise', 'Rain') %} http://192.168.1.250:8123/local/white_noise/rain.mp3
             {% endif %}
           media_content_type: 'audio/mp3'
+
+  - alias: 'bedroom flic single'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: flic_click
+      event_data:
+        button_name: flic_80e4da71b68e
+        click_type: single
+    action:
+      service: switch.toggle
+      entity_id: switch.bedroom_fan
+
+  - alias: 'bedroom flic double'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: flic_click
+      event_data:
+        button_name: flic_80e4da71b68e
+        click_type: double
+    action:
+      - service: switch.toggle
+        entity_id: switch.bedroom_lamps_
+      - service: switch.toggle
+        entity_id: switch.led_strip
+
+  - alias: 'bedroom flic hold'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: flic_click
+      event_data:
+        button_name: flic_80e4da71b68e
+        click_type: hold
+    action:
+      - service: switch.turn_off
+        entity_id: switch.bedroom_tv
+      - service: switch.turn_off
+        entity_id: switch.bedroom_lamps_
+      - service: switch.turn_off
+        entity_id: switch.led_strip
+      - service: switch.turn_on
+        entity_id: switch.bedroom_fan
+      - service: switch.turn_on
+        entity_id: switch.white_noise
 
 shell_command:
   bedroom_tv_cec: 'bash /home/homeassistant/.homeassistant/shell/cec.sh'

@@ -31,6 +31,9 @@ homeassistant:
     sensor.tracker_doorbell:
       friendly_name: 'Doorbell'
       icon: mdi:chip
+    sensor.bedroom_led_strip:
+      friendly_name: 'Bedroom Led Strip'
+      icon: mdi:chip
 ###### STATE CARD
 group:
   device_status:
@@ -45,6 +48,7 @@ group:
       - sensor.driveway_camera
       - sensor.raspberry_pi
       - sensor.tracker_doorbell
+      - sensor.bedroom_led_strip
 
 sensor:
   ###### CUSTOM ONLINE // OFFLINE TEXT FOR device_tracker
@@ -68,6 +72,8 @@ sensor:
         value_template: "{% if is_state('device_tracker.camera_driveway', 'home') %}Online{% else %}Offline{% endif %}"
       raspberry_pi:
         value_template: "{% if is_state('device_tracker.raspberrypi', 'home') %}Online{% else %}Offline{% endif %}"
+      bedroom_led_strip:
+        value_template: "{% if is_state('device_tracker.h801_led', 'home') %}Online{% else %}Offline{% endif %}"
 
 automation:
 ###############################################################################
@@ -86,6 +92,7 @@ automation:
         - sensor.dlink_camera
         - sensor.driveway_camera
         - sensor.raspberry_pi
+        - sensor.bedroom_led_strip
     condition:
       - condition: template
         value_template: "{% if trigger.from_state and trigger.to_state %} True {% else %} False {% endif %}"
@@ -96,5 +103,5 @@ automation:
             {% if trigger.to_state.state | lower == "offline" %}
               {{ trigger.to_state.attributes.friendly_name }} has gone offline!
             {% else %}
-              {{ trigger.to_state.attributes.friendly_name }} has gone online!
+              {{ trigger.to_state.attributes.friendly_name }} has come online!
             {% endif %}

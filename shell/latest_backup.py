@@ -1,2 +1,2 @@
 import os.path, time
-print("%s" % time.ctime(os.path.getmtime("/mnt/ntserver/home-assistant/")))
+print("%s" % time.ctime(os.path.getmtime("/mnt/router_usb/")))
