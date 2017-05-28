@@ -20,6 +20,10 @@ sun:
 #  client_id: !secret google_client_id
 #  client_secret: !secret google_secret
 
+binary_sensor:
+  - platform: flic
+    host: 192.168.1.92
+
 emulated_hue:
   #host_ip: 192.168.1.129
   expose_by_default: false
@@ -46,16 +50,11 @@ tts:
 
 recorder:
   db_url: !secret database
-#
-# # influxdb:
-# #   host: 127.0.0.1
-# #   username: !secret influx_user
-# #   password: !secret influx_pass
-#
+
 light:
   - platform: hue
     host: !secret philips_hue_ip
-#
+
 mqtt:
   broker: !secret mqtt_url
   port: !secret mqtt_port
@@ -67,11 +66,6 @@ mqtt:
   discovery_prefix: homeassistant
 
 device_tracker:
-  # - platform: tomato
-  #   host: !secret tomato_host
-  #   username: !secret tomato_username
-  #   password: !secret tomato_password
-  #   http_id: !secret tomato_id
   - platform: owntracks
   - platform: nmap_tracker
     hosts:
@@ -81,11 +75,13 @@ device_tracker:
       - 192.168.1.99
       - 192.168.1.230
       - 192.168.1.252
+      - 192.168.1.92
+      - 192.168.1.249
   - platform: ping
     hosts:
       chromecast_2: 192.168.1.231
       camera_driveway: 192.168.1.15
-      access_point: 192.168.1.59
+      access_point: 192.168.1.207
       living_room_pc: 192.168.1.76
       bedroom_pc: 192.168.1.96
       bedroom_pi: 192.168.1.21
@@ -98,7 +94,7 @@ wemo:
     - 192.168.1.204
     - 192.168.1.205
     - 192.168.1.206
-#
+
 media_player:
   - platform: kodi
     host: !secret kodi_livingroom_ip
