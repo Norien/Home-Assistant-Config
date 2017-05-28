@@ -16,6 +16,7 @@ Software on the server:
 
 **Devices in Use:**
 * [Netgear R6300](http://a.co/hKI7tOr) - [Tomato Firmware](http://tomato.groov.pl/download/K26RT-AC/140-MultiWAN/)
+* [D-Link AC1200 Wi-Fi Range Extender](http://a.co/cJLDbuO)
 * [Nest Thermostat - 2nd Gen](http://a.co/6BsUg19)
 * [Nest Protect - 1st Gen](http://a.co/5p5p97O)
 * [Echo Dot Gen 2](http://amzn.to/2hvCexj)
@@ -33,7 +34,7 @@ Software on the server:
 * [H801 Wifi RGB Controller](http://a.co/ej6LvjZ)
 * [Carlon RC3105R Modded to NodeMcu for Doorbell](https://github.com/Norien/Home-Assistant-Config/issues/25)
 * [TP-Link HS110](http://a.co/2Z7Jq9k)
-* [Flic Wireless Smart button] (http://a.co/aZDz2ww)
+* [Flic Wireless Smart button](http://a.co/aZDz2ww)
 * [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html) -  [Firmware](https://github.com/aneisch/Sonoff-Wemo-Home-Assistant)
 * [Sonoff Dual WiFi Smart Switch](https://www.itead.cc/smart-home/sonoff-dual.html)
 * ON ORDER ** [Sonoff POW](https://www.itead.cc/smart-home/sonoff-pow.html)

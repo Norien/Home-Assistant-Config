@@ -88,7 +88,7 @@ automation:
     initial_state: 'on'
     trigger:
       platform: template
-      value_template: "{{ states('sensor.latest_github_commit') > states('sensor.latest_backup') }}"
+      value_template: "{{ states('sensor.last_commit') > states('sensor.last_backup') }}"
     action:
       - service: script.backup_config
 #########################################################################
