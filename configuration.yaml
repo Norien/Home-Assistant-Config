@@ -20,18 +20,10 @@ sun:
 #  client_id: !secret google_client_id
 #  client_secret: !secret google_secret
 
-binary_sensor:
-  - platform: flic
-    host: 192.168.1.92
-
 emulated_hue:
-  #host_ip: 192.168.1.129
   expose_by_default: false
   exposed_domains:
     - switch
-    #- script
-    #- light
-    #- input_boolean
 
 logger:
   default: error

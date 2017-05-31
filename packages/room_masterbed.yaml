@@ -32,6 +32,10 @@ group:
      - input_select.led_scene
      - input_select.led_color
      - binary_sensor.flic_80e4da71b68e
+     
+binary_sensor:
+  - platform: flic
+    host: 192.168.1.92
 
 sensor:
   - platform: template

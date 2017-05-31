@@ -93,9 +93,12 @@ script:
             true
             {% endif %}
     - service: media_player.volume_set
-      data:
+      data_template:
         entity_id: media_player.kitchen
-        volume_level: '0.50'
+        volume_level: >
+          {% if is_state('sun.sun', 'above_horizon') %} '0.50'
+          {% elif is_state('sun.sun', 'below_horizon') %} '0.30'
+          {% endif %}
     - service: media_player.play_media
       data_template:
         entity_id: media_player.kitchen
@@ -106,6 +109,7 @@ script:
           {% elif is_state('input_select.doorbell', 'R2D2') %} http://192.168.1.250:8123/local/doorbell_tones/R2D2.mp3
           {% elif is_state('input_select.doorbell', 'Ding Dong') %} http://192.168.1.250:8123/local/doorbell_tones/ding_dong.mp3
           {% elif is_state('input_select.doorbell', 'Arnold') %} http://192.168.1.250:8123/local/doorbell_tones/get-to-the-choppa.mp3
+          {% elif is_state('input_select.doorbell', 'Guard Dogs') %} http://192.168.1.250:8123/local/misc_sound/dog-barking-2-bullmastiff.mp3
           {% endif %}
         media_content_type: 'audio/mp3'
 
@@ -119,6 +123,7 @@ input_select:
       - xmas
       - R2D2
       - Arnold
+      - Guard Dogs
     icon: mdi:bookmark-music
 
 binary_sensor:
