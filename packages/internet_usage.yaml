@@ -1,5 +1,6 @@
 ################################################################
 ## Packages / internet_usage
+## @norien - https://github.com/Norien/Home-Assistant-Config
 ################################################################
 homeassistant:
   customize:
