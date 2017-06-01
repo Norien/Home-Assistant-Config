@@ -1,16 +1,16 @@
-###############################################################################
-#   @author         :   Mahasri Kalavala
-#   @date           :   04/15/2017
-#   @package        :   Pi-Hole Package
-#   @description    :   Pi-Hole Ad Blocking Stuff.
-#                       Remember to add PiHole URL in your secrets.yaml file.
-#                       http://192.168.x.xx/admin/api.php
-###############################################################################
+################################################################
+## Packages / internet_usage
+## @norien - https://github.com/Norien/Home-Assistant-Config
+## #!secret_example
+#Authorization & Token required (see WEBPASSWORD in /etc/pihole/setupVars.conf)
+#pi_hole_switch_on: /usr/bin/curl -k "localhost/admin/api.php?enable&auth=webkey"
+#pi_hole_switch_off: /usr/bin/curl -k "localhost/admin/api.php?disable=600&auth=webkey"
+################################################################
 homeassistant:
   customize:
-
-    group.ads_blocked:
-      order: 5
+    switch.pihole:
+      friendly_name: Pi-Hole
+      entity_picture: /local/custom_icons/pihole.png
 
     sensor.ads_percentage_today:
       friendly_name: Percentage of Ad Traffic Blocked
@@ -23,8 +23,7 @@ homeassistant:
 
     sensor.ads_blocked_today:
       friendly_name: Ads Blocked Today
-      entity_picture: /local/custom_icons/pihole.png
-    #  icon: mdi:do-not-disturb
+      icon: mdi:do-not-disturb
 
     sensor.dns_queries_today:
       friendly_name: DNS Queries Today
@@ -50,9 +49,16 @@ homeassistant:
       friendly_name: Turn Pi-Hole On
       icon: mdi:power
 
+    sensor.pihole_dns:
+      friendly_name: DNS Service
+
+    sensor.pihole_blocking:
+      friendly_name: Ad Blocking
+
 group:
   Ads Blocked:
     entities:
+      - switch.pihole
       - sensor.ads_blocked_today
       - sensor.ads_percentage_today
       - sensor.dns_queries_today
@@ -61,8 +67,8 @@ group:
       - sensor.unique_domains
       - sensor.queries_forwarded
       - sensor.queries_cached
-      - script.pihole_on
-      - script.pihole_off
+      - sensor.pihole_dns
+      - sensor.pihole_blocking
 
 ###############################################################################
 #  Sensors
@@ -103,6 +109,60 @@ sensor:
     resource: !secret pi_hole_url
     value_template: '{{ value_json.queries_cached }}'
 
+###### I had to provide access in sudoers file for this script to run.
+  - platform: command_line
+    command: 'bash /home/homeassistant/.homeassistant/shell/pihole.sh'
+    name: 'pihole_status_raw'
+    scan_interval: 60
+
+  - platform: template
+    sensors:
+      pihole_dns:
+        value_template: "{{states.sensor.pihole_status_raw.state.split(':::')[1]}}"
+        icon_template: >-
+          {% if states.sensor.pihole_dns.state == 'DNS service is running' %}
+            mdi:checkbox-marked
+          {% else %}
+            mdi:checkbox-blank-outline
+          {% endif %}
+
+  - platform: template
+    sensors:
+      pihole_blocking:
+        value_template: "{{states.sensor.pihole_status_raw.state.split(':::')[2]}}"
+        icon_template: >-
+          {% if states.sensor.pihole_status.state == 'True' %}
+            mdi:checkbox-blank-outline
+          {% else %}
+            mdi:checkbox-marked
+          {% endif %}
+
+  - platform: template
+    sensors:
+      pihole_status:
+        value_template: >-
+          {% if states.sensor.pihole_blocking.state == 'Pi-hole blocking is Enabled' %}
+            True
+          {% else %}
+            False
+          {% endif %}
+###############################################################################
+#  Switch
+###############################################################################
+switch:
+  - platform: template
+    switches:
+      pihole:
+        value_template: '{{ states.sensor.pihole_status.state }}'
+        turn_on:
+          service: script.turn_on
+          entity_id: script.pihole_on
+        turn_off:
+          service: script.turn_on
+          entity_id: script.pihole_off
+###############################################################################
+#  Scripts
+###############################################################################
 script:
   pihole_on:
     sequence:
@@ -110,12 +170,9 @@ script:
   pihole_off:
     sequence:
        - service: shell_command.pihole_off
-
+###############################################################################
+#  Shell Command
+###############################################################################
 shell_command:
   pihole_on: !secret pi_hole_switch_on
   pihole_off: !secret pi_hole_switch_off
-
-#!secret_example
-#Authorization & Token required (see WEBPASSWORD in /etc/pihole/setupVars.conf)
-#pi_hole_switch_on: /usr/bin/curl -k "localhost/admin/api.php?enable&auth=webkey"
-#pi_hole_switch_off: /usr/bin/curl -k "localhost/admin/api.php?disable=600&auth=webkey"
