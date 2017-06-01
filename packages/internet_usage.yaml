@@ -1,0 +1,63 @@
+################################################################
+## Packages / internet_usage
+################################################################
+homeassistant:
+  customize:
+    sensor.usage_downloaded:
+      friendly_name: Downloaded
+      icon: mdi:folder-download
+    sensor.usage_uploaded:
+      friendly_name: Uploaded
+      icon: mdi:folder-upload
+    sensor.usage_total_usage:
+      friendly_name: Total Usage
+      icon: mdi:chart-donut
+    sensor.usage_usage_cap:
+      friendly_name: Usage Cap
+      icon: mdi:file
+    sensor.usage_remaining_usage:
+      friendly_name: Remaining Usage
+      icon: mdi:file
+
+###### STATE CARD
+group:
+  internet_usage:
+    name: Internet Usage
+    entities:
+      - sensor.usage_downloaded
+      - sensor.usage_uploaded
+      - sensor.usage_total_usage
+      - sensor.usage_usage_cap
+      - sensor.usage_remaining_usage
+
+sensor:
+  - platform: command_line
+    command: !secret internet_usage
+    name: 'usage'
+    scan_interval: 86400
+
+  - platform: template
+    sensors:
+      usage_downloaded:
+        value_template: "{{states.sensor.usage.state.split(',')[0]}}"
+        unit_of_measurement: "GB"
+  - platform: template
+    sensors:
+      usage_uploaded:
+        value_template: "{{states.sensor.usage.state.split(',')[1]}}"
+        unit_of_measurement: "GB"
+  - platform: template
+    sensors:
+      usage_total_usage:
+        value_template: "{{states.sensor.usage.state.split(',')[2]}}"
+        unit_of_measurement: "GB"
+  - platform: template
+    sensors:
+      usage_usage_cap:
+        value_template: "{{states.sensor.usage.state.split(',')[3]}}"
+        unit_of_measurement: "GB"
+  - platform: template
+    sensors:
+      usage_remaining_usage:
+        value_template: "{{states.sensor.usage.state.split(',')[4]}}"
+        unit_of_measurement: "GB"
