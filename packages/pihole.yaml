@@ -1,7 +1,8 @@
 ################################################################
-## Packages / internet_usage
+## Packages / Pi-Hole
 ## @norien - https://github.com/Norien/Home-Assistant-Config
 ## #!secret_example
+#pi_hole_url: http://192.168.0.55/admin/api.php
 #Authorization & Token required (see WEBPASSWORD in /etc/pihole/setupVars.conf)
 #pi_hole_switch_on: /usr/bin/curl -k "localhost/admin/api.php?enable&auth=webkey"
 #pi_hole_switch_off: /usr/bin/curl -k "localhost/admin/api.php?disable=600&auth=webkey"
@@ -40,6 +41,10 @@ homeassistant:
     sensor.queries_cached:
       friendly_name: Queries Cached
       icon: mdi:animation
+
+    script.ad_blocker:
+      friendly_name: Ad Blocker
+      emulated_hue: true
 
     script.pihole_off:
       friendly_name: Turn Pi-Hole Off
@@ -164,6 +169,11 @@ switch:
 #  Scripts
 ###############################################################################
 script:
+  # this script is just for alexa to toggle on/off
+  ad_blocker:
+    sequence:
+      - service: switch.toggle
+        entity_id: switch.pihole
   pihole_on:
     sequence:
        - service: shell_command.pihole_on
