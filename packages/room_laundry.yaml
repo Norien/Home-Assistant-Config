@@ -3,7 +3,7 @@
 ################################################################
 homeassistant:
   customize:
-###### ENERGY READINGS
+###### Washing Machine ENERGY READINGS
     sensor.washing_machine_amps:
       friendly_name: Amps
       icon: mdi:power-plug
@@ -17,13 +17,20 @@ homeassistant:
       friendly_name: Volttage
       icon: mdi:power-plug
     sensor.washing_machine_status:
-      friendly_name: Status
+      friendly_name: Wash Status
       icon: mdi:clipboard-outline
-
-###### Switches
     switch.washing_machine:
       friendly_name: Washing Machine
       icon: mdi:washing-machine
+######DRYER
+    sensor.dryer_status:
+      friendly_name: Dryer Status
+      icon: mdi:clipboard-outline
+    binary_sensor.laundry_dryer_vibration:
+      friendly_name: Dryer Vibration
+###### Motion
+    binary_sensor.laundry_motion:
+      friendly_name: Laundry Room motion
 
 ###### STATE CARD
 group:
@@ -31,18 +38,38 @@ group:
     control: hidden
     name: Laundry Room
     entities:
+      - binary_sensor.laundry_motion
       - switch.washing_machine
       - sensor.washing_machine_amps
       - sensor.washing_machine_watts
       - sensor.washing_machine_kw
       - sensor.washing_machine_volts
       - sensor.washing_machine_status
+      - sensor.dryer_status
 
-###### TP LINK SWITCH
 switch:
+###### TP LINK SWITCH
   - platform: tplink
     host: 192.168.1.211
     name: 'washing_machine'
+
+binary_sensor:
+###### TILT SENSOR FOR DRYER
+  - platform: mqtt
+    name: 'laundry_dryer_vibration'
+    state_topic: "/laundry_room/vibration/Switch"
+    qos: 0
+    payload_on: "0"
+    payload_off: "1"
+    device_class: vibration
+###### motion SENSOR
+  - platform: mqtt
+    name: 'laundry_motion'
+    state_topic: "/laundry_room/motion/Switch"
+    qos: 0
+    payload_on: "1"
+    payload_off: "0"
+    device_class: motion
 
 ###### WASHING MACHINE ENERGY SENSORS
 sensor:
@@ -60,6 +87,7 @@ sensor:
       washing_machine_volts:
         value_template: '{{ states.switch.washing_machine.attributes["Voltage"] | replace(" V", "") | float }}'
         unit_of_measurement: 'V'
+###### STATUS SENSORS
       washing_machine_status:
         value_template: >-
           {%- if states.sensor.washing_machine_watts.state|int <= 4.3 -%}
@@ -67,9 +95,29 @@ sensor:
           {% else %}
             Running
           {% endif %}
+      dryer_status:
+        value_template:  >-
+          {%- if states.input_boolean.dryer_status.state == 'off' -%}
+            Off
+          {% else %}
+            Running
+          {% endif %}
+
+automation:
+#Turn on washing_machine_switch if motion is detected.
+  - alias: 'laundry_switch_with_motion'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.laundry_motion
+        to: 'on'
+        for:
+          seconds: 10
+    action:
+      - service: switch.turn_on
+        entity_id: switch.washing_machine
 
 ###### NOTIFY IF WASH IS DONE ( AND TURN OFF SWITCH )
-automation:
   - alias: 'notify if washing machine is done'
     initial_state: 'on'
     trigger:
@@ -87,8 +135,62 @@ automation:
       - service: notify.nicole
         data:
           message: 'The Wash has completed.'
-#      - service: switch.turn_off
-#        entity_id: switch.washing_machine
+      - service: switch.turn_off
+        entity_id: switch.washing_machine
+
+###### DRYER AUTOMATIONS
+  - alias: 'Dryer Start'
+    initial_state: 'on'
+    trigger:
+      platform: state
+      entity_id: input_boolean.dryer_switch
+      from: 'off'
+      to: 'on'
+      for:
+        minutes: 4
+    action:
+      service: input_boolean.turn_on
+      entity_id: input_boolean.dryer_status
+
+  - alias: 'Dryer Done'
+    initial_state: 'on'
+    trigger:
+      platform: state
+      entity_id: input_boolean.dryer_switch
+      from: 'on'
+      to: 'off'
+      for:
+        minutes: 2
+    condition:
+      condition: state
+      entity_id: input_boolean.dryer_status
+      state: 'on'
+    action:
+      - service: notify.justin
+        data:
+          message: 'The Dryer has completed.'
+      - service: notify.nicole
+        data:
+          message: 'The Dryer has completed.'
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.dryer_status
+
+  - alias: 'dryer_status'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.laundry_dryer_vibration
+        to: 'on'
+      - platform: state
+        entity_id: binary_sensor.laundry_dryer_vibration
+        to: 'off'
+    action:
+      - service: script.turn_off
+        data:
+          entity_id: script.dryer_status
+      - service: script.turn_on
+        data:
+          entity_id: script.dryer_status
 
 script:
   laundry_tts:
@@ -126,3 +228,21 @@ script:
       data_template:
         entity_id: media_player.kodi_bedroom_pi
         message: "The Washing machine has completed it's cycle."
+
+  dryer_status:
+    sequence:
+      - service: homeassistant.turn_on
+        entity_id: input_boolean.dryer_switch
+      - delay: '00:00:15'
+      - service: homeassistant.turn_off
+        entity_id: input_boolean.dryer_switch
+
+input_boolean:
+  dryer_switch:
+    name: dryer_switch
+    icon: mdi:sync
+    initial: off
+  dryer_status:
+    name: dryer_status
+    icon: mdi:sync
+    initial: off
