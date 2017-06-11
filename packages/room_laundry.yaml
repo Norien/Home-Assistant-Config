@@ -220,7 +220,7 @@ script:
       conditions:
         - condition: template
           value_template: >
-            {% if is_state('media_player.kodi_bedroom_pi', 'playing') %}
+            {% if is_state('media_player.kitchen', 'playing') %}
             false
             {% else %}
             true
