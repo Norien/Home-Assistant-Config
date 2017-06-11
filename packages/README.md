@@ -10,3 +10,6 @@ for more details visit the [packages](https://home-assistant.io/docs/configurati
 ![image](https://github.com/Norien/Home-Assistant-Config/blob/master/www/card_previews/radio.PNG?raw=true)
 ![image](https://github.com/Norien/Home-Assistant-Config/blob/master/www/card_previews/waste.PNG?raw=true)
 ![image](https://github.com/Norien/Home-Assistant-Config/blob/master/www/card_previews/weather.PNG?raw=true)
+![image](https://github.com/Norien/Home-Assistant-Config/blob/master/www/card_previews/backup.PNG?raw=true)
+![image](https://github.com/Norien/Home-Assistant-Config/blob/master/www/card_previews/internet_usage.PNG?raw=true)
+![image](https://github.com/Norien/Home-Assistant-Config/blob/master/www/card_previews/laundry_room.PNG?raw=true)
