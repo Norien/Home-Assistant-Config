@@ -6,6 +6,8 @@
 #Authorization & Token required (see WEBPASSWORD in /etc/pihole/setupVars.conf)
 #pi_hole_switch_on: /usr/bin/curl -k "localhost/admin/api.php?enable&auth=webkey"
 #pi_hole_switch_off: /usr/bin/curl -k "localhost/admin/api.php?disable=600&auth=webkey"
+# the .SH file I am using is here
+#https://github.com/Norien/Home-Assistant-Config/blob/master/shell/pihole.sh
 ################################################################
 homeassistant:
   customize:

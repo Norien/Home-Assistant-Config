@@ -9,19 +9,6 @@ notify:
   - platform: pushbullet
     name: nicole
     api_key: !secret pushbullet_api_key_nicole
-  - name: email
-    platform: smtp
-    server: smtp.gmail.com
-    port: 587
-    timeout: 15
-    sender: !secret email
-    starttls: true
-    username: !secret email
-    password: !secret email_pass
-    recipient:
-      - !secret email
-      - !secret her_email
-
 automation:
 ###### NOTIFY IF NICOLE HAS LEFT ONE OF HER WORKPLACES
   - alias: Notify If Left Work

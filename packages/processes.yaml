@@ -23,6 +23,7 @@ group:
       - sensor.process_mosquitto
       - sensor.process_mysqld
       - sensor.process_dnsmasq
+      - sensor.gif_maker_status
 
 sensor:
   - platform: systemmonitor

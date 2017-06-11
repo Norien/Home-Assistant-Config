@@ -1,0 +1,20 @@
+################################################################
+## Packages / Startup
+## This a work around for a startup failure bug
+## https://github.com/home-assistant/home-assistant/issues/7058
+################################################################
+automation:
+  - alias: "Startup Workaround"
+    initial_state: "on"
+    trigger:
+      - platform: time
+        seconds: "/5"
+    action:
+      - service: automation.turn_off
+        entity_id: automation.startup_workaround
+      - service: automation.trigger
+        entity_id: automation.startup
+      - service: logbook.log
+        data_template:
+          name: "Startup Workaround"
+          message: "Workaround triggered"

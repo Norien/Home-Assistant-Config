@@ -97,6 +97,7 @@ sensor:
   - platform: template
     sensors:
       uv_burn_time:
+        unit_of_measurement: Minutes
 ### SUB IN CORRECT VALUE FOR YOUR SKIN#################################################################################################################################
 ### Celtic"all babies and children" = 67Min // caucasian = 100Min // Central Europe = 200Min // south american = 200Min // Middle Eastern = 400Min // African = 500Min
         value_template: >
@@ -105,7 +106,7 @@ sensor:
           {% elif is_state('sensor.pws_uv', '-1') %}
             0 Minutes
           {% else %}
-            {{ (67 / states.sensor.pws_uv.state | float) | round }} Minutes
+            {{ (67 / states.sensor.pws_uv.state | float) | round }}
           {% endif %}
 
 script:

@@ -34,7 +34,7 @@ homeassistant:
       icon: mdi:beach
     script.river:
       friendly_name: 'River'
-      icon: mdi:fire      
+      icon: mdi:fire
     script.kitchen_sink_bright:
       emulated_hue: true
       friendly_name: 'Kitchen Sink Bright'
