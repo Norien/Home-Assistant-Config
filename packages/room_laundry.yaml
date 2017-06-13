@@ -46,6 +46,7 @@ group:
       - sensor.washing_machine_volts
       - sensor.washing_machine_status
       - sensor.dryer_status
+      - binary_sensor.laundry_dryer_vibration
 
 switch:
 ###### TP LINK SWITCH
@@ -205,6 +206,9 @@ script:
             {% else %}
             true
             {% endif %}
+        - condition: time
+          after: '07:00:00'
+          before: '21:00:00'
     - service: media_player.volume_set
       data:
         entity_id: media_player.kitchen
@@ -225,6 +229,9 @@ script:
             {% else %}
             true
             {% endif %}
+        - condition: time
+          after: '07:00:00'
+          before: '21:00:00'
     - service: tts.google_say
       data_template:
         entity_id: media_player.kitchen
