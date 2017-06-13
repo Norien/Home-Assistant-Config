@@ -97,7 +97,7 @@ group:
      - sensor.driveway_battery_level
      - sensor.justins_g5_battery_dynamic
      - sensor.nicoles_s7_battery_dynamic
-     
+
 ###### BINARY SENSORS ------------------------------------------
 binary_sensor:
   - platform: workday
@@ -292,7 +292,7 @@ sensor:
   - platform: template
     sensors:
       date_day:
-        value_template: "{{as_timestamp(now())|timestamp_custom('%C', True)}}"
+        value_template: "{{as_timestamp(now())|timestamp_custom('%d', True)}}"
 
 ###### DAY TO ZONE
   - platform: template

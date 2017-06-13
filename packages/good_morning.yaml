@@ -28,26 +28,32 @@ script:
       data:
         entity_id: media_player.kitchen
         volume_level: '0.70'
-    - service: script.turn_on
-      data_template:
-        entity_id: >
-          {% if is_state('binary_sensor.workday_sensor', 'off') %} script.good_morning_weekend
-          {% elif is_state('binary_sensor.workday_sensor', 'on') %} script.good_morning_workday
-          {% endif %}
+    - service: script.good_morning_tts
 
-  good_morning_workday:
+  good_morning_tts:
     sequence:
       - service: tts.google_say
         data_template:
           entity_id: media_player.kitchen
-          message: "Good Morning, the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}.{% if is_state('sensor.nicole', 'not_home') %}{% elif is_state('sensor.nicole', 'home') %}Travel time this morning is {{states('sensor.nicole_home_to_work')}} minutes, Have a nice day at work Nicole, the love of my life.{% endif %}"
-
-  good_morning_weekend:
-    sequence:
-      - service: tts.google_say
-        data_template:
-          entity_id: media_player.kitchen
-          message: "Good Morning, the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}. Enjoy your Weekend!"
+          message: >
+            "Good Morning, the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}.
+            {% if is_state('sensor.nicole', 'not_home') %}
+            {% elif is_state('sensor.nicole', 'home') %}
+              {% if is_state('binary_sensor.workday_sensor', 'off') %}
+              {% elif is_state('binary_sensor.workday_sensor', 'on') %}
+              Travel time this morning is {{states('sensor.nicole_home_to_work')}} minutes and you must leave by {{((as_timestamp(now().date() ~ " 08:00:00") - (states.sensor.nicole_home_to_work.state|int * 60))|timestamp_local).split(" ")[1]}} to arrive on time.
+                {% if 'rain' in states.sensor.dark_sky_hourly_summary.state %}
+                Don't forget your Umbrella and
+                {% else %}
+                {% endif %}
+                Have a nice day at work Nicole, the eye of my pie.
+              {% endif %}
+            {%- endif -%}
+            {% if as_timestamp(now())|timestamp_custom('%A %B %d', True) == states.sensor.waste_pickup_garbage_recycling.state %}
+            The next garbage pickup will be tomorrow morning.
+            {% else%}
+            The next garbage pickup is on {{states('sensor.waste_pickup_garbage_recycling')}}
+            {% endif %}"
 
   morning_livingroom_lights:
     sequence:

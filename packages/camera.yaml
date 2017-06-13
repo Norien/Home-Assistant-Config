@@ -68,9 +68,9 @@ automation:
     action:
       service_template: >
         {% if trigger.event == "sunset" %}
-        homeassistant.turn_on
+        switch.turn_on
         {% elif trigger.event == "sunrise" %}
-        homeassistant.turn_off
+        switch.turn_off
         {% endif %}
       entity_id: switch.driveway_night_vision
 
