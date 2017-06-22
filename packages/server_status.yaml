@@ -206,10 +206,10 @@ sensor:
     value_template: '{{ value_json.min5 }} %'
     scan_interval: 300
 
-input_boolean:
-  restarts:
-    name: restarts
-    initial: off
+# input_boolean:
+#   restarts:
+#     name: restarts
+#     initial: off
 
 panel_iframe:
   glances:

@@ -25,6 +25,9 @@ homeassistant:
     sensor.raspberry_pi:
       friendly_name: 'Raspberry Pi'
       icon: mdi:chip
+    sensor.raspberry_pi_zero:
+      friendly_name: 'Raspberry Pi Zero'
+      icon: mdi:chip
     sensor.tracker_doorbell:
       friendly_name: 'Doorbell'
       icon: mdi:chip
@@ -52,6 +55,7 @@ group:
       - sensor.dlink_camera
       - sensor.driveway_camera
       - sensor.raspberry_pi
+      - sensor.raspberry_pi_zero
       - sensor.tracker_doorbell
       - sensor.bedroom_led_strip
       - sensor.laundry_room
@@ -82,6 +86,8 @@ sensor:
         value_template: "{% if is_state('device_tracker.laundry_room', 'home') %}Online{% else %}Offline{% endif %}"
       echo_dot:
         value_template: "{% if is_state('device_tracker.echodot', 'home') %}Online{% else %}Offline{% endif %}"
+      raspberry_pi_zero:
+        value_template: "{% if is_state('device_tracker.raspberry_pi_zero', 'home') %}Online{% else %}Offline{% endif %}"
 automation:
 ###############################################################################
 # Notify when a device goes Offline or Online
@@ -101,6 +107,7 @@ automation:
         - sensor.bedroom_led_strip
         - sensor.laundry_room
         - sensor.echo_dot
+        - sensor.raspberry_pi_zero
     condition:
       - condition: template
         value_template: "{% if trigger.from_state and trigger.to_state %} True {% else %} False {% endif %}"

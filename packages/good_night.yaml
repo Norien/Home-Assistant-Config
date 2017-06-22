@@ -21,11 +21,11 @@ script:
       entity_id: switch.bedroom_lamps_
     - service: switch.turn_on
       entity_id: switch.bedroom_fan
-    - service: script.turn_on
+    - service: switch.turn_on
       entity_id: switch.white_noise
 ###### LIVINGROOM/KITCHEN
     - service: switch.turn_off
-      entity_id: switch.living_room_pc_off
+      entity_id: switch.living_room_pc
     - service: light.turn_off
       entity_id: light.living_room
     - service: light.turn_off

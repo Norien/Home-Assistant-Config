@@ -24,6 +24,12 @@ group:
       - sensor.mold_indicator
       - switch.dehumidifier
       - automation.turn_on_dehumidifier_if_mold_sensor_is_high
+sensor:
+  - platform: mold_indicator
+    indoor_temp_sensor: sensor.average_house_temp
+    indoor_humidity_sensor: sensor.hallway_thermostat_humidity
+    outdoor_temp_sensor: sensor.dark_sky_apparent_temperature
+    calibration_factor: 1.2
 
 automation:
   - alias: 'Turn on dehumidifier if Mold sensor is high'

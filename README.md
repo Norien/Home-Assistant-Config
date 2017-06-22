@@ -36,7 +36,7 @@ Software on the server:
 * [TP-Link HS110](http://a.co/2Z7Jq9k)
 * [Flic Wireless Smart button](http://a.co/aZDz2ww)
 * [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html) -  [Firmware](https://github.com/aneisch/Sonoff-Wemo-Home-Assistant)
-* [Sonoff Dual WiFi Smart Switch](https://www.itead.cc/smart-home/sonoff-dual.html)
+* [Sonoff Dual WiFi Smart Switch](https://www.itead.cc/smart-home/sonoff-dual.html) - [Firmware](https://github.com/arendst/Sonoff-Tasmota)
 * ON ORDER ** [Sonoff POW](https://www.itead.cc/smart-home/sonoff-pow.html)
 * ON ORDER ** [WeMos D1 Mini](http://www.ebay.ca/itm/182035363514?_trksid=p2060353.m2749.l2649&ssPageName=STRK%3AMEBIDX%3AIT)
 * ON ORDER ** [NodeMcu ESP8266](https://geek.wish.com/search/1pc%20NodeMcu%20Lua%20ESP8266%20CH340G%20WIFI%20Internet%20Development%20Board%20Module#cid=58c646190b362f70c8bbeb10)

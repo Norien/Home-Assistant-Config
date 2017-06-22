@@ -32,7 +32,9 @@ group:
      - input_select.led_scene
      - input_select.led_color
      - binary_sensor.flic_80e4da71b68e
-     
+     - switch.bedroom_fan_a
+     - switch.bedroom_fan_b
+
 binary_sensor:
   - platform: flic
     host: 192.168.1.92
@@ -55,7 +57,26 @@ switch:
         turn_off:
           service: media_player.media_Stop
           entity_id: media_player.kodi_bedroom_pi
-
+###### SONOFF DUAL 1
+  - platform: mqtt
+    name: "Bedroom Fan A"
+    state_topic: "stat/sonoff_dual/POWER1"
+    command_topic: "cmnd/sonoff_dual/POWER1"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 0
+    retain: true
+###### SONOFF DUAL 2
+  - platform: mqtt
+    name: "Bedroom Fan B"
+    state_topic: "stat/sonoff_dual/POWER2"
+    command_topic: "cmnd/sonoff_dual/POWER2"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 0
+    retain: true
 ###### BEDROOM PC SWITCH with TV
   - platform: wake_on_lan
     mac_address: !secret kodi_bedroom_mac

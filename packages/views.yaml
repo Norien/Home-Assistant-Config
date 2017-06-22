@@ -63,6 +63,7 @@ group:
       - group.processes
       - group.restarts
       - group.ads_blocked
+      - group.pi_zero
   #Groups------------------------------------------------------------------
   livingroom:
     name: Living Room
