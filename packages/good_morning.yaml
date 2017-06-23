@@ -74,4 +74,16 @@ script:
         - condition: state
           entity_id: 'sensor.dark_sky_summary'
           state: 'Breezy and Overcast'
+        - condition: state
+          entity_id: 'sensor.dark_sky_summary'
+          state: 'Humid and Overcast'
+        - condition: state
+          entity_id: 'sensor.dark_sky_summary'
+          state: 'Rain'
+        - condition: state
+          entity_id: 'sensor.dark_sky_summary'
+          state: 'Heavy Rain'
+        - condition: state
+          entity_id: 'sensor.dark_sky_summary'
+          state: 'Light Rain'
     - service: script.lr_concentrate

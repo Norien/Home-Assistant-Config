@@ -47,6 +47,8 @@ group:
       - sensor.washing_machine_status
       - sensor.dryer_status
       - binary_sensor.laundry_dryer_vibration
+      - sensor.laundry_temperature
+      - sensor.laundry_humidity
 
 switch:
 ###### TP LINK SWITCH
@@ -58,7 +60,7 @@ binary_sensor:
 ###### TILT SENSOR FOR DRYER
   - platform: mqtt
     name: 'laundry_dryer_vibration'
-    state_topic: "/laundry_room/vibration/Switch"
+    state_topic: "/laundry_room_D1/vibration/Switch"
     qos: 0
     payload_on: "0"
     payload_off: "1"
@@ -66,14 +68,24 @@ binary_sensor:
 ###### motion SENSOR
   - platform: mqtt
     name: 'laundry_motion'
-    state_topic: "/laundry_room/motion/Switch"
+    state_topic: "/laundry_room_D1/motion/Switch"
     qos: 0
     payload_on: "1"
     payload_off: "0"
     device_class: motion
 
-###### WASHING MACHINE ENERGY SENSORS
 sensor:
+###### MQTT DHT22
+  - platform: mqtt
+    state_topic: '/laundry_room_D1/dht22/Temperature'
+    name: 'Laundry Temperature'
+    unit_of_measurement: '°C'
+  - platform: mqtt
+    state_topic: '/laundry_room_D1/dht22/Humidity'
+    name: 'Laundry Humidity'
+    unit_of_measurement: '%'
+
+  ###### WASHING MACHINE ENERGY SENSORS
   - platform: template
     sensors:
       washing_machine_amps:
