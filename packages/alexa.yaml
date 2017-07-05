@@ -51,7 +51,6 @@ script:
       - service: media_player.turn_off
         entity_id: media_player.kitchen
 
-
 ###### ALEXA TURN ON or OFF PC (Living Room)
   pc:
     sequence:

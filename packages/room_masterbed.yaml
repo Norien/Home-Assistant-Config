@@ -4,12 +4,25 @@
 homeassistant:
   customize:
     switch.white_noise:
+      emulated_hue: true
       friendly_name: 'White Noise'
       icon: mdi:snowflake
     media_player.kodi_bedroom:
       friendly_name: Bedroom KODI
     media_player.kodi_bedroom_pi:
       friendly_name: Bedroom KODI PI
+    switch.bedroom_fan:
+      emulated_hue: true
+      icon: mdi:fan
+      friendly_name: Bedroom Fan
+    switch.bedroom_lamps_:
+      emulated_hue: true
+      icon: mdi:lamp
+      friendly_name: Bedroom Lamp
+    switch.led_strip:
+      emulated_hue: true
+      icon: mdi:lamp
+      friendly_name: Bedroom Headboard      
     #Bedroom computer Switch
     switch.bedroom_media:
       emulated_hue: true

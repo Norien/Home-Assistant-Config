@@ -6,7 +6,7 @@ homeassistant:
     script.radio:
       friendly_name: Start Radio
       icon: mdi:radio
-      
+
 ###### STATE CARD
 group:
   Radio:
@@ -26,6 +26,7 @@ script:
           entity_id: >
             {% if is_state('input_select.radio_station_location', 'Kitchen') %} media_player.kitchen
             {% elif is_state('input_select.radio_station_location', 'Backyard') %} media_player.backyard
+            {% elif is_state('input_select.radio_station_location', 'Google-Home') %} media_player.google_home
             {% elif is_state('input_select.radio_station_location', 'All Zones') %} media_player.home_group
             {% endif %}
           media_content_id: >
@@ -54,6 +55,7 @@ automation:
           entity_id: >
             {% if is_state("input_select.radio_station_location", "Kitchen") %} media_player.kitchen
             {% elif is_state("input_select.radio_station_location", "Backyard") %} media_player.backyard
+            {% elif is_state("input_select.radio_station_location", "Google-Home") %} media_player.google_home
             {% elif is_state("input_select.radio_station_location", "All Zones") %} media_player.home_group
             {% endif %}
           volume_level: '{{  states.input_slider.volume_radio.state  }}'
@@ -88,6 +90,7 @@ input_select:
     options:
       - Kitchen
       - Backyard
+      - Google-Home
       - All Zones
     initial: "Kitchen"
     icon: mdi:radio

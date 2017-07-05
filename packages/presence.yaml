@@ -105,7 +105,7 @@ script:
         entity_id: switch.bedroom_fan
   ###### LIVINGROOM/KITCHEN
       - service: switch.turn_off
-        entity_id: switch.living_room_pc_off
+        entity_id: switch.living_room_pc
       - service: light.turn_off
         entity_id: light.living_room
       - service: light.turn_off

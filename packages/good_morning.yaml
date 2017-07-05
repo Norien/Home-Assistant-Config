@@ -8,8 +8,6 @@ homeassistant:
       emulated_hue_name: "Good Morning"
       friendly_name: Good Morning
       icon: mdi:emoticon-poop
-    switch.bedroom_fan:
-      icon: mdi:fan
 
 script:
 
@@ -26,7 +24,7 @@ script:
       entity_id: media_player.kodi_bedroom_pi
     - service: media_player.volume_set
       data:
-        entity_id: media_player.kitchen
+        entity_id: media_player.google_home
         volume_level: '0.70'
     - service: script.good_morning_tts
 
@@ -34,9 +32,9 @@ script:
     sequence:
       - service: tts.google_say
         data_template:
-          entity_id: media_player.kitchen
+          entity_id: media_player.google_home
           message: >
-            "Good Morning, the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}.
+            Good Morning, the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}.
             {% if is_state('sensor.nicole', 'not_home') %}
             {% elif is_state('sensor.nicole', 'home') %}
               {% if is_state('binary_sensor.workday_sensor', 'off') %}
@@ -50,10 +48,10 @@ script:
               {% endif %}
             {%- endif -%}
             {% if as_timestamp(now())|timestamp_custom('%A %B %d', True) == states.sensor.waste_pickup_garbage_recycling.state %}
-            The next garbage pickup will be tomorrow morning.
+            The next garbage pickup will be this evening.
             {% else%}
             The next garbage pickup is on {{states('sensor.waste_pickup_garbage_recycling')}}
-            {% endif %}"
+            {% endif %}
 
   morning_livingroom_lights:
     sequence:

@@ -39,7 +39,9 @@ group:
       - group.media_player1
       - group.media_player2
       - group.media_player3
+      - group.media_player4
       - group.media_player_chromecast
+      - group.google_home
       - group.playlists
       - group.kodi_utilities
       - group.kodi_control
@@ -104,6 +106,14 @@ group:
     name: Media Player Bedroom Pi
     entities:
       - media_player.kodi_bedroom_pi
+  media_player4:
+    name: Media Player Chromecast
+    entities:
+      - media_player.chromecast
+  google_home:
+    name: Google Home
+    entities:
+      - media_player.google_home
   media_player_chromecast:
     name: Media Players Chromecast
     entities:
