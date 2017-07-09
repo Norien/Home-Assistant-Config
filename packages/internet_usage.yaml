@@ -1,9 +1,12 @@
 ################################################################
 ## Packages / internet_usage
-## @norien - https://github.com/Norien/Home-Assistant-Config 
+## @norien - https://github.com/Norien/Home-Assistant-Config
 ################################################################
 homeassistant:
   customize:
+    sensor.billing_period:
+      friendly_name: Billing Period
+      icon: mdi:receipt
     sensor.usage_downloaded:
       friendly_name: Downloaded
       icon: mdi:folder-download
@@ -25,6 +28,7 @@ group:
   internet_usage:
     name: Internet Usage
     entities:
+      - sensor.billing_period
       - sensor.usage_downloaded
       - sensor.usage_uploaded
       - sensor.usage_total_usage
@@ -42,23 +46,26 @@ sensor:
       usage_downloaded:
         value_template: "{{states.sensor.usage.state.split(',')[0]}}"
         unit_of_measurement: "GB"
-  - platform: template
-    sensors:
       usage_uploaded:
         value_template: "{{states.sensor.usage.state.split(',')[1]}}"
         unit_of_measurement: "GB"
-  - platform: template
-    sensors:
       usage_total_usage:
         value_template: "{{states.sensor.usage.state.split(',')[2]}}"
         unit_of_measurement: "GB"
-  - platform: template
-    sensors:
       usage_usage_cap:
         value_template: "{{states.sensor.usage.state.split(',')[3]}}"
         unit_of_measurement: "GB"
-  - platform: template
-    sensors:
       usage_remaining_usage:
         value_template: "{{states.sensor.usage.state.split(',')[4]}}"
         unit_of_measurement: "GB"
+      billing_period:
+        value_template: >
+          {% set month = as_timestamp(now())|timestamp_custom('%B', True) %}
+          {% set month_prev = '{:02}'.format(as_timestamp(now())|timestamp_custom('%m', True) | int) %}
+          {% set month_next = '{:02}'.format(as_timestamp(now())|timestamp_custom('%m', True) | int + 2) %}
+          {% set day = as_timestamp(now())|timestamp_custom('%d', True) %}
+          {% if day <= '14' %}
+          {{as_timestamp(strptime(month_prev, '%m'))|timestamp_custom('%B')}} 15 - {{month}} 14
+          {% else %}
+          {{month}} 15 - {{as_timestamp(strptime(month_next, '%m'))|timestamp_custom('%B')}} 14
+          {% endif %}
