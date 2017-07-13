@@ -9,12 +9,13 @@ homeassistant:
   customize: !include_dir_merge_named customizations
   packages: !include_dir_named packages
 frontend:
+python_script:
 conversation:
 updater:
 history:
 logbook:
 sun:
-#discovery:
+discovery:
 #Components
 # google:
 #  client_id: !secret google_client_id
@@ -107,4 +108,4 @@ media_player:
     host: !secret kodi_bedroom_pi_ip
     port: !secret kodi_bedroom_pi_port
     name: kodi_bedroom_pi
-    turn_off_action: hibernate
+    turn_off_action: quit

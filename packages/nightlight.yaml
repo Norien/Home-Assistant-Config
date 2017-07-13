@@ -30,6 +30,9 @@ automation:
       - condition: state
         entity_id: 'light.living_room'
         state: 'off'
+      - condition: state
+        entity_id: 'media_player.kodi_livingroom'
+        state: 'off'
     action:
       - service: script.turn_off
         data:

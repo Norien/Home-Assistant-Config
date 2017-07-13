@@ -120,3 +120,4 @@ group:
       - media_player.kitchen
       - media_player.backyard
       - media_player.home_group
+      - media_player.home_group_2

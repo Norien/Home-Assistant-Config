@@ -99,7 +99,7 @@ sensor:
   - platform: rest
     name: ads_percentage_today
     resource: !secret pi_hole_url
-    value_template: '{{ value_json.ads_percentage_today }}'
+    value_template: '{{ value_json.ads_percentage_today | int }}'
 
   - platform: rest
     name: unique_domains
@@ -138,7 +138,7 @@ sensor:
       pihole_blocking:
         value_template: "{{states.sensor.pihole_status_raw.state.split(':::')[2]}}"
         icon_template: >-
-          {% if states.sensor.pihole_status.state == 'True' %}
+          {% if states.switch.pihole.state == 'off' %}
             mdi:checkbox-blank-outline
           {% else %}
             mdi:checkbox-marked

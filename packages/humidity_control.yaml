@@ -20,6 +20,8 @@ group:
     name: Humidity
     entities:
       - sensor.dark_sky_humidity
+      - sensor.master_bed_humidity
+      - sensor.laundry_humidity
       - sensor.hallway_thermostat_humidity
       - sensor.mold_indicator
       - switch.dehumidifier
@@ -72,3 +74,17 @@ automation:
         data_template:
           title: "Possible Mold Growth"
           message: "It's possible to have mold growth because the mold indicator is {{ states.sensor.mold_indicator.state }}"
+
+  - alias: 'Notify if Dehumidifier is on too long'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: switch.dehumidifier
+        state: 'on'
+        for:
+          hours: 2
+    action:
+      - service: notify.justin
+        data_template:
+          title: "dehumidifier Warning"
+          message: "It's possible the dehumidifier water bucket if full."

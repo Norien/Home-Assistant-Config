@@ -12,6 +12,12 @@ homeassistant:
       friendly_name: 'MySQL'
     sensor.process_dnsmasq:
       friendly_name: 'Pi-Hole'
+    sensor.master_bed_kodi:
+      friendly_name: 'Master Bedroom Kodi'
+      icon: mdi:memory
+    sensor.master_bed_flic:
+      icon: mdi:memory
+      friendly_name: 'Master Bedroom Flic'
 
 ###### STATE CARD
 group:
@@ -19,11 +25,14 @@ group:
     name: Processes
     control: hidden
     entities:
+      - automation.notify_if_service_goes_offline
       - sensor.process_glances
       - sensor.process_mosquitto
       - sensor.process_mysqld
       - sensor.process_dnsmasq
       - sensor.gif_maker_status
+      - sensor.master_bed_kodi
+      - sensor.master_bed_flic
 
 sensor:
   - platform: systemmonitor
@@ -36,3 +45,43 @@ sensor:
         arg: mysqld
       - type: process
         arg: dnsmasq
+
+  - platform: template
+    sensors:
+      master_bed_kodi:
+        value_template: >
+          {% if is_state('media_player.kodi_bedroom_pi', 'off') %}off{% else %}on{% endif %}
+
+  - platform: rest
+    name: master_bed_flic
+    resource: http://192.168.1.92/stats.json
+    value_template: '{{ value_json.processes.flic }}'
+
+automation:
+###############################################################################
+# Notify when a service goes Offline or Online
+###############################################################################
+  - alias: Notify if Service Goes Offline
+    trigger:
+      platform: state
+      entity_id:
+        - sensor.process_glances
+        - sensor.process_mosquitto
+        - sensor.process_mysqld
+        - sensor.process_dnsmasq
+        - sensor.gif_maker_status
+        - sensor.master_bed_kodi
+        - sensor.master_bed_flic
+
+    condition:
+      - condition: template
+        value_template: "{% if trigger.from_state and trigger.to_state %} True {% else %} False {% endif %}"
+    action:
+      - service: notify.justin
+        data_template:
+          message: >
+            {% if trigger.to_state.state | lower == "off" %}
+              {{ trigger.to_state.attributes.friendly_name }} has gone offline!
+            {% else %}
+              {{ trigger.to_state.attributes.friendly_name }} has come online!
+            {% endif %}
