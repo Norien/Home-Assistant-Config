@@ -54,7 +54,12 @@ sensor:
         value_template: "{{states.sensor.usage.state.split(',')[0]}}"
         unit_of_measurement: "GB"
       usage_remaining_per_day:
-        value_template: "{{(states.sensor.usage_remaining_usage.state|int / states.sensor.usage_remaining_days.state|int|round)|round(2)}}"
+        value_template: >
+          {% if states.sensor.usage_remaining_days.state|int == 0 %}
+          {{states.sensor.usage_remaining_usage.state}}
+          {% else %}
+          {{(states.sensor.usage_remaining_usage.state|int / states.sensor.usage_remaining_days.state|int|round)|round(2)}}
+          {% endif %}
         unit_of_measurement: "GB"
       usage_uploaded:
         value_template: "{{states.sensor.usage.state.split(',')[1]}}"
@@ -97,7 +102,7 @@ sensor:
   - platform: command_line
     command: "python /home/homeassistant/.homeassistant/python_scripts/usage_time_remaining.py"
     name: 'usage_remaining_days'
-    unit_of_measurement: Days
+    unit_of_measurement: Day(s)
     scan_interval: 120
 
 automation:

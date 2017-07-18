@@ -53,8 +53,18 @@ camera:
   - platform: generic
     still_image_url: !secret weather_radar
     name: Radar
+### YAHOO WEATHER
+weather:
+  - platform: yweather
+    woeid: !secret yahoo
 
 sensor:
+  ## Custom Weather Report
+  - platform: template
+    sensors:
+      weather_report:
+        value_template: >
+          The weather is currently {{states('sensor.dark_sky_minutely_summary')[:-1]|lower}} and {{states('sensor.dark_sky_apparent_temperature') | round}} degrees. Today's high is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}. The current UV index is {{states('sensor.pws_uv')}} with a burn time of {{states('sensor.uv_burn_time')}} minutes.
 ###### DARKSKY
   - platform: darksky
     api_key: !secret darksky_api_key
@@ -102,9 +112,9 @@ sensor:
 ### Celtic"all babies and children" = 67Min // caucasian = 100Min // Central Europe = 200Min // south american = 200Min // Middle Eastern = 400Min // African = 500Min
         value_template: >
           {% if is_state('sensor.pws_uv', '0') %}
-            0 Minutes
+            0
           {% elif is_state('sensor.pws_uv', '-1') %}
-            0 Minutes
+            0
           {% else %}
             {{ (67 / states.sensor.pws_uv.state | float) | round }}
           {% endif %}
@@ -118,5 +128,6 @@ script:
         volume_level: '0.70'
     - service: tts.google_say
       data_template:
-        entity_id: media_player.kitchen
-        message: "the weather is {{states('sensor.dark_sky_minutely_summary')}} and {{states('sensor.dark_sky_apparent_temperature') | round}} Degrees. Today's High is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}. The current UV index is {{states('sensor.pws_uv')}} with a burn time of {{states('sensor.uv_burn_time')}}."
+        entity_id: media_player.google_home
+        message: >
+          {{states('sensor.weather_report')}}

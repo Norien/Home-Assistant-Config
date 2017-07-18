@@ -39,6 +39,7 @@ This is my [Home Assistant](https://home-assistant.io/) configuration running on
 * [Sonoff POW](https://www.itead.cc/smart-home/sonoff-pow.html)
 * [WeMos D1 Mini](http://www.ebay.ca/itm/182035363514?_trksid=p2060353.m2749.l2649&ssPageName=STRK%3AMEBIDX%3AIT)
 * [NodeMcu ESP8266](https://geek.wish.com/search/1pc%20NodeMcu%20Lua%20ESP8266%20CH340G%20WIFI%20Internet%20Development%20Board%20Module#cid=58c646190b362f70c8bbeb10)
+* [Nortek Z-wave Adapter](http://a.co/58q0mCu)
 
 ## Wish List:
 * [ClearOne XAP800](http://www.ebay.ca/itm/CLEARONE-XAP800-Professional-Conferencing-System-910-151-101-Rev-2-5-0-/292069134421?hash=item4400ad5055:g:dYwAAOSwOgdYsjBk)

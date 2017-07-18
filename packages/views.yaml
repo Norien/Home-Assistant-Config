@@ -66,6 +66,22 @@ group:
       - group.restarts
       - group.ads_blocked
       - group.pi_zero
+  guest_view:
+    name: Guest
+    view: yes
+    icon: mdi:account-outline
+    entities:
+      - switch.living_room_pc
+      - media_player.kodi_livingroom
+      - light.living_room
+      - light.deck_lights
+      - script.lr_concentrate
+      - script.kitchen_sink_bright
+      - light.findlay_lamp
+      - camera.baby_monitor
+      - script.auto_pawpatrol
+      - script.auto_cartoons
+      - climate.hallway
   #Groups------------------------------------------------------------------
   livingroom:
     name: Living Room
