@@ -21,6 +21,12 @@ discovery:
 #  client_id: !secret google_client_id
 #  client_secret: !secret google_secret
 
+zwave:
+  usb_path: /dev/zwave
+  
+zigbee:
+  device: /dev/zigbee
+
 emulated_hue:
   host_ip: 192.168.1.250
   listen_port: 80
