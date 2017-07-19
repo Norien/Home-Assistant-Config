@@ -1,0 +1,67 @@
+################################################################
+## Packages / hassctl
+## Add HASSCTL to sudoers File
+## homeassistant ALL=(ALL) NOPASSWD: /usr/local/bin/hassctl
+## update_ha.sh - https://github.com/Norien/Home-Assistant-Config/blob/master/shell/update_ha.sh
+################################################################
+homeassistant:
+  customize:
+    script.update_ha:
+      friendly_name: Update Home Assistant
+      icon: mdi:package-variant
+    script.update_hassctl:
+      friendly_name: Update hassctl
+      icon: mdi:package-variant
+    script.restart_ha:
+      friendly_name: Restart Home Assistant
+      icon: mdi:restart
+    sensor.hassctl_version:
+      friendly_name: Version
+###### STATE CARD #######################################################
+group:
+  hassctl:
+    name: hassctl
+    control: hidden
+    entities:
+      - script.restart_ha
+      - script.update_ha
+      - script.update_hassctl
+      - sensor.hassctl_version
+#########################################################################
+script:
+  update_ha:
+    sequence:
+      - service: shell_command.update_ha
+  update_hassctl:
+    sequence:
+      - service: shell_command.update_ha
+  restart_ha:
+      - service: shell_command.restart_ha
+#########################################################################
+shell_command:
+  update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'
+  update_hassctl: 'sudo hassctl update-hassctl'
+  restart_ha: 'sudo hassctl restart'
+#########################################################################
+sensor:
+  ###### VERSIONS
+    - platform: command_line
+      name: hassctl Current Version
+      command: curl -s  https://raw.githubusercontent.com/dale3h/hassctl/master/hassctl 2> /dev/null | head -3 | tail -1 | cut -d# -f2
+      value_template: '{{value[17:-1]}}'
+
+    - platform: command_line
+      name: hassctl Installed Version
+      command: cat /usr/local/bin/hassctl | head -3 | tail -1 | cut -d# -f2
+      value_template: '{{value[17:-1]}}'
+  ###### single line Version
+    - platform: template
+      sensors:
+        hassctl_version:
+          value_template: "{%- if states.sensor.hassctl_current_version.state == states.sensor.hassctl_installed_version.state-%}{{states.sensor.hassctl_installed_version.state}} {% else %}{{states.sensor.hassctl_current_version.state}} Available{% endif%}"
+          icon_template: >-
+            {% if states.sensor.hassctl_current_version.state == states.sensor.hassctl_installed_version.state %}
+              mdi:checkbox-marked
+            {% else %}
+              mdi:checkbox-blank-outline
+            {% endif %}

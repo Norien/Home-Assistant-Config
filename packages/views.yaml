@@ -66,6 +66,7 @@ group:
       - group.restarts
       - group.ads_blocked
       - group.pi_zero
+      - group.hassctl
   guest_view:
     name: Guest
     view: yes
