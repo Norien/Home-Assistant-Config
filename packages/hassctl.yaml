@@ -6,13 +6,13 @@
 ################################################################
 homeassistant:
   customize:
-    script.update_ha:
+    script.hassctl_update_ha:
       friendly_name: Update Home Assistant
       icon: mdi:package-variant
-    script.update_hassctl:
+    script.hassctl_update:
       friendly_name: Update hassctl
       icon: mdi:package-variant
-    script.restart_ha:
+    script.hassctl_restart_ha:
       friendly_name: Restart Home Assistant
       icon: mdi:restart
     sensor.hassctl_version:
@@ -23,25 +23,26 @@ group:
     name: hassctl
     control: hidden
     entities:
-      - script.restart_ha
-      - script.update_ha
-      - script.update_hassctl
+      - script.hassctl_restart_ha
+      - script.hassctl_update_ha
+      - script.hassctl_update
       - sensor.hassctl_version
 #########################################################################
 script:
-  update_ha:
+  hassctl_restart_ha:
     sequence:
-      - service: shell_command.update_ha
-  update_hassctl:
+      - service: shell_command.hassctl_restart_ha
+  hassctl_update_ha:
     sequence:
-      - service: shell_command.update_ha
-  restart_ha:
-      - service: shell_command.restart_ha
+      - service: shell_command.hassctl_update_ha
+  hassctl_update:
+    sequence:
+      - service: shell_command.hassctl_update
 #########################################################################
 shell_command:
-  update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'
-  update_hassctl: 'sudo hassctl update-hassctl'
-  restart_ha: 'sudo hassctl restart'
+  hassctl_restart_ha: 'sudo hassctl restart'
+  hassctl_update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/update_ha.log 2>&1 &'
+  hassctl_update: 'sudo hassctl update-hassctl'
 #########################################################################
 sensor:
   ###### VERSIONS
@@ -49,12 +50,11 @@ sensor:
       name: hassctl Current Version
       command: curl -s  https://raw.githubusercontent.com/dale3h/hassctl/master/hassctl 2> /dev/null | head -3 | tail -1 | cut -d# -f2
       value_template: '{{value[17:-1]}}'
-
     - platform: command_line
       name: hassctl Installed Version
       command: cat /usr/local/bin/hassctl | head -3 | tail -1 | cut -d# -f2
       value_template: '{{value[17:-1]}}'
-  ###### single line Version
+  ###### Single line Version
     - platform: template
       sensors:
         hassctl_version:
