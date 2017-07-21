@@ -93,3 +93,26 @@ automation:
         data:
           rgb_hex: 'ff0000'
           host: !secret H801WIFI_url
+
+  - alias: 'nest open a window'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.weather_inside_vs_outside
+        from: 'false'
+        to: 'true'
+    condition:
+      - condition: state
+        entity_id: climate.hallway
+        state: 'cool'
+    action:
+      - service: notify.justin
+        data:
+          message: 'It is cooler outside then inside and the AC is on. You should open a window!'
+      - service: automation.turn_off
+        data:
+          entity_id: automation.nest_open_a_window
+      - delay: '01:00:00'
+      - service: automation.turn_on
+        data:
+          entity_id: automation.nest_open_a_window
