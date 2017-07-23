@@ -60,10 +60,10 @@ sensor:
     sensors:
       weather_report:
         value_template: >
-          The weather is currently {{states('sensor.dark_sky_minutely_summary')[:-1]|lower}} and {{states('sensor.dark_sky_apparent_temperature') | round}} degrees. Today's high is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}.
+          The weather is {{states('sensor.dark_sky_minutely_summary')[:-1]|lower}} and {{states('sensor.dark_sky_apparent_temperature') | round}} degrees. Today's high is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}.
           {%- if states.sensor.pws_uv.state|int == 0 -%}
           {%- else -%}
-          The current UV index is {{states('sensor.pws_uv')}} with a burn time of {{states('sensor.uv_burn_time')}} minutes.
+          {{' '}}The current UV index is {{states('sensor.pws_uv')}} with a burn time of {{states('sensor.uv_burn_time')}} minutes.
           {%- endif -%}
       weather_inside_vs_outside:
         value_template: >

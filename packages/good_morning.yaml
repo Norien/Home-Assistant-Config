@@ -39,18 +39,20 @@ script:
             Good Morning, {{weather}}
             {%- if as_timestamp(now())|timestamp_custom('%A %B %d', True) == states.sensor.waste_pickup_garbage_recycling.state -%}
             The garbage is to go out this evening.
-            {%else%}
-            The next garbage pickup is on {{states('sensor.waste_pickup_garbage_recycling')}}
-            {%endif%}
-            {% if is_state('sensor.nicole', 'not_home') %}
+            {%-else-%}
+            {{' '}}The next garbage pickup is on {{states('sensor.waste_pickup_garbage_recycling')}}.{{' '}}
+            {%-endif-%}
+            {%- if is_state('sensor.nicole', 'not_home') -%}
             {% elif is_state('sensor.nicole', 'home') %}
               {% if is_state('binary_sensor.workday_sensor', 'off') %}
               {% elif is_state('binary_sensor.workday_sensor', 'on') %}
               {{travel_time}}
                 {% if 'rain' in states.sensor.dark_sky_hourly_summary.state %}
-                Don't forget your Umbrella and
+                Don't forget your Umbrella.
                 {% else %}
                 {% endif %}
+                {% endif %}
+                {%- endif -%}
                 {{ [
                   "Not the day only, but all things have their morning. Refresh your self and have a good day.",
                   "I don't ask for the meaning of the song of a bird or the rising of the sun on a misty morning. There they are, and they are beautiful. Just like you",
@@ -113,8 +115,6 @@ script:
                   "Opportunities will knock on your door every morning. But if you keep sleeping they will simply pass you by.",
                   "Each morning we are born again, what we do today is what matters most."
                 ]|random }}
-              {% endif %}
-            {% endif %}
 
   morning_livingroom_lights:
     sequence:
