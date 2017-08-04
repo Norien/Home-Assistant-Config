@@ -41,3 +41,5 @@ shell/push_image.py
 shell/rogers.txt
 OZW_Log.txt
 pyozw.sqlite
+python_scripts/usage_time_remaining.py
+custom_components/sensor/__pycache__/steam_online.cpython-35.pyc

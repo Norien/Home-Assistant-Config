@@ -23,7 +23,7 @@ discovery:
 
 zwave:
   usb_path: /dev/zwave
-  
+
 zigbee:
   device: /dev/zigbee
 
@@ -37,9 +37,12 @@ logger:
   default: error
   #default: info
   logs:
-    homeassistant.components.switch.template: fatal
     homeassistant.components.switch.command_line: fatal
-    homeassistant.pywemo.ssdp: fatal
+    homeassistant.components.sensor.command_line: fatal
+    homeassistant.components.switch.template: fatal
+    homeassistant.components.camera.generic: fatal
+    pychromecast.socket_client: fatal
+    pydroid_ipcam: fatal
 
 http:
    api_password: !secret api_password

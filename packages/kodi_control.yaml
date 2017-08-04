@@ -35,6 +35,11 @@ homeassistant:
       friendly_name: Paw Partol
       icon: mdi:playlist-play
 
+    script.auto_moana:
+      <<: *customize
+      friendly_name: Moana
+      icon: mdi:playlist-play
+
     script.kodi_play:
       <<: *customize
       friendly_name: Play
@@ -151,6 +156,7 @@ group:
       - script.auto_all_tv
       - script.auto_cartoons
       - script.auto_pawpatrol
+      - script.auto_moana
       - script.kodi_youtbe
 
 script:
@@ -183,6 +189,16 @@ script:
           script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
         data:
           file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/pawpatrol.xsp"
+
+  ################################################
+  ## Living Room -Moana
+  ################################################
+  auto_moana:
+    sequence:
+      - service_template: >-
+          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+        data:
+          file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/moanag.xsp"
 
   ################################################
   ## Kodi Commands

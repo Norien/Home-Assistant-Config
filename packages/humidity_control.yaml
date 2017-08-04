@@ -80,7 +80,7 @@ automation:
     trigger:
       - platform: state
         entity_id: switch.dehumidifier
-        state: 'on'
+        to: 'on'
         for:
           hours: 2
     action:

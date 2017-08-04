@@ -111,6 +111,7 @@ group:
     entities:
      - switch.office_pc
      - switch.office_lightswitch
+     - sensor.steam_account
   media_player1:
     name: Media Players Living Room
     entities:

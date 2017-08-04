@@ -107,6 +107,12 @@ binary_sensor:
     country: CA
 ###### SENSORS -------------------------------------------------
 sensor:
+  - platform: steam_online
+    api_key: !secret steam_api
+    accounts:
+      - id: !secret steam_user
+        entity_id: "account"
+
   #####FINDLAYS ROOM SENSOR & DIMMER
   - platform: rest
     resource: !secret finn_room_lux
@@ -264,7 +270,7 @@ sensor:
             {% endif %}
           {% endif %}
 
-  ###### CUSTOM AVERAGE TEMP
+###### CUSTOM AVERAGE TEMP
   - platform: template
     sensors:
       average_house_temp:

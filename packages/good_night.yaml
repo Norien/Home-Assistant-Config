@@ -12,7 +12,7 @@ homeassistant:
 script:
   good_night:
     sequence:
-##### BEDROOM
+##### Master BEDROOM
     - service: switch.turn_off
       entity_id: switch.bedroom_media
     - service: switch.turn_off
@@ -47,7 +47,12 @@ script:
 ###### OFFICE
     - service: switch.turn_off
       entity_id: switch.office_lightswitch
-    - service: switch.turn_off
+    - service_template: >
+       {%- if is_state('sensor.steam_account', 'Online') -%}
+         switch.turn_on
+       {%- else -%}
+         switch.turn_off
+       {%- endif %}
       entity_id: switch.office_pc
 ###### lAUNDRY ROOM
     - service: switch.turn_off
