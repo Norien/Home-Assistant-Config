@@ -296,44 +296,9 @@ sensor:
       date_day:
         value_template: "{{as_timestamp(now())|timestamp_custom('%d', True)}}"
 
-###### DAY TO ZONE
-  - platform: template
-    sensors:
-      todays_zone:
-        value_template: >
-          {% if is_state('sensor.date_weekday', 'Monday') %}
-            {{ states.zone.work_westmount.attributes.latitude | string + ', ' | string + states.zone.work_westmount.attributes.longitude | string }}
-          {% elif is_state('sensor.date_weekday', 'Tuesday') %}
-            {{ states.zone.work_old_south.attributes.latitude | string + ', ' | string + states.zone.work_old_south.attributes.longitude | string }}
-          {% elif is_state('sensor.date_weekday', 'Wednesday') %}
-            {{ states.zone.work_westmount.attributes.latitude | string + ', ' | string + states.zone.work_westmount.attributes.longitude | string }}
-          {% elif is_state('sensor.date_weekday', 'Thursday') %}
-            {{ states.zone.work_whitehills.attributes.latitude | string + ', ' | string + states.zone.work_whitehills.attributes.longitude | string }}
-          {% elif is_state('sensor.date_weekday', 'Friday') %}
-            {{ states.zone.work_westmount.attributes.latitude | string + ', ' | string + states.zone.work_westmount.attributes.longitude | string }}
-          {% else %}
-            {{ states.zone.home.attributes.latitude | string + ', ' | string + states.zone.home.attributes.longitude | string }}
-          {% endif %}
-
-  - platform: template
-    sensors:
-      monday_flop:
-        value_template: >
-          {%- if "{{as_timestamp(now())|timestamp_custom('%W', true)|lower}} % 2 == 0"  -%}
-            {{states.zone.work_westmount.attributes.latitude | string + ', ' | string + states.zone.work_westmount.attributes.longitude | string}}
-          {%- else -%}
-            {{ states.zone.work_old_south.attributes.latitude | string + ', ' | string + states.zone.work_old_south.attributes.longitude | string }}
-          {%- endif %}
-
 ###### GOOGLE TRAVEL TIME
   - platform: google_travel_time
     name: Nicole Phone To Home
     api_key: !secret google_secret
     origin: device_tracker.bigdrakar_nicole
     destination: zone.home
-
-  - platform: google_travel_time
-    name: Nicole Home to Work
-    api_key: !secret google_secret
-    origin: zone.home
-    destination: sensor.todays_zone

@@ -14,7 +14,6 @@ group:
       - group.office
       - group.backyard
       - group.laundry_room
-      - group.live_scenes
   sensor_view:
     name: Sensors
     view: yes
@@ -76,6 +75,7 @@ group:
       - media_player.kodi_livingroom
       - light.living_room
       - light.deck_lights
+      - light.hallway
       - script.lr_concentrate
       - script.kitchen_sink_bright
       - light.findlay_lamp
@@ -84,20 +84,6 @@ group:
       - script.auto_cartoons
       - climate.hallway
   #Groups------------------------------------------------------------------
-  livingroom:
-    name: Living Room
-    control: hidden
-    entities:
-     - switch.living_room_pc
-     - light.living_room
-     - automation.night_light
-     - script.lr_concentrate
-     - script.lr_read
-     - script.lr_relax
-     - script.lr_dimmed
-     - script.lr_springblossom
-     - script.beach
-     - script.good_morning
   findlays_room:
     name: Findlay's Room
     entities:

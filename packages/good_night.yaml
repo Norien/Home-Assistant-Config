@@ -57,3 +57,6 @@ script:
 ###### lAUNDRY ROOM
     - service: switch.turn_off
       entity_id: switch.washing_machine
+###### HALLWAY
+    - service: light.turn_off
+      entity_id: light.hallway

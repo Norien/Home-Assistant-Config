@@ -43,3 +43,8 @@ OZW_Log.txt
 pyozw.sqlite
 python_scripts/usage_time_remaining.py
 custom_components/sensor/__pycache__/steam_online.cpython-35.pyc
+python_scripts/make_github_issue.py
+python_scripts/rogersusage.py
+python_scripts/waste_pickup_container.py
+python_scripts/waste_pickup_garbage_recycle.py
+python_scripts/waste_pickup_yard_waste.py

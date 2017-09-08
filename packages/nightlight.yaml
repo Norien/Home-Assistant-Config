@@ -48,8 +48,12 @@ script:
         data:
           group_name: "Living Room"
           scene_name: "Nightlight"
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Hallway"
+          scene_name: "Nightlight"
       - delay:
-          minutes: 6
+          minutes: 4
       - service_template: >
           {% if is_state_attr('light.living_room', 'rgb_color', (21, 8, 0)) %}
             script.nightlight_off
@@ -66,3 +70,6 @@ script:
             light.hue_color_lamp_2:
             light.hue_color_lamp_3:
             light.kitchen_sink:
+            light.hallway1:
+            light.hallway2:
+            light.living_room_lamp:

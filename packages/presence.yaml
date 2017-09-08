@@ -21,7 +21,6 @@ group:
      - device_tracker.bigdrakar_justin
      - device_tracker.bigdrakar_nicole
      - sensor.nicole_phone_to_home
-     - sensor.nicole_home_to_work
      - input_boolean.guest
      - input_boolean.away
      - input_boolean.vacation
@@ -132,6 +131,9 @@ script:
         data:
           entity_id: climate.hallway
           away_mode: 'true'
+  ###### HALLWAY
+      - service: light.turn_off
+        entity_id: light.hallway
 
 ###### MODES / PEOPLE
 input_boolean:
@@ -151,6 +153,7 @@ input_boolean:
     name: Nap
     icon: mdi:sleep
     initial: off
+
 ###### Sensors
 sensor:
   - platform: template

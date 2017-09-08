@@ -5,10 +5,11 @@ homeassistant:
   longitude: !secret longitude
   elevation: 264
   unit_system: metric
-  time_zone: America/Toronto
+  time_zone: !secret time_zone
   customize: !include_dir_merge_named customizations
   packages: !include_dir_named packages
 frontend:
+config:
 python_script:
 conversation:
 updater:
@@ -41,6 +42,7 @@ logger:
     homeassistant.components.sensor.command_line: fatal
     homeassistant.components.switch.template: fatal
     homeassistant.components.camera.generic: fatal
+    homeassistant.components.camera.mjpeg: fatal
     pychromecast.socket_client: fatal
     pydroid_ipcam: fatal
 

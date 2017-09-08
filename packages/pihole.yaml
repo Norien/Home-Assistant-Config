@@ -62,6 +62,9 @@ homeassistant:
     sensor.pihole_blocking:
       friendly_name: Ad Blocking
 
+    sensor.pi_hole_version:
+      friendly_name: Version
+    
 group:
   Ads Blocked:
     entities:
@@ -76,6 +79,7 @@ group:
       - sensor.queries_cached
       - sensor.pihole_dns
       - sensor.pihole_blocking
+      - sensor.pi_hole_version
 
 ###############################################################################
 #  Sensors
@@ -116,6 +120,29 @@ sensor:
     resource: !secret pi_hole_url
     value_template: '{{ value_json.queries_cached }}'
 
+######Custom Version sensor
+  - platform: command_line
+    command: "pihole -v -p -c"
+    name: 'pihole_version_current'
+    value_template: '{{ value[28:] }}'
+    scan_interval: 86400
+
+  - platform: command_line
+    command: "pihole -v -p -l"
+    name: 'pihole_version_latest'
+    value_template: '{{ value[27:] }}'
+    scan_interval: 86400
+
+  - platform: template
+    sensors:
+      pi_hole_version:
+        value_template: "{%- if states.sensor.pihole_version_current.state == states.sensor.pihole_version_latest.state -%}{{states.sensor.pihole_version_current.state}} {% else %}{{states.sensor.pihole_version_latest.state}} Available{% endif%}"
+        icon_template: >-
+          {% if states.sensor.pihole_version_current.state == states.sensor.pihole_version_latest.state %}
+            mdi:checkbox-marked
+          {% else %}
+            mdi:checkbox-blank-outline
+          {% endif %}
 ###### I had to provide access in sudoers file for this script to run.
   - platform: command_line
     command: 'bash /home/homeassistant/.homeassistant/shell/pihole.sh'

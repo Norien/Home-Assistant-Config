@@ -35,7 +35,6 @@ script:
           entity_id: media_player.google_home
           message: >
             {% set weather = states('sensor.weather_report') %}
-            {% set travel_time = 'Travel time this morning is ' + states('sensor.nicole_home_to_work') + ' minutes and you must leave by ' + ((as_timestamp(now().date() ~ " 08:00:00") - (states.sensor.nicole_home_to_work.state|int * 60))|timestamp_local).split(" ")[1][1:-3] + ' to arrive on time.'%}
             Good Morning, {{weather}}
             {%- if as_timestamp(now())|timestamp_custom('%A %B %d', True) == states.sensor.waste_pickup_garbage_recycling.state -%}
             The garbage is to go out this evening.
@@ -46,7 +45,6 @@ script:
             {% elif is_state('sensor.nicole', 'home') %}
               {% if is_state('binary_sensor.workday_sensor', 'off') %}
               {% elif is_state('binary_sensor.workday_sensor', 'on') %}
-              {{travel_time}}
                 {% if 'rain' in states.sensor.dark_sky_hourly_summary.state %}
                 Don't forget your Umbrella.
                 {% else %}

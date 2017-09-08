@@ -210,9 +210,3 @@ sensor:
 #   restarts:
 #     name: restarts
 #     initial: off
-
-panel_iframe:
-  glances:
-    title: System Monitor
-    icon: mdi:biohazard
-    url: !secret glances_url

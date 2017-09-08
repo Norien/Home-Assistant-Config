@@ -1,0 +1,229 @@
+################################################################
+## Packages / Livingroom
+################################################################
+homeassistant:
+  customize:
+    automation.light_living_room_sunset:
+      friendly_name: Sunset Lights
+      icon: mdi:weather-sunset-down
+    light.living_room:
+      friendly_name: Living Room Lights
+    light.findlay_lamp:
+      friendly_name: Findlay's Lamp
+      icon: mdi:lamp
+    script.lr_dimmed:
+      emulated_hue: true
+      friendly_name: 'Dimmed'
+      icon: mdi:brightness-7
+    script.lr_relax:
+      emulated_hue: true
+      friendly_name: 'Relax'
+      icon: mdi:brightness-6
+    script.lr_read:
+      emulated_hue: true
+      friendly_name: 'Read'
+      icon: mdi:brightness-5
+    script.lr_concentrate:
+      emulated_hue: true
+      friendly_name: 'Bright'
+      icon: mdi:star-circle
+    script.lr_springblossom:
+      emulated_hue: true
+      friendly_name: 'Spring blossom'
+      icon: mdi:flower
+    script.beach:
+      emulated_hue: true
+      friendly_name: 'Beach'
+      icon: mdi:beach
+    script.river:
+      friendly_name: 'River'
+      icon: mdi:fire
+    script.kitchen_sink_bright:
+      emulated_hue: true
+      friendly_name: 'Kitchen Sink Bright'
+      icon: mdi:flower
+    switch.office_lightswitch:
+      friendly_name: Office Light Switch
+      icon: mdi:lightbulb
+
+
+###### STATE CARD
+group:
+  livingroom:
+    name: Living Room
+    control: hidden
+    entities:
+     - switch.living_room_pc
+     - light.living_room
+     - automation.night_light
+     - automation.light_living_room_sunset
+     - input_select.light_living_room_scene
+     - input_select.live_scene
+
+script:
+  light_living_room_off:
+    sequence:
+      - service: light.turn_off
+        data:
+          entity_id:
+            light.hue_color_lamp_1:
+            light.hue_color_lamp_2:
+            light.hue_color_lamp_3:
+            light.living_room_lamp:
+            light.kitchen_sink:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.light_living_room_scene
+          option: "off"
+
+  kitchen_sink_bright:
+    sequence:
+      - service: light.turn_on
+        data:
+          entity_id:
+            light.kitchen_sink:
+          brightness: 254
+          rgb_color: [255,241,199]
+  lr_dimmed:
+    sequence:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Dimmed"
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.light_living_room_scene
+          option: "Dimmed"
+  lr_relax:
+    sequence:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Relax"
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.light_living_room_scene
+          option: "Relax"
+  lr_read:
+    sequence:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Read"
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.light_living_room_scene
+          option: "Read"
+  lr_concentrate:
+    sequence:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Concentrate"
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.light_living_room_scene
+          option: "Bright"
+  lr_springblossom:
+    sequence:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Spring blossom"
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.light_living_room_scene
+          option: "Spring Blossom"
+  beach:
+    sequence:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Beach"
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.light_living_room_scene
+          option: "Beach"
+  river:
+    sequence:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "river"
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.light_living_room_scene
+          option: "River"
+
+automation:
+  - alias: 'light_living_room_sunset'
+    initial_state: 'on'
+    trigger:
+      - platform: sun
+        event: sunset
+        #offset: '-01:00:00'
+    condition:
+      - condition: state
+        entity_id: 'input_boolean.away'
+        state: 'off'
+      - condition: state
+        entity_id: 'switch.living_room_pc'
+        state: 'on'
+      - condition: state
+        entity_id: 'light.living_room_lamp'
+        state: 'off'
+    action:
+      - service: light.hue_activate_scene
+        data:
+          group_name: "Living Room"
+          scene_name: "Spring blossom"
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.light_living_room_scene
+          option: "Spring Blossom"
+
+  - alias: 'light_living_room_scene'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: input_select.light_living_room_scene
+    action:
+      service: script.turn_on
+      data_template:
+        entity_id: >-
+          {% if is_state("input_select.light_living_room_scene", "off") %} script.light_living_room_off
+          {% elif is_state("input_select.light_living_room_scene", "Bright") %} script.lr_concentrate
+          {% elif is_state("input_select.light_living_room_scene", "Read") %} script.lr_read
+          {% elif is_state("input_select.light_living_room_scene", "Relax") %} script.lr_relax
+          {% elif is_state("input_select.light_living_room_scene", "Dimmed") %} script.lr_dimmed
+          {% elif is_state("input_select.light_living_room_scene", "Spring Blossom") %} script.lr_springblossom
+          {% elif is_state("input_select.light_living_room_scene", "Beach") %} script.beach
+          {% elif is_state("input_select.light_living_room_scene", "River") %} script.river
+          {% endif %}
+
+  - alias: 'light_living_room_scene'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: light.living_room
+        to: "off"
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.light_living_room_scene
+          option: "off"
+
+input_select:
+  light_living_room_scene:
+    name: Scene
+    options:
+      - "off"
+      - "Bright"
+      - "Read"
+      - "Relax"
+      - "Dimmed"
+      - "Spring Blossom"
+      - "Beach"
+      - "River"
+    initial: "off"
+    icon: mdi:ceiling-light

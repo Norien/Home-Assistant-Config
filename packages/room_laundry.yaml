@@ -213,7 +213,7 @@ script:
       conditions:
         - condition: template
           value_template: >
-            {% if is_state('media_player.kitchen', 'playing') %}
+            {% if is_state('media_player.google_home', 'playing') %}
             false
             {% else %}
             true
@@ -223,11 +223,11 @@ script:
           before: '21:00:00'
     - service: media_player.volume_set
       data:
-        entity_id: media_player.kitchen
-        volume_level: '0.50'
+        entity_id: media_player.google_home
+        volume_level: '0.70'
     - service: tts.google_say
       data_template:
-        entity_id: media_player.kitchen
+        entity_id: media_player.google_home
         message: "The Washing machine has completed it's cycle."
 
   dryer_tts:

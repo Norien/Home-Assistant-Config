@@ -22,7 +22,7 @@ homeassistant:
     switch.led_strip:
       emulated_hue: true
       icon: mdi:lamp
-      friendly_name: Bedroom Headboard      
+      friendly_name: Bedroom Headboard
     #Bedroom computer Switch
     switch.bedroom_media:
       emulated_hue: true
@@ -45,18 +45,42 @@ group:
      - input_select.led_scene
      - input_select.led_color
      - binary_sensor.flic_80e4da71b68e
-     - switch.bedroom_fan_a
-     - switch.bedroom_fan_b
+    # - switch.bedroom_fan_a
+    # - switch.bedroom_fan_b
 
 binary_sensor:
   - platform: flic
     host: 192.168.1.92
 
+###### motion SENSOR
+  - platform: mqtt
+    name: 'room_masterbed_motion'
+    state_topic: "/room_masterbed/motion/Switch"
+    qos: 0
+    payload_on: "1"
+    payload_off: "0"
+    device_class: motion
+
 sensor:
+###### MQTT DHT22
+  - platform: mqtt
+    state_topic: '/room_masterbed/dht22/Temperature'
+    name: 'Master Bed Temperature'
+    unit_of_measurement: '°C'
+  - platform: mqtt
+    state_topic: '/room_masterbed/dht22/Humidity'
+    name: 'Master Bed Humidity'
+    unit_of_measurement: '%'
+
   - platform: template
     sensors:
       white_noise:
         value_template: "{% if is_state('media_player.kodi_bedroom_pi', 'playing') %}on{% else %}Off{% endif %}"
+###### Monitor if flic is listed in the log file.
+  - platform: command_line
+    command: "python /home/homeassistant/.homeassistant/python_scripts/flic.py"
+    name: 'flic_log'
+    scan_interval: 120
 
 switch:
 ###### Switch for White Noise
@@ -111,13 +135,26 @@ switch:
           entity_id: script.bedroom_media_off
 
 script:
+  bedroom_flic_hold:
+    sequence:
+      - service_template: >
+          {% if is_state('sun.sun', 'below_horizon') %}
+            script.good_night
+          {% else %}
+            script.good_morning
+          {% endif %}
+
   bedroom_media_on:
     sequence:
+      - service: shell_command.bedroom_hdmi_off
+      - service: shell_command.bedroom_pi_kodi_off
+      - service: shell_command.bedroom_pi_kodi_on
       - service: switch.turn_on
         entity_id: switch.bedroom_tv
       - delay: '00:00:10'
       - service: switch.turn_on
         entity_id: switch.bedroom_pc
+      - delay: '00:00:05'
       - service: shell_command.bedroom_tv_cec
 
   bedroom_media_off:
@@ -141,6 +178,9 @@ script:
 
   white_noise:
     sequence:
+      - service: shell_command.bedroom_pi_kodi_off
+      - service: shell_command.bedroom_pi_kodi_on
+      - delay: 00:00:10
       - service: media_player.play_media
         data:
           entity_id: media_player.kodi_bedroom_pi
@@ -148,6 +188,38 @@ script:
           media_content_type: "audio/mp3"
 
 automation:
+  - alias: flic_restart
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.flic_log
+        to: 'true'
+    condition:
+      - condition: state
+        entity_id: 'sensor.raspberry_pi'
+        state: 'Online'        
+    action:
+      - service: shell_command.bedroom_pi_flic_restart
+      - delay: 00:00:10
+      - service: script.restart_ha
+
+  - alias: Notify on Bedroom Motion If Guest Mode is on
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.room_masterbed_motion
+        from: 'off'
+        to: 'on'
+    condition:
+      - condition: state
+        entity_id: 'input_boolean.guest'
+        state: 'on'
+    action:
+      - service: notify.justin
+        data_template:
+          message: >
+            motion detected in our bedroom.
+
   - alias: 'white_noise'
     initial_state: 'on'
     trigger:
@@ -199,19 +271,15 @@ automation:
         button_name: flic_80e4da71b68e
         click_type: hold
     action:
-      - service: switch.turn_off
-        entity_id: switch.bedroom_tv
-      - service: switch.turn_off
-        entity_id: switch.bedroom_lamps_
-      - service: switch.turn_off
-        entity_id: switch.led_strip
-      - service: switch.turn_on
-        entity_id: switch.bedroom_fan
-      - service: switch.turn_on
-        entity_id: switch.white_noise
+      - service: script.bedroom_flic_hold
 
 shell_command:
   bedroom_tv_cec: 'bash /home/homeassistant/.homeassistant/shell/cec.sh'
+  bedroom_pi_kodi_on: 'ssh pi@192.168.1.92 nohup /usr/bin/kodi &'
+  bedroom_pi_kodi_off: 'ssh pi@192.168.1.92 pkill -9 -f kodi'
+  bedroom_pi_restart: 'ssh pi@192.168.1.92 sudo reboot'
+  bedroom_hdmi_off: "ssh pi@192.168.1.92 'tvservice --off'"
+  bedroom_pi_flic_restart: 'ssh pi@192.168.1.92 sudo systemctl restart flicd'
 
 input_select:
   white_noise:

@@ -28,19 +28,19 @@ group:
 sensor:
 ######  GARBAGE AND RECYCLE
   - platform: command_line
-    command: "python /home/homeassistant/.homeassistant/shell/waste_pickup_garbage_recycle.py"
+    command: "python /home/homeassistant/.homeassistant/python_scripts/waste_pickup_garbage_recycle.py"
     name: 'Waste Pickup Garbage Recycling'
     scan_interval: 43200
     value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
 ######  YARD WASTE
   - platform: command_line
-    command: "python /home/homeassistant/.homeassistant/shell/waste_pickup_yard_waste.py"
+    command: "python /home/homeassistant/.homeassistant/python_scripts/waste_pickup_yard_waste.py"
     name: 'Waste Pickup Yard Waste'
     scan_interval: 43200
     value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
 ######  3 Container Exemption
   - platform: command_line
-    command: "python /home/homeassistant/.homeassistant/shell/waste_pickup_container.py"
+    command: "python /home/homeassistant/.homeassistant/python_scripts/waste_pickup_container.py"
     name: 'Waste Pickup Container'
     scan_interval: 43200
     value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
