@@ -21,7 +21,7 @@ group:
     entities:
       - sensor.dark_sky_humidity
       - sensor.master_bed_humidity
-      #- sensor.laundry_humidity
+      - sensor.laundry_humidity
       - sensor.hallway_thermostat_humidity
       - sensor.mold_indicator
       - switch.dehumidifier

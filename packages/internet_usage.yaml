@@ -117,3 +117,10 @@ automation:
         data_template:
           title: "Internet Usage"
           message: "There is {{states.sensor.usage_remaining_days.state}} days left until usage meter resets and you have {{states.sensor.usage_remaining_usage.state}} GB remaining."
+      - service: automation.turn_off
+        data:
+          entity_id: automation.notify_internet_usage_details
+      - delay: '02:00:00'
+      - service: automation.turn_on
+        data:
+          entity_id: automation.notify_internet_usage_details

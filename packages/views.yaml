@@ -9,8 +9,9 @@ group:
     icon: mdi:home
     entities:
       - group.livingroom
-      - group.bedroom
       - group.findlays_room
+      - group.bedroom
+      - group.misc_lights
       - group.office
       - group.backyard
       - group.laundry_room
@@ -25,6 +26,7 @@ group:
       - group.all_humidity
       - group.smoke_gas
       - group.motion_sensors
+      - group.lux
       - group.waste_pickup
       - group.weather
       - group.doorbell
@@ -84,20 +86,11 @@ group:
       - script.auto_cartoons
       - climate.hallway
   #Groups------------------------------------------------------------------
-  findlays_room:
-    name: Findlay's Room
+  misc_lights:
+    name: Misc Lights
     entities:
-      - light.findlay_lamp
-      - sensor.findlay_room_temperature
-      - sensor.findlay_room_lux
-      - sensor.findlay_room_motion
-  office:
-    name: Office
-    control: hidden
-    entities:
-     - switch.office_pc
-     - switch.office_lightswitch
-     - sensor.steam_account
+      - light.hallway
+      - light.hue_go
   media_player1:
     name: Media Players Living Room
     entities:
@@ -109,7 +102,7 @@ group:
   media_player3:
     name: Media Player Bedroom Pi
     entities:
-      - media_player.kodi_bedroom_pi
+       - media_player.kodi_bedroom_pi
   media_player4:
     name: Media Player Chromecast
     entities:

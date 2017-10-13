@@ -95,7 +95,7 @@ script:
           volume_level: '0.20'
       - service: media_player.play_media
         data:
-          entity_id: media_player.kitchen
+          entity_id: media_player.google_home
           media_content_id: "http://192.168.1.250:8123/local/misc_sound/sexy_time.mp3"
           media_content_type: "audio/mp3"
       - service: input_select.select_option

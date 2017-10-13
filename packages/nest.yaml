@@ -11,7 +11,7 @@ homeassistant:
       friendly_name: Thermostat Fan
       icon: mdi:fan
     sensor.hallway_thermostat_humidity:
-      friendly_name: Indoor Humidity
+      friendly_name: Hallway Humidity
       icon: mdi:water-percent
     sensor.hallway_thermostat_temperature:
       friendly_name: Hallway

@@ -19,6 +19,10 @@ script:
     - service: script.morning_livingroom_lights
     - service: switch.turn_off
       entity_id: switch.bedroom_fan
+    - service: switch.turn_on
+      entity_id: switch.office_powerbar
+    - service: homeassistant.turn_off
+      entity_id: input_boolean.finn_sleep
     - service: script.auto_cartoons
     - service: media_player.media_Stop
       entity_id: media_player.kodi_bedroom_pi

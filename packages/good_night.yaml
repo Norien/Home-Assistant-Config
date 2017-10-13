@@ -12,6 +12,12 @@ homeassistant:
 script:
   good_night:
     sequence:
+###### lAUNDRY ROOM
+    - service: switch.turn_off
+      entity_id: switch.washing_machine
+###### HALLWAY
+    - service: light.turn_off
+      entity_id: light.hallway
 ##### Master BEDROOM
     - service: switch.turn_off
       entity_id: switch.bedroom_media
@@ -25,7 +31,7 @@ script:
       entity_id: switch.white_noise
 ###### LIVINGROOM/KITCHEN
     - service_template: >
-       {%- if is_state('media_player.kodi_livingroom', 'playing') -%}
+       {%- if is_state('media_player.kodi_livingroom', 'playing') or is_state('media_player.kodi_livingroom', 'paused') -%}
          switch.turn_on
        {%- else -%}
          switch.turn_off
@@ -54,9 +60,11 @@ script:
          switch.turn_off
        {%- endif %}
       entity_id: switch.office_pc
-###### lAUNDRY ROOM
-    - service: switch.turn_off
-      entity_id: switch.washing_machine
-###### HALLWAY
-    - service: light.turn_off
-      entity_id: light.hallway
+    - delay: '00:01:30'
+    - service_template: >
+       {%- if is_state('switch.office_pc', 'on') -%}
+         switch.turn_on
+       {%- else -%}
+         switch.turn_off
+       {%- endif %}
+      entity_id: switch.office_powerbar

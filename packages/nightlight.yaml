@@ -55,7 +55,7 @@ script:
       - delay:
           minutes: 4
       - service_template: >
-          {% if is_state_attr('light.living_room', 'rgb_color', (21, 8, 0)) %}
+          {% if is_state_attr('light.kitchen_sink', 'rgb_color', (21, 8, 0)) %}
             script.nightlight_off
           {% else %}
             script.nightlight

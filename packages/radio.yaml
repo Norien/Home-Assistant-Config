@@ -14,7 +14,7 @@ group:
     entities:
       - input_select.radio_station_location
       - input_select.radio_station
-      - input_slider.volume_radio
+      - input_number.volume_radio
       - script.radio
 
 ###### SELECT LOCATION AND STATION
@@ -48,7 +48,7 @@ automation:
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: input_slider.volume_radio
+        entity_id: input_number.volume_radio
     action:
       - service: media_player.volume_set
         data_template:
@@ -58,9 +58,9 @@ automation:
             {% elif is_state("input_select.radio_station_location", "Google-Home") %} media_player.google_home
             {% elif is_state("input_select.radio_station_location", "All Zones") %} media_player.home_group
             {% endif %}
-          volume_level: '{{  states.input_slider.volume_radio.state  }}'
+          volume_level: '{{  states.input_number.volume_radio.state  }}'
 
-input_slider:
+input_number:
   volume_radio:
     name: Volume
     icon: mdi:volume-high

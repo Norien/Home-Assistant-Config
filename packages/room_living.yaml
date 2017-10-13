@@ -3,14 +3,15 @@
 ################################################################
 homeassistant:
   customize:
+    #Livingroom computer Switch
+    switch.living_room_pc:
+      icon: mdi:monitor
+      friendly_name: PC
     automation.light_living_room_sunset:
       friendly_name: Sunset Lights
       icon: mdi:weather-sunset-down
     light.living_room:
       friendly_name: Living Room Lights
-    light.findlay_lamp:
-      friendly_name: Findlay's Lamp
-      icon: mdi:lamp
     script.lr_dimmed:
       emulated_hue: true
       friendly_name: 'Dimmed'
@@ -42,10 +43,6 @@ homeassistant:
       emulated_hue: true
       friendly_name: 'Kitchen Sink Bright'
       icon: mdi:flower
-    switch.office_lightswitch:
-      friendly_name: Office Light Switch
-      icon: mdi:lightbulb
-
 
 ###### STATE CARD
 group:
@@ -213,6 +210,16 @@ automation:
           entity_id: input_select.light_living_room_scene
           option: "off"
 
+switch:
+###### PC SWITCH
+  - platform: wake_on_lan
+    mac_address: !secret livingroom_pc_mac
+    name: "living_room_pc"
+    host: !secret livingroom_pc_ip
+    broadcast_address: 255.255.255.255
+    turn_off:
+      service: shell_command.living_room_pc_off
+
 input_select:
   light_living_room_scene:
     name: Scene
@@ -227,3 +234,6 @@ input_select:
       - "River"
     initial: "off"
     icon: mdi:ceiling-light
+
+shell_command:
+  living_room_pc_off: !secret livingroom_pc_off

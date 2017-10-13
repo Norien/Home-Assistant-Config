@@ -1,0 +1,59 @@
+################################################################
+## Packages / Findlays Room
+################################################################
+homeassistant:
+  customize:
+    light.findlay_lamp:
+      friendly_name: Findlay's Lamp
+      icon: mdi:lamp    
+    automation.light_finn_sleep:
+      friendly_name: 'Keep Light Off'
+      icon: mdi:brightness-4
+
+###### STATE CARD
+group:
+  findlays_room:
+    control: hidden
+    name: "Findlay's Room"
+    entities:
+      - light.findlays_room
+      - input_boolean.finn_sleep
+      - automation.light_finn_sleep
+
+automation:
+  - alias: 'light_finn_sleep'
+    initial_state: 'on'
+    trigger:
+      - platform: template
+        value_template: "{% if is_state('light.findlays_room', 'on') %}true{% endif %}"
+    condition:
+      - condition: state
+        entity_id: 'input_boolean.finn_sleep'
+        state: 'on'
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.findlays_room
+
+  - alias: 'light_finn'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.findlay_room_motion
+        to: 'True'
+    condition:
+      - condition: time
+        after: '08:00:00'
+        before: '20:00:00'
+      - condition: state
+        entity_id: 'input_boolean.finn_sleep'
+        state: 'off'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.findlays_room
+
+input_boolean:
+  finn_sleep:
+    name: 'Sleep'
+    icon: mdi:sleep

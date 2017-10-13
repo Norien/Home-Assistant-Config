@@ -5,32 +5,34 @@ homeassistant:
   customize:
 ###### Washing Machine ENERGY READINGS
     sensor.washing_machine_amps:
-      friendly_name: Amps
+      friendly_name: "Amps"
       icon: mdi:power-plug
     sensor.washing_machine_watts:
-      friendly_name: Watts
+      friendly_name: "Watts"
       icon: mdi:power-plug
     sensor.washing_machine_kw:
-      friendly_name: KW
+      friendly_name: "KW"
       icon: mdi:power-plug
     sensor.washing_machine_volts:
-      friendly_name: Volttage
+      friendly_name: "Volttage"
       icon: mdi:power-plug
     sensor.washing_machine_status:
-      friendly_name: Wash Status
+      friendly_name: "Wash Status"
       icon: mdi:clipboard-outline
     switch.washing_machine:
-      friendly_name: Washing Machine
+      friendly_name: "Washing Machine"
       icon: mdi:washing-machine
 ######DRYER
     sensor.dryer_status:
-      friendly_name: Dryer Status
+      friendly_name: "Dryer Status"
       icon: mdi:clipboard-outline
     binary_sensor.laundry_dryer_vibration:
-      friendly_name: Dryer Vibration
+      friendly_name: "Dryer Vibration"
 ###### Motion
     binary_sensor.laundry_motion:
-      friendly_name: Laundry Room motion
+      friendly_name: "Laundry Room"
+    sensor.laundry_temperature:
+      friendly_name: "Laundry Room"
 
 ###### STATE CARD
 group:
@@ -38,17 +40,18 @@ group:
     control: hidden
     name: Laundry Room
     entities:
-      - binary_sensor.laundry_motion
+      #- binary_sensor.laundry_motion
       - switch.washing_machine
-      - sensor.washing_machine_amps
-      - sensor.washing_machine_watts
-      - sensor.washing_machine_kw
-      - sensor.washing_machine_volts
+      # - sensor.washing_machine_amps
+      # - sensor.washing_machine_watts
+      # - sensor.washing_machine_kw
+      # - sensor.washing_machine_volts
       - sensor.washing_machine_status
-      - sensor.dryer_status
-      - binary_sensor.laundry_dryer_vibration
-      - sensor.laundry_temperature
-      - sensor.laundry_humidity
+      #- sensor.dryer_status
+      #- binary_sensor.laundry_dryer_vibration
+      #- sensor.laundry_temperature
+      #- sensor.laundry_humidity
+      - binary_sensor.fresh_water_level
 
 switch:
 ###### TP LINK SWITCH
@@ -60,7 +63,7 @@ binary_sensor:
 ###### TILT SENSOR FOR DRYER
   - platform: mqtt
     name: 'laundry_dryer_vibration'
-    state_topic: "/laundry_room_D1/vibration/Switch"
+    state_topic: "/Laundry_Room/tilt/Tilt"
     qos: 0
     payload_on: "0"
     payload_off: "1"
@@ -68,38 +71,48 @@ binary_sensor:
 ###### motion SENSOR
   - platform: mqtt
     name: 'laundry_motion'
-    state_topic: "/laundry_room_D1/motion/Switch"
+    state_topic: "/Laundry_Room/motion/Motion"
     qos: 0
     payload_on: "1"
     payload_off: "0"
     device_class: motion
+###### Float SENSOR
+  - platform: mqtt
+    name: 'Fresh water level'
+    state_topic: "/Laundry_Room/float/Float"
+    qos: 0
+    payload_on: "1"
+    payload_off: "0"
 
 sensor:
 ###### MQTT DHT22
   - platform: mqtt
-    state_topic: '/laundry_room_D1/dht22/Temperature'
+    state_topic: '/Laundry_Room/dht22/Temperature'
     name: 'Laundry Temperature'
+    value_template: '{{ (value | float - 1.5) | round(1) }}'
     unit_of_measurement: '°C'
   - platform: mqtt
-    state_topic: '/laundry_room_D1/dht22/Humidity'
+    state_topic: '/Laundry_Room/dht22/Humidity'
     name: 'Laundry Humidity'
+    value_template: '{{ (value | float + 6) | round }}'
     unit_of_measurement: '%'
 
   ###### WASHING MACHINE ENERGY SENSORS
   - platform: template
     sensors:
       washing_machine_amps:
-        value_template: '{{ states.switch.washing_machine.attributes["Current"] | replace(" A", "") | float }}'
+        value_template: '{{ states.switch.washing_machine.attributes["current"] | replace(" A", "") | float }}'
         unit_of_measurement: 'A'
       washing_machine_watts:
-        value_template: '{{ states.switch.washing_machine.attributes["Current consumption"] | replace(" W", "") | float }}'
+        value_template: '{{ states.switch.washing_machine.attributes["current_consumption"] | replace(" W", "") | float }}'
         unit_of_measurement: 'W'
       washing_machine_kw:
-        value_template: '{{ states.switch.washing_machine.attributes["Total consumption"] | replace(" kW", "") | float }}'
+        value_template: '{{ states.switch.washing_machine.attributes["total_consumption"] | replace(" kW", "") | float }}'
         unit_of_measurement: 'kW'
       washing_machine_volts:
-        value_template: '{{ states.switch.washing_machine.attributes["Voltage"] | replace(" V", "") | float }}'
+        value_template: '{{ states.switch.washing_machine.attributes["voltage"] | replace(" V", "") | float }}'
         unit_of_measurement: 'V'
+
 ###### STATUS SENSORS
       washing_machine_status:
         value_template: >-

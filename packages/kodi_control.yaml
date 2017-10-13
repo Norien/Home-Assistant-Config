@@ -178,7 +178,7 @@ script:
       - service_template: >-
           script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
         data:
-          file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/all.xsp"
+          file: "special://profile/playlists/video/all.xsp"
 
   ################################################
   ## Living Room - Paw Patrol
@@ -188,7 +188,7 @@ script:
       - service_template: >-
           script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
         data:
-          file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/pawpatrol.xsp"
+          file: "special://profile/playlists/video/pawpatrol.xsp"
 
   ################################################
   ## Living Room -Moana
@@ -198,7 +198,7 @@ script:
       - service_template: >-
           script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
         data:
-          file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/moanag.xsp"
+          file: "special://profile/playlists/video/moanag.xsp"
 
   ################################################
   ## Kodi Commands
@@ -223,7 +223,7 @@ script:
             content-type: "application/json"
           payload:
             jsonrpc: "2.0"
-            id: 1
+            id: "1"
             method: "Player.Open"
             params:
               item:

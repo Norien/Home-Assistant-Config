@@ -1,0 +1,89 @@
+################################################################
+## Packages / Office
+################################################################
+homeassistant:
+  customize:
+    switch.office_lightswitch:
+      friendly_name: Light Switch
+      icon: mdi:lightbulb
+    #Office computer Switch
+    switch.office_pc:
+      icon: mdi:monitor
+      friendly_name: PC
+    switch.office_powerbar:
+      icon: mdi:power
+      friendly_name: Power Strip
+
+###### STATE CARD
+group:
+  office:
+    name: Office
+    control: hidden
+    entities:
+     - sensor.steam_account
+     - switch.office_pc
+     - switch.office_lightswitch
+     - switch.office_powerbar
+     - sensor.office_draw
+     - sensor.office_yesterday
+
+switch:
+###### SONOFF POW POWERBAR
+  - platform: mqtt
+    name: "Office PowerBar"
+    state_topic: "stat/office_pwrbar/POWER"
+    command_topic: "cmnd/office_pwrbar/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 0
+    retain: true
+
+###### PC switch
+  - platform: wake_on_lan
+    mac_address: !secret office_pc_mac
+    name: "office_pc"
+    host: !secret office_pc_ip
+    broadcast_address: 255.255.255.255
+    turn_off:
+      service: shell_command.office_pc_off
+
+sensor:
+###### SONOFF POW SENSORS
+  - platform: mqtt
+    name: "Office Draw"
+    state_topic: "tele/office_pwrbar/ENERGY"
+    qos: 0
+    unit_of_measurement: "W"
+    value_template: "{{ value_json.Power }}"
+
+  - platform: mqtt
+    name: "Office Voltage"
+    state_topic: "tele/office_pwrbar/ENERGY"
+    qos: 0
+    unit_of_measurement: "V"
+    value_template: "{{ value_json.Voltage }}"
+
+  - platform: mqtt
+    name: "Office Today"
+    state_topic: "tele/office_pwrbar/ENERGY"
+    qos: 0
+    unit_of_measurement: "kWh"
+    value_template: "{{ value_json.Today }}"
+
+  - platform: mqtt
+    name: "Office Current"
+    state_topic: "tele/office_pwrbar/ENERGY"
+    qos: 0
+    unit_of_measurement: "A"
+    value_template: "{{ value_json.Current }}"
+
+  - platform: mqtt
+    name: "Office Yesterday"
+    state_topic: "tele/office_pwrbar/ENERGY"
+    qos: 0
+    unit_of_measurement: "kWh"
+    value_template: "{{ value_json.Yesterday }}"
+
+shell_command:
+  office_pc_off: !secret office_pc_off
