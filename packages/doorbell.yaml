@@ -65,11 +65,11 @@ automation:
     action:
       - service: media_player.volume_set
         data:
-          entity_id: media_player.kitchen
+          entity_id: media_player.google_home
           volume_level: '1.00'
       - service: media_player.play_media
         data_template:
-          entity_id: media_player.kitchen
+          entity_id: media_player.google_home
           media_content_id: http://192.168.1.250:8123/local/misc_sound/dog-barking-2-bullmastiff.mp3
           media_content_type: 'audio/mp3'
       - service: script.notify_camera
@@ -87,14 +87,14 @@ script:
       conditions:
         - condition: template
           value_template: >
-            {% if is_state('media_player.kitchen', 'playing') %}
+            {% if is_state('media_player.google_home', 'playing') %}
             false
             {% else %}
             true
             {% endif %}
     - service: media_player.volume_set
       data_template:
-        entity_id: media_player.kitchen
+        entity_id: media_player.google_home
         volume_level: >
           {% if is_state('sun.sun', 'above_horizon') %} '0.50'
           {% elif is_state('sun.sun', 'below_horizon') %} '0.30'

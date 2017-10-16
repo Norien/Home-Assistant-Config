@@ -3,9 +3,8 @@
 ################################################################
 homeassistant:
   customize:
-    light.findlay_lamp:
-      friendly_name: Findlay's Lamp
-      icon: mdi:lamp    
+    input_boolean.finn_sleep:
+      emulated_hue: true
     automation.light_finn_sleep:
       friendly_name: 'Keep Light Off'
       icon: mdi:brightness-4
@@ -42,14 +41,29 @@ automation:
         entity_id: sensor.findlay_room_motion
         to: 'True'
     condition:
-      - condition: time
-        after: '08:00:00'
-        before: '20:00:00'
+      # - condition: time
+      #   after: '08:00:00'
+      #   before: '20:00:00'
       - condition: state
         entity_id: 'input_boolean.finn_sleep'
         state: 'off'
     action:
       - service: light.turn_on
+        data:
+          entity_id: light.findlays_room
+
+  - alias: 'light_finn_off'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.findlay_room_motion
+        to: 'False'
+        for:
+          hours: 0
+          minutes: 3
+          seconds: 0
+    action:
+      - service: light.turn_off
         data:
           entity_id: light.findlays_room
 

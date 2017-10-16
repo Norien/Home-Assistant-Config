@@ -75,14 +75,14 @@ script:
       - service: tts.clear_cache
 #########################################################################
 automation:
-  - alias: "Owntracks Refresh"
-    initial_state: 'on'
-    trigger:
-      - platform: time
-        minutes: '/5'
-        seconds: 0
-    action:
-      - service: script.refresh_devices
+  # - alias: "Owntracks Refresh"
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: time
+  #       minutes: '/5'
+  #       seconds: 0
+  #   action:
+  #     - service: script.refresh_devices
 
   - alias: "Auto Backup"
     initial_state: 'on'

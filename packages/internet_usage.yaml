@@ -116,7 +116,7 @@ automation:
       - service: notify.justin
         data_template:
           title: "Internet Usage"
-          message: "There is {{states.sensor.usage_remaining_days.state}} days left until usage meter resets and you have {{states.sensor.usage_remaining_usage.state}} GB remaining."
+          message: "{{states.sensor.usage_remaining_days.state}} day(s) remain until usage meter resets and you have {{states.sensor.usage_remaining_usage.state}} GB remaining."
       - service: automation.turn_off
         data:
           entity_id: automation.notify_internet_usage_details

@@ -11,7 +11,7 @@ homeassistant:
       friendly_name: Sunset Lights
       icon: mdi:weather-sunset-down
     light.living_room:
-      friendly_name: Living Room Lights
+      friendly_name: Lights
     script.lr_dimmed:
       emulated_hue: true
       friendly_name: 'Dimmed'
@@ -58,6 +58,11 @@ group:
      - input_select.live_scene
 
 script:
+  living_room_pc_off:
+    sequence:
+      - service: script.kodi_stop
+      - service: shell_command.living_room_pc_off
+
   light_living_room_off:
     sequence:
       - service: light.turn_off
@@ -218,7 +223,7 @@ switch:
     host: !secret livingroom_pc_ip
     broadcast_address: 255.255.255.255
     turn_off:
-      service: shell_command.living_room_pc_off
+      service: script.living_room_pc_off
 
 input_select:
   light_living_room_scene:
