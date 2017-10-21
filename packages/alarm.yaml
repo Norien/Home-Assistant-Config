@@ -48,11 +48,11 @@ script:
             An alarm has been Triggered in {% if is_state('sensor.findlay_room_motion', 'True') %}Findlay's Room{% elif is_state('sensor.living_room_motion', 'True') %}the Living Room{% elif is_state('binary_sensor.room_masterbed_motion', 'True') %}the Master Bedroom{% elif is_state('sensor.dining_room_motion', 'True') %}the Dining Room{% endif %}
       - service: media_player.volume_set
         data:
-          entity_id: media_player.kitchen
+          entity_id: media_player.google_home
           volume_level: '1'
       - service: tts.google_say
         data_template:
-          entity_id: media_player.kitchen
+          entity_id: media_player.google_home
           message: "INTRUDER ALERT.THE POLICE HAVE BEEN CALLED AND ARE ON THE WAY"
           cache: false
       - service: script.notify_camera

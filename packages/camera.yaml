@@ -2,9 +2,9 @@
 ## Packages / Camera
 ################################################################
 homeassistant:
-  customize:
-    sensor.driveway_battery_level:
-      friendly_name: Driveway Camera
+   customize:
+  #   sensor.driveway_battery_level:
+  #     friendly_name: Driveway Camera
     script.notify_camera:
       friendly_name: Email Camera Photo
     script.start_gifmaker:
@@ -27,10 +27,10 @@ group:
     name: Camera Controls
     control: hidden
     entities:
-     - sensor.driveway_battery_level
-     - sensor.driveway_motion
-     - switch.driveway_night_vision
-     - switch.driveway_video_recording
+     # - sensor.driveway_battery_level
+     # - sensor.driveway_motion
+     # - switch.driveway_night_vision
+     # - switch.driveway_video_recording
      - script.notify_camera
      - script.start_gifmaker
      - sensor.gif_maker_cpu
@@ -43,36 +43,44 @@ camera:
     username: !secret dlink_camera_username
     password: !secret dlink_camera_password
 
-android_ip_webcam:
-  - name: Driveway
-    host: !secret android_ip_webcam_url
-    port: 8036
-    username: !secret andriod_camera_username
-    password: !secret andriod_camera_password
-    sensors:
-      - battery_level
-      - motion
-    switches:
-      - night_vision
-      - video_recording
+  - platform: mjpeg
+    name: Driveway
+    mjpeg_url: !secret dlink2_camera_mjpeg
+    still_image_url: !secret dlink2_camera_link
+    username: !secret dlink2_camera_username
+    password: !secret dlink2_camera_password
 
+
+# android_ip_webcam:
+#   - name: Driveway
+#     host: !secret android_ip_webcam_url
+#     port: 8036
+#     username: !secret andriod_camera_username
+#     password: !secret andriod_camera_password
+#     sensors:
+#       - battery_level
+#       - motion
+#     switches:
+#       - night_vision
+#       - video_recording
+#
 automation:
-  - alias: 'Camera Night Vision Dusk/Dawn'
-    initial_state: 'on'
-    trigger:
-      - platform: sun
-        event: sunset
-        offset: '+00:45:00'
-      - platform: sun
-        event: sunrise
-    action:
-      service_template: >
-        {% if trigger.event == "sunset" %}
-        switch.turn_on
-        {% elif trigger.event == "sunrise" %}
-        switch.turn_off
-        {% endif %}
-      entity_id: switch.driveway_night_vision
+  # - alias: 'Camera Night Vision Dusk/Dawn'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: sun
+  #       event: sunset
+  #       offset: '+00:45:00'
+  #     - platform: sun
+  #       event: sunrise
+  #   action:
+  #     service_template: >
+  #       {% if trigger.event == "sunset" %}
+  #       switch.turn_on
+  #       {% elif trigger.event == "sunrise" %}
+  #       switch.turn_off
+  #       {% endif %}
+  #     entity_id: switch.driveway_night_vision
 
   - alias: 'Auto Start Gif Maker'
     initial_state: 'on'

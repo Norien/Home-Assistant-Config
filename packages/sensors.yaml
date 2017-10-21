@@ -129,7 +129,7 @@ sensor:
     value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
     unit_of_measurement: Lux
     name: 'Findlay Room Lux'
-    scan_interval: 600
+    scan_interval: 80
 
   - platform: rest
     resource: !secret finn_room_motion
@@ -289,7 +289,7 @@ sensor:
       average_house_temp:
             unit_of_measurement: "°C"
             value_template: >-
-              {{ ((float(states.sensor.findlay_room_temperature.state) + float(states.sensor.hallway_thermostat_temperature.state) + float(states.sensor.living_room_temperature.state) + float(states.sensor.dining_room_temperature.state) + float(states.sensor.master_bed_temperature.state)) / 5) | round(1) }}
+              {{ ((float(states.sensor.findlay_room_temperature.state) + float(states.sensor.hallway_thermostat_temperature.state) + float(states.sensor.living_room_temperature.state) + float(states.sensor.dining_room_temperature.state) + float(states.sensor.master_bed_temperature.state)) / 5) | default(0) | round(1) }}
 
 ###### DAY OF THE WEEK
   - platform: template

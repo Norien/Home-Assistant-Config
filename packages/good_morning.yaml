@@ -9,13 +9,19 @@ homeassistant:
       friendly_name: Good Morning
       icon: mdi:emoticon-poop
 
-
 script:
   good_morning:
     sequence:
     - condition: time
       after: '06:00:00'
       before: '13:00:00'
+    - service_template: >
+        {% if is_state_attr('light.hallway2', 'brightness', 3) %}
+          light.turn_off
+        {% endif %}
+      data:
+        entity_id:
+          light.hallway:
     - service: script.morning_livingroom_lights
     - service: switch.turn_off
       entity_id: switch.bedroom_fan
@@ -23,7 +29,9 @@ script:
       entity_id: switch.office_powerbar
     - service: homeassistant.turn_off
       entity_id: input_boolean.finn_sleep
-    - service: script.auto_cartoons
+  # - service: script.auto_cartoons ## kodi leia will not allow me to play smart playlists yet.
+    - service: switch.turn_on
+      entity_id: switch.living_room_pc
     - service: media_player.media_Stop
       entity_id: media_player.kodi_bedroom_pi
     - service: media_player.volume_set

@@ -1,8 +1,6 @@
 ################################################################
 ## Packages / Device Status
 ################################################################
-homeassistant:
-  customize:
 
 ###### STATE CARD
 group:
@@ -34,7 +32,7 @@ sensor:
       tracker_doorbell:
         friendly_name: 'Doorbell'
         value_template: "{% if is_state('device_tracker.doorbell', 'home') %}Online{% else %}Offline{% endif %}"
-        icon_template: "{% if states.device_tracker.doorbell.state == 'home' %} mdi:chip {% else %} mdi:alert-outline {% endif %}"
+        icon_template: "{% if states.device_tracker.doorbell.state == 'home' %} mdi:glassdoor {% else %} mdi:alert-outline {% endif %}"
       wemo_link:
         friendly_name: 'Wemo Link'
         value_template: "{% if is_state('device_tracker.wemolink', 'home') %}Online{% else %}Offline{% endif %}"

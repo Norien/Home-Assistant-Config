@@ -101,7 +101,7 @@ script:
           {% endif %}
     - service: media_player.play_media
       data_template:
-        entity_id: media_player.kitchen
+        entity_id: media_player.google_home
         media_content_id: >
           {% if is_state('input_select.doorbell', 'door_1') %} http://192.168.1.250:8123/local/doorbell_tones/door_1.mp3
           {% elif is_state('input_select.doorbell', 'door_ff7') %} http://192.168.1.250:8123/local/doorbell_tones/door_ff7.mp3

@@ -40,13 +40,19 @@ automation:
       - platform: state
         entity_id: sensor.findlay_room_motion
         to: 'True'
+      - platform: numeric_state
+        entity_id: 'sensor.findlay_room_lux'
+        below: 45
     condition:
-      # - condition: time
-      #   after: '08:00:00'
-      #   before: '20:00:00'
+      - condition: numeric_state
+        entity_id: 'sensor.findlay_room_lux'
+        below: 45
       - condition: state
         entity_id: 'input_boolean.finn_sleep'
         state: 'off'
+      - condition: state
+        entity_id: sensor.findlay_room_motion
+        state: 'True'
     action:
       - service: light.turn_on
         data:
@@ -62,6 +68,9 @@ automation:
           hours: 0
           minutes: 3
           seconds: 0
+      - platform: numeric_state
+        entity_id: 'sensor.findlay_room_lux'
+        above: 45
     action:
       - service: light.turn_off
         data:

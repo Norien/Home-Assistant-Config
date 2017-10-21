@@ -26,6 +26,7 @@ group:
      - switch.office_powerbar
      - sensor.office_draw
      - sensor.office_yesterday
+     - script.office_pc_on
 
 switch:
 ###### SONOFF POW POWERBAR
@@ -40,13 +41,22 @@ switch:
     retain: true
 
 ###### PC switch
-  - platform: wake_on_lan
-    mac_address: !secret office_pc_mac
-    name: "office_pc"
-    host: !secret office_pc_ip
-    broadcast_address: 255.255.255.255
-    turn_off:
-      service: shell_command.office_pc_off
+  # - platform: wake_on_lan
+  #   mac_address: !secret office_pc_mac
+  #   name: "office_pc_wol"
+  #   host: !secret office_pc_ip
+  #   broadcast_address: 255.255.255.255
+  #   turn_off:
+  #     service: shell_command.office_pc_off
+
+  - platform: template
+    switches:
+      office_pc:
+        value_template: "{{ is_state('device_tracker.computer_office', 'home') }}"
+        turn_on:
+          service: script.office_pc_on
+        turn_off:
+          service: shell_command.office_pc_off
 
 sensor:
 ###### SONOFF POW SENSORS
@@ -85,5 +95,13 @@ sensor:
     unit_of_measurement: "kWh"
     value_template: "{{ value_json.Yesterday }}"
 
+script:
+  office_pc_on:
+    sequence:
+    - service: shell_command.office_relay_1
+    - service: shell_command.office_relay_0
+
 shell_command:
   office_pc_off: !secret office_pc_off
+  office_relay_0: curl -v http://192.168.1.144/control?cmd=GPIO,5,0
+  office_relay_1: curl -v http://192.168.1.144/control?cmd=GPIO,5,1

@@ -77,6 +77,7 @@ device_tracker:
     host: !secret router_host
     username: !secret router_username
     password: !secret router_password
+    interval_seconds: 10
   - platform: owntracks
   - platform: nmap_tracker
     hosts:
