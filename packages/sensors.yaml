@@ -289,7 +289,19 @@ sensor:
       average_house_temp:
             unit_of_measurement: "°C"
             value_template: >-
-              {{ ((float(states.sensor.findlay_room_temperature.state) + float(states.sensor.hallway_thermostat_temperature.state) + float(states.sensor.living_room_temperature.state) + float(states.sensor.dining_room_temperature.state) + float(states.sensor.master_bed_temperature.state)) / 5) | default(0) | round(1) }}
+              {% set hallway = states('sensor.findlay_room_temperature') %}
+              {% set findlay_room = states('sensor.hallway_thermostat_temperature') %}
+              {% set living_room = states('sensor.living_room_temperature') %}
+              {% set dining_room = states('sensor.dining_room_temperature') %}
+              {% set master_bed_room = states('sensor.master_bed_temperature') %}
+              {% set laundry_room = states('sensor.laundry_temperature') %}
+
+              {% if (hallway  == 'unknown') or (findlay_room  == 'unknown') or (living_room  == 'unknown') or
+                (dining_room  == 'unknown') or (master_bed_room  == 'unknown')%}
+              {{states.sensor.hallway_thermostat_temperature.state}}
+              {% else %}
+                {{ ((float(hallway) + float(findlay_room) + float(living_room) + float(dining_room) + float(master_bed_room)) / 5) | round(1) }}
+              {% endif %}
 
 ###### DAY OF THE WEEK
   - platform: template

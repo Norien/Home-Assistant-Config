@@ -52,45 +52,12 @@ group:
       - weblink.release_log
       - sensor.glances_linux_distro
 
-  # restarts:
-  #   name: Restarts
-  #   control: hidden
-  #   entities:
-  #     - sensor.this_week
-  #     - sensor.this_month
-  #     - sensor.all_time
-
 weblink:
   entities:
     - name: release_log
       url: https://github.com/home-assistant/home-assistant/releases
 
 sensor:
-# ###### RESTART COUNTERS
-#   - platform: history_stats
-#     name: This Week
-#     entity_id: input_boolean.restarts
-#     state: 'on'
-#     type: count
-#     start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
-#     end: '{{ now() }}'
-#
-#   - platform: history_stats
-#     name: This Month
-#     entity_id: input_boolean.restarts
-#     state: 'on'
-#     type: count
-#     start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 345600 }}'
-#     end: '{{ now() }}'
-#
-#   - platform: history_stats
-#     name: All Time
-#     entity_id: input_boolean.restarts
-#     state: 'on'
-#     type: count
-#     start: '{{ 0 }}'
-#     end: '{{ now() }}'
-
 ###### VERSIONS
   - platform: command_line
     command: python3 -c "import requests; print(requests.get('https://pypi.python.org/pypi/homeassistant/json').json()['info']['version'])"
@@ -120,25 +87,8 @@ sensor:
     scan_interval: 604800
 
 ###### UPTIMES
-  - platform: command_line
+  - platform: uptime
     name: 'HA Uptime'
-    command: echo "$(($(date +%s) - $(date -d "$(head -n1 /home/homeassistant/.homeassistant/home-assistant.log | cut -d' ' -f-2)" +%s)))"
-    scan_interval: 720
-    value_template: >-
-      {% set uptime = value | int %}
-      {% set seconds = uptime % 60 %}
-      {% set minutes = ((uptime % 3600) / 60) | int %}
-      {% set hours = ((uptime % 86400) / 3600) | int %}
-      {% set days = (uptime / 86400) | int %}
-      {%- if days > 0 -%}
-        {%- if days == 1 -%}
-          1 day
-        {%- else -%}
-          {{ days }} days
-        {%- endif -%}
-        {{ ', ' }}
-      {%- endif -%}
-      {{ '%02d' % hours }}:{{ '%02d' % minutes }}
 
   - platform: command_line
     command: curl -X GET http://localhost:61208/api/2/uptime
@@ -205,8 +155,3 @@ sensor:
     name: 'glances_cpu_load'
     value_template: '{{ value_json.min5 }} %'
     scan_interval: 300
-
-# input_boolean:
-#   restarts:
-#     name: restarts
-#     initial: off

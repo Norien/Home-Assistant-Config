@@ -12,15 +12,12 @@ frontend:
 config:
 python_script:
 conversation:
+map:
 updater:
 history:
 logbook:
 sun:
 discovery:
-#Components
-# google:
-#  client_id: !secret google_client_id
-#  client_secret: !secret google_secret
 
 zwave:
   usb_path: /dev/zwave
@@ -73,18 +70,15 @@ mqtt:
   discovery_prefix: homeassistant
 
 device_tracker:
-  - platform: ddwrt
-    host: !secret router_host
-    username: !secret router_username
-    password: !secret router_password
-    interval_seconds: 10
+  # - platform: ddwrt
+    # host: !secret router_host
+    # username: !secret router_username
+    # password: !secret router_password
+    # interval_seconds: 10
   - platform: owntracks
   - platform: nmap_tracker
-    hosts:
-      - 192.168.1.76
-      - 192.168.1.250
-      - 192.168.1.13
-      - 192.168.1.96
+    hosts: 192.168.1.1-255
+    scan_options: " --privileged -sP "
 
 wemo:
   static:
