@@ -18,13 +18,10 @@ tts
 secrets.yaml
 known_devices.yaml
 config
-pc_switches.yaml
 .uuid
 .gitignore
 .gitattributes
 .HA_VERSION
-shell/bedroom_pc_on.sh
-shell/living_room_pc_on.sh
 shell/waste_pickup_yard_waste.py
 shell/waste_pickup_garbage_recycle.py
 shell/update_ha.log
@@ -48,3 +45,4 @@ python_scripts/rogersusage.py
 python_scripts/waste_pickup_container.py
 python_scripts/waste_pickup_garbage_recycle.py
 python_scripts/waste_pickup_yard_waste.py
+known_devices.bak
