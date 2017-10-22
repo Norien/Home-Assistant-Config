@@ -43,6 +43,7 @@ group:
       - sensor.external_ip
       - sensor.glances_cpu_load
       - sensor.cpu_temperature
+      - sensor.cpu_speed
       - sensor.glances_disk_overview
       - sensor.disk_temperature
       - sensor.glances_ram_overview
@@ -58,6 +59,8 @@ weblink:
       url: https://github.com/home-assistant/home-assistant/releases
 
 sensor:
+  - platform: cpuspeed
+    name: 'CPU Speed'
 ###### VERSIONS
   - platform: command_line
     command: python3 -c "import requests; print(requests.get('https://pypi.python.org/pypi/homeassistant/json').json()['info']['version'])"

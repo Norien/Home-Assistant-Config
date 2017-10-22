@@ -64,7 +64,7 @@ homeassistant:
 
     sensor.pi_hole_version:
       friendly_name: Version
-    
+
 group:
   Ads Blocked:
     entities:
@@ -165,7 +165,7 @@ sensor:
       pihole_blocking:
         value_template: "{{states.sensor.pihole_status_raw.state.split(':::')[2]}}"
         icon_template: >-
-          {% if states.switch.pihole.state == 'off' %}
+          {% if states.sensor.pihole_blocking.state == 'Pi-hole blocking is Enabled' %}
             mdi:checkbox-blank-outline
           {% else %}
             mdi:checkbox-marked

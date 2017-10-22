@@ -12,7 +12,7 @@ This is my [Home Assistant](https://home-assistant.io/) configuration running on
 * [Kodi](https://kodi.tv/)
 
 ## Devices in Use:
-* [Netgear R6300](http://a.co/hKI7tOr) - [DD-WRT Firmware](ftp://ftp.dd-wrt.com/betas/2017/)
+* [Netgear R6300](http://a.co/hKI7tOr) - [DD-WRT Firmware](ftp.dd-wrt.com/betas/2017/10-20-2017-r33555/netgear-r6300/dd-wrt.v24-33555_NEWD-2_K3.x_mega-R6300.bin)
 * [Nest Thermostat - 2nd Gen](http://a.co/6BsUg19)
 * [Nest Protect - 1st Gen](http://a.co/5p5p97O)
 * [Echo Dot Gen 2](http://amzn.to/2hvCexj)
