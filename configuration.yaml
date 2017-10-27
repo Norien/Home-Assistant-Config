@@ -44,8 +44,10 @@ logger:
     pydroid_ipcam: fatal
 
 http:
-   api_password: !secret api_password
    base_url: !secret base_url
+   api_password: !secret api_password
+   ssl_certificate: !secret ssl_certificate
+   ssl_key: !secret ssl_key
 
 tts:
   platform: google
