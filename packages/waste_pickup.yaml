@@ -50,11 +50,10 @@ script:
     sequence:
       - service: tts.google_say
         data_template:
-          entity_id: media_player.kitchen
+          entity_id: media_player.google_home
           message: >
-           {%- if states.sensor.waste_pickup_garbage_recycling.state == states.sensor.waste_pickup_container.state -%}
-           The next garbage pickup is {{states('sensor.waste_pickup_garbage_recycling')}} which also has a 3 container exemption.
-           {%- else -%}
-           The next garbage pickup is {{states('sensor.waste_pickup_garbage_recycling')}}
-           {%- endif %}
-           And The next yard waste pickup will be on {{states('sensor.waste_pickup_yard_waste')}}
+            {%- if as_timestamp(now())|timestamp_custom('%A %B %d', True) == states.sensor.waste_pickup_garbage_recycling.state -%}
+            The garbage is to go out this evening.
+            {%-else-%}
+            {{' '}}The next garbage pickup is on {{states('sensor.waste_pickup_garbage_recycling')}}.{{' '}}
+            {%-endif-%}

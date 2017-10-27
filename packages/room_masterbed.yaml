@@ -194,7 +194,7 @@ script:
       - service: media_player.play_media
         data:
           entity_id: media_player.kodi_bedroom_pi
-          media_content_id: "http://192.168.1.250:8123/local/white_noise/blizzard.mp3"
+          media_content_id: "https://192.168.1.250:8123/local/white_noise/blizzard.mp3"
           media_content_type: "audio/mp3"
 
 automation:
@@ -240,9 +240,9 @@ automation:
         data_template:
           entity_id: media_player.kodi_bedroom_pi
           media_content_id: >
-            {% if is_state('input_select.white_noise', 'Blizzard') %} http://192.168.1.250:8123/local/white_noise/blizzard.mp3
-            {% elif is_state('input_select.white_noise', 'Blizzard2') %} http://192.168.1.250:8123/local/white_noise/blizzard2.mp3
-            {% elif is_state('input_select.white_noise', 'Rain') %} http://192.168.1.250:8123/local/white_noise/rain.mp3
+            {% if is_state('input_select.white_noise', 'Blizzard') %} https://192.168.1.250:8123/local/white_noise/blizzard.mp3
+            {% elif is_state('input_select.white_noise', 'Blizzard2') %} https://192.168.1.250:8123/local/white_noise/blizzard2.mp3
+            {% elif is_state('input_select.white_noise', 'Rain') %} https://192.168.1.250:8123/local/white_noise/rain.mp3
             {% endif %}
           media_content_type: 'audio/mp3'
 

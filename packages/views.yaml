@@ -28,9 +28,9 @@ group:
       - group.motion_sensors
       - group.lux
       - group.waste_pickup
-      - group.weather
       - group.doorbell
       - group.internet_usage
+      - group.weather
   media_view:
     name: Media Players
     view: yes

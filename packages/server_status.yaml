@@ -41,6 +41,7 @@ group:
     control: hidden
     entities:
       - sensor.external_ip
+      - sensor.certificate
       - sensor.glances_cpu_load
       - sensor.cpu_temperature
       - sensor.cpu_speed
@@ -59,6 +60,12 @@ weblink:
       url: https://github.com/home-assistant/home-assistant/releases
 
 sensor:
+  - platform: command_line
+    command: !secret check_cert
+    name: certificate
+    unit_of_measurement: days
+    scan_interval: 86400
+
   - platform: cpuspeed
     name: 'CPU Speed'
 ###### VERSIONS
@@ -132,7 +139,7 @@ sensor:
   - platform: template
     sensors:
       glances_disk_overview:
-        value_template: "{{states.sensor.glances_disk_use.state|float}} GB / {{(states.sensor.glances_disk_total.state|int/1024/1024/1024)|round(0)}} GB"
+        value_template: "{{states.sensor.glances_disk_used.state|float}} GB / {{(states.sensor.glances_disk_total.state|int/1024/1024/1024)|round(0)}} GB"
 
   - platform: command_line
     command: curl -X GET http://localhost:61208/api/2/fs
@@ -144,7 +151,7 @@ sensor:
   - platform: template
     sensors:
       glances_ram_overview:
-        value_template: "{{states.sensor.glances_ram_use.state|int}} MB / {{(states.sensor.glances_ram_total.state|int/1024/1024+1)|round(0)}} MB"
+        value_template: "{{states.sensor.glances_ram_used.state|int}} MB / {{(states.sensor.glances_ram_total.state|int/1024/1024+1)|round(0)}} MB"
 
   - platform: command_line
     command: curl -X GET http://localhost:61208/api/2/mem/total

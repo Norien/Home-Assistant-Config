@@ -215,6 +215,17 @@ automation:
           entity_id: input_select.light_living_room_scene
           option: "off"
 
+  - alias: 'light_living_room_off'
+    initial_state: 'on'
+    trigger:
+      - platform: numeric_state
+        entity_id: 'sensor.living_room_lux'
+        above: 45
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.living_room
+
 switch:
 ###### PC SWITCH
   - platform: wake_on_lan

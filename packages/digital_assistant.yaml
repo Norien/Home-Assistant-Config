@@ -1,20 +1,11 @@
 ################################################################
-## Packages / Alexa Scripts
+## Packages / Digital Assistant
 ################################################################
 homeassistant:
   customize:
     script.kitchen_radio:
       emulated_hue: true
       friendly_name: 'Kitchen Radio'
-    script.hotter:
-      emulated_hue: true
-      friendly_name: 'Hotter'
-    script.colder:
-      emulated_hue: true
-      friendly_name: 'Colder'
-    script.fan:
-      emulated_hue: true
-      friendly_name: 'Fan'
     script.pc:
       emulated_hue: true
       friendly_name: 'PC'
@@ -24,6 +15,15 @@ homeassistant:
     script.office_pc:
       emulated_hue: true
       friendly_name: 'Office PC'
+
+google_assistant:
+  project_id: !secret google_assistant_project_id
+  client_id: !secret google_assistant_client_id
+  access_token: !secret google_assistant_access_token
+  exposed_domains:
+    - switch
+#    - light
+#    - group
 
 script:
 ###### ALEXA TURN ON/OFF KITCHEN RADIO

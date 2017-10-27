@@ -27,6 +27,18 @@ homeassistant:
     sensor.kitchen_nest_protect_battery_health:
       friendly_name: Kitchen Nest Protect Battery
       icon: mdi:battery
+#Script
+    script.fan:
+      emulated_hue: true
+      emulated_hue_name: "fan"
+      friendly_name: Turn Fan on
+      icon: mdi:fan
+    script.hotter:
+      emulated_hue: true
+      friendly_name: 'Hotter'
+    script.colder:
+      emulated_hue: true
+      friendly_name: 'Colder'      
 
 ###### STATE CARD
 group:
@@ -35,6 +47,7 @@ group:
     entities:
      - climate.hallway
      - binary_sensor.hallway_thermostat_fan
+     - script.fan
      - sensor.hallway_thermostat_hvac_state
      - sensor.hallway_thermostat_operation_mode
   smoke_gas:

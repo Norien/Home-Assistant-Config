@@ -12,18 +12,29 @@ homeassistant:
     device_tracker.androidc3a6fa8dea348d9e:
       friendly_name: Nicole Netgear
 
+
 ###### STATE CARD
 group:
   presence:
     control: hidden
     name: Presence
     entities:
-     - device_tracker.bigdrakar_justin
-     - device_tracker.bigdrakar_nicole
-     - sensor.nicole_phone_to_home
-     - input_boolean.guest
-     - input_boolean.away
-     - input_boolean.vacation
+      - group.justin
+      - group.nicole
+      - input_boolean.guest
+      - input_boolean.away
+      - input_boolean.vacation
+  justin:
+    entities:
+      - sensor.justin
+      - device_tracker.bigdrakar_justin
+      - device_tracker.phone_justin
+  nicole:
+    entities:
+      - sensor.nicole
+      - device_tracker.bigdrakar_nicole
+      - device_tracker.phone_nicole
+      - sensor.nicole_phone_to_home
 
 automation:
 ############# AWAY

@@ -70,7 +70,7 @@ automation:
       - service: media_player.play_media
         data_template:
           entity_id: media_player.google_home
-          media_content_id: http://192.168.1.250:8123/local/misc_sound/dog-barking-2-bullmastiff.mp3
+          media_content_id: https://192.168.1.250:8123/local/misc_sound/dog-barking-2-bullmastiff.mp3
           media_content_type: 'audio/mp3'
       - service: script.notify_camera
       - service: notify.justin
@@ -103,13 +103,13 @@ script:
       data_template:
         entity_id: media_player.google_home
         media_content_id: >
-          {% if is_state('input_select.doorbell', 'door_1') %} http://192.168.1.250:8123/local/doorbell_tones/door_1.mp3
-          {% elif is_state('input_select.doorbell', 'door_ff7') %} http://192.168.1.250:8123/local/doorbell_tones/door_ff7.mp3
-          {% elif is_state('input_select.doorbell', 'xmas') %} http://192.168.1.250:8123/local/doorbell_tones/xmas.mp3
-          {% elif is_state('input_select.doorbell', 'R2D2') %} http://192.168.1.250:8123/local/doorbell_tones/R2D2.mp3
-          {% elif is_state('input_select.doorbell', 'Ding Dong') %} http://192.168.1.250:8123/local/doorbell_tones/ding_dong.mp3
-          {% elif is_state('input_select.doorbell', 'Arnold') %} http://192.168.1.250:8123/local/doorbell_tones/get-to-the-choppa.mp3
-          {% elif is_state('input_select.doorbell', 'Guard Dogs') %} http://192.168.1.250:8123/local/misc_sound/dog-barking-2-bullmastiff.mp3
+          {% if is_state('input_select.doorbell', 'door_1') %} https://192.168.1.250:8123/local/doorbell_tones/door_1.mp3
+          {% elif is_state('input_select.doorbell', 'door_ff7') %} https://192.168.1.250:8123/local/doorbell_tones/door_ff7.mp3
+          {% elif is_state('input_select.doorbell', 'xmas') %} https://192.168.1.250:8123/local/doorbell_tones/xmas.mp3
+          {% elif is_state('input_select.doorbell', 'R2D2') %} https://192.168.1.250:8123/local/doorbell_tones/R2D2.mp3
+          {% elif is_state('input_select.doorbell', 'Ding Dong') %} https://192.168.1.250:8123/local/doorbell_tones/ding_dong.mp3
+          {% elif is_state('input_select.doorbell', 'Arnold') %} https://192.168.1.250:8123/local/doorbell_tones/get-to-the-choppa.mp3
+          {% elif is_state('input_select.doorbell', 'Guard Dogs') %} https://192.168.1.250:8123/local/misc_sound/dog-barking-2-bullmastiff.mp3
           {% endif %}
         media_content_type: 'audio/mp3'
 

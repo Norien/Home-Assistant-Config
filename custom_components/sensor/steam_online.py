@@ -5,6 +5,7 @@ For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.steam_online/
 
 THIS IS AN EDITIED VERSION FOR @norien !
+UPDATED to match #9945
 """
 import logging
 
@@ -109,7 +110,7 @@ class SteamSensor(Entity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        return {'Game': self._game}
+        return {'game': self._game}
 
     @property
     def entity_picture(self):
