@@ -9,6 +9,7 @@ homeassistant:
   customize: !include_dir_merge_named customizations
   packages: !include_dir_named packages
 frontend:
+  themes: !include_dir_merge_named themes/  
 config:
 python_script:
 conversation:
