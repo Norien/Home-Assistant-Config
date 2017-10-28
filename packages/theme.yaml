@@ -9,6 +9,7 @@ group:
     control: hidden
     entities:
      - input_select.theme
+     - sensor.holiday
 
 automation:
   - alias: 'theme_set'
@@ -20,6 +21,20 @@ automation:
       - service: frontend.set_theme
         data_template:
           name: '{{states.input_select.theme.state}}'
+
+  - alias: 'theme_holiday'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.holiday
+    condition:
+      - condition: template
+        value_template: '{{states.sensor.holiday.state != "standard"}}'
+    action:
+      - service: input_select.select_option
+        data_template:
+          entity_id: input_select.theme
+          option: '{{states.sensor.holiday.state}}'
 
   - alias: 'theme_night_day'
     initial_state: 'on'
@@ -37,6 +52,63 @@ automation:
             {% if states.sun.sun.state == "above_horizon" %} default
             {% else %} default_night
             {% endif %}
+
+sensor:
+  - platform: template
+    sensors:
+      holiday:
+        value_template: >
+          {%- if now().strftime("%m%d")|int == 101 -%}
+          new_years_day
+          {%- elif now().strftime("%m%d")|int == 212
+          or now().strftime("%m%d")|int == 220
+          or now().strftime("%m%d")|int == 520
+          or now().strftime("%m%d")|int == 529
+          or now().strftime("%m%d")|int == 614
+          or now().strftime("%m%d")|int == 704
+          or now().strftime("%m%d")|int == 904
+          or now().strftime("%m%d")|int == 911
+          or now().strftime("%m%d")|int == 1009
+          or now().strftime("%m%d")|int == 1111
+          -%}
+          RWB
+          {%- elif now().strftime("%m%d")|int >= 210
+          and now().strftime("%m%d")|int <= 214-%}
+          valentine
+          {%- elif now().strftime("%m%d")|int == 228 -%}
+          marti_gras
+          {%- elif now().strftime("%m%d")|int >= 314
+          and now().strftime("%m%d")|int <= 317-%}
+          st_patty
+          {%- elif now().strftime("%m%d")|int >= 414
+          and now().strftime("%m%d")|int <= 416-%}
+          easter
+          {%- elif now().strftime("%m%d")|int == 505 -%}
+          cinco_de_mayo
+          {%- elif now().strftime("%m%d")|int == 514 -%}
+          valentine
+          {%- elif now().strftime("%m%d")|int == 618 -%}
+          fathers_day
+          {%- elif now().strftime("%m%d")|int >= 1001
+          and now().strftime("%m%d")|int <= 1031-%}
+          halloween
+          {%- elif now().strftime("%m%d")|int >= 1123
+          and now().strftime("%m%d")|int <= 1124-%}
+          thanksgiving
+          {%- elif now().strftime("%m%d")|int >= 1201
+          and now().strftime("%m%d")|int <= 1211-%}
+          christmas
+          {%- elif now().strftime("%m%d")|int >= 1212
+          and now().strftime("%m%d")|int <= 1220-%}
+          hanukkah
+          {%- elif now().strftime("%m%d")|int >= 1221
+          and now().strftime("%m%d")|int <= 1230-%}
+          christmas
+          {%- elif now().strftime("%m%d")|int == 1231 -%}
+          new_years_day
+          {%- else -%}
+          standard
+          {%- endif -%}
 
 input_select:
   theme:
