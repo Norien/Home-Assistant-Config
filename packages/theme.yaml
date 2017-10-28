@@ -1,0 +1,57 @@
+################################################################
+## Packages / Theme
+################################################################
+
+###### STATE CARD
+group:
+  theme:
+    name: Theme
+    control: hidden
+    entities:
+     - input_select.theme
+
+automation:
+  - alias: 'theme_set'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: input_select.theme
+    action:
+      - service: frontend.set_theme
+        data_template:
+          name: '{{states.input_select.theme.state}}'
+
+  - alias: 'theme_night_day'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sun.sun
+    condition:
+      - condition: template
+        value_template: '{{states.input_select.theme.state == "default" or states.input_select.theme.state == "default_night"}}'
+    action:
+      - service: input_select.select_option
+        data_template:
+          entity_id: input_select.theme
+          option: >
+            {% if states.sun.sun.state == "above_horizon" %} default
+            {% else %} default_night
+            {% endif %}
+
+input_select:
+  theme:
+    name: Theme
+    options:
+      - "default"
+      - "default_night"
+      - "new_years_day"
+      - "valentines_day"
+      - "st_patricks_day"
+      - "easter"
+      - "victoria_day"
+      - "canada_day"
+      - "thanksgiving"
+      - "halloween"
+      - "christmas"
+    initial: "default"
+    icon: 'mdi:palette'
