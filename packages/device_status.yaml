@@ -9,6 +9,8 @@ group:
     name: Device Status
     entities:
       - automation.notify_if_device_goes_offline
+      - sensor.dlink_camera
+      - sensor.driveway_camera
       - sensor.roomba
       - sensor.echo_dot
       - sensor.google_home
@@ -16,8 +18,6 @@ group:
       - sensor.philips_hue_hub
       - sensor.chromecast_backyard
       - sensor.chromecast_kitchen
-      - sensor.dlink_camera
-      - sensor.driveway_camera
       - sensor.raspberry_pi
       - sensor.raspberry_pi_zero
       - sensor.tracker_doorbell

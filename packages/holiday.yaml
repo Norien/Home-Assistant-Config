@@ -1,0 +1,58 @@
+###############################################################################
+#   @author         :   Mahasri Kalavala
+#   @date           :   10/28/2017
+#   @package        :   Holidays
+#   @description    :   Retrieves the holiday
+#   Adjusted for region and style by @ norien
+#
+# Sensor updates once every 4 hours (14400 seconds) & runs 6 times in 24 hours
+#
+# First it checks for holiday in static section, if that doesn't exist,
+# it checks in the dynamic section. If neither exists, the value will be empty
+###############################################################################
+sensor:
+  - platform: rest
+    resource: https://raw.githubusercontent.com/Norien/Home-Assistant-Config/master/www/holiday.json
+    name: holiday_data
+    scan_interval: 60
+    value_template: >
+      {% set today = now().month  ~ '/' ~ now().day  %}
+      {% set holiday =  value_json.MAJOR_CA.static[ today ] %}
+      {% if holiday | trim == "" %}
+        {% set today = now().month  ~ '/' ~ now().day ~ '/' ~ now().year %}
+        {% set holiday =  value_json.MAJOR_CA.dynamic[ today ] %}
+      {% endif %}
+      {{ holiday }}
+
+  - platform: template
+    sensors:
+      holiday:
+        friendly_name: 'Holiday'
+        value_template: >
+          {%- if states.sensor.holiday_data.state == unknown or states.sensor.holiday_data.state == "" -%}
+              Standard
+          {%- else -%}
+              {{states.sensor.holiday_data.state}}
+          {%- endif -%}
+        icon_template: >
+          {% if is_state('sensor.holiday_data', "New Year's Day") %} mdi:gift
+          {% elif is_state('sensor.holiday_data', "Groundhog Day") %} mdi:white-balance-sunny
+          {% elif is_state('sensor.holiday_data', "Valentine's Day") %} mdi:heart
+          {% elif is_state('sensor.holiday_data', "St. Patrick's Day") %} mdi:beer
+          {% elif is_state('sensor.holiday_data', "Good Friday") %} mdi:owl
+          {% elif is_state('sensor.holiday_data', "Easter Sunday") %} mdi:owl
+          {% elif is_state('sensor.holiday_data', "Earth Day") %} mdi:earth
+          {% elif is_state('sensor.holiday_data', "Mother's Day") %} mdi:flower
+          {% elif is_state('sensor.holiday_data', "Victoria Day") %} mdi:flower
+          {% elif is_state('sensor.holiday_data', "Father's Day") %} mdi:face
+          {% elif is_state('sensor.holiday_data', "Canada Day") %} mdi:flag
+          {% elif is_state('sensor.holiday_data', "Labour Day") %} mdi:worker
+          {% elif is_state('sensor.holiday_data', "Thanksgiving Day") %} mdi:corn
+          {% elif is_state('sensor.holiday_data', "Halloween") %} mdi:ghost
+          {% elif is_state('sensor.holiday_data', "Remembrance Day") %} mdi:sword-cross
+          {% elif is_state('sensor.holiday_data', "Christmas Eve") %} mdi:candycane
+          {% elif is_state('sensor.holiday_data', "Christmas Day") %} mdi:candycane
+          {% elif is_state('sensor.holiday_data', "Boxing Day") %} mdi:candycane
+          {% elif is_state('sensor.holiday_data', "New Year's Eve") %} mdi:gift
+          {% else %} mdi:calendar-today
+          {% endif %}

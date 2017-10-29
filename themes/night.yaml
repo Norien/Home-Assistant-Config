@@ -1,4 +1,4 @@
-default_night:
+"Night":
   # MyVariables
   base-hue: '220' #Controls the base (and accent) color hue (0-360) | 0=Red 60=Yellow 120=Green 180=Cyan 240=Blue 300=Magenta 360=Red
   base-sat: '5%' #Controls the saturation of the theme (0%-100%) | 0%=Grey 100%=Full Saturation

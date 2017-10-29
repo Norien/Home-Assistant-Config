@@ -6,6 +6,8 @@ homeassistant:
     script.good_night:
       emulated_hue: true
       emulated_hue_name: "Good Night"
+      google_assistant: true
+      google_assistant_name: "Good Night"      
       friendly_name: Good Night
       icon: mdi:sleep
 

@@ -1,5 +1,8 @@
 ################################################################
 ## Packages / Theme
+## Change frontend theme to match holiday sensor
+## Change lights to match theme
+## change Doorbell tone to match theme
 ################################################################
 
 ###### STATE CARD
@@ -8,8 +11,10 @@ group:
     name: Theme
     control: hidden
     entities:
-     - input_select.theme
-     - sensor.holiday
+      - sensor.holiday
+      - input_select.theme
+      - automation.theme_light
+      - sensor.theme_color
 
 automation:
   - alias: 'theme_set'
@@ -29,7 +34,7 @@ automation:
         entity_id: sensor.holiday
     condition:
       - condition: template
-        value_template: '{{states.sensor.holiday.state != "standard"}}'
+        value_template: '{{states.sensor.holiday.state != "Standard"}}'
     action:
       - service: input_select.select_option
         data_template:
@@ -43,87 +48,81 @@ automation:
         entity_id: sun.sun
     condition:
       - condition: template
-        value_template: '{{states.input_select.theme.state == "default" or states.input_select.theme.state == "default_night"}}'
+        value_template: '{{states.input_select.theme.state == "Day" or states.input_select.theme.state == "Night"}}'
     action:
       - service: input_select.select_option
         data_template:
           entity_id: input_select.theme
           option: >
-            {% if states.sun.sun.state == "above_horizon" %} default
-            {% else %} default_night
+            {% if states.sun.sun.state == "above_horizon" %} Day
+            {% else %} Night
             {% endif %}
+
+  - alias: 'theme_light'
+    initial_state: 'on'
+    trigger:
+      - platform: sun
+        event: sunset
+    action:
+      - service: light.turn_on
+        data:
+          entity_id:
+            - light.hue_go
+          brightness: 250
+        data_template:
+          rgb_color: [ "{{ states.sensor.theme_color.state.split(',')[0]|int }}", "{{ states.sensor.theme_color.state.split(',')[1]|int }}", "{{ states.sensor.theme_color.state.split(',')[2]|int }}" ]
 
 sensor:
   - platform: template
     sensors:
-      holiday:
+      theme_color:
         value_template: >
-          {%- if now().strftime("%m%d")|int == 101 -%}
-          new_years_day
-          {%- elif now().strftime("%m%d")|int == 212
-          or now().strftime("%m%d")|int == 220
-          or now().strftime("%m%d")|int == 520
-          or now().strftime("%m%d")|int == 529
-          or now().strftime("%m%d")|int == 614
-          or now().strftime("%m%d")|int == 704
-          or now().strftime("%m%d")|int == 904
-          or now().strftime("%m%d")|int == 911
-          or now().strftime("%m%d")|int == 1009
-          or now().strftime("%m%d")|int == 1111
-          -%}
-          RWB
-          {%- elif now().strftime("%m%d")|int >= 210
-          and now().strftime("%m%d")|int <= 214-%}
-          valentine
-          {%- elif now().strftime("%m%d")|int == 228 -%}
-          marti_gras
-          {%- elif now().strftime("%m%d")|int >= 314
-          and now().strftime("%m%d")|int <= 317-%}
-          st_patty
-          {%- elif now().strftime("%m%d")|int >= 414
-          and now().strftime("%m%d")|int <= 416-%}
-          easter
-          {%- elif now().strftime("%m%d")|int == 505 -%}
-          cinco_de_mayo
-          {%- elif now().strftime("%m%d")|int == 514 -%}
-          valentine
-          {%- elif now().strftime("%m%d")|int == 618 -%}
-          fathers_day
-          {%- elif now().strftime("%m%d")|int >= 1001
-          and now().strftime("%m%d")|int <= 1031-%}
-          halloween
-          {%- elif now().strftime("%m%d")|int >= 1123
-          and now().strftime("%m%d")|int <= 1124-%}
-          thanksgiving
-          {%- elif now().strftime("%m%d")|int >= 1201
-          and now().strftime("%m%d")|int <= 1211-%}
-          christmas
-          {%- elif now().strftime("%m%d")|int >= 1212
-          and now().strftime("%m%d")|int <= 1220-%}
-          hanukkah
-          {%- elif now().strftime("%m%d")|int >= 1221
-          and now().strftime("%m%d")|int <= 1230-%}
-          christmas
-          {%- elif now().strftime("%m%d")|int == 1231 -%}
-          new_years_day
-          {%- else -%}
-          standard
-          {%- endif -%}
+            {%- if is_state('input_select.theme', "New Year's Day") -%} 255,0,0
+            {%- elif is_state('input_select.theme', "Groundhog Day") -%} 255,0,0
+            {%- elif is_state('input_select.theme', "Valentine's Day") -%} 255,196,250
+            {%- elif is_state('input_select.theme', "St. Patrick's Day") -%} 85,255,56
+            {%- elif is_state('input_select.theme', "Good Friday") -%} 255,255,56
+            {%- elif is_state('input_select.theme', "Easter Sunday") -%} 255,255,56
+            {%- elif is_state('input_select.theme', "Earth Day") -%} 82,255,56
+            {%- elif is_state('input_select.theme', "Mother's Day") -%} 255,196,250
+            {% elif is_state('input_select.theme', "Victoria Day") -%} 255,0,0
+            {%- elif is_state('input_select.theme', "Father's Day") -%} 56,56,255
+            {%- elif is_state('input_select.theme', "Canada Day") -%}  255,0,0
+            {%- elif is_state('input_select.theme', "Labour Day") -%} 255,0,0
+            {%- elif is_state('input_select.theme', "Thanksgiving Day") -%} 255,110,0
+            {%- elif is_state('input_select.theme', "Halloween") -%} 255,168,39
+            {%- elif is_state('input_select.theme', "Remembrance Day") -%} 255,0,0
+            {%- elif is_state('input_select.theme', "Christmas Eve") -%} 33,55,0
+            {%- elif is_state('input_select.theme', "Christmas Day") -%} 33,55,0
+            {%- elif is_state('input_select.theme', "Boxing Day") -%} 33,55,0
+            {%- elif is_state('input_select.theme', "New Year's Eve") -%} 255,0,0
+            {%- else -%} 255,255,255
+            {%- endif -%}
 
 input_select:
   theme:
     name: Theme
     options:
-      - "default"
-      - "default_night"
-      - "new_years_day"
-      - "valentines_day"
-      - "st_patricks_day"
-      - "easter"
-      - "victoria_day"
-      - "canada_day"
-      - "thanksgiving"
-      - "halloween"
-      - "christmas"
-    initial: "default"
+      - "Day"
+      - "Night"
+      - "New Year's Day"
+      - "Groundhog Day"
+      - "Valentine's Day"
+      - "St. Patrick's Day"
+      - "Good Friday"
+      - "Easter Sunday"
+      - "Earth Day"
+      - "Mother's Day"
+      - "Victoria Day"
+      - "Father's Day"
+      - "Canada Day"
+      - "Labour Day"
+      - "Thanksgiving Day"
+      - "Halloween"
+      - "Remembrance Day"
+      - "Christmas Eve"
+      - "Christmas Day"
+      - "Boxing Day"
+      - "New Year's Eve"
+    initial: "Day"
     icon: 'mdi:palette'
