@@ -4,7 +4,6 @@
 *.crt
 *.key
 *.conf
-*.json
 *.db-wal
 *.db-shm
 *.log
@@ -46,3 +45,4 @@ python_scripts/waste_pickup_container.py
 python_scripts/waste_pickup_garbage_recycle.py
 python_scripts/waste_pickup_yard_waste.py
 known_devices.bak
+emulated_hue_ids.json
