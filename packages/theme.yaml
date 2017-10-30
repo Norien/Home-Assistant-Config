@@ -92,6 +92,7 @@ sensor:
             {%- elif is_state('input_select.theme', "Groundhog Day") -%} 255,0,0
             {%- elif is_state('input_select.theme', "Valentine's Day") -%} 255,196,250
             {%- elif is_state('input_select.theme', "St. Patrick's Day") -%} 85,255,56
+            {%- elif is_state('input_select.theme', "Starwars Day") -%} 86,66,244            
             {%- elif is_state('input_select.theme', "Good Friday") -%} 255,255,56
             {%- elif is_state('input_select.theme', "Easter Sunday") -%} 255,255,56
             {%- elif is_state('input_select.theme', "Earth Day") -%} 82,255,56
@@ -120,6 +121,7 @@ input_select:
       - "Groundhog Day"
       - "Valentine's Day"
       - "St. Patrick's Day"
+      - "Starwars Day"
       - "Good Friday"
       - "Easter Sunday"
       - "Earth Day"

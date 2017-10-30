@@ -10,6 +10,8 @@
 *.db-journal
 *.db
 *.cfg
+*.wav
+*.mp3
 lib
 deps
 tts
@@ -45,8 +47,4 @@ python_scripts/waste_pickup_garbage_recycle.py
 python_scripts/waste_pickup_yard_waste.py
 known_devices.bak
 emulated_hue_ids.json
-www/misc_sound/sexy_time.mp3
-www/misc_sound/german-shephard.mp3
-www/white_noise/blizzard.mp3
-www/white_noise/rain.mp3
-www/white_noise/blizzard2.mp3
+

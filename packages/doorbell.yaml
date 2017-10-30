@@ -14,7 +14,7 @@ group:
     name: Door Bell
     entities:
       - binary_sensor.front_doorbell
-      - input_select.doorbell
+      #- input_select.doorbell
       - automation.guard_dog
 
 automation:
@@ -66,11 +66,11 @@ automation:
       - service: media_player.volume_set
         data:
           entity_id: media_player.google_home
-          volume_level: '1.00'
+          volume_level: 1.00
       - service: media_player.play_media
         data_template:
           entity_id: media_player.google_home
-          media_content_id: https://192.168.1.250:8123/local/misc_sound/dog-barking-2-bullmastiff.mp3
+          media_content_id: "http://192.168.1.92/misc_sound/dog-barking-2-bullmastiff.mp3"
           media_content_type: 'audio/mp3'
       - service: script.notify_camera
       - service: notify.justin
@@ -96,35 +96,49 @@ script:
       data_template:
         entity_id: media_player.google_home
         volume_level: >
-          {% if is_state('sun.sun', 'above_horizon') %} '0.50'
-          {% elif is_state('sun.sun', 'below_horizon') %} '0.30'
+          {% if is_state('input_boolean.finn_sleep', 'off') %} 1
+          {% elif is_state('input_boolean.finn_sleep', 'on') %} 0.30
           {% endif %}
     - service: media_player.play_media
       data_template:
         entity_id: media_player.google_home
         media_content_id: >
-          {% if is_state('input_select.doorbell', 'door_1') %} https://192.168.1.250:8123/local/doorbell_tones/door_1.mp3
-          {% elif is_state('input_select.doorbell', 'door_ff7') %} https://192.168.1.250:8123/local/doorbell_tones/door_ff7.mp3
-          {% elif is_state('input_select.doorbell', 'xmas') %} https://192.168.1.250:8123/local/doorbell_tones/xmas.mp3
-          {% elif is_state('input_select.doorbell', 'R2D2') %} https://192.168.1.250:8123/local/doorbell_tones/R2D2.mp3
-          {% elif is_state('input_select.doorbell', 'Ding Dong') %} https://192.168.1.250:8123/local/doorbell_tones/ding_dong.mp3
-          {% elif is_state('input_select.doorbell', 'Arnold') %} https://192.168.1.250:8123/local/doorbell_tones/get-to-the-choppa.mp3
-          {% elif is_state('input_select.doorbell', 'Guard Dogs') %} https://192.168.1.250:8123/local/misc_sound/dog-barking-2-bullmastiff.mp3
-          {% endif %}
+            {%- if is_state('input_select.theme', "New Year's Day") -%} http://192.168.1.92/doorbell_tones/new_years.mp3
+            {%- elif is_state('input_select.theme', "Groundhog Day") -%} http://192.168.1.92/doorbell_tones/groundhog_day.mp3
+            {%- elif is_state('input_select.theme', "Valentine's Day") -%} http://192.168.1.92/doorbell_tones/valentines_day.mp3
+            {%- elif is_state('input_select.theme', "St. Patrick's Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
+            {%- elif is_state('input_select.theme', "Good Friday") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
+            {%- elif is_state('input_select.theme', "Starwars Day") -%} http://192.168.1.92/doorbell_tones/R2D2.mp3
+            {%- elif is_state('input_select.theme', "Easter Sunday") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
+            {%- elif is_state('input_select.theme', "Earth Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
+            {%- elif is_state('input_select.theme', "Mother's Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
+            {% elif is_state('input_select.theme', "Victoria Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
+            {%- elif is_state('input_select.theme', "Father's Day") -%} http://192.168.1.92/doorbell_tones/get-to-the-choppa.mp3
+            {%- elif is_state('input_select.theme', "Canada Day") -%}  http://192.168.1.92/doorbell_tones/door_1.mp3
+            {%- elif is_state('input_select.theme', "Labour Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
+            {%- elif is_state('input_select.theme', "Thanksgiving Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
+            {%- elif is_state('input_select.theme', "Halloween") -%} http://192.168.1.92/doorbell_tones/halloween.wav
+            {%- elif is_state('input_select.theme', "Remembrance Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
+            {%- elif is_state('input_select.theme', "Christmas Eve") -%} http://192.168.1.92/doorbell_tones/xmas.mp3
+            {%- elif is_state('input_select.theme', "Christmas Day") -%} http://192.168.1.92/doorbell_tones/xmas.mp3
+            {%- elif is_state('input_select.theme', "Boxing Day") -%} http://192.168.1.92/doorbell_tones/xmas.mp3
+            {%- elif is_state('input_select.theme', "New Year's Eve") -%} http://192.168.1.92/doorbell_tones/new_years.mp3
+            {%- else -%} http://192.168.1.92/doorbell_tones/door_1.mp3
+            {%- endif -%}
         media_content_type: 'audio/mp3'
 
-input_select:
-  doorbell:
-    name: Tones
-    options:
-      - door_1
-      - door_ff7
-      - Ding Dong
-      - xmas
-      - R2D2
-      - Arnold
-      - Guard Dogs
-    icon: mdi:bookmark-music
+# input_select:
+#   doorbell:
+#     name: Tones
+#     options:
+#       - door_1
+#       - door_ff7
+#       - Ding Dong
+#       - xmas
+#       - R2D2
+#       - Arnold
+#       - Guard Dogs
+#     icon: mdi:bookmark-music
 
 binary_sensor:
   - platform: mqtt
