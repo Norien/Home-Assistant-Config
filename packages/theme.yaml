@@ -3,6 +3,7 @@
 ## Change frontend theme to match holiday sensor
 ## Change lights to match theme
 ## change Doorbell tone to match theme
+## color picker - https://www.google.ca/search?q=rgb+color+picker&rlz=1C1GGRV_enCA749CA749&oq=rgb+color+picker&aqs=chrome.0.0l6.3705j0j4&sourceid=chrome&ie=UTF-8
 ################################################################
 
 ###### STATE CARD
@@ -22,6 +23,16 @@ automation:
     trigger:
       - platform: state
         entity_id: input_select.theme
+    action:
+      - service: frontend.set_theme
+        data_template:
+          name: '{{states.input_select.theme.state}}'
+
+  - alias: 'theme_set_boot'
+    initial_state: 'on'
+    trigger:
+      - platform: homeassistant
+        event: start
     action:
       - service: frontend.set_theme
         data_template:

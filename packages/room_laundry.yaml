@@ -41,18 +41,23 @@ group:
     name: Laundry Room
     entities:
       #- binary_sensor.laundry_motion
-      - switch.washing_machine
-      # - sensor.washing_machine_amps
-      # - sensor.washing_machine_watts
-      # - sensor.washing_machine_kw
-      # - sensor.washing_machine_volts
+      - group.laundry_wash
       - sensor.washing_machine_status
       #- sensor.dryer_status
       #- binary_sensor.laundry_dryer_vibration
       #- sensor.laundry_temperature
       #- sensor.laundry_humidity
       - binary_sensor.fresh_water_level
-
+  laundry_wash:
+    control: hidden
+    name: Washing Machine
+    icon: mdi:washing-machine
+    entities:
+      - switch.washing_machine
+      - sensor.washing_machine_amps
+      - sensor.washing_machine_watts
+      - sensor.washing_machine_kw
+      - sensor.washing_machine_volts
 switch:
 ###### TP LINK SWITCH
   - platform: tplink

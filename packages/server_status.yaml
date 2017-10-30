@@ -113,17 +113,19 @@ sensor:
     value_template: '{{ value_json.ip }}'
     scan_interval: 10800
 
-###### CPU & HDD TEMP
+###### CPU & HDD TEMPERATURE
   - platform: command_line
     command: sudo hddtemp /dev/sd*
     name: 'Disk Temperature'
-    value_template: '{{ value[23:-87] }}'
-    scan_interval: 240
+    value_template: '{{ value[23:-89] }}'
+    unit_of_measurement: '°C'
+    scan_interval: 300
 
   - platform: command_line
     command: curl -X GET http://localhost:61208/api/2/sensors
     name: CPU Temperature
-    value_template: '{{ value_json[0].value }}°C'
+    value_template: '{{ value_json[0].value }}'
+    unit_of_measurement: '°C'
     scan_interval: 300
 
 ###### GLANCES
@@ -163,5 +165,6 @@ sensor:
   - platform: command_line
     command: curl -X GET http://localhost:61208/api/2/load
     name: 'glances_cpu_load'
-    value_template: '{{ value_json.min5 }} %'
+    value_template: '{{ value_json.min5 }}'
+    unit_of_measurement: '%'
     scan_interval: 300

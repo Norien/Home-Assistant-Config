@@ -6,7 +6,11 @@ homeassistant:
     script.radio:
       friendly_name: Start Radio
       icon: mdi:radio
-
+    script.kitchen_radio:
+      emulated_hue: true
+      friendly_name: 'Kitchen Radio'
+      google_assistant: true
+      google_assistant_name: 'Kitchen Radio'
 ###### STATE CARD
 group:
   Radio:
@@ -41,6 +45,32 @@ script:
             {% elif is_state('input_select.radio_station', 'Elium-Rock') %} http://listen.radionomy.com/Elium-Rock
             {% endif %}
           media_content_type: 'audio/mp3'
+
+###### CALL OUT TO PLAY RADIO
+  kitchen_radio:
+    sequence:
+      - service: script.turn_on
+        data_template:
+          entity_id: >
+            {% if is_state('media_player.google_home', 'off') %} script.kitchen_radio_off
+            {% elif not is_state('media_player.google_home', 'off') %} script.kitchen_radio_on
+            {% endif %}
+  kitchen_radio_off:
+    sequence:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.google_home
+          volume_level: '0.35'
+      - service: media_player.play_media
+        data_template:
+          entity_id: media_player.google_home
+          media_content_id: http://rfcmedia.streamguys1.com/90hits.mp3
+          media_content_type: 'audio/mp3'
+  kitchen_radio_on:
+    sequence:
+      - service: media_player.turn_off
+        entity_id: media_player.google_home
+
 
 ###### VOLUME SLIDER CONTROL (LOCATION BASED)
 automation:

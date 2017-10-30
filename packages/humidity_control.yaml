@@ -9,7 +9,7 @@ homeassistant:
     sensor.mold_indicator:
       friendly_name: Mold Indicator
       entity_picture: /local/custom_icons/mold.png
-    automation.turn_on_dehumidifier_if_mold_sensor_is_high:
+    automation.dehumidifier:
       friendly_name: Automatic Dehumidifier
       icon: mdi:water-percent
 
@@ -25,7 +25,7 @@ group:
       - sensor.hallway_thermostat_humidity
       - sensor.mold_indicator
       - switch.dehumidifier
-      - automation.turn_on_dehumidifier_if_mold_sensor_is_high
+      - automation.dehumidifier
 sensor:
   - platform: mold_indicator
     indoor_temp_sensor: sensor.average_house_temp
@@ -34,33 +34,55 @@ sensor:
     calibration_factor: 1.2
 
 automation:
-  - alias: 'Turn on dehumidifier if Mold sensor is high'
-    initial_state: 'on'
-    trigger:
-      - platform: numeric_state
-        entity_id: sensor.mold_indicator
-        above: 65
-    action:
-      - service: switch.turn_on
-        entity_id: switch.dehumidifier
-      - service: climate.set_fan_mode
-        data:
-          entity_id: climate.hallway
-          fan_mode: 'on'
+  # - alias: 'Turn on dehumidifier if Mold sensor is high'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: numeric_state
+  #       entity_id: sensor.mold_indicator
+  #       above: 65
+  #   action:
+  #     - service: switch.turn_on
+  #       entity_id: switch.dehumidifier
+  #     - service: climate.set_fan_mode
+  #       data:
+  #         entity_id: climate.hallway
+  #         fan_mode: 'on'
+  #
+  # - alias: 'Turn off dehumidifier if Mold sensor is low'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: numeric_state
+  #       entity_id: sensor.mold_indicator
+  #       below: 63
+  #   action:
+  #     - service: switch.turn_off
+  #       entity_id: switch.dehumidifier
+  #     - service: climate.set_fan_mode
+  #       data:
+  #         entity_id: climate.hallway
+  #         fan_mode: 'auto'
 
-  - alias: 'Turn off dehumidifier if Mold sensor is low'
+  - alias: 'dehumidifier'
     initial_state: 'on'
     trigger:
-      - platform: numeric_state
-        entity_id: sensor.mold_indicator
-        below: 63
+      - platform: template
+        value_template: >
+          {% if float(states.sensor.mold_indicator.state) > float(65) or float(states.sensor.mold_indicator.state) < float(63) %} true
+          {% else %} false
+          {% endif %}
     action:
-      - service: switch.turn_off
-        entity_id: switch.dehumidifier
-      - service: climate.set_fan_mode
-        data:
-          entity_id: climate.hallway
-          fan_mode: 'auto'
+    - service_template: >
+        {% if states.sensor.mold_indicator.state | float > 65 %} switch.turn_on
+        {% else %} switch.turn_off
+        {% endif %}
+      entity_id: switch.dehumidifier
+    - service: climate.set_fan_mode
+      data_template:
+        entity_id: climate.hallway
+        fan_mode: >
+          {% if states.sensor.mold_indicator.state | float > 65 %} 'on'
+          {% else %} 'auto'
+          {% endif %}
 
 ###### NOTIFY IF MOLD SENSOR IS GREATER OR EQUAL TO 70%
   - alias: 'Notify if Mold sensor is too high'

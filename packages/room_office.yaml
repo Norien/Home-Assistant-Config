@@ -23,10 +23,18 @@ group:
      - sensor.steam_account
      - switch.office_pc
      - switch.office_lightswitch
+     - group.office_energy
+     # - script.office_pc_on
+  office_energy:
+    icon: mdi:power
+    name: Power Strip
+    entities:
      - switch.office_powerbar
+     - sensor.office_current
      - sensor.office_draw
+     - sensor.office_voltage
+     - sensor.office_today
      - sensor.office_yesterday
-     - script.office_pc_on
 
 switch:
 ###### SONOFF POW POWERBAR
@@ -59,6 +67,12 @@ switch:
           service: shell_command.office_pc_off
 
 sensor:
+###### STEAM COMPONENT
+  - platform: steam_online
+    api_key: !secret steam_api
+    accounts:
+      - id: !secret steam_user
+        entity_id: "account"
 ###### SONOFF POW SENSORS
   - platform: mqtt
     name: "Office Draw"

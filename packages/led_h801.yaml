@@ -53,7 +53,7 @@ homeassistant:
       friendly_name: "LED Set Scene"
 
     switch.led_strip:
-      friendly_name: "Led Strip"
+      friendly_name: "LED Strip"
       icon: mdi:led-outline
 
 automation:

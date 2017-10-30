@@ -11,7 +11,13 @@ homeassistant:
       friendly_name: Justin Netgear
     device_tracker.androidc3a6fa8dea348d9e:
       friendly_name: Nicole Netgear
-
+    # GOOGLE TRAVEL TIME SENSORS
+    sensor.nicole_phone_to_home:
+      friendly_name: 'Nicole Phone to Home'
+      icon: mdi:car
+    sensor.nicole_home_to_work:
+      friendly_name: 'Nicole Home to Work'
+      icon: mdi:car
 
 ###### STATE CARD
 group:
@@ -162,6 +168,13 @@ input_boolean:
 
 ###### Sensors
 sensor:
+###### GOOGLE TRAVEL TIME
+  - platform: google_travel_time
+    name: Nicole Phone To Home
+    api_key: !secret google_secret
+    origin: device_tracker.bigdrakar_nicole
+    destination: zone.home
+
   - platform: template
     sensors:
       nicole:

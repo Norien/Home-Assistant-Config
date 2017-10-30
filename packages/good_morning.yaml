@@ -49,7 +49,12 @@ script:
           entity_id: media_player.google_home
           message: >
             {% set weather = states('sensor.weather_report') %}
-            Good Morning, {{weather}}
+            {%- if states.sensor.holiday_data.state != "" -%}
+            Today is {{ states.sensor.holiday.state }},
+            {%- else -%}
+            Good Morning,
+            {%- endif -%}
+            {{weather}}
             {%- if as_timestamp(now())|timestamp_custom('%A %B %d', True) == states.sensor.waste_pickup_garbage_recycling.state -%}
             The garbage is to go out this evening.
             {%-else-%}

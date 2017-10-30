@@ -5,9 +5,14 @@ homeassistant:
   customize:
     input_boolean.finn_sleep:
       emulated_hue: true
+      google_assistant: true
+      google_assistant_name: 'Sleep'
     automation.light_finn_sleep:
       friendly_name: 'Keep Light Off'
       icon: mdi:brightness-4
+    automation.finn_temp_watchdog:
+      friendly_name: 'Temperature Watch Dog'
+      icon: mdi:thermometer-lines
 
 ###### STATE CARD
 group:
@@ -18,14 +23,31 @@ group:
       - light.findlays_room
       - input_boolean.finn_sleep
       - automation.light_finn_sleep
+      - automation.finn_temp_watchdog
 
 automation:
+  - alias: 'finn_temp_watchdog'
+    initial_state: 'on'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.findlay_room_temperature
+        below: 19
+    condition:
+      - condition: state
+        entity_id: 'input_boolean.finn_sleep'
+        state: 'on'
+    action:
+      - service: climate.set_temperature
+        data_template:
+          entity_id: climate.hallway
+          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) +1 }}"
+
   - alias: 'light_finn_sleep'
     initial_state: 'on'
     trigger:
       - platform: state
         entity_id: input_boolean.finn_sleep
-        to: 'on'      
+        to: 'on'
       - platform: template
         value_template: "{% if is_state('light.findlays_room', 'on') %}true{% endif %}"
     condition:
