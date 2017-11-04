@@ -8,6 +8,7 @@ homeassistant:
     automation.guard_dog:
       friendly_name: Guard Dogs
       icon: mdi:bone
+
 ###### STATE CARD
 group:
   doorbell:
@@ -97,48 +98,66 @@ script:
         entity_id: media_player.google_home
         volume_level: >
           {% if is_state('input_boolean.finn_sleep', 'off') %} 1
-          {% elif is_state('input_boolean.finn_sleep', 'on') %} 0.30
+          {% elif is_state('input_boolean.finn_sleep', 'on') %} 0.40
           {% endif %}
     - service: media_player.play_media
       data_template:
         entity_id: media_player.google_home
         media_content_id: >
-            {%- if is_state('input_select.theme', "New Year's Day") -%} http://192.168.1.92/doorbell_tones/new_years.mp3
-            {%- elif is_state('input_select.theme', "Groundhog Day") -%} http://192.168.1.92/doorbell_tones/groundhog_day.mp3
-            {%- elif is_state('input_select.theme', "Valentine's Day") -%} http://192.168.1.92/doorbell_tones/valentines_day.mp3
-            {%- elif is_state('input_select.theme', "St. Patrick's Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
-            {%- elif is_state('input_select.theme', "Good Friday") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
-            {%- elif is_state('input_select.theme', "Starwars Day") -%} http://192.168.1.92/doorbell_tones/R2D2.mp3
-            {%- elif is_state('input_select.theme', "Easter Sunday") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
-            {%- elif is_state('input_select.theme', "Earth Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
-            {%- elif is_state('input_select.theme', "Mother's Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
-            {% elif is_state('input_select.theme', "Victoria Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
-            {%- elif is_state('input_select.theme', "Father's Day") -%} http://192.168.1.92/doorbell_tones/get-to-the-choppa.mp3
-            {%- elif is_state('input_select.theme', "Canada Day") -%}  http://192.168.1.92/doorbell_tones/door_1.mp3
-            {%- elif is_state('input_select.theme', "Labour Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
-            {%- elif is_state('input_select.theme', "Thanksgiving Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
-            {%- elif is_state('input_select.theme', "Halloween") -%} http://192.168.1.92/doorbell_tones/halloween.wav
-            {%- elif is_state('input_select.theme', "Remembrance Day") -%} http://192.168.1.92/doorbell_tones/door_1.mp3
-            {%- elif is_state('input_select.theme', "Christmas Eve") -%} http://192.168.1.92/doorbell_tones/xmas.mp3
-            {%- elif is_state('input_select.theme', "Christmas Day") -%} http://192.168.1.92/doorbell_tones/xmas.mp3
-            {%- elif is_state('input_select.theme', "Boxing Day") -%} http://192.168.1.92/doorbell_tones/xmas.mp3
-            {%- elif is_state('input_select.theme', "New Year's Eve") -%} http://192.168.1.92/doorbell_tones/new_years.mp3
-            {%- else -%} http://192.168.1.92/doorbell_tones/door_1.mp3
-            {%- endif -%}
+          http://192.168.1.92/doorbell_tones/
+           {%- if is_state('input_select.theme', "New Year's Day") -%} new_years.mp3
+           {%- elif is_state('input_select.theme', "Groundhog Day") -%} groundhog_day.mp3
+           {%- elif is_state('input_select.theme', "Valentine's Day") -%} valentines_day.mp3
+           {%- elif is_state('input_select.theme', "St. Patrick's Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Good Friday") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Starwars Day") -%} R2D2.mp3
+           {%- elif is_state('input_select.theme', "Easter Sunday") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Earth Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Mother's Day") -%} door_1.mp3
+           {% elif is_state('input_select.theme', "Victoria Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Father's Day") -%} get-to-the-choppa.mp3
+           {%- elif is_state('input_select.theme', "Canada Day") -%}  door_1.mp3
+           {%- elif is_state('input_select.theme', "Labour Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Thanksgiving Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Halloween") -%} halloween.wav
+           {%- elif is_state('input_select.theme', "Remembrance Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Christmas Eve") -%} xmas.mp3
+           {%- elif is_state('input_select.theme', "Christmas Day") -%} xmas.mp3
+           {%- elif is_state('input_select.theme', "Boxing Day") -%} xmas.mp3
+           {%- elif is_state('input_select.theme', "New Year's Eve") -%} new_years.mp3
+           {%- else -%} door_1.mp3
+           {%- endif -%}
         media_content_type: 'audio/mp3'
 
-# input_select:
-#   doorbell:
-#     name: Tones
-#     options:
-#       - door_1
-#       - door_ff7
-#       - Ding Dong
-#       - xmas
-#       - R2D2
-#       - Arnold
-#       - Guard Dogs
-#     icon: mdi:bookmark-music
+sensor:
+  - platform: template
+    sensors:
+      theme_sound:
+        friendly_name: 'Doorbell Sound'
+        value_template: >
+           {%- if is_state('input_select.theme', "New Year's Day") -%} new_years.mp3
+           {%- elif is_state('input_select.theme', "Groundhog Day") -%} groundhog_day.mp3
+           {%- elif is_state('input_select.theme', "Valentine's Day") -%} valentines_day.mp3
+           {%- elif is_state('input_select.theme', "St. Patrick's Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Good Friday") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Starwars Day") -%} R2D2.mp3
+           {%- elif is_state('input_select.theme', "Easter Sunday") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Earth Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Mother's Day") -%} door_1.mp3
+           {% elif is_state('input_select.theme', "Victoria Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Father's Day") -%} get-to-the-choppa.mp3
+           {%- elif is_state('input_select.theme', "Canada Day") -%}  door_1.mp3
+           {%- elif is_state('input_select.theme', "Labour Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Thanksgiving Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Halloween") -%} halloween.wav
+           {%- elif is_state('input_select.theme', "Remembrance Day") -%} door_1.mp3
+           {%- elif is_state('input_select.theme', "Christmas Eve") -%} xmas.mp3
+           {%- elif is_state('input_select.theme', "Christmas Day") -%} xmas.mp3
+           {%- elif is_state('input_select.theme', "Boxing Day") -%} xmas.mp3
+           {%- elif is_state('input_select.theme', "New Year's Eve") -%} new_years.mp3
+           {%- else -%} door_1.mp3
+           {%- endif -%}
+        icon_template: "{% if is_state('sun.sun', 'above_horizon') %} mdi:speaker {% else %}mdi:speaker{% endif %}"
 
 binary_sensor:
   - platform: mqtt

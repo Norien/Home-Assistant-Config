@@ -51,12 +51,6 @@ homeassistant:
       friendly_name: Findlay's Dimmer Switch
       icon: mdi:battery
 
-    # dynamic battery names
-    sensor.justins_g5_battery_dynamic:
-      friendly_name: Justin's Cellphone
-    sensor.nicoles_s7_battery_dynamic:
-      friendly_name: Nicole's Cellphone
-
     #Custom data template sensor
     sensor.average_house_temp:
       friendly_name: Average Whole Home
@@ -94,8 +88,10 @@ group:
      - sensor.findlays_room_dimmer_switch
      - sensor.living_room_dimmer_switch
     # - sensor.driveway_battery_level
-     - sensor.justins_g5_battery_dynamic
-     - sensor.nicoles_s7_battery_dynamic
+     - sensor.justin_battery
+     - sensor.nicole_battery
+     - input_label.justin_battery
+     - input_label.nicole_battery
   lux:
     name: Light Level
     entities:
@@ -218,55 +214,112 @@ sensor:
 
   ##### Owntracks Battery Tracker for Cell Phones
   - platform: mqtt
-    state_topic: "owntracks/bigdrakar/justin"
-    name: "Justin's G5 Battery"
-    unit_of_measurement: "%"
-    value_template: '{{ value_json.batt }}'
-  - platform: template
-    sensors:
-      justins_g5_battery_dynamic:
-        unit_of_measurement: '%'
-        entity_id: sensor.justins_g5_battery
-        value_template: "{{ (states.sensor.justins_g5_battery.state)|int|default('unknown') }}"
-        icon_template: >-
-          {% set battery_level = states('sensor.justins_g5_battery')|int('unknown') %}
-          {% set battery_round = (battery_level|int / 10)|int * 10 %}
-          {% if battery_level == 'unknown' %}
-            mdi:battery-unknown
-          {% else %}
-            {% if battery_round >= 100 %}
-              mdi:battery
-            {% elif battery_round > 0 %}
-              mdi:battery-{{ battery_round }}
-            {% else %}
-              mdi:battery-alert
-            {% endif %}
-          {% endif %}
+    state_topic: "owntracks/justin/justin"
+    name: "Justin's Battery State"
+    value_template: >
+      {% if value_json.charging == 1 %}
+        Charging
+      {% else %}
+        Not Charging
+      {% endif %}
 
   - platform: mqtt
-    state_topic: "owntracks/bigdrakar/nicole"
-    name: "Nicole's S7 Battery"
+    state_topic: "owntracks/justin/justin"
+    name: "Justin's Battery"
     unit_of_measurement: "%"
-    value_template: '{{ value_json.batt }}'
+    value_template: "{{ value_json.batt }}"
+
+  - platform: mqtt
+    state_topic: "owntracks/nicole/nicole"
+    name: "Nicole's Battery State"
+    value_template: >
+      {% if value_json.charging == 1 %}
+        Charging
+      {% else %}
+        Not Charging
+      {% endif %}
+
+  - platform: mqtt
+    state_topic: "owntracks/nicole/nicole"
+    name: "Nicole's Battery"
+    unit_of_measurement: "%"
+    value_template: "{{ value_json.batt }}"
+
   - platform: template
     sensors:
-      nicoles_s7_battery_dynamic:
+      justin_battery:
+        friendly_name: Justin's Phone Battery
         unit_of_measurement: '%'
-        entity_id: sensor.nicoles_s7_battery
-        value_template: "{{ (states.sensor.nicoles_s7_battery.state)|int|default('unknown') }}"
+        entity_id: device_tracker.justin_justin
+        value_template: "{{ states('sensor.justins_battery')|int(-1) }}"
         icon_template: >-
-          {% set battery_level = states('sensor.nicoles_s7_battery')|int('unknown') %}
-          {% set battery_round = (battery_level|int / 10)|int * 10 %}
-          {% if battery_level == 'unknown' %}
-            mdi:battery-unknown
-          {% else %}
-            {% if battery_round >= 100 %}
-              mdi:battery
-            {% elif battery_round > 0 %}
-              mdi:battery-{{ battery_round }}
+          {% if states('sensor.justin_battery') != "unknown" %}
+            {% set battery_level = states('sensor.justins_battery')|int (-1)%}
+            {% set battery_round = (battery_level|int / 10)|int * 10 %}
+            {% if states.sensor.justins_battery_state.state | lower == "charging" %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery-charging-100
+                {% elif battery_round > 0 %}
+                  mdi:battery-charging-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
             {% else %}
-              mdi:battery-alert
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery
+                {% elif battery_round > 0 %}
+                  mdi:battery-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
             {% endif %}
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+      nicole_battery:
+        friendly_name: Nicole's Phone Battery
+        unit_of_measurement: '%'
+        entity_id: device_tracker.nicole_nicole
+        value_template: "{{ states('sensor.nicoles_battery')|int(-1) }}"
+        icon_template: >-
+          {% if states('sensor.nicole_battery') != "unknown" %}
+            {% set battery_level = states('sensor.nicoles_battery')|int (-1)%}
+            {% set battery_round = (battery_level|int / 10)|int * 10 %}
+            {% if states.sensor.nicoles_battery_state.state | lower == "charging" %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery-charging-100
+                {% elif battery_round > 0 %}
+                  mdi:battery-charging-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+            {% else %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery
+                {% elif battery_round > 0 %}
+                  mdi:battery-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            mdi:battery-alert
           {% endif %}
 
 ###### AVERAGE TEMP

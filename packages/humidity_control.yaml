@@ -5,10 +5,10 @@ homeassistant:
   customize:
     switch.dehumidifier:
       friendly_name: Dehumidifier
-      entity_picture: /local/custom_icons/dehumidifier.png
+      icon: mdi:water-off
     sensor.mold_indicator:
       friendly_name: Mold Indicator
-      entity_picture: /local/custom_icons/mold.png
+      icon: mdi:chemical-weapon
     automation.dehumidifier:
       friendly_name: Automatic Dehumidifier
       icon: mdi:water-percent
@@ -26,6 +26,7 @@ group:
       - sensor.mold_indicator
       - switch.dehumidifier
       - automation.dehumidifier
+
 sensor:
   - platform: mold_indicator
     indoor_temp_sensor: sensor.average_house_temp
@@ -34,34 +35,6 @@ sensor:
     calibration_factor: 1.2
 
 automation:
-  # - alias: 'Turn on dehumidifier if Mold sensor is high'
-  #   initial_state: 'on'
-  #   trigger:
-  #     - platform: numeric_state
-  #       entity_id: sensor.mold_indicator
-  #       above: 65
-  #   action:
-  #     - service: switch.turn_on
-  #       entity_id: switch.dehumidifier
-  #     - service: climate.set_fan_mode
-  #       data:
-  #         entity_id: climate.hallway
-  #         fan_mode: 'on'
-  #
-  # - alias: 'Turn off dehumidifier if Mold sensor is low'
-  #   initial_state: 'on'
-  #   trigger:
-  #     - platform: numeric_state
-  #       entity_id: sensor.mold_indicator
-  #       below: 63
-  #   action:
-  #     - service: switch.turn_off
-  #       entity_id: switch.dehumidifier
-  #     - service: climate.set_fan_mode
-  #       data:
-  #         entity_id: climate.hallway
-  #         fan_mode: 'auto'
-
   - alias: 'dehumidifier'
     initial_state: 'on'
     trigger:

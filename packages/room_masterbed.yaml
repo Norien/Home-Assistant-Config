@@ -19,10 +19,6 @@ homeassistant:
       emulated_hue: true
       icon: mdi:lamp
       friendly_name: Bedroom Lamp
-    switch.led_strip:
-      emulated_hue: true
-      icon: mdi:lamp
-      friendly_name: Bedroom Headboard
     #Bedroom computer Switch
     switch.bedroom_media:
       emulated_hue: true
@@ -44,14 +40,24 @@ group:
      - switch.bedroom_lamps_
      - switch.bedroom_fan
      - switch.bedroom_tv
+     - group.bedroom_white_noise
+     - group.bedroom_led_strip
+     # - binary_sensor.flic_80e4da71b68e
+     # - switch.bedroom_fan_a
+     # - switch.bedroom_fan_b
+  bedroom_white_noise:
+    name: White Noise
+    icon: mdi:snowflake
+    entities:
      - switch.white_noise
      - input_select.white_noise
+  bedroom_led_strip:
+    name: LED Strip
+    icon: mdi:led-outline
+    entities:
      - switch.led_strip
      - input_select.led_scene
      - input_select.led_color
-    # - binary_sensor.flic_80e4da71b68e
-     - switch.bedroom_fan_a
-     - switch.bedroom_fan_b
 
 binary_sensor:
   - platform: flic

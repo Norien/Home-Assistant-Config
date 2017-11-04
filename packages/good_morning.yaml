@@ -40,6 +40,7 @@ script:
       data:
         entity_id: media_player.google_home
         volume_level: '0.70'
+    - wait_template: "{{ states.sensor.living_room_motion.state == 'True' }}"        
     - service: script.good_morning_tts
 
   good_morning_tts:

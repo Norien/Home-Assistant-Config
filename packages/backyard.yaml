@@ -31,21 +31,18 @@ automation:
         to: 'idle'
         for:
           minutes: 1
+      - platform: state
+        entity_id: media_player.backyard
+        to: 'off'
+      - platform: state
+        entity_id: switch.sonoff_1
+        from: 'on'
+        to: 'off'
     action:
       - service: switch.turn_off
         entity_id: switch.sonoff_1
       - service: media_player.turn_off
         entity_id: media_player.backyard
-
-  - alias: "Backyard Amp Off2"
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: media_player.backyard
-        to: 'off'
-    action:
-      - service: switch.turn_off
-        entity_id: switch.sonoff_1
 
   - alias: "Backyard Amp On"
     initial_state: 'on'
@@ -56,18 +53,6 @@ automation:
     action:
       - service: switch.turn_on
         entity_id: switch.sonoff_1
-
-###### AUTOMATIC CONTROL OF CHROMECAST AUDIO
-  - alias: "Backyard media player Off"
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: switch.sonoff_1
-        from: 'on'
-        to: 'off'
-    action:
-      - service: media_player.turn_off
-        entity_id: media_player.backyard
 
 ###### 1 PRESS TO START MUSIC AND LIGHTS
 script:

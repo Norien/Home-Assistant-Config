@@ -23,7 +23,12 @@ group:
       - light.findlays_room
       - input_boolean.finn_sleep
       - automation.light_finn_sleep
+      - group.findlays_room_temp
+  findlays_room_temp:
+    name: 'Temperature Watch Dog'
+    entities:
       - automation.finn_temp_watchdog
+      - sensor.findlay_room_temperature
 
 automation:
   - alias: 'finn_temp_watchdog'

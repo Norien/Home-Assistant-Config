@@ -2,8 +2,8 @@
 ## Packages / Theme
 ## Change frontend theme to match holiday sensor
 ## Change lights to match theme
-## change Doorbell tone to match theme
-## color picker - https://www.google.ca/search?q=rgb+color+picker&rlz=1C1GGRV_enCA749CA749&oq=rgb+color+picker&aqs=chrome.0.0l6.3705j0j4&sourceid=chrome&ie=UTF-8
+## Change Doorbell tone to match theme
+## Color Picker - https://www.google.ca/search?q=rgb+color+picker&rlz=1C1GGRV_enCA749CA749&oq=rgb+color+picker&aqs=chrome.0.0l6.3705j0j4&sourceid=chrome&ie=UTF-8
 ################################################################
 
 ###### STATE CARD
@@ -14,8 +14,9 @@ group:
     entities:
       - sensor.holiday
       - input_select.theme
-      - automation.theme_light
+      #- automation.theme_light
       - sensor.theme_color
+      - sensor.theme_sound
 
 automation:
   - alias: 'theme_set'
@@ -23,17 +24,13 @@ automation:
     trigger:
       - platform: state
         entity_id: input_select.theme
-    action:
-      - service: frontend.set_theme
-        data_template:
-          name: '{{states.input_select.theme.state}}'
-
-  - alias: 'theme_set_boot'
-    initial_state: 'on'
-    trigger:
       - platform: homeassistant
         event: start
     action:
+      - service: input_select.select_option
+        data_template:
+          entity_id: input_select.theme
+          option: '{{states.sensor.holiday.state}}'
       - service: frontend.set_theme
         data_template:
           name: '{{states.input_select.theme.state}}'
@@ -57,9 +54,12 @@ automation:
     trigger:
       - platform: state
         entity_id: sun.sun
+      - platform: state
+        entity_id: sensor.holiday
+        to: 'Standard'
     condition:
       - condition: template
-        value_template: '{{states.input_select.theme.state == "Day" or states.input_select.theme.state == "Night"}}'
+        value_template: '{{states.input_select.theme.state == "Day" or states.input_select.theme.state == "Night" or states.sensor.holiday.state == "Standard"}}'
     action:
       - service: input_select.select_option
         data_template:
@@ -74,6 +74,12 @@ automation:
     trigger:
       - platform: sun
         event: sunset
+      - platform: state
+        entity_id: input_boolean.away
+        to: 'off'
+    condition:
+      - condition: template
+        value_template: '{{states.input_boolean.away.state == "off" and states.sun.sun == "below_horizon"}}'
     action:
       - service: light.turn_on
         data:
@@ -87,12 +93,13 @@ sensor:
   - platform: template
     sensors:
       theme_color:
+        friendly_name: 'Porch Light RGB Value'
         value_template: >
             {%- if is_state('input_select.theme', "New Year's Day") -%} 255,0,0
             {%- elif is_state('input_select.theme', "Groundhog Day") -%} 255,0,0
             {%- elif is_state('input_select.theme', "Valentine's Day") -%} 255,196,250
             {%- elif is_state('input_select.theme', "St. Patrick's Day") -%} 85,255,56
-            {%- elif is_state('input_select.theme', "Starwars Day") -%} 86,66,244            
+            {%- elif is_state('input_select.theme', "Starwars Day") -%} 86,66,244
             {%- elif is_state('input_select.theme', "Good Friday") -%} 255,255,56
             {%- elif is_state('input_select.theme', "Easter Sunday") -%} 255,255,56
             {%- elif is_state('input_select.theme', "Earth Day") -%} 82,255,56
@@ -110,6 +117,7 @@ sensor:
             {%- elif is_state('input_select.theme', "New Year's Eve") -%} 255,0,0
             {%- else -%} 255,255,255
             {%- endif -%}
+        icon_template: "{% if is_state('sun.sun', 'above_horizon') %} mdi:led-on {% else %}mdi:led-on{% endif %}"
 
 input_select:
   theme:

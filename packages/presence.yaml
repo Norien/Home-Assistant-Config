@@ -3,14 +3,6 @@
 ################################################################
 homeassistant:
   customize:
-    device_tracker.bigdrakar_justin:
-      friendly_name: Justin Owntracks
-    device_tracker.bigdrakar_nicole:
-      friendly_name: Nicole Owntracks
-    device_tracker.android262071b676d4d855:
-      friendly_name: Justin Netgear
-    device_tracker.androidc3a6fa8dea348d9e:
-      friendly_name: Nicole Netgear
     # GOOGLE TRAVEL TIME SENSORS
     sensor.nicole_phone_to_home:
       friendly_name: 'Nicole Phone to Home'
@@ -18,6 +10,8 @@ homeassistant:
     sensor.nicole_home_to_work:
       friendly_name: 'Nicole Home to Work'
       icon: mdi:car
+    sensor.life360_sensor:
+      friendly_name: Life 360
 
 ###### STATE CARD
 group:
@@ -31,40 +25,118 @@ group:
       - input_boolean.away
       - input_boolean.vacation
   justin:
+    name: Justin
+    icon: mdi:human
     entities:
-      - sensor.justin
-      - device_tracker.bigdrakar_justin
-      - device_tracker.phone_justin
+      - input_boolean.justin
+      - device_tracker.justin_router
+      - device_tracker.justin_justin
   nicole:
+    name: Nicole
+    icon: mdi:human-female
     entities:
-      - sensor.nicole
-      - device_tracker.bigdrakar_nicole
-      - device_tracker.phone_nicole
+      - input_boolean.nicole
+      - device_tracker.nicole_router
+      - device_tracker.nicole_nicole
       - sensor.nicole_phone_to_home
 
 automation:
+###### Mark Justin away or home
+  - alias: 'Mark Justin Away'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.justin_router
+        to: 'not_home'
+        for:
+          minutes: 10
+      - platform: state
+        entity_id: device_tracker.justin_justin
+        to: 'not_home'
+    condition:
+      condition: state
+      entity_id: input_boolean.justin
+      state: 'on'
+    action:
+      - service: homeassistant.turn_off
+        entity_id: input_boolean.justin
+
+  - alias: 'Mark Justin Home'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.justin_router
+        to: 'home'
+      - platform: state
+        entity_id: device_tracker.justin_justin
+        to: 'home'
+    condition:
+      condition: state
+      entity_id: input_boolean.justin
+      state: 'off'
+    action:
+       service: homeassistant.turn_on
+       entity_id: input_boolean.justin
+
+  ###### Mark Nicole away or home
+  - alias: 'Mark Nicole Away'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.nicole_router
+        to: 'not_home'
+        for:
+          minutes: 10
+      - platform: state
+        entity_id: device_tracker.nicole_nicole
+        to: 'not_home'
+    condition:
+      condition: state
+      entity_id: input_boolean.nicole
+      state: 'on'
+    action:
+      - service: homeassistant.turn_off
+        entity_id: input_boolean.nicole
+
+  - alias: 'Mark Nicole Home'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.nicole_router
+        to: 'home'
+      - platform: state
+        entity_id: device_tracker.nicole_nicole
+        to: 'home'
+    condition:
+      condition: state
+      entity_id: input_boolean.nicole
+      state: 'off'
+    action:
+       service: homeassistant.turn_on
+       entity_id: input_boolean.nicole
+
+#-----------------------------------------------
 ############# AWAY
   - alias: Set Away Mode on
     initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: group.justin, group.nicole
+        to: 'off'
     condition:
     - condition: and
       conditions:
         - condition: state
-          entity_id: 'sensor.justin'
-          state: 'not_home'
+          entity_id: 'group.justin'
+          state: 'off'
         - condition: state
-          entity_id: 'sensor.nicole'
-          state: 'not_home'
+          entity_id: 'group.nicole'
+          state: 'off'
         - condition: state
           entity_id: 'input_boolean.guest'
           state: 'off'
         - condition: state
           entity_id: 'input_boolean.away'
           state: 'off'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.bigdrakar_justin, device_tracker.bigdrakar_nicole
-        to: 'not_home'
     action:
       - service: homeassistant.turn_on
         entity_id: input_boolean.away
@@ -76,6 +148,10 @@ automation:
 ############# HOME
   - alias: 'Set Away Mode off'
     initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: group.justin, group.nicole
+        to: 'on'
     condition:
     - condition: state
       entity_id: input_boolean.away
@@ -83,18 +159,14 @@ automation:
     - condition: or
       conditions:
         - condition: state
-          entity_id: 'sensor.justin'
-          state: 'home'
+          entity_id: 'group.justin'
+          state: 'on'
         - condition: state
-          entity_id: 'sensor.nicole'
-          state: 'home'
+          entity_id: 'group.nicole'
+          state: 'on'
         - condition: state
           entity_id: 'input_boolean.guest'
           state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.bigdrakar_justin, device_tracker.bigdrakar_nicole
-        to: 'home'
     action:
       - service: homeassistant.turn_off
         entity_id: input_boolean.away
@@ -165,6 +237,12 @@ input_boolean:
     name: Away
     icon: mdi:account-off
     initial: off
+  justin:
+    name: Justin
+    icon: mdi:account
+  nicole:
+    name: Nicole
+    icon: mdi:account
 
 ###### Sensors
 sensor:
@@ -172,12 +250,11 @@ sensor:
   - platform: google_travel_time
     name: Nicole Phone To Home
     api_key: !secret google_secret
-    origin: device_tracker.bigdrakar_nicole
+    origin: device_tracker.nicole_nicole
     destination: zone.home
 
-  - platform: template
-    sensors:
-      nicole:
-        value_template: "{% if is_state('device_tracker.bigdrakar_nicole', 'home') %}home{% else %}not_home{% endif %}"
-      justin:
-        value_template: "{% if is_state('device_tracker.bigdrakar_justin', 'home') %}home{% else %}not_home{% endif %}"
+  - platform: life360
+    username: !secret life360_username
+    password: !secret life360_password
+    mqtt_topic: "/life360/data"
+    scan_interval: 60
