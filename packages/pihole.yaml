@@ -154,11 +154,11 @@ sensor:
       pihole_dns:
         value_template: "{{states.sensor.pihole_status_raw.state.split(':::')[1]}}"
         icon_template: >-
-          {% if states.sensor.pihole_dns.state == 'DNS service is running' %}
+          {%- if states.sensor.pihole_status_raw.state.split(':::')[1][1:-1] == 'DNS service is running' -%}
             mdi:checkbox-marked
-          {% else %}
+          {%- else -%}
             mdi:checkbox-blank-outline
-          {% endif %}
+          {%- endif -%}
 
   - platform: template
     sensors:
