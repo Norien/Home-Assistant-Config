@@ -178,6 +178,26 @@ automation:
         data:
           entity_id: climate.hallway
           away_mode: 'false'
+
+###### SET VACATION MODE
+  - alias: Set vacation mode
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: input_boolean.away
+        to: 'on'
+        for:
+          hours: 17
+      - platform: state
+        entity_id: group.justin, group.nicole
+        to: 'on'
+    action:
+      - service_template: >
+          {% if states.input_boolean.vacation.state == 'on' %} homeassistant.turn_off
+          {% else %} homeassistant.turn_on
+          {% endif %}
+        entity_id: input_boolean.vacation
+
 script:
   all_off:
     sequence:
