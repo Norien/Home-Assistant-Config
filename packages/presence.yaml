@@ -10,6 +10,7 @@ homeassistant:
     sensor.nicole_home_to_work:
       friendly_name: 'Nicole Home to Work'
       icon: mdi:car
+    # OTHER
     sensor.life360_sensor:
       friendly_name: Life 360
 
@@ -41,146 +42,19 @@ group:
       - sensor.nicole_phone_to_home
 
 automation:
-###### Mark Justin away or home
-  - alias: 'Mark Justin Away'
+  - alias: house_mode_away
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: device_tracker.justin_router
-        to: 'not_home'
-        for:
-          minutes: 10
-      - platform: state
-        entity_id: device_tracker.justin_justin
-        to: 'not_home'
-    condition:
-      condition: state
-      entity_id: input_boolean.justin
-      state: 'on'
+        entity_id: group.justin, group.nicole, input_boolean.guest
     action:
-      - service: homeassistant.turn_off
-        entity_id: input_boolean.justin
-
-  - alias: 'Mark Justin Home'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.justin_router
-        to: 'home'
-      - platform: state
-        entity_id: device_tracker.justin_justin
-        to: 'home'
-    condition:
-      condition: state
-      entity_id: input_boolean.justin
-      state: 'off'
-    action:
-       service: homeassistant.turn_on
-       entity_id: input_boolean.justin
-
-  ###### Mark Nicole away or home
-  - alias: 'Mark Nicole Away'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.nicole_router
-        to: 'not_home'
-        for:
-          minutes: 10
-      - platform: state
-        entity_id: device_tracker.nicole_nicole
-        to: 'not_home'
-    condition:
-      condition: state
-      entity_id: input_boolean.nicole
-      state: 'on'
-    action:
-      - service: homeassistant.turn_off
-        entity_id: input_boolean.nicole
-
-  - alias: 'Mark Nicole Home'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.nicole_router
-        to: 'home'
-      - platform: state
-        entity_id: device_tracker.nicole_nicole
-        to: 'home'
-    condition:
-      condition: state
-      entity_id: input_boolean.nicole
-      state: 'off'
-    action:
-       service: homeassistant.turn_on
-       entity_id: input_boolean.nicole
-
-#-----------------------------------------------
-############# AWAY
-  - alias: Set Away Mode on
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: group.justin, group.nicole
-        to: 'off'
-    condition:
-    - condition: and
-      conditions:
-        - condition: state
-          entity_id: 'group.justin'
-          state: 'off'
-        - condition: state
-          entity_id: 'group.nicole'
-          state: 'off'
-        - condition: state
-          entity_id: 'input_boolean.guest'
-          state: 'off'
-        - condition: state
-          entity_id: 'input_boolean.away'
-          state: 'off'
-    action:
-      - service: homeassistant.turn_on
+      - service_template: >
+          {% if states.group.justin.state == 'off' and states.group.nicole.state == 'off' and states.input_boolean.guest.state == 'off' and states.input_boolean.away.state == 'off' %} homeassistant.turn_on
+          {% elif states.group.justin.state == 'on' or states.group.nicole.state == 'on' or states.input_boolean.guest.state == 'on' and states.input_boolean.away.state == 'on' %} homeassistant.turn_off
+          {% endif %}
         entity_id: input_boolean.away
-      - service: notify.justin
-        data:
-          message: 'Nobody is home, All switches and lights have been turned OFF. The alarm is armed'
-      - service: script.all_off
 
-############# HOME
-  - alias: 'Set Away Mode off'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: group.justin, group.nicole
-        to: 'on'
-    condition:
-    - condition: state
-      entity_id: input_boolean.away
-      state: 'on'
-    - condition: or
-      conditions:
-        - condition: state
-          entity_id: 'group.justin'
-          state: 'on'
-        - condition: state
-          entity_id: 'group.nicole'
-          state: 'on'
-        - condition: state
-          entity_id: 'input_boolean.guest'
-          state: 'on'
-    action:
-      - service: homeassistant.turn_off
-        entity_id: input_boolean.away
-      - service: notify.justin
-        data:
-          message: 'Alarm is disarmed, Welcome Home'
-###### SET NEST HOME
-      - service: climate.set_away_mode
-        data:
-          entity_id: climate.hallway
-          away_mode: 'false'
-
-###### SET VACATION MODE
-  - alias: Set vacation mode
+  - alias: house_mode_vacation
     initial_state: 'on'
     trigger:
       - platform: state
@@ -188,60 +62,72 @@ automation:
         to: 'on'
         for:
           hours: 17
-      - platform: state
-        entity_id: group.justin, group.nicole
-        to: 'on'
     action:
       - service_template: >
-          {% if states.input_boolean.vacation.state == 'on' %} homeassistant.turn_off
-          {% else %} homeassistant.turn_on
+          {% if states.input_boolean.vacation.state == 'off' and states.input_boolean.away.state == 'on' %} homeassistant.turn_on
+          {% elif states.input_boolean.vacation.state == 'on' and states.input_boolean.away.state == 'off' %} homeassistant.turn_off
           {% endif %}
         entity_id: input_boolean.vacation
 
-script:
-  all_off:
-    sequence:
-  ##### BEDROOM
-      - service: switch.turn_off
-        entity_id: switch.bedroom_pc_off
-      - service: switch.turn_off
-        entity_id: switch.led_strip
-      - service: switch.turn_off
-        entity_id: switch.bedroom_lamps_
-      - service: switch.turn_off
-        entity_id: switch.bedroom_fan
-  ###### LIVINGROOM/KITCHEN
-      - service: switch.turn_off
-        entity_id: switch.living_room_pc
-      - service: light.turn_off
+  - alias: house_mode_user_justin
+    initial_state: 'on'
+    trigger:
+        - platform: state
+          entity_id: device_tracker.justin_router
+          to: 'not_home'
+          for:
+            minutes: 10
+        - platform: state
+          entity_id: device_tracker.justin_justin
+    action:
+      - service_template: >
+          {% if states.device_tracker.justin_justin.state == 'home' or states.device_tracker.justin_router.state == 'home' and states.input_boolean.justin.state == 'off' %} homeassistant.turn_on
+          {% elif states.device_tracker.justin_justin.state != 'home' or states.device_tracker.justin_router.state != 'home' and states.input_boolean.justin.state == 'on' and states.device_tracker.justin_justin.attributes.battery | int > 7 %} homeassistant.turn_off
+          {% endif %}
+        entity_id: input_boolean.justin
+
+  - alias: house_mode_user_nicole
+    initial_state: 'on'
+    trigger:
+        - platform: state
+          entity_id: device_tracker.nicole_router
+          to: 'not_home'
+          for:
+            minutes: 10
+        - platform: state
+          entity_id: device_tracker.nicole_nicole
+    action:
+      - service_template: >
+          {% if states.device_tracker.nicole_nicole.state == 'home' or states.device_tracker.nicole_router.state == 'home' and states.input_boolean.nicole.state == 'off' %} homeassistant.turn_on
+          {% elif states.device_tracker.nicole_nicole.state != 'home' or states.device_tracker.nicole_router.state != 'home' and states.input_boolean.nicole.state == 'on' and states.device_tracker.nicole_nicole.attributes.battery | int > 7%} homeassistant.turn_off
+          {% endif %}
+        entity_id: input_boolean.nicole
+
+  - alias: 'welcome_home'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: input_boolean.away, input_boolean.vacation
+        to: 'off'
+    action:
+# OUTDOOR PORCH LIGHT IS SET ON WHEN HOME FROM THEME PACKAGE
+      - service_template: >
+          {% if states.sensor.living_room_lux.state | float < 45 %} switch.turn_on
+          {% else %} switch.turn_off
+          {% endif %}
         entity_id: light.living_room
-      - service: light.turn_off
-        entity_id: light.kitchen_sink
-      - service: media_player.turn_off
-        entity_id: media_player.kitchen
-  ###### BACKYARD
-      - service: light.turn_off
-        entity_id: light.deck_lights
-      - service: media_player.turn_off
-        entity_id: media_player.backyard
-      - service: switch.turn_off
-        entity_id: switch.patio_amplifier
-  ###### OFFICE
-      - service: switch.turn_off
-        entity_id: switch.office_lightswitch
-      - service: switch.turn_off
-        entity_id: switch.office_pc
-  ###### FINDLAYS ROOM
-      - service: light.turn_off
-        entity_id: light.findlay_lamp
-  ###### SET NEST AWAY
       - service: climate.set_away_mode
         data:
           entity_id: climate.hallway
-          away_mode: 'true'
-  ###### HALLWAY
-      - service: light.turn_off
-        entity_id: light.hallway
+          away_mode: 'false'
+      - service: notify.justin
+        data:
+          message: 'Alarm is disarmed, Welcome Home'
+      - wait_template: "{{ states.sensor.living_room_motion.state == 'True' }}"
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.google_home
+          message: "Welcome Home"
 
 ###### MODES / PEOPLE
 input_boolean:
@@ -264,7 +150,55 @@ input_boolean:
     name: Nicole
     icon: mdi:account
 
-###### Sensors
+script:
+  house_mode_away:
+    sequence:
+  ##### BEDROOM
+      - service: switch.turn_off
+        entity_id: switch.bedroom_pc_off
+      - service: switch.turn_off
+        entity_id: switch.led_strip
+      - service: switch.turn_off
+        entity_id: switch.bedroom_lamps_
+      - service: switch.turn_off
+        entity_id: switch.bedroom_fan
+  ###### LIVINGROOM/KITCHEN
+      - service: switch.turn_off
+        entity_id: switch.living_room_pc
+      - service: light.turn_off
+        entity_id: light.living_room
+      - service: light.turn_off
+        entity_id: light.kitchen_sink
+      - service: media_player.turn_off
+        entity_id: media_player.kitchen
+      - service: media_player.turn_off
+        entity_id: media_player.google_home
+  ###### BACKYARD
+      - service: light.turn_off
+        entity_id: light.deck_lights
+      - service: media_player.turn_off
+        entity_id: media_player.backyard
+      - service: switch.turn_off
+        entity_id: switch.patio_amplifier
+  ###### OFFICE
+      - service: switch.turn_off
+        entity_id: switch.office_lightswitch
+      - service: switch.turn_off
+        entity_id: switch.office_pc
+  ###### FINDLAYS ROOM
+      - service: light.turn_off
+        entity_id: light.findlays_room
+  ###### SET NEST AWAY
+      - service: climate.set_away_mode
+        data:
+          entity_id: climate.hallway
+          away_mode: 'true'
+  ###### MISC LIGHTS
+      - service: light.turn_off
+        entity_id: light.hallway
+      - service: light.turn_off
+        entity_id: light.hue_go
+
 sensor:
 ###### GOOGLE TRAVEL TIME
   - platform: google_travel_time
