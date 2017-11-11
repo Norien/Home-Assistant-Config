@@ -52,10 +52,16 @@ group:
     entities:
      - switch.living_room_pc
      - light.living_room
+     - light.couch
      - automation.night_light
      - automation.light_living_room_sunset
      - input_select.light_living_room_scene
      - input_select.live_scene
+
+light:
+  - platform: tplink
+    host: 192.168.1.108
+    name: 'Couch'
 
 script:
   living_room_pc_off:
@@ -73,6 +79,7 @@ script:
             light.hue_color_lamp_3:
             light.living_room_lamp:
             light.kitchen_sink:
+            light.couch:
       - service: input_select.select_option
         data:
           entity_id: input_select.light_living_room_scene
@@ -96,6 +103,12 @@ script:
         data:
           entity_id: input_select.light_living_room_scene
           option: "Dimmed"
+      - service: light.turn_on
+        data:
+          entity_id:
+            - light.couch
+          brightness: 77
+          rgb_color: [174,140,79]
   lr_relax:
     sequence:
       - service: light.hue_activate_scene
@@ -126,6 +139,12 @@ script:
         data:
           entity_id: input_select.light_living_room_scene
           option: "Bright"
+      - service: light.turn_on
+        data:
+          entity_id:
+            - light.couch
+          brightness: 255
+          rgb_color: [154,233,254]
   lr_springblossom:
     sequence:
       - service: light.hue_activate_scene
@@ -136,6 +155,12 @@ script:
         data:
           entity_id: input_select.light_living_room_scene
           option: "Spring Blossom"
+      - service: light.turn_on
+        data:
+          entity_id:
+            - light.couch
+          brightness: 255
+          rgb_color: [238,132,255]
   beach:
     sequence:
       - service: light.hue_activate_scene

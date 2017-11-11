@@ -108,10 +108,11 @@ sensor:
 
 ###### EXTERNAL IP FOR NOTIFY
   - platform: rest
-    resource: http://ip.jsontest.com
+    resource: https://api.ipify.org/?format=json
+    #resource: http://ip.jsontest.com
     name: external_ip
     value_template: '{{ value_json.ip }}'
-    scan_interval: 10800
+    scan_interval: 14400
 
 ###### CPU & HDD TEMPERATURE
   - platform: command_line

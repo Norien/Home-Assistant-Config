@@ -14,7 +14,7 @@ group:
     entities:
       - sensor.holiday
       - input_select.theme
-      #- automation.theme_light
+      - automation.theme_light
       - sensor.theme_color
       - sensor.theme_sound
 
@@ -72,22 +72,36 @@ automation:
   - alias: 'theme_light'
     initial_state: 'on'
     trigger:
-      - platform: sun
-        event: sunset
+      - platform: state
+        entity_id: sun.sun
       - platform: state
         entity_id: input_boolean.away
         to: 'off'
     condition:
       - condition: template
-        value_template: '{{states.input_boolean.away.state == "off" and states.sun.sun == "below_horizon"}}'
+        value_template: '{{states.input_boolean.away.state == "off" and states.sun.sun.state == "below_horizon"}}'
     action:
       - service: light.turn_on
         data:
           entity_id:
-            - light.hue_go
+            - light.front_door
           brightness: 250
         data_template:
           rgb_color: [ "{{ states.sensor.theme_color.state.split(',')[0]|int }}", "{{ states.sensor.theme_color.state.split(',')[1]|int }}", "{{ states.sensor.theme_color.state.split(',')[2]|int }}" ]
+
+  - alias: 'theme_light_auto_off'
+    initial_state: 'on'
+    trigger:
+      - platform: template
+        value_template: "{% if is_state('light.front_door', 'on') %}true{% endif %}"
+    condition:
+      - condition: state
+        entity_id: 'sun.sun'
+        state: 'above_horizon'
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.front_door
 
 sensor:
   - platform: template
@@ -110,7 +124,7 @@ sensor:
             {%- elif is_state('input_select.theme', "Labour Day") -%} 255,0,0
             {%- elif is_state('input_select.theme', "Thanksgiving Day") -%} 255,110,0
             {%- elif is_state('input_select.theme', "Halloween") -%} 255,168,39
-            {%- elif is_state('input_select.theme', "Remembrance Day") -%} 255,0,0
+            {%- elif is_state('input_select.theme', "Remembrance Day") -%} 252,10,10
             {%- elif is_state('input_select.theme', "Christmas Eve") -%} 33,55,0
             {%- elif is_state('input_select.theme', "Christmas Day") -%} 33,55,0
             {%- elif is_state('input_select.theme', "Boxing Day") -%} 33,55,0

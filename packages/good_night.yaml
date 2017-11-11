@@ -7,13 +7,15 @@ homeassistant:
       emulated_hue: true
       emulated_hue_name: "Good Night"
       google_assistant: true
-      google_assistant_name: "Good Night"      
+      google_assistant_name: "Good Night"
       friendly_name: Good Night
       icon: mdi:sleep
 
 script:
   good_night:
     sequence:
+    - service: light.turn_off
+      entity_id: light.front_door
 ###### lAUNDRY ROOM
     - service: switch.turn_off
       entity_id: switch.washing_machine

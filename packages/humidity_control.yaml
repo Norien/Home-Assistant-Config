@@ -29,7 +29,7 @@ group:
 
 sensor:
   - platform: mold_indicator
-    indoor_temp_sensor: sensor.average_house_temp
+    indoor_temp_sensor: sensor.hallway_thermostat_temperature
     indoor_humidity_sensor: sensor.hallway_thermostat_humidity
     outdoor_temp_sensor: sensor.dark_sky_apparent_temperature
     calibration_factor: 1.2
@@ -40,7 +40,7 @@ automation:
     trigger:
       - platform: template
         value_template: >
-          {% if float(states.sensor.mold_indicator.state) > float(65) or float(states.sensor.mold_indicator.state) < float(63) %} true
+          {% if float(states.sensor.mold_indicator.state) > float(65) or float(states.sensor.mold_indicator.state) < float(64) %} true
           {% else %} false
           {% endif %}
     action:
@@ -69,6 +69,13 @@ automation:
         data_template:
           title: "Possible Mold Growth"
           message: "It's possible to have mold growth because the mold indicator is {{ states.sensor.mold_indicator.state }}"
+      - service: automation.turn_off
+        data:
+          entity_id: automation.notify_if_mold_sensor_is_too_high
+      - delay: '02:00:00'
+      - service: automation.turn_on
+        data:
+          entity_id: automation.notify_if_mold_sensor_is_too_high          
 
   - alias: 'Notify if Dehumidifier is on too long'
     initial_state: 'on'

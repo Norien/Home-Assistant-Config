@@ -15,9 +15,6 @@ homeassistant:
     script.clear_log:
       friendly_name: 'Clear Log File'
       icon: mdi:eraser
-    script.refresh_devices:
-      friendly_name: Refresh Devices
-      icon: mdi:account-convert
     script.clear_tts_cache:
       friendly_name: Clear TTS cache
       icon: mdi:shredder
@@ -27,7 +24,6 @@ group:
     name: Utilities
     control: hidden
     entities:
-      - script.refresh_devices
       - script.restart_ha
       - script.update_ha
       - script.clear_log
@@ -60,30 +56,11 @@ script:
      sequence:
        - service: tts.clear_cache
        - service: shell_command.backup_config
-  refresh_devices:
-    sequence:
-      - service: mqtt.publish
-        data:
-          topic: owntracks/bigdrakar/justin/cmd
-          payload: '{"_type":"cmd","action":"reportLocation"}"'
-      - service: mqtt.publish
-        data:
-          topic: owntracks/bigdrakar/nicole/cmd
-          payload: '{"_type":"cmd","action":"reportLocation"}"'
   clear_tts_cache:
     sequence:
       - service: tts.clear_cache
 #########################################################################
 automation:
-  # - alias: "Owntracks Refresh"
-  #   initial_state: 'on'
-  #   trigger:
-  #     - platform: time
-  #       minutes: '/5'
-  #       seconds: 0
-  #   action:
-  #     - service: script.refresh_devices
-
   - alias: "Auto Backup"
     initial_state: 'on'
     trigger:

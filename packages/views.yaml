@@ -92,6 +92,7 @@ group:
     entities:
       - light.hallway
       - light.hue_go
+      - light.front_door
   media_player1:
     name: Media Players Living Room
     entities:

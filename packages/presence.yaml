@@ -62,6 +62,9 @@ automation:
         to: 'on'
         for:
           hours: 17
+      - platform: state
+        entity_id: input_boolean.away
+        to: 'off'
     action:
       - service_template: >
           {% if states.input_boolean.vacation.state == 'off' and states.input_boolean.away.state == 'on' %} homeassistant.turn_on
@@ -155,24 +158,23 @@ script:
     sequence:
   ##### BEDROOM
       - service: switch.turn_off
-        entity_id: switch.bedroom_pc_off
-      - service: switch.turn_off
-        entity_id: switch.led_strip
-      - service: switch.turn_off
-        entity_id: switch.bedroom_lamps_
-      - service: switch.turn_off
-        entity_id: switch.bedroom_fan
+        entity_id:
+          - switch.bedroom_media
+          - switch.led_strip
+          - switch.bedroom_lamps_
+          - switch.bedroom_fan
   ###### LIVINGROOM/KITCHEN
       - service: switch.turn_off
         entity_id: switch.living_room_pc
       - service: light.turn_off
-        entity_id: light.living_room
-      - service: light.turn_off
-        entity_id: light.kitchen_sink
+        entity_id:
+          - light.living_room
+          - light.kitchen_sink
+          - light.couch
       - service: media_player.turn_off
-        entity_id: media_player.kitchen
-      - service: media_player.turn_off
-        entity_id: media_player.google_home
+        entity_id:
+          - media_player.kitchen
+          - media_player.google_home
   ###### BACKYARD
       - service: light.turn_off
         entity_id: light.deck_lights
@@ -182,9 +184,9 @@ script:
         entity_id: switch.patio_amplifier
   ###### OFFICE
       - service: switch.turn_off
-        entity_id: switch.office_lightswitch
-      - service: switch.turn_off
-        entity_id: switch.office_pc
+        entity_id:
+          - switch.office_lightswitch
+          - switch.office_pc
   ###### FINDLAYS ROOM
       - service: light.turn_off
         entity_id: light.findlays_room
@@ -195,9 +197,27 @@ script:
           away_mode: 'true'
   ###### MISC LIGHTS
       - service: light.turn_off
-        entity_id: light.hallway
-      - service: light.turn_off
-        entity_id: light.hue_go
+        entity_id:
+          - light.hallway
+          - light.hue_go
+
+  house_mode_away_test:
+    sequence:
+      - service: homeassistant.turn_off
+        data_template:
+          entity_id: >
+            {%- for state in states.light -%}
+            {%- if loop.first -%}{%- endif -%}
+            - {{ state.entity_id | lower }}
+            {% endfor -%}
+            {%- for state in states.switch -%}
+              {%- if loop.first -%}{%- endif -%}
+            - {{ state.entity_id | lower }}
+            {% endfor -%}
+            {%- for state in states.media_player-%}
+              {%- if loop.first -%}{%- endif -%}
+            - {{ state.entity_id | lower }}
+            {% endfor -%}
 
 sensor:
 ###### GOOGLE TRAVEL TIME

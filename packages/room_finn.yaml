@@ -85,8 +85,13 @@ automation:
         state: 'True'
     action:
       - service: light.turn_on
-        data:
+        data_template:
           entity_id: light.findlays_room
+          brightness: >
+            {% if (as_timestamp(now()) - as_timestamp(states.input_boolean.finn_sleep.last_changed)) > 600 %} 250
+            {% else %}
+            100
+            {% endif %}
 
   - alias: 'light_finn_off'
     initial_state: 'on'
