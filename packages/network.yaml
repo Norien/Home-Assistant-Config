@@ -1,0 +1,84 @@
+################################################################
+## Packages / internet_usage
+## @norien - https://github.com/Norien/Home-Assistant-Config
+################################################################
+
+###### STATE CARD
+group:
+  network:
+    name: Network
+    entities:
+      - sensor.external_ip
+      - sensor.certificate
+      - sensor.usage_days_remaining
+      - sensor.usage_downloaded
+      - sensor.usage_uploaded
+      - sensor.usage_total_usage
+      - sensor.speedtest_ping
+      - sensor.speedtest_download
+      - sensor.speedtest_upload
+
+sensor:
+###### CERT DAYS LEFT
+  - platform: command_line
+    command: !secret check_cert
+    name: certificate
+    unit_of_measurement: days
+    scan_interval: 86400
+    icon: mdi:certificate
+###### EXTERNAL IP FOR NOTIFY
+  - platform: rest
+    resource: https://api.ipify.org/?format=json
+    #resource: http://ip.jsontest.com
+    name: external_ip
+    value_template: '{{ value_json.ip }}'
+    scan_interval: 14400
+###### SPEEDTEST
+  - platform: speedtest
+    monitored_conditions:
+      - ping
+      - download
+      - upload
+###### CUSTOM DATA USAGE PYTHON SCRIPT
+  - platform: command_line
+    command: !secret internet_usage
+    hidden: true
+    name: 'usage'
+    scan_interval: 21600
+  - platform: template
+    sensors:
+      usage_downloaded:
+        friendly_name: "Downloaded"
+        value_template: "{{states.sensor.usage.state.split(',')[0]}}"
+        unit_of_measurement: "GB"
+        icon_template: "{% if icon == icon %}mdi:folder-download{% endif %}"
+      usage_uploaded:
+        friendly_name: "Uploaded"
+        value_template: "{{states.sensor.usage.state.split(',')[1]}}"
+        unit_of_measurement: "GB"
+        icon_template: "{% if icon == icon %}mdi:folder-upload{% endif %}"
+      usage_remaining_usage:
+        friendly_name: "Remaining Bandwidth"
+        value_template: "{{states.sensor.usage.state.split(',')[2]}}"
+        unit_of_measurement: "GB"
+        icon_template: "{% if icon == icon %}mdi:file{% endif %}"
+      usage_total_usage:
+        friendly_name: "Total Bandwidth"
+        value_template: "{{states.sensor.usage.state.split(',')[3]}}"
+        unit_of_measurement: "GB"
+        icon_template: "{% if icon == icon %}mdi:folder-star{% endif %}"
+      usage_usage_cap:
+        friendly_name: "Cap"
+        value_template: "{{states.sensor.usage.state.split(',')[4]}}"
+        unit_of_measurement: "GB"
+        icon_template: "{% if icon == icon %}mdi:school{% endif %}"
+      usage_percentage_used:
+        friendly_name: "Percentage Used"
+        value_template: "{{states.sensor.usage.state.split(',')[5]}}"
+        unit_of_measurement: "%"
+        icon_template: "{% if icon == icon %}mdi:update{% endif %}"
+      usage_days_remaining:
+        friendly_name: "Days Remaining"
+        value_template: "{{states.sensor.usage.state.split(',')[6]}}"
+        unit_of_measurement: "Days"
+        icon_template: "{% if icon == icon %}mdi:calendar-clock{% endif %}"
