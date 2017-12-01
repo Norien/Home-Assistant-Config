@@ -24,7 +24,6 @@ group:
      - switch.office_pc
      - switch.office_lightswitch
      - group.office_energy
-     # - script.office_pc_on
   office_energy:
     icon: mdi:power
     name: Power Strip
@@ -48,23 +47,14 @@ switch:
     qos: 0
     retain: true
 
-###### PC switch
-  # - platform: wake_on_lan
-  #   mac_address: !secret office_pc_mac
-  #   name: "office_pc_wol"
-  #   host: !secret office_pc_ip
-  #   broadcast_address: 255.255.255.255
-  #   turn_off:
-  #     service: shell_command.office_pc_off
-
   - platform: template
     switches:
       office_pc:
-        value_template: "{{ is_state('device_tracker.computer_office', 'home') }}"
+        value_template: "{{ states.sensor.office_draw.state|int > 100 }}"
         turn_on:
           service: script.office_pc_on
         turn_off:
-          service: shell_command.office_pc_off
+          service: script.office_pc_off
 
 sensor:
 ###### STEAM COMPONENT
@@ -112,8 +102,17 @@ sensor:
 script:
   office_pc_on:
     sequence:
+    - service: switch.turn_on
+      entity_id: switch.office_powerbar
+    - delay: '00:00:03'
     - service: shell_command.office_relay_1
     - service: shell_command.office_relay_0
+  office_pc_off:
+    sequence:
+    - service: shell_command.office_pc_off
+    - wait_template: "{{ states.sensor.office_draw.state|int < 100 }}"
+    - service: switch.turn_off
+      entity_id: switch.office_powerbar
 
 shell_command:
   office_pc_off: !secret office_pc_off
