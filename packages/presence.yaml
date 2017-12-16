@@ -30,6 +30,7 @@ group:
     icon: mdi:human
     entities:
       - input_boolean.justin
+      - sensor.find_justin
       - device_tracker.justin_router
       - device_tracker.justin_justin
   nicole:
@@ -53,6 +54,17 @@ automation:
           {% elif states.group.justin.state == 'on' or states.group.nicole.state == 'on' or states.input_boolean.guest.state == 'on' and states.input_boolean.away.state == 'on' %} homeassistant.turn_off
           {% endif %}
         entity_id: input_boolean.away
+      - service_template: >
+          {% if states.input_boolean.away.state == 'on' %} script.house_mode_away
+          {% endif %}
+      - service_template: >
+            {% if (as_timestamp(now()) - as_timestamp(states.input_boolean.away.last_changed)) < 60 %} notify.html5
+            {% endif %}
+        data_template:
+          message: >
+           {% if states.input_boolean.away.state == 'off' and states.input_boolean.guest.state == 'off' %} Alarm is disarmed, Welcome Home
+           {% elif states.input_boolean.away.state == 'on' and states.input_boolean.guest.state == 'off' %} Alarm is armed, House set to Away Mode
+           {% endif %}
 
   - alias: house_mode_vacation
     initial_state: 'on'
@@ -71,6 +83,12 @@ automation:
           {% elif states.input_boolean.vacation.state == 'on' and states.input_boolean.away.state == 'off' %} homeassistant.turn_off
           {% endif %}
         entity_id: input_boolean.vacation
+      - service: notify.html5
+        data_template:
+          message: >
+           {% if states.input_boolean.vacation.state == 'off' %} Welcome Home I trust your time away was nice.
+           {% elif states.input_boolean.vacation.state == 'on'%} Vacation Mode is now activated. Have a nice time away.
+           {% endif %}
 
   - alias: house_mode_user_justin
     initial_state: 'on'
@@ -85,7 +103,7 @@ automation:
     action:
       - service_template: >
           {% if states.device_tracker.justin_justin.state == 'home' or states.device_tracker.justin_router.state == 'home' and states.input_boolean.justin.state == 'off' %} homeassistant.turn_on
-          {% elif states.device_tracker.justin_justin.state != 'home' or states.device_tracker.justin_router.state != 'home' and states.input_boolean.justin.state == 'on' and states.device_tracker.justin_justin.attributes.battery | int > 7 %} homeassistant.turn_off
+          {% elif states.device_tracker.justin_justin.state != 'home' or states.device_tracker.justin_router.state != 'home' and states.input_boolean.justin.state == 'off' and states.device_tracker.justin_justin.attributes.battery | int > 7 %} homeassistant.turn_off
           {% endif %}
         entity_id: input_boolean.justin
 
@@ -102,7 +120,7 @@ automation:
     action:
       - service_template: >
           {% if states.device_tracker.nicole_nicole.state == 'home' or states.device_tracker.nicole_router.state == 'home' and states.input_boolean.nicole.state == 'off' %} homeassistant.turn_on
-          {% elif states.device_tracker.nicole_nicole.state != 'home' or states.device_tracker.nicole_router.state != 'home' and states.input_boolean.nicole.state == 'on' and states.device_tracker.nicole_nicole.attributes.battery | int > 7%} homeassistant.turn_off
+          {% elif states.device_tracker.nicole_nicole.state != 'home' or states.device_tracker.nicole_router.state != 'home' and states.input_boolean.nicole.state == 'off' and states.device_tracker.nicole_nicole.attributes.battery | int > 7%} homeassistant.turn_off
           {% endif %}
         entity_id: input_boolean.nicole
 
@@ -115,22 +133,70 @@ automation:
     action:
 # OUTDOOR PORCH LIGHT IS SET ON WHEN HOME FROM THEME PACKAGE
       - service_template: >
-          {% if states.sensor.living_room_lux.state | float < 45 %} switch.turn_on
-          {% else %} switch.turn_off
+          {% if states.sensor.living_room_lux.state | float < 45 %}
+          script.lr_concentrate
           {% endif %}
-        entity_id: light.living_room
+        entity_id: script.lr_concentrate
       - service: climate.set_away_mode
         data:
           entity_id: climate.hallway
           away_mode: 'false'
-      - service: notify.justin
-        data:
-          message: 'Alarm is disarmed, Welcome Home'
       - wait_template: "{{ states.sensor.living_room_motion.state == 'True' }}"
       - service: tts.google_say
         data_template:
           entity_id: media_player.google_home
           message: "Welcome Home"
+
+script:
+  house_mode_away:
+    sequence:
+      - service: light.turn_off
+        data_template:
+          entity_id: >
+            {%- for state in states.light if state.entity_id != 'light.front_door' -%}
+            {{- "," if not loop.first-}}{{ state.entity_id }}{{-endif-}}
+            {%- endfor -%}
+      - service: switch.turn_off
+        data_template:
+          entity_id: >
+            {%- for state in states.switch if
+            state.entity_id != 'switch.washing_machine' and
+            state.entity_id != 'switch.dehumidifier' and
+            state.entity_id != 'switch.office_powerbar' and
+            state.entity_id != 'switch.pihole'-%}
+            {{- "," if not loop.first-}}{{ state.entity_id }}{{-endif-}}
+            {%- endfor -%}
+      - service: media_player.turn_off
+        data_template:
+          entity_id: >
+            {%- for state in states.media_player -%}
+            {{- "," if not loop.first-}}{{ state.entity_id }}{{-endif-}}
+            {%- endfor -%}
+      - service: climate.set_away_mode
+        data:
+          entity_id: climate.hallway
+          away_mode: 'true'
+
+sensor:
+###### GOOGLE TRAVEL TIME
+  - platform: google_travel_time
+    name: Nicole Phone To Home
+    api_key: !secret google_secret
+    origin: device_tracker.nicole_nicole
+    destination: zone.home
+
+  - platform: life360
+    username: !secret life360_username
+    password: !secret life360_password
+    mqtt_topic: "/life360/data"
+    scan_interval: 60
+
+  - platform: rest
+    resource: http://ml.internalpositioning.com/location?group=norien_potato&user=justin
+    value_template: '{{ value_json.users.justin[0].location }}'
+    method: GET
+    name: FIND Justin
+    scan_interval: 10
 
 ###### MODES / PEOPLE
 input_boolean:
@@ -152,83 +218,3 @@ input_boolean:
   nicole:
     name: Nicole
     icon: mdi:account
-
-script:
-  house_mode_away:
-    sequence:
-  ##### BEDROOM
-      - service: switch.turn_off
-        entity_id:
-          - switch.bedroom_media
-          - switch.led_strip
-          - switch.bedroom_lamps_
-          - switch.bedroom_fan
-  ###### LIVINGROOM/KITCHEN
-      - service: switch.turn_off
-        entity_id: switch.living_room_pc
-      - service: light.turn_off
-        entity_id:
-          - light.living_room
-          - light.kitchen_sink
-          - light.couch
-      - service: media_player.turn_off
-        entity_id:
-          - media_player.kitchen
-          - media_player.google_home
-  ###### BACKYARD
-      - service: light.turn_off
-        entity_id: light.deck_lights
-      - service: media_player.turn_off
-        entity_id: media_player.backyard
-      - service: switch.turn_off
-        entity_id: switch.patio_amplifier
-  ###### OFFICE
-      - service: switch.turn_off
-        entity_id:
-          - switch.office_lightswitch
-          - switch.office_pc
-  ###### FINDLAYS ROOM
-      - service: light.turn_off
-        entity_id: light.findlays_room
-  ###### SET NEST AWAY
-      - service: climate.set_away_mode
-        data:
-          entity_id: climate.hallway
-          away_mode: 'true'
-  ###### MISC LIGHTS
-      - service: light.turn_off
-        entity_id:
-          - light.hallway
-          - light.hue_go
-
-  house_mode_away_test:
-    sequence:
-      - service: homeassistant.turn_off
-        data_template:
-          entity_id: >
-            {%- for state in states.light -%}
-            {%- if loop.first -%}{%- endif -%}
-            - {{ state.entity_id | lower }}
-            {% endfor -%}
-            {%- for state in states.switch -%}
-              {%- if loop.first -%}{%- endif -%}
-            - {{ state.entity_id | lower }}
-            {% endfor -%}
-            {%- for state in states.media_player-%}
-              {%- if loop.first -%}{%- endif -%}
-            - {{ state.entity_id | lower }}
-            {% endfor -%}
-
-sensor:
-###### GOOGLE TRAVEL TIME
-  - platform: google_travel_time
-    name: Nicole Phone To Home
-    api_key: !secret google_secret
-    origin: device_tracker.nicole_nicole
-    destination: zone.home
-
-  - platform: life360
-    username: !secret life360_username
-    password: !secret life360_password
-    mqtt_topic: "/life360/data"
-    scan_interval: 60

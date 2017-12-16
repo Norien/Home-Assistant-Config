@@ -43,8 +43,7 @@ group:
      - group.bedroom_white_noise
      - group.bedroom_led_strip
      # - binary_sensor.flic_80e4da71b68e
-     # - switch.bedroom_fan_a
-     # - switch.bedroom_fan_b
+
   bedroom_white_noise:
     name: White Noise
     icon: mdi:snowflake
@@ -110,26 +109,7 @@ switch:
         turn_off:
           service: media_player.media_Stop
           entity_id: media_player.kodi_bedroom_pi
-###### SONOFF DUAL 1
-  - platform: mqtt
-    name: "Bedroom Fan A"
-    state_topic: "stat/sonoff_dual/POWER1"
-    command_topic: "cmnd/sonoff_dual/POWER1"
-    payload_on: "ON"
-    payload_off: "OFF"
-    optimistic: false
-    qos: 0
-    retain: true
-###### SONOFF DUAL 2
-  - platform: mqtt
-    name: "Bedroom Fan B"
-    state_topic: "stat/sonoff_dual/POWER2"
-    command_topic: "cmnd/sonoff_dual/POWER2"
-    payload_on: "ON"
-    payload_off: "OFF"
-    optimistic: false
-    qos: 0
-    retain: true
+
 ###### BEDROOM PC SWITCH with TV
   - platform: wake_on_lan
     mac_address: !secret kodi_bedroom_mac
@@ -200,7 +180,7 @@ script:
       - service: media_player.play_media
         data:
           entity_id: media_player.kodi_bedroom_pi
-          media_content_id: "https://192.168.1.250:8123/local/white_noise/blizzard.mp3"
+          media_content_id: "https://192.168.1.115:8123/local/white_noise/blizzard.mp3"
           media_content_type: "audio/mp3"
 
 automation:

@@ -47,6 +47,10 @@ script:
       entity_id: light.kitchen_sink
     - service: media_player.turn_off
       entity_id: media_player.kitchen
+    - service: switch.turn_off
+      entity_id: switch.star
+    - service: switch.turn_off
+      entity_id: switch.tree
 ###### BACKYARD
     - service: light.turn_off
       entity_id: light.deck_lights
@@ -64,11 +68,3 @@ script:
          switch.turn_off
        {%- endif %}
       entity_id: switch.office_pc
-    - delay: '00:01:30'
-    - service_template: >
-       {%- if is_state('switch.office_pc', 'on') -%}
-         switch.turn_on
-       {%- else -%}
-         switch.turn_off
-       {%- endif %}
-      entity_id: switch.office_powerbar

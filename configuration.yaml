@@ -20,15 +20,14 @@ logbook:
 sun:
 discovery:
 
-zwave:
-  usb_path: /dev/zwave
+# zwave:
+  # usb_path: /dev/zwave
 
-zigbee:
-  device: /dev/zigbee
+# zigbee:
+  # device: /dev/zigbee
 
 emulated_hue:
-  host_ip: 192.168.1.250
-  listen_port: 80
+  host_ip: 192.168.1.115
   expose_by_default: false
 
 logger:
@@ -50,6 +49,10 @@ http:
    ssl_certificate: !secret ssl_certificate
    ssl_key: !secret ssl_key
 
+duckdns:
+  domain: !secret domain
+  access_token: !secret access_token
+
 tts:
   platform: google
 
@@ -57,6 +60,9 @@ recorder:
   db_url: !secret database
   purge_interval: 10
   purge_keep_days: 10
+  exclude:
+    entities:
+      - sensor.pihole_status_raw
 
 light:
   - platform: hue
@@ -73,14 +79,14 @@ mqtt:
   discovery_prefix: homeassistant
 
 device_tracker:
-  # - platform: ddwrt
-    # host: !secret router_host
-    # username: !secret router_username
-    # password: !secret router_password
-    # interval_seconds: 10
+  - platform: ddwrt
+    host: !secret router_host
+    username: !secret router_username
+    password: !secret router_password
+    interval_seconds: 10
   - platform: owntracks
   - platform: nmap_tracker
-    hosts: 192.168.1.1-255
+    hosts: 192.168.1.13
     scan_options: " --privileged -sP "
 
 wemo:
@@ -99,7 +105,11 @@ media_player:
     port: !secret kodi_livingroom_port
     username: !secret kodi_livingroom_username
     password: !secret kodi_livingroom_password
-    turn_off_action: shutdown
+    turn_off_action:
+      service: media_player.kodi_call_method
+      data_template:
+        entity_id: '{{ entity_id }}'
+        method: System.Shutdown
     name: kodi_livingroom
   - platform: cast
     host: 192.168.1.230
@@ -113,9 +123,17 @@ media_player:
     host: !secret kodi_bedroom_ip
     port: !secret kodi_bedroom_port
     name: kodi_bedroom
-    turn_off_action: hibernate
+    turn_off_action:
+      service: media_player.kodi_call_method
+      data_template:
+        entity_id: '{{ entity_id }}'
+        method: System.Hibernate
   - platform: kodi
     host: !secret kodi_bedroom_pi_ip
     port: !secret kodi_bedroom_pi_port
     name: kodi_bedroom_pi
-    turn_off_action: quit
+    turn_off_action:
+      service: media_player.kodi_call_method
+      data_template:
+        entity_id: '{{ entity_id }}'
+        method: Application.Quit

@@ -2,6 +2,14 @@
 ## Packages / internet_usage
 ## @norien - https://github.com/Norien/Home-Assistant-Config
 ################################################################
+homeassistant:
+  customize:
+    sensor.external_ip:
+      friendly_name: External IP
+      icon: mdi:earth
+    sensor.certificate:
+      friendly_name: Certificate
+      icon: mdi:certificate
 
 ###### STATE CARD
 group:
@@ -22,10 +30,10 @@ sensor:
 ###### CERT DAYS LEFT
   - platform: command_line
     command: !secret check_cert
-    name: certificate
+    name: Certificate
     unit_of_measurement: days
     scan_interval: 86400
-    icon: mdi:certificate
+    icon_template: "{% if icon == icon %}mdi:mdi:certificate{% endif %}"
 ###### EXTERNAL IP FOR NOTIFY
   - platform: rest
     resource: https://api.ipify.org/?format=json
@@ -78,7 +86,36 @@ sensor:
         unit_of_measurement: "%"
         icon_template: "{% if icon == icon %}mdi:update{% endif %}"
       usage_days_remaining:
-        friendly_name: "Days Remaining"
+        friendly_name: "Billing Period"
         value_template: "{{states.sensor.usage.state.split(',')[6]}}"
         unit_of_measurement: "Days"
         icon_template: "{% if icon == icon %}mdi:calendar-clock{% endif %}"
+
+script:
+###### NOTIFY IF IP CHANGES
+  - alias: Notify Of New External IP
+    initial_state: 'on'
+    trigger:
+      platform: state
+      entity_id: sensor.external_ip
+    condition:
+      - condition: template
+        value_template: "{% if trigger.from_state and trigger.to_state %} True {% else %} False {% endif %}"
+    action:
+      - service: notify.html5
+        data_template:
+          target: justin
+          message: "Your External IP changed from {{ trigger.from_state.state }} to {{ trigger.to_state.state }}"
+
+# Announce new devices on the network. Thanks 2 @robotsandcakes
+  - alias: "Notify if New device connected"
+    initial_state: 'on'
+    trigger:
+      - platform: event
+        event_type: device_tracker_new_device
+    action:
+      - service: notify.html5
+        data_template:
+          target: justin
+          message: >
+            New entity ID {{ trigger.event.data.entity_id }} and hostname {{ trigger.event.data.host_name }}

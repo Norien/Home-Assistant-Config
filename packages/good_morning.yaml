@@ -27,8 +27,6 @@ script:
     - service: script.morning_livingroom_lights
     - service: switch.turn_off
       entity_id: switch.bedroom_fan
-    - service: switch.turn_on
-      entity_id: switch.office_powerbar
     - service: homeassistant.turn_off
       entity_id: input_boolean.finn_sleep
   # - service: script.auto_cartoons ## kodi leia will not allow me to play smart playlists yet.
@@ -40,7 +38,7 @@ script:
       data:
         entity_id: media_player.google_home
         volume_level: '0.70'
-    - wait_template: "{{ states.sensor.living_room_motion.state == 'True' }}"        
+    - wait_template: "{{ states.sensor.living_room_motion.state == 'True' }}"
     - service: script.good_morning_tts
 
   good_morning_tts:

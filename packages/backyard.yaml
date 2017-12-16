@@ -54,6 +54,17 @@ automation:
       - service: switch.turn_on
         entity_id: switch.sonoff_1
 
+  - alias: "Backyard Party"
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.find_justin
+        to: 'backyard'
+        for:
+          seconds: 30 
+    action:
+      - service: script.backyard_party
+
 ###### 1 PRESS TO START MUSIC AND LIGHTS
 script:
   backyard_party:

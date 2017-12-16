@@ -23,16 +23,26 @@ group:
       - sensor.master_bed_humidity
       - sensor.laundry_humidity
       - sensor.hallway_thermostat_humidity
+      - sensor.average_humidity
       - sensor.mold_indicator
       - switch.dehumidifier
       - automation.dehumidifier
 
 sensor:
   - platform: mold_indicator
-    indoor_temp_sensor: sensor.hallway_thermostat_temperature
-    indoor_humidity_sensor: sensor.hallway_thermostat_humidity
+    indoor_temp_sensor: sensor.average_whole_home
+    indoor_humidity_sensor: sensor.average_humidity
     outdoor_temp_sensor: sensor.dark_sky_apparent_temperature
     calibration_factor: 1.2
+
+###### AVERAGE HUMIDITY
+  - platform: min_max
+    type: mean
+    name: Average Humidity
+    entity_ids:
+      - sensor.master_bed_humidity
+    #  - sensor.laundry_humidity
+      - sensor.hallway_thermostat_humidity
 
 automation:
   - alias: 'dehumidifier'
@@ -65,17 +75,18 @@ automation:
         entity_id: sensor.mold_indicator
         above: 69
     action:
-      - service: notify.justin
+      - service: notify.html5
         data_template:
           title: "Possible Mold Growth"
           message: "It's possible to have mold growth because the mold indicator is {{ states.sensor.mold_indicator.state }}"
+          target: "justin"
       - service: automation.turn_off
         data:
           entity_id: automation.notify_if_mold_sensor_is_too_high
       - delay: '02:00:00'
       - service: automation.turn_on
         data:
-          entity_id: automation.notify_if_mold_sensor_is_too_high          
+          entity_id: automation.notify_if_mold_sensor_is_too_high
 
   - alias: 'Notify if Dehumidifier is on too long'
     initial_state: 'on'
@@ -86,7 +97,8 @@ automation:
         for:
           hours: 2
     action:
-      - service: notify.justin
+      - service: notify.html5
         data_template:
           title: "dehumidifier Warning"
           message: "It's possible the dehumidifier water bucket if full."
+          target: "justin"

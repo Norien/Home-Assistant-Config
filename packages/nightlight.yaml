@@ -48,10 +48,6 @@ script:
         data:
           group_name: "Living Room"
           scene_name: "Nightlight"
-      - service: light.hue_activate_scene
-        data:
-          group_name: "Hallway"
-          scene_name: "Nightlight"
       - delay:
           minutes: 4
       - service_template: >
@@ -70,6 +66,4 @@ script:
             light.hue_color_lamp_2:
             light.hue_color_lamp_3:
             light.kitchen_sink:
-            light.hallway1:
-            light.hallway2:
             light.living_room_lamp:

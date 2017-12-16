@@ -3,11 +3,6 @@
 ################################################################
 homeassistant:
   customize:
-    script.kitchen_radio:
-      emulated_hue: true
-      friendly_name: 'Kitchen Radio'
-      google_assistant: true
-      google_assistant_name: 'Kitchen Radio'
     script.pc:
       emulated_hue: true
       friendly_name: 'PC'
@@ -28,10 +23,9 @@ google_assistant:
   project_id: !secret google_assistant_project_id
   client_id: !secret google_assistant_client_id
   access_token: !secret google_assistant_access_token
+  api_key: !secret google_assistant_api
   exposed_domains:
     - switch
-#    - light
-#    - group
 
 automation:
   - alias: 'google_home_volume'

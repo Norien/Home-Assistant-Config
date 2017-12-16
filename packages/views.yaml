@@ -29,7 +29,6 @@ group:
       - group.lux
       - group.waste_pickup
       - group.doorbell
-      - group.internet_usage
       - group.weather
   media_view:
     name: Media Players
@@ -69,6 +68,7 @@ group:
       - group.pi_zero
       - group.hassctl
       - group.theme
+      - group.network
   guest_view:
     name: Guest
     view: yes
@@ -93,6 +93,8 @@ group:
       - light.hallway
       - light.hue_go
       - light.front_door
+      - switch.tree
+      - switch.star
   media_player1:
     name: Media Players Living Room
     entities:

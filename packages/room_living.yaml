@@ -91,7 +91,7 @@ script:
         data:
           entity_id:
             light.kitchen_sink:
-          brightness: 254
+          brightness: 255
           rgb_color: [255,241,199]
   lr_dimmed:
     sequence:
@@ -144,7 +144,7 @@ script:
           entity_id:
             - light.couch
           brightness: 255
-          rgb_color: [154,233,254]
+          rgb_color: [255,255,255]
   lr_springblossom:
     sequence:
       - service: light.hue_activate_scene

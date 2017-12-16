@@ -26,6 +26,16 @@ automation:
     action:
       - service: script.activate_alarm
 
+  - alias: 'action button deactivate_alarm'
+    initial_state: 'on'
+    trigger:
+      - platform: event
+        event_type: html5_notification.clicked
+        event_data:
+          action: deactivate_alarm
+    action:
+      - service: script.deactivate_alarm
+
 script:
   activate_alarm:
     sequence:
@@ -38,21 +48,36 @@ script:
         data:
           rgb_hex: 'ff0000'
           host: !secret H801WIFI_url
-      - service: notify.justin
-        data_template:
+      - service: notify.html5
+        data:
           message: >
-            An alarm has been Triggered in {% if is_state('sensor.findlay_room_motion', 'True') %}Findlay's Room{% elif is_state('sensor.living_room_motion', 'True') %}the Living Room{% elif is_state('binary_sensor.room_masterbed_motion', 'True') %}the Master Bedroom{% elif is_state('sensor.dining_room_motion', 'True') %}the Dining Room{% endif %}
-      - service: notify.nicole
-        data_template:
-          message: >
-            An alarm has been Triggered in {% if is_state('sensor.findlay_room_motion', 'True') %}Findlay's Room{% elif is_state('sensor.living_room_motion', 'True') %}the Living Room{% elif is_state('binary_sensor.room_masterbed_motion', 'True') %}the Master Bedroom{% elif is_state('sensor.dining_room_motion', 'True') %}the Dining Room{% endif %}
+            An alarm has been Triggered in
+            {% if is_state('sensor.findlay_room_motion', 'True') %}Findlay's Room
+            {% elif is_state('sensor.living_room_motion', 'True') %}The Living Room
+            {% elif is_state('binary_sensor.room_masterbed_motion', 'True') %}The Master Bedroom
+            {% elif is_state('sensor.dining_room_motion', 'True') %}The Dining Room
+            {% endif %}
+          data:
+            actions:
+              - action: deactivate_alarm
+                title: "Turn Off"
       - service: media_player.volume_set
         data:
           entity_id: media_player.google_home
-          volume_level: '1'
+          volume_level: 1
       - service: tts.google_say
         data_template:
           entity_id: media_player.google_home
           message: "INTRUDER ALERT.THE POLICE HAVE BEEN CALLED AND ARE ON THE WAY"
           cache: false
       - service: script.notify_camera
+
+  deactivate_alarm:
+    sequence:
+      - service: script.morning_livingroom_lights
+      - service: switch.turn_off
+        data:
+          entity_id: switch.led_strip
+      - service: homeassistant.turn_on
+        data:
+          entity_id: input_boolean.guest

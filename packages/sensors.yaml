@@ -51,11 +51,6 @@ homeassistant:
       friendly_name: Findlay's Dimmer Switch
       icon: mdi:battery
 
-    #Custom data template sensor
-    sensor.average_house_temp:
-      friendly_name: Average Whole Home
-      icon: mdi:thermometer
-
 ###### STATE CARDS
 group:
   motion_sensors:
@@ -64,7 +59,6 @@ group:
      - sensor.findlay_room_motion
      - sensor.living_room_motion
      - sensor.dining_room_motion
-     #- sensor.driveway_motion
      - binary_sensor.room_masterbed_motion
      - binary_sensor.laundry_motion
   all_temps:
@@ -77,7 +71,7 @@ group:
      - sensor.living_room_temperature
      - sensor.dining_room_temperature
      - sensor.laundry_temperature
-     - sensor.average_house_temp
+     - sensor.average_whole_home
   sensor_battery_levels:
     name: Battery Levels
     entities:
@@ -87,11 +81,10 @@ group:
      - sensor.dining_room_motion_sensor_battery_level
      - sensor.findlays_room_dimmer_switch
      - sensor.living_room_dimmer_switch
-    # - sensor.driveway_battery_level
      - sensor.justin_battery
      - sensor.nicole_battery
-     - input_label.justin_battery
-     - input_label.nicole_battery
+     # - input_label.justin_battery
+     # - input_label.nicole_battery
   lux:
     name: Light Level
     entities:
@@ -322,25 +315,17 @@ sensor:
             mdi:battery-alert
           {% endif %}
 
-###### AVERAGE TEMP
-  - platform: template
-    sensors:
-      average_house_temp:
-            unit_of_measurement: "°C"
-            value_template: >-
-              {% set hallway = states('sensor.findlay_room_temperature') %}
-              {% set findlay_room = states('sensor.hallway_thermostat_temperature') %}
-              {% set living_room = states('sensor.living_room_temperature') %}
-              {% set dining_room = states('sensor.dining_room_temperature') %}
-              {% set master_bed_room = states('sensor.master_bed_temperature') %}
-              {% set laundry_room = states('sensor.laundry_temperature') %}
-
-              {% if (hallway  == 'unknown') or (findlay_room  == 'unknown') or (living_room  == 'unknown') or
-                (dining_room  == 'unknown') or (master_bed_room  == 'unknown')%}
-              {{states.sensor.hallway_thermostat_temperature.state}}
-              {% else %}
-                {{ ((float(hallway) + float(findlay_room) + float(living_room) + float(dining_room) + float(master_bed_room)) / 5) | round(1) }}
-              {% endif %}
+###### AVERAGE TEMPERATURE
+  - platform: min_max
+    type: mean
+    name: Average Whole Home
+    entity_ids:
+      - sensor.hallway_thermostat_temperature
+      - sensor.findlay_room_temperature
+      - sensor.master_bed_temperature
+      - sensor.living_room_temperature
+      - sensor.dining_room_temperature
+     # - sensor.laundry_temperature
 
 ###### DAY OF THE WEEK
   - platform: template

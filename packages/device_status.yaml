@@ -117,7 +117,9 @@ automation:
       - condition: template
         value_template: "{% if trigger.from_state and trigger.to_state %} True {% else %} False {% endif %}"
     action:
-      - service: notify.justin
+      - service: notify.html5
+        data:
+          target: justin
         data_template:
           message: >
             {% if trigger.to_state.state | lower == "offline" %}

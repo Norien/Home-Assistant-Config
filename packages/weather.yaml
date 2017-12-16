@@ -32,6 +32,8 @@ homeassistant:
     script.weather_report:
       friendly_name: 'Weather Report'
       emulated_hue: true
+      google_assistant: true
+      google_assistant_name: 'Weather Report'
 
 ###### STATE CARD
 group:
@@ -39,14 +41,19 @@ group:
     name: Weather
     control: hidden
     entities:
-      - sensor.dark_sky_apparent_temperature
-      - sensor.dark_sky_humidity
+      - weather.openweathermap
       - sensor.dark_sky_daily_high_apparent_temperature
       - sensor.dark_sky_daily_low_apparent_temperature
       - sensor.dark_sky_precip_probability
       - sensor.pws_uv
       - sensor.uv_burn_time
       - camera.radar
+
+
+weather:
+  - platform: openweathermap
+    api_key: !secret openweathermap
+    name: openweathermap
 
 ###### WEATHER MAP
 camera:
@@ -67,7 +74,7 @@ sensor:
           {%- endif -%}
       weather_inside_vs_outside:
         value_template: >
-          {% if (states.sensor.average_house_temp.state | float) >  (states.sensor.dark_sky_apparent_temperature.state | float) %}
+          {% if (states.sensor.average_whole_home.state | float) >  (states.sensor.dark_sky_apparent_temperature.state | float) %}
           true
           {% else %}
           false
@@ -129,10 +136,6 @@ sensor:
 script:
   weather_report:
     sequence:
-    - service: media_player.volume_set
-      data:
-        entity_id: media_player.kitchen
-        volume_level: '0.70'
     - service: tts.google_say
       data_template:
         entity_id: media_player.google_home

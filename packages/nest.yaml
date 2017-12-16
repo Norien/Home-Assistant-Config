@@ -38,7 +38,7 @@ homeassistant:
       friendly_name: 'Hotter'
     script.colder:
       emulated_hue: true
-      friendly_name: 'Colder'      
+      friendly_name: 'Colder'
 
 ###### STATE CARD
 group:
@@ -91,10 +91,7 @@ automation:
         entity_id: sensor.kitchen_nest_protect_co_status,sensor.kitchen_nest_protect_smoke_status
         to: 'emergency'
     action:
-      - service: notify.justin
-        data:
-          message: 'Nest has detected Smoke or CO in the Kitchen.'
-      - service: notify.nicole
+      - service: notify.html5
         data:
           message: 'Nest has detected Smoke or CO in the Kitchen.'
       - service: light.hue_activate_scene
@@ -119,7 +116,7 @@ automation:
         entity_id: climate.hallway
         state: 'cool'
     action:
-      - service: notify.justin
+      - service: notify.html5
         data:
           message: 'It is cooler outside then inside and the AC is on. You should open a window!'
       - service: automation.turn_off

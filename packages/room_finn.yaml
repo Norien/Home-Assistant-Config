@@ -5,6 +5,7 @@ homeassistant:
   customize:
     input_boolean.finn_sleep:
       emulated_hue: true
+    script.finn_sleep:  
       google_assistant: true
       google_assistant_name: 'Sleep'
     automation.light_finn_sleep:
@@ -29,6 +30,12 @@ group:
     entities:
       - automation.finn_temp_watchdog
       - sensor.findlay_room_temperature
+
+script:
+  finn_sleep:
+    sequence:
+      - service: input_boolean.toggle
+        entity_id: input_boolean.finn_sleep
 
 automation:
   - alias: 'finn_temp_watchdog'

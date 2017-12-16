@@ -157,13 +157,10 @@ automation:
         from: 'Running'
         to: 'Off'
         for:
-          minutes: 4
+          minutes: 6
     action:
       - service: script.laundry_tts
-      - service: notify.justin
-        data:
-          message: 'The Wash has completed.'
-      - service: notify.nicole
+      - service: notify.html5
         data:
           message: 'The Wash has completed.'
       - service: switch.turn_off
@@ -197,10 +194,7 @@ automation:
       entity_id: input_boolean.dryer_status
       state: 'on'
     action:
-      - service: notify.justin
-        data:
-          message: 'The Dryer has completed.'
-      - service: notify.nicole
+      - service: notify.html5
         data:
           message: 'The Dryer has completed.'
       - service: input_boolean.turn_off
@@ -239,10 +233,6 @@ script:
         - condition: time
           after: '07:00:00'
           before: '21:00:00'
-    - service: media_player.volume_set
-      data:
-        entity_id: media_player.google_home
-        volume_level: '0.70'
     - service: tts.google_say
       data_template:
         entity_id: media_player.google_home

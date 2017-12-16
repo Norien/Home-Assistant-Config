@@ -16,7 +16,9 @@ group:
   Radio:
     name: Radio
     entities:
-      - input_select.radio_station_location
+      - automation.radio_set_input_select
+      - input_select.radio_station_location_test
+      #- input_select.radio_station_location
       - input_select.radio_station
       - input_number.volume_radio
       - script.radio
@@ -90,6 +92,29 @@ automation:
             {% endif %}
           volume_level: '{{  states.input_number.volume_radio.state  }}'
 
+  # - alias: radio_set_input_select
+  #   initial_state: "on"
+  #   trigger:
+  #     - platform: time
+  #       seconds: "/5"
+  #   action:
+  #     - service: automation.turn_off
+  #       entity_id: automation.radio_set_input_select
+  #     - service: automation.trigger
+  #       entity_id: automation.radio_set_input_select
+  #     - service: input_select.set_options
+  #       data_template:
+  #         entity_id: input_select.radio_station_location_test
+  #         options: '{{states.sensor.all_media_players.state}}'
+sensor:
+  - platform: template
+    sensors:
+      all_media_players:
+        value_template: >
+          {%- for state in states.media_player -%}
+          {{- ", " if not loop.first-}}"{{ state.entity_id }}"{{-endif-}}
+          {%- endfor -%}
+
 input_number:
   volume_radio:
     name: Volume
@@ -115,12 +140,18 @@ input_select:
       - Elium-Rock
     initial: "-"
     icon: mdi:radio
-  radio_station_location:
+  # radio_station_location:
+  #   name: Radio Location
+  #   options:
+  #     - Kitchen
+  #     - Backyard
+  #     - Google-Home
+  #     - All Zones
+  #   initial: "Kitchen"
+  #   icon: mdi:radio
+
+  radio_station_location_test:
     name: Radio Location
     options:
-      - Kitchen
-      - Backyard
-      - Google-Home
-      - All Zones
-    initial: "Kitchen"
+      - "all_media_players"
     icon: mdi:radio

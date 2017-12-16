@@ -40,10 +40,7 @@ automation:
         to: 'on'
     action:
       - service: script.doorbell
-      - service: notify.justin
-        data:
-          message: 'Someone is at the front door.'
-      - service: notify.nicole
+      - service: notify.html5
         data:
           message: 'Someone is at the front door.'
 
@@ -74,10 +71,7 @@ automation:
           media_content_id: "http://192.168.1.92/misc_sound/dog-barking-2-bullmastiff.mp3"
           media_content_type: 'audio/mp3'
       - service: script.notify_camera
-      - service: notify.justin
-        data:
-          message: 'Someone is at the front door, Release the Hounds!'
-      - service: notify.nicole
+      - service: notify.html5
         data:
           message: 'Someone is at the front door, Release the Hounds!'
 
@@ -157,7 +151,7 @@ sensor:
            {%- elif is_state('input_select.theme', "New Year's Eve") -%} new_years.mp3
            {%- else -%} door_1.mp3
            {%- endif -%}
-        icon_template: "{% if is_state('sun.sun', 'above_horizon') %} mdi:speaker {% else %}mdi:speaker{% endif %}"
+        icon_template: "{% if is_state('sun.sun', 'above_horizon') %}mdi:speaker-wireless{% else %}mdi:speaker{% endif %}"
 
 binary_sensor:
   - platform: mqtt
