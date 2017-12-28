@@ -32,7 +32,7 @@ automation:
         state: 'off'
       - condition: state
         entity_id: 'media_player.kodi_livingroom'
-        state: 'off'
+        state: 'idle'
     action:
       - service: script.turn_off
         data:
@@ -44,7 +44,7 @@ automation:
 script:
   nightlight:
     sequence:
-      - service: light.hue_activate_scene
+      - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"
           scene_name: "Nightlight"

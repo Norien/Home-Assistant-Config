@@ -34,13 +34,6 @@ script:
     - service: switch.turn_on
       entity_id: switch.white_noise
 ###### LIVINGROOM/KITCHEN
-    - service_template: >
-       {%- if is_state('media_player.kodi_livingroom', 'playing') or is_state('media_player.kodi_livingroom', 'paused') -%}
-         switch.turn_on
-       {%- else -%}
-         switch.turn_off
-       {%- endif %}
-      entity_id: switch.living_room_pc
     - service: light.turn_off
       entity_id: light.living_room
     - service: light.turn_off
@@ -48,9 +41,9 @@ script:
     - service: media_player.turn_off
       entity_id: media_player.kitchen
     - service: switch.turn_off
-      entity_id: switch.star
+      entity_id: switch.tv
     - service: switch.turn_off
-      entity_id: switch.tree
+      entity_id: switch.receiver
 ###### BACKYARD
     - service: light.turn_off
       entity_id: light.deck_lights

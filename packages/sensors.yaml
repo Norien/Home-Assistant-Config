@@ -339,8 +339,14 @@ sensor:
       date_month:
         value_template: "{{as_timestamp(now())|timestamp_custom('%B', True)}}"
 
-###### DAY OF THE MONTH
+###### test
   - platform: template
     sensors:
-      date_day:
-        value_template: "{{as_timestamp(now())|timestamp_custom('%d', True)}}"
+      online_cameras:
+        value_template: >
+          {% set comma = joiner(", ") %}          
+          {%- for state in states.device_tracker -%}
+          {%- if state.state == 'home' and state.name[0:7] == 'camera_' -%}
+          {{ comma() }}{{state.name[7:]}}
+          {%-endif -%}
+          {%- endfor %}

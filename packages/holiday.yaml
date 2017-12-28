@@ -57,26 +57,3 @@ sensor:
           {% elif is_state('sensor.holiday_data', "New Year's Eve") %} mdi:gift
           {% else %} mdi:calendar-today
           {% endif %}
-
-###### CHRISTMAS TREE
-switch:
-###### SONOFF DUAL 1
-  - platform: mqtt
-    name: "tree"
-    state_topic: "stat/sonoff_dual/POWER1"
-    command_topic: "cmnd/sonoff_dual/POWER1"
-    payload_on: "ON"
-    payload_off: "OFF"
-    optimistic: false
-    qos: 0
-    retain: true
-###### SONOFF DUAL 2
-  - platform: mqtt
-    name: "star"
-    state_topic: "stat/sonoff_dual/POWER2"
-    command_topic: "cmnd/sonoff_dual/POWER2"
-    payload_on: "ON"
-    payload_off: "OFF"
-    optimistic: false
-    qos: 0
-    retain: true

@@ -143,8 +143,6 @@ script:
   bedroom_media_on:
     sequence:
       - service: shell_command.bedroom_hdmi_off
-      # - service: shell_command.bedroom_pi_kodi_off
-      # - service: shell_command.bedroom_pi_kodi_on
       - service: switch.turn_on
         entity_id: switch.bedroom_tv
       - delay: '00:00:10'
@@ -174,8 +172,6 @@ script:
 
   white_noise:
     sequence:
-      # - service: shell_command.bedroom_pi_kodi_off
-      # - service: shell_command.bedroom_pi_kodi_on
       - delay: 00:00:15
       - service: media_player.play_media
         data:
@@ -184,21 +180,6 @@ script:
           media_content_type: "audio/mp3"
 
 automation:
-  # - alias: flic_restart
-  #   initial_state: 'on'
-  #   trigger:
-  #     - platform: state
-  #       entity_id: sensor.flic_log
-  #       to: 'true'
-  #   condition:
-  #     - condition: state
-  #       entity_id: 'sensor.raspberry_pi'
-  #       state: 'Online'
-  #   action:
-  #     - service: shell_command.bedroom_pi_flic_restart
-  #     - delay: 00:00:10
-  #     - service: script.restart_ha
-
   - alias: Notify on Bedroom Motion If Guest Mode is on
     initial_state: 'on'
     trigger:

@@ -9,6 +9,7 @@ group:
     name: Device Status
     entities:
       - automation.notify_if_device_goes_offline
+      - sensor.online_cameras
       - sensor.dlink_camera
       - sensor.driveway_camera
       - sensor.roomba

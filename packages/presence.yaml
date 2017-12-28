@@ -169,7 +169,8 @@ script:
       - service: media_player.turn_off
         data_template:
           entity_id: >
-            {%- for state in states.media_player -%}
+            {%- for state in states.media_player if
+            state.entity_id != 'media_player.kodi_livingroom'-%}
             {{- "," if not loop.first-}}{{ state.entity_id }}{{-endif-}}
             {%- endfor -%}
       - service: climate.set_away_mode

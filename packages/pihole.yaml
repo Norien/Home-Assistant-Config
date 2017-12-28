@@ -56,6 +56,10 @@ homeassistant:
       friendly_name: Turn Pi-Hole On
       icon: mdi:power
 
+    script.pihole_update:
+      friendly_name: Update Pi-Hole
+      icon: mdi:package-variant
+
     sensor.pihole_dns:
       friendly_name: DNS Service
 
@@ -80,6 +84,7 @@ group:
       - sensor.pihole_dns
       - sensor.pihole_blocking
       - sensor.pi_hole_version
+      - script.pihole_update
 
 ###############################################################################
 #  Sensors
@@ -145,7 +150,7 @@ sensor:
           {% endif %}
 ###### I had to provide access in sudoers file for this script to run.
   - platform: command_line
-    command: 'bash /home/homeassistant/.homeassistant/shell/pihole.sh'
+    command: 'pihole status'
     name: 'pihole_status_raw'
     scan_interval: 60
 
@@ -209,9 +214,13 @@ script:
   pihole_off:
     sequence:
        - service: shell_command.pihole_off
+  pihole_update:
+    sequence:
+       - service: shell_command.pihole_update
 ###############################################################################
 #  Shell Command
 ###############################################################################
 shell_command:
   pihole_on: !secret pi_hole_switch_on
   pihole_off: !secret pi_hole_switch_off
+  pihole_update: "pihole -up"

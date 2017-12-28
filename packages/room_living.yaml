@@ -4,9 +4,12 @@
 homeassistant:
   customize:
     #Livingroom computer Switch
-    switch.living_room_pc:
+    switch.tv:
       icon: mdi:monitor
-      friendly_name: PC
+      friendly_name: TV
+    switch.receiver:
+      icon: mdi:speaker
+      friendly_name: Receiver
     automation.light_living_room_sunset:
       friendly_name: Sunset Lights
       icon: mdi:weather-sunset-down
@@ -43,6 +46,12 @@ homeassistant:
       emulated_hue: true
       friendly_name: 'Kitchen Sink Bright'
       icon: mdi:flower
+    script.tv:
+      emulated_hue_hidden: false
+      emulated_hue_name: "TV"
+      google_assistant: true
+      google_assistant_name: "TV"
+      friendly_name: TV
 
 ###### STATE CARD
 group:
@@ -50,13 +59,23 @@ group:
     name: Living Room
     control: hidden
     entities:
-     - switch.living_room_pc
-     - light.living_room
-     - light.couch
+     - switch.tv
+     - switch.receiver
+     - group.lr_lights
      - automation.night_light
      - automation.light_living_room_sunset
      - input_select.light_living_room_scene
      - input_select.live_scene
+  lr_lights:
+    name: Lights
+    icon: mdi:lightbulb
+    entities:
+     - light.living_room_lamp
+     - light.couch
+     - light.kitchen_sink
+     - light.hue_color_lamp_1
+     - light.hue_color_lamp_3
+     - light.hue_go
 
 light:
   - platform: tplink
@@ -64,6 +83,15 @@ light:
     name: 'Couch'
 
 script:
+  tv:
+    sequence:
+      - service_template: >
+          {% if states.switch.tv.state == 'off' %} switch.turn_on
+          {% elif states.switch.tv.state == 'on' %} switch.turn_off
+          {% endif %}
+        data:
+          entity_id: switch.tv, switch.receiver
+
   living_room_pc_off:
     sequence:
       - service: script.kodi_stop
@@ -95,7 +123,7 @@ script:
           rgb_color: [255,241,199]
   lr_dimmed:
     sequence:
-      - service: light.hue_activate_scene
+      - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"
           scene_name: "Dimmed"
@@ -111,7 +139,7 @@ script:
           rgb_color: [174,140,79]
   lr_relax:
     sequence:
-      - service: light.hue_activate_scene
+      - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"
           scene_name: "Relax"
@@ -121,7 +149,7 @@ script:
           option: "Relax"
   lr_read:
     sequence:
-      - service: light.hue_activate_scene
+      - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"
           scene_name: "Read"
@@ -131,7 +159,7 @@ script:
           option: "Read"
   lr_concentrate:
     sequence:
-      - service: light.hue_activate_scene
+      - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"
           scene_name: "Concentrate"
@@ -147,7 +175,7 @@ script:
           rgb_color: [255,255,255]
   lr_springblossom:
     sequence:
-      - service: light.hue_activate_scene
+      - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"
           scene_name: "Spring blossom"
@@ -173,7 +201,7 @@ script:
           option: "Beach"
   river:
     sequence:
-      - service: light.hue_activate_scene
+      - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"
           scene_name: "river"
@@ -188,7 +216,6 @@ automation:
     trigger:
       - platform: sun
         event: sunset
-        #offset: '-01:00:00'
     condition:
       - condition: state
         entity_id: 'input_boolean.away'
@@ -200,7 +227,7 @@ automation:
         entity_id: 'light.living_room_lamp'
         state: 'off'
     action:
-      - service: light.hue_activate_scene
+      - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"
           scene_name: "Spring blossom"
@@ -251,16 +278,6 @@ automation:
         data:
           entity_id: light.living_room
 
-switch:
-###### PC SWITCH
-  - platform: wake_on_lan
-    mac_address: !secret livingroom_pc_mac
-    name: "living_room_pc"
-    host: !secret livingroom_pc_ip
-    broadcast_address: 255.255.255.255
-    turn_off:
-      service: script.living_room_pc_off
-
 input_select:
   light_living_room_scene:
     name: Scene
@@ -276,5 +293,25 @@ input_select:
     initial: "off"
     icon: mdi:ceiling-light
 
-shell_command:
-  living_room_pc_off: !secret livingroom_pc_off
+######
+switch:
+###### SONOFF DUAL 1
+  - platform: mqtt
+    name: "tv"
+    state_topic: "stat/sonoff_dual/POWER1"
+    command_topic: "cmnd/sonoff_dual/POWER1"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 0
+    retain: true
+###### SONOFF DUAL 2
+  - platform: mqtt
+    name: "receiver"
+    state_topic: "stat/sonoff_dual/POWER2"
+    command_topic: "cmnd/sonoff_dual/POWER2"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 0
+    retain: true

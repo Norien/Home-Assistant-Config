@@ -5,14 +5,7 @@
 ## Change Doorbell tone to match theme
 ## Color Picker - https://www.google.ca/search?q=rgb+color+picker&rlz=1C1GGRV_enCA749CA749&oq=rgb+color+picker&aqs=chrome.0.0l6.3705j0j4&sourceid=chrome&ie=UTF-8
 ################################################################
-homeassistant:
-  customize:
-    script.christmas:
-      emulated_hue_hidden: false
-      emulated_hue_name: "Christmas"
-      google_assistant: true
-      google_assistant_name: "Christmas"
-      friendly_name: Christmas
+
 ###### STATE CARD
 group:
   theme:
@@ -24,23 +17,6 @@ group:
       - automation.theme_light
       - sensor.theme_color
       - sensor.theme_sound
-
-script:
-  christmas:
-    sequence:
-      - service_template: >
-          {% if states.switch.tree.state == 'off' %} switch.turn_on
-          {% elif states.switch.tree.state == 'on' %} switch.turn_off
-          {% endif %}
-        data:
-          entity_id: switch.tree, switch.star
-      - service_template: >
-          {% if states.switch.tree.state == 'off' %} media_player.play_media
-          {% endif %}
-        data:
-          entity_id: media_player.google_home
-          media_content_id: http://www.wavlist.com/holidays/005/xmas-simp-bart.wav
-          media_content_type: 'audio/mp3'
 
 automation:
   - alias: 'theme_set'

@@ -19,7 +19,7 @@ This is my [Home Assistant](https://home-assistant.io/) configuration running on
 * [Chromecast](http://www.bestbuy.ca/en-CA/product/google-google-chromecast-ga3a00097-a03-z01/10392133.aspx?icmp=Recos_4across_cstmrs_ls_vwd)
 * [Chromecast Audio](http://www.bestbuy.ca/en-CA/product/google-google-chromecast-audio-ga3a00153-a03-z01/10392132.aspx?icmp=googlestore_chromecastaudio_footer_shopnow&fromBrandStore=google)
 * [D-Link DCS 933L](http://a.co/aA0add8)
-* [D-link DCS-936L](http://a.co/ipkXggn)
+* [D-Link DCS-936L](http://a.co/ipkXggn)
 * [Philips Hue A19 RGB](http://a.co/i7IHr5e)
 * [Philips Hue A19 White](http://a.co/1zLLeS7)
 * [Philips Hue A19 White Ambiance](http://a.co/2wGd2al)
