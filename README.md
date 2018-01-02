@@ -9,6 +9,7 @@ This is my [Home Assistant](https://home-assistant.io/) configuration running on
 * [Mosquitto](https://mosquitto.org/)
 * [Pi-Hole](https://pi-hole.net/)
 * [Kodi](https://kodi.tv/)
+* [RetroPie](https://retropie.org.uk/)
 
 ## Devices in Use:
 * [Netgear R6300](http://a.co/hKI7tOr) - [DD-WRT Firmware](https://goo.gl/d3qFQP)
@@ -36,6 +37,7 @@ This is my [Home Assistant](https://home-assistant.io/) configuration running on
 * [H801 Wifi RGB Controller](http://a.co/ej6LvjZ)
 * [Carlon RC3105R Modded to NodeMcu for Doorbell](https://github.com/Norien/Home-Assistant-Config/issues/25)
 * [TP-Link HS110](http://a.co/2Z7Jq9k)
+* [TP-Link LB130](https://www.bestbuy.ca/en-ca/product/tp-link-tp-link-a19-wi-fi-smart-led-light-bulb-lb130-multi-colour-lb130/10538480.aspx?)
 * [Flic Wireless Smart button](http://a.co/aZDz2ww)
 * [Sonoff WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html) -  [Firmware](https://github.com/aneisch/Sonoff-Wemo-Home-Assistant)
 * [Sonoff Dual WiFi Smart Switch](https://www.itead.cc/smart-home/sonoff-dual.html) - [Firmware](https://github.com/arendst/Sonoff-Tasmota)
