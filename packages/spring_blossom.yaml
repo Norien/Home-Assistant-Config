@@ -9,7 +9,7 @@ homeassistant:
       color_set: false
     light.hue_color_lamp_1:
       color_set: false
-    light.hue_color_lamp_2:
+    light.hue_color_lamp_3:
       color_set: false
     light.hue_go:
       color_set: false
