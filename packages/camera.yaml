@@ -19,7 +19,7 @@ group:
     name: Cameras
     control: hidden
     entities:
-     - camera.baby_monitor
+     - camera.findlay
      - camera.driveway
   camera_control:
     name: Camera Controls
@@ -29,23 +29,48 @@ group:
      - script.start_gifmaker
      - sensor.gif_maker_cpu
      - sensor.gif_maker_status
+     - sensor.driveway_events
+     - sensor.driveway_status
+     - sensor.findlay_events
+     - sensor.findlay_status
+
+zoneminder:
+  host: !secret zm_host
+  username: !secret zm_username
+  password: !secret zm_password
 
 camera:
-  - platform: generic
-    name: Baby Monitor
-    still_image_url: !secret dlink_camera_link
-    username: !secret dlink_camera_username
-    password: !secret dlink_camera_password
+  - platform: zoneminder
 
-  - platform: mjpeg
-    name: Driveway
-    mjpeg_url: !secret dlink2_camera_mjpeg
-    still_image_url: !secret dlink2_camera_link
-    username: !secret dlink2_camera_username
-    password: !secret dlink2_camera_password
-
+  # - platform: generic
+  #   name: Baby Monitor
+  #   still_image_url: !secret dlink_camera_link
+  #   username: !secret dlink_camera_username
+  #   password: !secret dlink_camera_password
+  #
+  # - platform: mjpeg
+  #   name: Driveway
+  #   mjpeg_url: !secret dlink2_camera_mjpeg
+  #   still_image_url: !secret dlink2_camera_link
+  #   username: !secret dlink2_camera_username
+  #   password: !secret dlink2_camera_password
 
 automation:
+  - alias: driveway_motion_detected
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.driveway_events
+    condition:
+      - condition: state
+        entity_id: input_boolean.away
+        state: 'on'
+    action:
+      - service: notify.html5
+        data:
+          message: "Motion Detected in the Driveway"
+          target: "justin"
+
   - alias: 'Auto Start Gif Maker'
     initial_state: 'on'
     trigger:
@@ -79,6 +104,8 @@ script:
       - service: shell_command.push_image
 
 sensor:
+  - platform: zoneminder
+    include_archived: false
 ###### GET CPU USAGE OF THE GIF MAKER SCRIPT
   - platform: command_line
     command: ps -eo pcpu -eo command |grep python |grep buffer.py
