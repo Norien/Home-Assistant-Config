@@ -5,7 +5,7 @@ homeassistant:
   customize:
     input_boolean.finn_sleep:
       emulated_hue: true
-    script.finn_sleep:  
+    script.finn_sleep:
       google_assistant: true
       google_assistant_name: 'Sleep'
     automation.light_finn_sleep:
@@ -52,7 +52,7 @@ automation:
       - service: climate.set_temperature
         data_template:
           entity_id: climate.hallway
-          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) +1 }}"
+          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) +0.5 }}"
 
   - alias: 'light_finn_sleep'
     initial_state: 'on'

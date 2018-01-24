@@ -243,7 +243,6 @@ sensor:
       justin_battery:
         friendly_name: Justin's Phone Battery
         unit_of_measurement: '%'
-        entity_id: device_tracker.justin_justin
         value_template: "{{ states('sensor.justins_battery')|int(-1) }}"
         icon_template: >-
           {% if states('sensor.justin_battery') != "unknown" %}
@@ -280,7 +279,6 @@ sensor:
       nicole_battery:
         friendly_name: Nicole's Phone Battery
         unit_of_measurement: '%'
-        entity_id: device_tracker.nicole_nicole
         value_template: "{{ states('sensor.nicoles_battery')|int(-1) }}"
         icon_template: >-
           {% if states('sensor.nicole_battery') != "unknown" %}
@@ -344,7 +342,7 @@ sensor:
     sensors:
       online_cameras:
         value_template: >
-          {% set comma = joiner(", ") %}          
+          {% set comma = joiner(", ") %}
           {%- for state in states.device_tracker -%}
           {%- if state.state == 'home' and state.name[0:7] == 'camera_' -%}
           {{ comma() }}{{state.name[7:]}}

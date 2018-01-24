@@ -62,6 +62,7 @@ group:
       - group.backup
       - group.device_status
       - group.server_status
+      - group.server_status_disks
       - group.processes
       - group.restarts
       - group.ads_blocked
@@ -69,6 +70,15 @@ group:
       - group.hassctl
       - group.theme
       - group.network
+  janet:
+    name: Janet
+    view: yes
+    icon: mdi:tune
+    entities:
+      - group.janet_notification_modes
+      - group.janet_notification_notifications
+      - group.janet_notification_settings
+      - group.janet_notification_skills
   guest_view:
     name: Guest
     view: yes
@@ -91,10 +101,7 @@ group:
     name: Misc Lights
     entities:
       - light.hallway
-      - light.hue_go
       - light.front_door
-      - switch.tree
-      - switch.star
   media_player1:
     name: Media Players Living Room
     entities:

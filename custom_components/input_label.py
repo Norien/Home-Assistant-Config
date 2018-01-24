@@ -24,8 +24,7 @@ input_label:
 """
 Component to provide input_label.
 
-For more details about this component, please refer to the documentation
-at https://home-assistant.io/components/input_label/
+For more details about this component, please contact Suresh Kalavala
 """
 import asyncio
 import logging
@@ -152,15 +151,15 @@ def async_setup(hass, config):
 
     hass.services.async_register(
         DOMAIN, SERVICE_SETVALUE, async_handler_service,
-        descriptions[DOMAIN][SERVICE_SETVALUE], SERVICE_SCHEMA)
+        schema=SERVICE_SCHEMA)
 
     hass.services.async_register(
         DOMAIN, SERVICE_SETICON, async_handler_service,
-        descriptions[DOMAIN][SERVICE_SETICON], SERVICE_SCHEMA)
+        schema=SERVICE_SCHEMA)
 
     hass.services.async_register(
         DOMAIN, SERVICE_SETNAME, async_handler_service,
-        descriptions[DOMAIN][SERVICE_SETNAME], SERVICE_SCHEMA)
+        schema=SERVICE_SCHEMA)
 
     yield from component.async_add_entities(entities)
     return True

@@ -11,6 +11,14 @@ homeassistant:
       friendly_name: Good Night
       icon: mdi:sleep
 
+google_assistant:
+  entity_config:
+    script.good_night:
+      expose: true
+      alias: 'Good Night'
+      name: 'Good Night'
+      type: script
+
 script:
   good_night:
     sequence:

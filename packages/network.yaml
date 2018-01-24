@@ -33,7 +33,6 @@ sensor:
     name: Certificate
     unit_of_measurement: days
     scan_interval: 86400
-    icon_template: "{% if icon == icon %}mdi:mdi:certificate{% endif %}"
 ###### EXTERNAL IP FOR NOTIFY
   - platform: rest
     resource: https://api.ipify.org/?format=json

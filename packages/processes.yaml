@@ -28,6 +28,7 @@ group:
       - sensor.process_flic
       - sensor.master_bed_kodi
       - sensor.process_life360
+      - sensor.processes_kodi_cpu
 
 sensor:
   - platform: systemmonitor
@@ -55,6 +56,14 @@ sensor:
         friendly_name: 'Life 360'
         value_template: "{% if is_state('sensor.life360_sensor', 'running') %}on{% else %}off{% endif %}"
         icon_template: "{% if states.sensor.life360_sensor.state == 'running' %} mdi:account-convert {% else %} mdi:alert-outline {% endif %}"
+
+
+  - platform: command_line
+    command: ps -eo pcpu -eo command |grep kodi-x11
+    name: processes_kodi_cpu
+    value_template: '{{value [0:4]|float}}'
+    unit_of_measurement: '%'
+    scan_interval: 60
 
   - platform: command_line
     name: master_bed_flic

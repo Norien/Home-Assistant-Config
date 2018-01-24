@@ -14,6 +14,19 @@ homeassistant:
     sensor.life360_sensor:
       friendly_name: Life 360
 
+    script.location:
+      emulated_hue_hidden: false
+      emulated_hue_name: "location"
+      friendly_name: Location
+
+google_assistant:
+  entity_config:
+    script.location:
+      expose: true
+      alias: 'location'
+      name: 'location'
+      type: script
+
 ###### STATE CARD
 group:
   presence:
@@ -148,6 +161,22 @@ automation:
           message: "Welcome Home"
 
 script:
+  location:
+    sequence:
+     - service: script.janet_speech_engine
+       data:
+         call_location_inquiry: 1
+       data_template:
+         person: >-
+           {%set nicole = states.device_tracker.nicole_nicole.state%}
+           {%set justin = states.device_tracker.justin_justin.state%}
+           {%if nicole != "home" and justin == "home"%}
+           nicole
+           {%elif nicole == "home" and justin != "home"%}
+           justin
+           {%else%}
+           {%endif%}
+
   house_mode_away:
     sequence:
       - service: light.turn_off

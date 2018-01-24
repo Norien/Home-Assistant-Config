@@ -15,8 +15,6 @@ homeassistant:
     script.garbage_tracker:
       friendly_name: Garbage Tracker
       emulated_hue: true
-      google_assistant: true
-      google_assistant_name: 'Garbage Tracker'
 
 ###### STATE CARD
 group:
@@ -26,6 +24,14 @@ group:
       - sensor.waste_pickup_garbage_recycling
       - sensor.waste_pickup_yard_waste
       - sensor.waste_pickup_container
+
+google_assistant:
+  entity_config:
+    script.garbage_tracker:
+      expose: true
+      alias: 'Garbage Tracker'
+      name: 'Garbage Tracker'
+      type: script
 
 sensor:
 ######  GARBAGE AND RECYCLE
@@ -50,10 +56,12 @@ sensor:
 script:
   garbage_tracker:
     sequence:
-      - service: tts.google_say
+      - service: script.janet_speech_engine
+        data:
+          call_greeting: 1
+          call_inform: 1
         data_template:
-          entity_id: media_player.google_home
-          message: >
+          CustomMessage: >-
             {%- if as_timestamp(now())|timestamp_custom('%A %B %d', True) == states.sensor.waste_pickup_garbage_recycling.state -%}
             The garbage is to go out this evening.
             {%-else-%}

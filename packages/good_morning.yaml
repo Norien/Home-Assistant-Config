@@ -4,12 +4,25 @@
 homeassistant:
   customize:
     script.good_morning:
-      emulated_hue: true
+      emulated_hue_hidden: false
       emulated_hue_name: "Good Morning"
-      google_assistant: true
-      google_assistant_name: "Good Morning"
       friendly_name: Good Morning
       icon: mdi:emoticon-poop
+
+google_assistant:
+  entity_config:
+    script.good_morning:
+      expose: true
+      alias: 'Good Morning'
+      name: 'Good Morning'
+      type: script
+
+sensor:
+  - platform: rest
+    name: quote_of_the_day
+    resource: http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en
+    value_template: '{{ value_json.quoteText }}'
+    scan_interval: 86400
 
 script:
   good_morning:
@@ -43,94 +56,32 @@ script:
 
   good_morning_tts:
     sequence:
-      - service: tts.google_say
-        data_template:
-          entity_id: media_player.google_home
-          message: >
-            {% set weather = states('sensor.weather_report') %}
-            {%- if states.sensor.holiday_data.state != "" -%}
-            Today is {{ states.sensor.holiday.state }},
-            {%- else -%}
-            Good Morning,
-            {%- endif -%}
-            {{weather}}
-            {%- if as_timestamp(now())|timestamp_custom('%A %B %d', True) == states.sensor.waste_pickup_garbage_recycling.state -%}
-            The garbage is to go out this evening.
-            {%-else-%}
-            {{' '}}The next garbage pickup is on {{states('sensor.waste_pickup_garbage_recycling')}}.{{' '}}
-            {%-endif-%}
-            {%- if is_state('sensor.nicole', 'not_home') -%}
-            {% elif is_state('sensor.nicole', 'home') %}
-              {% if is_state('binary_sensor.workday_sensor', 'off') %}
-              {% elif is_state('binary_sensor.workday_sensor', 'on') %}
-                {% if 'rain' in states.sensor.dark_sky_hourly_summary.state %}
-                Don't forget your Umbrella.
-                {% else %}
-                {% endif %}
-                {% endif %}
-                {%- endif -%}
-                {{ [
-                  "Not the day only, but all things have their morning. Refresh your self and have a good day.",
-                  "I don't ask for the meaning of the song of a bird or the rising of the sun on a misty morning. There they are, and they are beautiful. Just like you",
-                  "I opened two gifts this morning. They were my eyes.",
-                  "Thank you for always being there.",
-                  "Thank you for being my one and only dear.",
-                  "Thank you for ever being close and near.",
-                  "The happiness of your life depends upon the quality of your thoughts. So think happy and positive.",
-                  "May the force be with you my love.",
-                  "You will never have this day again in your life so make it count, make something new.",
-                  "You have to get up every morning and tell yourself I can do this.",
-                  "May morning sun rays hit you and light the fire in your heart giving the hope to achieve great things in your daily life.",
-                  "Being happy or sad or excited, moody or stable. are the emoticons which actually applicable in real life. Its you to choose the right one.",
-                  "Every morning is destiny's way of telling you that your purpose in life is yet to be fulfilled.",
-                  "You have never lived this day before and will never experience again so make use of it now.",
-                  "Your future is created by what you do today not tomorrow.",
-                  "If yesterday was a good day, don't stop. May be success ventured is just turned on.",
-                  "Opportunities are like sunrises. If you wait too long, you miss them.",
-                  "Yesterday is gone, tomorrow is a mystery, today is a blessing.",
-                  "The sun is new everyday to teach you new things.",
-                  "Every morning, I wake up saying, I'm still alive, a miracle. And so I keep on pushing.",
-                  "Never work before breakfast; if you have to work before breakfast, eat your breakfast first.",
-                  "Old friends pass away, new friends appear. It is just like the days. An old day passes, a new day arrives. The important thing is to make it meaningful: a meaningful friend, or a meaningful day.",
-                  "There was never a night or a problem that could defeat sunrise or hope.",
-                  "A day without laughter is a day wasted. Keep Smiling.",
-                  "The world is beautiful outside when there is stability inside. Keep smiling, and have a good day.",
-                  "Nothing is more beautiful than the loveliness of the woods before sunrise. Except for you.",
-                  "Sometimes stepping outside the comfort zone box can help change the view! Its time to change your view.",
-                  "Be willing to be a beginner every single morning to learn the new things.",
-                  "No man in this world is rich enough to buy his own past. Enjoy each moment before it gets beyond reach.",
-                  "Life is perishable: the quicker you have it, the better it tastes. Stop thinking and start action.",
-                  "I get up in the morning looking for another adventure.",
-                  "Everyday may not be good, but there is something good in every day.",
-                  "You don't have to be great to start, but you have to start to be great.",
-                  "Today's journey will be more lighter and happier if you trash yesterday happenings , move with positive attitude. Have a pleasant day.",
-                  "I like my coffee black and my mornings bright.",
-                  "Every morning gives you two opportunities: continue to sleep with your dreams or to wake up and chase your dreams in the real time life. The choice is yours!",
-                  "Wake up and face life's challenges. Move on. Else, eventually life will become quite a challenge.",
-                  "All I want is to be with you morning and night Being in love with you is what brightens My mornings and sweetens my dreams.",
-                  "Wake up with determination, go to bed with satisfaction.",
-                  "Every morning I wake up and look at the list of the richest people in world. If I'm not there, I go to work.",
-                  "Just the thought of you brightens up my morning.",
-                  "I don't care whether the sun rises or not, my morning starts only after I text my girl who I love a lot.",
-                  "Just the thought of you brightens up my morning.",
-                  "Mornings are always better when I wake up next to you.",
-                  "Love the life you live; Live the life you love.",
-                  "My Mornings Are awesome because It Starts With Your Love that Stays With Me All Day Long.",
-                  "Have you felt little warm in the morning?",
-                  "I had sent you a couple of my lovely hugs in my thoughts!",
-                  "It's a brand new day. Take Care of it.",
-                  "Think in the morning. Act in the noon. Eat in the evening. Sleep in the night.",
-                  "Only way to respect your last night dream is to get out of bed and do something to achieve it.",
-                  "Think as you wake up Today I am fortunate to be alive I have a precious human life I am not going to waste it.",
-                  "Dreaming and doing are the choices that will determine the state of failure or success in your life.",
-                  "Every morning was a cheerful invitation to make my life of equal simplicity, and I may say innocence, with Nature herself.",
-                  "Success comes to those who have the will power to win over their snooze buttons. Wishing you an awesome morning.",
-                  "This is not just another day, this is yet another chance to make your dreams come true.",
-                  "The minute you think of giving up.",
-                  "It is good to dream big but your dreams will never see the light of day if you sleep big too.",
-                  "Opportunities will knock on your door every morning. But if you keep sleeping they will simply pass you by.",
-                  "Each morning we are born again, what we do today is what matters most."
-                ]|random }}
+     - service: script.janet_speech_engine
+       data_template:
+         CustomMessage: >-
+           {% set weather = states('sensor.weather_report') %}
+           {%- if states.sensor.holiday_data.state != "" -%}
+           Today is {{ states.sensor.holiday.state }},
+           {%- else -%}
+           Good Morning,
+           {%- endif -%}
+           {{weather}}
+           {%- if as_timestamp(now())|timestamp_custom('%A %B %d', True) == states.sensor.waste_pickup_garbage_recycling.state -%}
+           The garbage is to go out this evening.
+           {%-else-%}
+           {{' '}}The next garbage pickup is on {{states('sensor.waste_pickup_garbage_recycling')}}.{{' '}}
+           {%-endif-%}
+           {%- if is_state('sensor.nicole', 'not_home') -%}
+           {% elif is_state('sensor.nicole', 'home') %}
+             {% if is_state('binary_sensor.workday_sensor', 'off') %}
+             {% elif is_state('binary_sensor.workday_sensor', 'on') %}
+               {% if 'rain' in states.sensor.dark_sky_hourly_summary.state %}
+               Don't forget your Umbrella.
+               {% else %}
+               {% endif %}
+               {% endif %}
+               {%- endif -%}
+               {{ states.sensor.quote_of_the_day.state  }}
 
   morning_livingroom_lights:
     sequence:

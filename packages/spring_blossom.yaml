@@ -58,9 +58,9 @@ script:
                 {{- entity_ids .split(',')[0] -}}
               {%- endif -%}
             {% endif %}
-          r: '{{ "{0:d}".format(range(210, 238)|random) }}'
-          g: '{{ "{0:d}".format(range(100, 132)|random) }}'
-          b: '{{ "{0:d}".format(range(240, 255)|random) }}'
+          # r: '{{ "{0:d}".format(range(210, 238)|random) }}'
+          # g: '{{ "{0:d}".format(range(100, 132)|random) }}'
+          # b: '{{ "{0:d}".format(range(240, 255)|random) }}'
           brightness: 255
 
   light_set_color:
@@ -69,13 +69,13 @@ script:
         value_template: '{{ entity_id | trim != "" }}'
       - condition: template
         value_template: '{{ brightness | trim != "" }}'
-      - condition: template
-        value_template: '{{ rgb_color | trim != "" }}'
+      # - condition: template
+      #   value_template: '{{ rgb_color | trim != "" }}'
       - service: light.turn_on
         data_template:
           entity_id: '{{ entity_id }}'
           brightness: '{{ brightness | int }}'
-          rgb_color:  '[{{r}}, {{g}}, {{b}}]'
+      #    rgb_color:  '[{{r}}, {{g}}, {{b}}]'
           color_set: true
       - condition: template
         value_template: >

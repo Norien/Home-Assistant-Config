@@ -18,6 +18,13 @@ homeassistant:
     script.clear_tts_cache:
       friendly_name: Clear TTS cache
       icon: mdi:shredder
+    sensor.last_commit:
+      icon: mdi:github-box
+    sensor.last_backup:
+      friendly_name: Last YAML Backup
+      icon: mdi:cloud-upload
+    sensor.last_snapshot:
+      icon: mdi:camera-gopro
 ###### STATE CARD #######################################################
 group:
   utilities:
@@ -36,6 +43,7 @@ group:
       - script.backup_config
       - sensor.last_commit
       - sensor.last_backup
+      - sensor.last_snapshot
 #########################################################################
 script:
   update_ha:
@@ -72,14 +80,20 @@ automation:
 sensor:
 ###### Latest github Commit
   - platform: command_line
-    command: "python /home/homeassistant/.homeassistant/shell/latest_commit.py"
+    command: "python /home/homeassistant/.homeassistant/python_scripts/latest_commit.py"
     name: 'Last Commit'
     scan_interval: 60
 
 ###### Latest config backup
   - platform: command_line
-    command: "python /home/homeassistant/.homeassistant/shell/latest_backup.py"
+    command: "python /home/homeassistant/.homeassistant/python_scripts/latest_backup.py"
     name: 'Last Backup'
+    scan_interval: 60
+
+###### Latest snapshot backup
+  - platform: command_line
+    command: "python /home/homeassistant/.homeassistant/python_scripts/latest_snapshot.py"
+    name: 'Last Snapshot'
     scan_interval: 60
 
 shell_command:

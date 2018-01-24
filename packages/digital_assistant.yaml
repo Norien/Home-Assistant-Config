@@ -6,18 +6,12 @@ homeassistant:
     script.pc:
       emulated_hue: true
       friendly_name: 'PC'
-      google_assistant: true
-      google_assistant_name: 'PC'
     script.bedroom_pc:
       emulated_hue: true
       friendly_name: 'Bedroom PC'
-      google_assistant: true
-      google_assistant_name: 'Bedroom PC'
     script.office_pc:
       emulated_hue: true
       friendly_name: 'Office PC'
-      google_assistant: true
-      google_assistant_name: 'Office PC'
 
 google_assistant:
   project_id: !secret google_assistant_project_id
@@ -26,6 +20,22 @@ google_assistant:
   api_key: !secret google_assistant_api
   exposed_domains:
     - switch
+  entity_config:
+    script.pc:
+      expose: true
+      alias: 'PC'
+      name: 'PC'
+      type: switch
+    script.bedroom_pc:
+      expose: true
+      alias: 'Bedroom PC'
+      name: 'Bedroom PC'
+      type: switch
+    script.office_pc:
+      expose: true
+      alias: 'Office PC'
+      name: 'BOffice PC'
+      type: switch
 
 automation:
   - alias: 'google_home_volume'

@@ -7,21 +7,25 @@ homeassistant:
       friendly_name: Start Radio
       icon: mdi:radio
     script.kitchen_radio:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Kitchen Radio'
-      google_assistant: true
-      google_assistant_name: 'Kitchen Radio'
 ###### STATE CARD
 group:
   Radio:
     name: Radio
     entities:
       - automation.radio_set_input_select
-      - input_select.radio_station_location_test
-      #- input_select.radio_station_location
+      - input_select.radio_station_location
       - input_select.radio_station
       - input_number.volume_radio
       - script.radio
+
+google_assistant:
+  entity_config:
+    script.kitchen_radio:
+      expose: true
+      name: 'Kitchen Radio'
+      type: script
 
 ###### SELECT LOCATION AND STATION
 script:
@@ -107,13 +111,13 @@ automation:
   #         entity_id: input_select.radio_station_location_test
   #         options: '{{states.sensor.all_media_players.state}}'
 sensor:
-  - platform: template
-    sensors:
-      all_media_players:
-        value_template: >
-          {%- for state in states.media_player -%}
-          {{- ", " if not loop.first-}}"{{ state.entity_id }}"{{-endif-}}
-          {%- endfor -%}
+  # - platform: template
+  #   sensors:
+  #     all_media_players:
+  #       value_template: >
+  #         {%- for state in states.media_player -%}
+  #         {{- ", " if not loop.first-}}"{{ state.entity_id }}"{{-endif-}}
+  #         {%- endfor -%}
 
 input_number:
   volume_radio:
@@ -140,18 +144,18 @@ input_select:
       - Elium-Rock
     initial: "-"
     icon: mdi:radio
-  # radio_station_location:
-  #   name: Radio Location
-  #   options:
-  #     - Kitchen
-  #     - Backyard
-  #     - Google-Home
-  #     - All Zones
-  #   initial: "Kitchen"
-  #   icon: mdi:radio
-
-  radio_station_location_test:
+  radio_station_location:
     name: Radio Location
     options:
-      - "all_media_players"
+      - Kitchen
+      - Backyard
+      - Google-Home
+      - All Zones
+    initial: "Kitchen"
     icon: mdi:radio
+
+  # radio_station_location_test:
+  #   name: Radio Location
+  #   options:
+  #     - "all_media_players"
+  #   icon: mdi:radio

@@ -106,13 +106,13 @@ sensor:
   - platform: template
     sensors:
       washing_machine_amps:
-        value_template: '{{ states.switch.washing_machine.attributes["current"] | replace(" A", "") | float }}'
+        value_template: '{{ states.switch.washing_machine.attributes["current_a"] | replace(" A", "") | float }}'
         unit_of_measurement: 'A'
       washing_machine_watts:
-        value_template: '{{ states.switch.washing_machine.attributes["current_consumption"] | replace(" W", "") | float }}'
+        value_template: '{{ states.switch.washing_machine.attributes["current_power_w"] | replace(" W", "") | float }}'
         unit_of_measurement: 'W'
       washing_machine_kw:
-        value_template: '{{ states.switch.washing_machine.attributes["total_consumption"] | replace(" kW", "") | float }}'
+        value_template: '{{ states.switch.washing_machine.attributes["total_energy_kwh"] | replace(" kW", "") | float }}'
         unit_of_measurement: 'kW'
       washing_machine_volts:
         value_template: '{{ states.switch.washing_machine.attributes["voltage"] | replace(" V", "") | float }}'
@@ -223,20 +223,14 @@ script:
     sequence:
     - condition: and
       conditions:
-        - condition: template
-          value_template: >
-            {% if is_state('media_player.google_home', 'playing') %}
-            false
-            {% else %}
-            true
-            {% endif %}
         - condition: time
           after: '07:00:00'
           before: '21:00:00'
-    - service: tts.google_say
-      data_template:
-        entity_id: media_player.google_home
-        message: "The Washing machine has completed it's cycle."
+    - service: script.janet_speech_engine
+      data:
+        call_greeting: 1
+        call_inform: 1
+        CustomMessage: "The Washing machine has completed it's cycle."
 
   dryer_tts:
     sequence:

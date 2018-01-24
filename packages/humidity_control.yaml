@@ -33,14 +33,14 @@ sensor:
     indoor_temp_sensor: sensor.average_whole_home
     indoor_humidity_sensor: sensor.average_humidity
     outdoor_temp_sensor: sensor.dark_sky_apparent_temperature
-    calibration_factor: 1.2
+    calibration_factor: 1.3
 
 ###### AVERAGE HUMIDITY
   - platform: min_max
     type: mean
     name: Average Humidity
     entity_ids:
-      - sensor.master_bed_humidity
+    #  - sensor.master_bed_humidity
     #  - sensor.laundry_humidity
       - sensor.hallway_thermostat_humidity
 
@@ -53,6 +53,8 @@ automation:
           {% if float(states.sensor.mold_indicator.state) > float(65) or float(states.sensor.mold_indicator.state) < float(64) %} true
           {% else %} false
           {% endif %}
+      -  platform: time
+         hours: 1
     action:
     - service_template: >
         {% if states.sensor.mold_indicator.state | float > 65 %} switch.turn_on

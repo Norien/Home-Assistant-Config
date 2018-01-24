@@ -16,7 +16,7 @@ homeassistant:
     sensor.ha_version:
       friendly_name: Home Assistant Version
     sensor.glances_cpu_load:
-      friendly_name: CPU
+      friendly_name: CPU Usage
       icon: mdi:desktop-tower
     sensor.glances_disk_overview:
       friendly_name: Disk
@@ -31,6 +31,22 @@ homeassistant:
       friendly_name: Linux Distro
       icon: mdi:ubuntu
 
+    sensor.disk_file_system:
+      friendly_name: File System
+      icon: mdi:harddisk
+    sensor.disk_media_vault:
+      friendly_name: Media Vault
+      icon: mdi:harddisk
+    sensor.disk_zoneminder:
+      friendly_name: Zoneminder
+      icon: mdi:harddisk
+    sensor.disk_backup:
+      friendly_name: Snapshot Backup
+      icon: mdi:harddisk
+    sensor.disk_router_usb:
+      friendly_name: YAML Backup
+      icon: mdi:harddisk
+
 ###### STATE CARD
 group:
   server_status:
@@ -39,6 +55,7 @@ group:
     entities:
       - sensor.glances_cpu_load
       - sensor.cpu_speed
+      - sensor.cpu_temperature
       - sensor.glances_disk_overview
       - sensor.glances_ram_overview
       - sensor.server_uptime
@@ -47,15 +64,21 @@ group:
       - input_select.log_level
       - weblink.release_log
       - sensor.glances_linux_distro
-
+  server_status_disks:
+    name: Disks
+    control: hidden
+    entities:
+      - sensor.disk_file_system
+      - sensor.disk_media_vault
+      - sensor.disk_zoneminder
+      - sensor.disk_backup
+      - sensor.disk_router_usb
 weblink:
   entities:
     - name: release_log
       url: https://github.com/home-assistant/home-assistant/releases
 
 sensor:
-  - platform: cpuspeed
-    name: 'CPU Speed'
 ###### VERSIONS
   - platform: command_line
     command: python3 -c "import requests; print(requests.get('https://pypi.python.org/pypi/homeassistant/json').json()['info']['version'])"
@@ -95,8 +118,20 @@ sensor:
     scan_interval: 720
 
 ###### CPU TEMPERATURE
-
-
+  - platform: command_line
+    name: CPU Temperature
+    command: sensors | grep -A 0 'Package'| cut -c17-20
+    unit_of_measurement: '°C'
+###### CPU SPEED
+  - platform: cpuspeed
+    name: 'CPU Speed'
+###### CPU LOAD
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/load
+    name: 'glances_cpu_load'
+    value_template: '{{ value_json.min5 }}'
+    unit_of_measurement: '%'
+    scan_interval: 300
 
 ###### GLANCES
   - platform: glances
@@ -107,7 +142,7 @@ sensor:
       - 'memory_use'
       - 'memory_free'
 
-###### CUSTOM HARD DRIVE DISPLAY
+###### HARD DRIVE DISPLAY
   - platform: template
     sensors:
       glances_disk_overview:
@@ -118,7 +153,36 @@ sensor:
     name: 'glances_disk_total'
     value_template: '{{ value_json[0].size }}'
     scan_interval: 604800
-
+###### PYSICAL DRIVE %
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/fs
+    name: 'Disk File System'
+    value_template: '{{ value_json[0].percent }}'
+    scan_interval: 3600
+    unit_of_measurement: '%'
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/fs
+    name: 'Disk Media Vault'
+    value_template: '{{ value_json[4].percent }}'
+    scan_interval: 3600
+    unit_of_measurement: '%'
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/fs
+    name: 'Disk Backup'
+    value_template: '{{ value_json[5].percent }}'
+    scan_interval: 3600
+    unit_of_measurement: '%'
+  - platform: command_line
+    command: curl -X GET http://localhost:61208/api/2/fs
+    name: 'Disk Zoneminder'
+    value_template: '{{ value_json[6].percent }}'
+    scan_interval: 3600
+    unit_of_measurement: '%'
+  - platform: command_line
+    command: df -h /mnt/router_usb | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
+    name: 'Disk Router USB'
+    scan_interval: 3600
+    unit_of_measurement: '%'
 ##### CUSTOM RAM DISPLAY
   - platform: template
     sensors:
@@ -130,14 +194,6 @@ sensor:
     name: 'glances_ram_total'
     value_template: '{{ value_json.total }}'
     scan_interval: 604800
-
-###### CUSTOM CPU LOAD
-  - platform: command_line
-    command: curl -X GET http://localhost:61208/api/2/load
-    name: 'glances_cpu_load'
-    value_template: '{{ value_json.min5 }}'
-    unit_of_measurement: '%'
-    scan_interval: 300
 
 ################### Logger level
 input_select:
@@ -152,7 +208,7 @@ input_select:
      - info
      - debug
      - notset
-    initial: info
+    initial: error
 
 ############################# Sets Logging Level
 automation:

@@ -3,7 +3,9 @@
 ################################################################
 homeassistant:
   customize:
-    #Livingroom computer Switch
+    group.lr_lights:
+      emulated_hue_hidden: false
+      friendly_name: Lights
     switch.tv:
       icon: mdi:monitor
       friendly_name: TV
@@ -16,34 +18,34 @@ homeassistant:
     light.living_room:
       friendly_name: Lights
     script.lr_dimmed:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Dimmed'
       icon: mdi:brightness-7
     script.lr_relax:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Relax'
       icon: mdi:brightness-6
     script.lr_read:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Read'
       icon: mdi:brightness-5
     script.lr_concentrate:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Bright'
       icon: mdi:star-circle
     script.lr_springblossom:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Spring blossom'
       icon: mdi:flower
     script.beach:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Beach'
       icon: mdi:beach
     script.river:
       friendly_name: 'River'
       icon: mdi:fire
     script.kitchen_sink_bright:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Kitchen Sink Bright'
       icon: mdi:flower
     script.tv:
@@ -66,6 +68,7 @@ group:
      - automation.light_living_room_sunset
      - input_select.light_living_room_scene
      - input_select.live_scene
+     - script.set_random_color_2_all_bulbs
   lr_lights:
     name: Lights
     icon: mdi:lightbulb
@@ -92,22 +95,14 @@ script:
         data:
           entity_id: switch.tv, switch.receiver
 
-  living_room_pc_off:
-    sequence:
-      - service: script.kodi_stop
-      - service: shell_command.living_room_pc_off
-
   light_living_room_off:
     sequence:
       - service: light.turn_off
         data:
-          entity_id:
-            light.hue_color_lamp_1:
-            light.hue_color_lamp_2:
-            light.hue_color_lamp_3:
-            light.living_room_lamp:
-            light.kitchen_sink:
-            light.couch:
+          entity_id: group.lr_lights
+      - service: light.turn_off
+        data:
+          entity_id: group.lr_lights
       - service: input_select.select_option
         data:
           entity_id: input_select.light_living_room_scene
@@ -123,46 +118,39 @@ script:
           rgb_color: [255,241,199]
   lr_dimmed:
     sequence:
-      - service: hue.hue_activate_scene
-        data:
-          group_name: "Living Room"
-          scene_name: "Dimmed"
       - service: input_select.select_option
         data:
           entity_id: input_select.light_living_room_scene
           option: "Dimmed"
       - service: light.turn_on
         data:
-          entity_id:
-            - light.couch
+          entity_id: group.lr_lights
           brightness: 77
           rgb_color: [174,140,79]
   lr_relax:
     sequence:
-      - service: hue.hue_activate_scene
-        data:
-          group_name: "Living Room"
-          scene_name: "Relax"
       - service: input_select.select_option
         data:
           entity_id: input_select.light_living_room_scene
           option: "Relax"
+      - service: light.turn_on
+        data:
+          entity_id: group.lr_lights
+          brightness: 144
+          rgb_color: [243,179,80]
   lr_read:
     sequence:
-      - service: hue.hue_activate_scene
-        data:
-          group_name: "Living Room"
-          scene_name: "Read"
       - service: input_select.select_option
         data:
           entity_id: input_select.light_living_room_scene
           option: "Read"
+      - service: light.turn_on
+        data:
+          entity_id: group.lr_lights
+          brightness: 254
+          rgb_color: [255,211,130]
   lr_concentrate:
     sequence:
-      - service: hue.hue_activate_scene
-        data:
-          group_name: "Living Room"
-          scene_name: "Concentrate"
       - service: input_select.select_option
         data:
           entity_id: input_select.light_living_room_scene
@@ -170,28 +158,32 @@ script:
       - service: light.turn_on
         data:
           entity_id:
-            - light.couch
+            - group.lr_lights
+          brightness: 255
+          rgb_color: [255,255,255]
+      - service: light.turn_on
+        data:
+          entity_id:
+            - group.lr_lights
           brightness: 255
           rgb_color: [255,255,255]
   lr_springblossom:
     sequence:
-      - service: hue.hue_activate_scene
-        data:
-          group_name: "Living Room"
-          scene_name: "Spring blossom"
       - service: input_select.select_option
         data:
           entity_id: input_select.light_living_room_scene
           option: "Spring Blossom"
       - service: light.turn_on
-        data:
-          entity_id:
-            - light.couch
+        data_template:
+          entity_id: >-
+            {%- for state in states.group.lr_lights.attributes.entity_id -%}
+            {{- ","if not loop.first-}}{{ state }}{{-endif-}}
+            {%- endfor -%}
           brightness: 255
-          rgb_color: [238,132,255]
+          rgb_color: ['{{ "{0:d}".format(range(210, 238)|random) }}' , '{{ "{0:d}".format(range(100, 132)|random) }}', '{{ "{0:d}".format(range(240, 255)|random) }}']
   beach:
     sequence:
-      - service: light.hue_activate_scene
+      - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"
           scene_name: "Beach"
@@ -211,6 +203,23 @@ script:
           option: "River"
 
 automation:
+  # - alias: 'turn_tv_off'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: media_player.kodi_livingroom
+  #       from: 'playing'
+  #       to: 'idle'
+  #       for:
+  #         minutes: 15
+  #   condition:
+  #     - condition: state
+  #       entity_id: 'media_player.kodi_livingroom'
+  #       state: 'idle'
+  #   action:
+  #     - service: switch.turn_off
+  #       entity_id: switch.tv, switch.receiver
+
   - alias: 'light_living_room_sunset'
     initial_state: 'on'
     trigger:
@@ -276,7 +285,7 @@ automation:
     action:
       - service: light.turn_off
         data:
-          entity_id: light.living_room
+          entity_id: group.lr_lights
 
 input_select:
   light_living_room_scene:
