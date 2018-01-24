@@ -16,6 +16,53 @@ conversation:
 map:
 updater:
 history:
+  include:
+    domains:
+      - light
+      - switch
+    entities:
+      - device_tracker.justin_justin
+      - device_tracker.nicole_nicole
+      - input_boolean.justin
+      - input_boolean.nicole
+      - input_boolean.vacation
+      - input_boolean.guest
+      - input_boolean.away
+      - input_boolean.finn_sleep
+      - script.backup_config
+      - script.hassctl_restart_ha
+      - script.hassctl_update_ha
+      - sensor.dark_sky_apparent_temperature
+      - sensor.dark_sky_temperature
+      - sensor.dark_sky_cloud_coverage
+      - sensor.dark_sky_dew_point
+      - sensor.dark_sky_humidity
+      - sensor.dining_room_lux
+      - sensor.dining_room_motion
+      - sensor.dining_room_temperature
+      - sensor.findlay_room_lux
+      - sensor.findlay_room_motion
+      - sensor.findlay_room_temperature
+      - sensor.living_room_lux
+      - sensor.living_room_motion
+      - sensor.living_room_temperature
+      - sensor.glances_cpu_load
+      - sensor.hallway_thermostat_humidity
+      - sensor.hallway_thermostat_hvac_state
+      - sensor.hallway_thermostat_operation_mode
+      - sensor.hallway_thermostat_operation_mode
+      - sensor.hallway_thermostat_target
+      - sensor.hallway_thermostat_temperature
+      - sensor.mold_indicator
+      - sensor.office_current
+      - sensor.office_draw
+      - sensor.office_today
+      - sensor.office_voltage
+      - sensor.office_yesterday
+      - sensor.pws_uv
+      - sensor.uv_burn_time
+      - sun.sun
+
 logbook:
 sun:
 discovery:
