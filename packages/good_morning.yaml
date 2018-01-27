@@ -22,7 +22,7 @@ sensor:
     name: quote_of_the_day
     resource: http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en
     value_template: '{{ value_json.quoteText }}'
-    scan_interval: 86400
+    scan_interval: 43200
 
 script:
   good_morning:
@@ -81,7 +81,11 @@ script:
                {% endif %}
                {% endif %}
                {%- endif -%}
-               {{ states.sensor.quote_of_the_day.state  }}
+               {%- if is_state("sensor.quote_of_the_day", "unknown") -%}
+               Do or do not. There is no Try.
+               {%- else -%}
+               {{states.sensor.quote_of_the_day.state}}
+               {%- endif %}
 
   morning_livingroom_lights:
     sequence:

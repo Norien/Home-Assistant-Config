@@ -20,11 +20,11 @@ group:
       - sensor.chromecast_backyard
       - sensor.chromecast_kitchen
       - sensor.raspberry_pi
-      - sensor.raspberry_pi_zero
+      #- sensor.raspberry_pi_zero
       - sensor.tracker_doorbell
       - sensor.bedroom_led_strip
-      - sensor.room_masterbed
-      - sensor.room_laundry_room_sensor
+    #  - sensor.room_masterbed
+    #  - sensor.room_laundry_room_sensor
 
 sensor:
   ###### CUSTOM ONLINE // OFFLINE TEXT FOR device_tracker

@@ -29,15 +29,15 @@ homeassistant:
       icon: mdi:battery
 #Script
     script.fan:
-      emulated_hue: true
+      emulated_hue_hidden: false
       emulated_hue_name: "fan"
       friendly_name: Turn Fan on
       icon: mdi:fan
     script.hotter:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Hotter'
     script.colder:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Colder'
 
 ###### STATE CARD
@@ -68,13 +68,13 @@ script:
       - service: climate.set_temperature
         data_template:
           entity_id: climate.hallway
-          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) +1 }}"
+          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) +0.5 }}"
   colder:
     sequence:
       - service: climate.set_temperature
         data_template:
           entity_id: climate.hallway
-          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) -1 }}"
+          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) -0.5 }}"
   fan:
     sequence:
       - service: climate.set_fan_mode
@@ -94,7 +94,7 @@ automation:
       - service: notify.html5
         data:
           message: 'Nest has detected Smoke or CO in the Kitchen.'
-      - service: light.hue_activate_scene
+      - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"
           scene_name: "Alarm"

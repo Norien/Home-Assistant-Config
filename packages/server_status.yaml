@@ -155,27 +155,23 @@ sensor:
     scan_interval: 604800
 ###### PYSICAL DRIVE %
   - platform: command_line
-    command: curl -X GET http://localhost:61208/api/2/fs
+    command: df -h / | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
     name: 'Disk File System'
-    value_template: '{{ value_json[0].percent }}'
     scan_interval: 3600
     unit_of_measurement: '%'
   - platform: command_line
-    command: curl -X GET http://localhost:61208/api/2/fs
+    command: df -h /mnt/media_vault | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
+    scan_interval: 3600
+    unit_of_measurement: '%'
     name: 'Disk Media Vault'
-    value_template: '{{ value_json[4].percent }}'
-    scan_interval: 3600
-    unit_of_measurement: '%'
   - platform: command_line
-    command: curl -X GET http://localhost:61208/api/2/fs
+    command: df -h /mnt/backup | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
     name: 'Disk Backup'
-    value_template: '{{ value_json[5].percent }}'
     scan_interval: 3600
     unit_of_measurement: '%'
   - platform: command_line
-    command: curl -X GET http://localhost:61208/api/2/fs
+    command: df -h /mnt/zoneminder | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
     name: 'Disk Zoneminder'
-    value_template: '{{ value_json[6].percent }}'
     scan_interval: 3600
     unit_of_measurement: '%'
   - platform: command_line

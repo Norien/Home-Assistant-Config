@@ -10,6 +10,8 @@ This is my [Home Assistant](https://home-assistant.io/) configuration running on
 * [Pi-Hole](https://pi-hole.net/)
 * [Kodi](https://kodi.tv/)
 * [RetroPie](https://retropie.org.uk/)
+* [Plex](https://plex.tv/)
+* [Zoneminder](https://zoneminder.com/)
 
 ## Devices in Use:
 * [Netgear R6300](http://a.co/hKI7tOr) - [DD-WRT Firmware](https://goo.gl/d3qFQP)

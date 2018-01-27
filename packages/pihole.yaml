@@ -46,7 +46,7 @@ homeassistant:
 
     script.ad_blocker:
       friendly_name: Ad Blocker
-      emulated_hue: true
+      emulated_hue_hidden: false
 
     script.pihole_off:
       friendly_name: Turn Pi-Hole Off
@@ -68,6 +68,9 @@ homeassistant:
 
     sensor.pi_hole_version:
       friendly_name: Version
+
+    sensor.pihole_status_raw:
+      hidden: true
 
 group:
   Ads Blocked:

@@ -7,7 +7,7 @@ homeassistant:
       friendly_name: Living Room KODI
 
     packages.kodi_control: &customize
-      emulated_hue: true
+      emulated_hue_hidden: false
       package: 'kodi_control'
 
     script.baby_cam:
