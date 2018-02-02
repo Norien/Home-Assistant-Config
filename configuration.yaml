@@ -1,6 +1,6 @@
 ###### Configuration
 homeassistant:
-  name: -H-
+  name: " "
   latitude: !secret latitude
   longitude: !secret longitude
   elevation: 264

@@ -25,6 +25,11 @@ homeassistant:
       icon: mdi:cloud-upload
     sensor.last_snapshot:
       icon: mdi:camera-gopro
+    script.kodi_restart:
+      friendly_name: Restart Kodi
+      emulated_hue_hidden: false
+      emulated_hue_name: "Restart Kodi"
+      icon: mdi:kodi
 ###### STATE CARD #######################################################
 group:
   utilities:
@@ -35,6 +40,7 @@ group:
       - script.update_ha
       - script.clear_log
       - script.clear_tts_cache
+      - script.kodi_restart
   backup:
     name: Backup
     control: hidden
@@ -67,6 +73,9 @@ script:
   clear_tts_cache:
     sequence:
       - service: tts.clear_cache
+  kodi_restart:
+    sequence:
+       - service: shell_command.kodi_restart
 #########################################################################
 automation:
   - alias: "Auto Backup"
@@ -101,3 +110,4 @@ shell_command:
   update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/shell/update_ha.log 2>&1 &'
   restart_ha: 'sudo hassctl restart'
   del_log: rm /home/homeassistant/.homeassistant/home-assistant.log && touch /home/homeassistant/.homeassistant/home-assistant.log && chown -R -v homeassistant:homeassistant /home/homeassistant/.homeassistant/home-assistant.log
+  kodi_restart: 'sudo bash /home/homeassistant/.homeassistant/shell/kodi_restart.sh'

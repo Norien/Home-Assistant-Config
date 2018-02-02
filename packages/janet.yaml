@@ -377,12 +377,15 @@ script:
                 #TODO
                 entity_id: input_boolean.away
                 state: 'off'
-              - condition: state                
+              - condition: state
                 entity_id: input_boolean.vacation
                 state: 'off'
               - condition: state
                 entity_id: input_boolean.janet_guest_mode
                 state: 'on'
+              - condition: state
+                entity_id: input_boolean.finn_sleep
+                state: 'off'
         #TODO
       - wait_template: "{{ not is_state( media_player, 'playing') }}"
         timeout: 00:00:30

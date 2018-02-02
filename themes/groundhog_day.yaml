@@ -1,0 +1,49 @@
+"Groundhog Day":
+  primary-color: "#ED7C30"
+  disabled-text-color: "#DC742D"
+  divider-color: "#EDE4D8" #"rgba(255, 255, 255, 0.15)"
+  dark-primary-color: "#592A13"
+
+  primary-background-color: "#85AC3F"
+  primary-text-color: "#5C3410"
+  secondary-background-color: "#C5D8DF"
+  secondary-text-color: "#693A23"
+  text-primary-color: "#693A23"
+
+  label-badge-background-color: "var(--primary-background-color)"
+  label-badge-text-color: "var(--text-primary-color)"
+
+  paper-card-background-color: "#DC742D"
+  paper-grey-50: "#ED7C30"
+  paper-grey-200: "#B0D24A"
+  paper-item-icon-color: "#B3D54A"
+  paper-listbox-background-color: "#DC742D"
+  paper-listbox-color: "#ED7C30"
+
+  paper-card-header-color: "#EDE4D8"
+
+  paper-item-icon-active-color: "#85AC3F"
+  paper-item-icon_-_color: "#B3D54A"
+
+  paper-slider-active-color: "#A56521"
+  paper-slider-knob-color: "#A56521"
+  paper-slider-knob-start-color: "#ED7C30"
+  paper-slider-pin-color: "#FF00FF"
+  paper-slider-secondary-color: "#A06020"
+
+  paper-toggle-button-checked-ink-color: "#A56521"
+  paper-toggle-button-checked-button-color: "#A56521"
+  paper-toggle-button-checked-bar-color: "#EDE4D8"
+  paper-toggle-button-unchecked-bar-color: "#EDE4D8"
+
+  table-row-background-color: "#DC742D"
+  table-row-alternative-background-color: "#C67A2E"
+
+  google-red: "#A56521"
+  google-green: "#DC742D"
+  google-blue: "#268BD2"
+  google-yellow: "#ED7C30"
+  accent-color: "#EDE4D8"
+  paper-green: "#DC742D"
+  paper-blue: "#268BD2"
+  paper-orange: "#EDE4D8"
