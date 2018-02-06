@@ -12,6 +12,7 @@
 *.cfg
 *.wav
 *.mp3
+*.bak
 lib
 deps
 tts
