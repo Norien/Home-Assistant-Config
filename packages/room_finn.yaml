@@ -4,7 +4,7 @@
 homeassistant:
   customize:
     input_boolean.finn_sleep:
-      emulated_hue: true
+      emulated_hue_hidden: false
     script.finn_sleep:
       google_assistant: true
       google_assistant_name: 'Sleep'

@@ -204,6 +204,7 @@ sensor:
   - platform: time_date
     display_options:
       - "date_time"
+      - 'time'
 
   ##### Owntracks Battery Tracker for Cell Phones
   - platform: mqtt

@@ -14,7 +14,7 @@ homeassistant:
       icon: mdi:delete
     script.garbage_tracker:
       friendly_name: Garbage Tracker
-      emulated_hue: true
+      emulated_hue_hidden: false
 
 ###### STATE CARD
 group:

@@ -4,7 +4,7 @@
 homeassistant:
   customize:
     script.backyard_party:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: Party Time
       icon: mdi:pizza
     switch.sonoff_1:
@@ -61,7 +61,7 @@ automation:
         entity_id: sensor.find_justin
         to: 'backyard'
         for:
-          seconds: 30 
+          seconds: 30
     action:
       - service: script.backyard_party
 

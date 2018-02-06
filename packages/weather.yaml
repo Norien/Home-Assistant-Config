@@ -31,7 +31,7 @@ homeassistant:
     # WEATHER report
     script.weather_report:
       friendly_name: 'Weather Report'
-      emulated_hue: true
+      emulated_hue_hidden: false
       google_assistant: true
       google_assistant_name: 'Weather Report'
 

@@ -31,7 +31,7 @@ script:
       after: '06:00:00'
       before: '13:00:00'
     - service: homeassistant.turn_off
-      entity_id: input_boolean.finn_sleep      
+      entity_id: input_boolean.finn_sleep
     - service: script.morning_livingroom_lights
     - service: switch.turn_off
       entity_id: switch.bedroom_fan

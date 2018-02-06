@@ -74,7 +74,7 @@ discovery:
   # device: /dev/zigbee
 
 emulated_hue:
-  host_ip: 192.168.1.115
+  host_ip: !secret emulated_hue_url
   expose_by_default: false
 
 logger:

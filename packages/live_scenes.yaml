@@ -5,45 +5,32 @@ homeassistant:
   customize:
     script.aquarium_scene:
       friendly_name: 'Aquarium'
-      emulated_hue: true
+      emulated_hue_hidden: false
       icon: mdi:fish
     script.sexy_time:
       friendly_name: 'Sexy Time'
-      emulated_hue: true
+      emulated_hue_hidden: false
       icon: mdi:heart
     script.river_scene:
       friendly_name: 'River'
-      emulated_hue: true
+      emulated_hue_hidden: false
       icon: mdi:hook
     script.beach_scene:
       friendly_name: 'Beach'
-      emulated_hue: true
+      emulated_hue_hidden: false
       icon: mdi:tower-beach
     script.jungle_scene:
       friendly_name: 'Jungle'
-      emulated_hue: true
+      emulated_hue_hidden: false
       icon: mdi:paw
     script.fireplace_scene:
       friendly_name: 'Fire Place'
-      emulated_hue: true
+      emulated_hue_hidden: false
       icon: mdi:fire
     script.space_scene:
       friendly_name: 'Space'
-      emulated_hue: true
+      emulated_hue_hidden: false
       icon: mdi:earth
-# ###### STATE CARD
-# group:
-#   live_scenes:
-#     control: hidden
-#     name: Live Scenes
-#     entities:
-#       - script.aquarium_scene
-#       - script.river_scene
-#       - script.beach_scene
-#       - script.sexy_time
-#       - script.jungle_scene
-#       - script.fireplace_scene
-#       - script.space_scene
 
 script:
   space_scene:

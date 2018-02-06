@@ -4,13 +4,13 @@
 homeassistant:
   customize:
     script.pc:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'PC'
     script.bedroom_pc:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Bedroom PC'
     script.office_pc:
-      emulated_hue: true
+      emulated_hue_hidden: false
       friendly_name: 'Office PC'
 
 google_assistant:
