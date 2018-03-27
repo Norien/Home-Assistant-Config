@@ -27,6 +27,7 @@ group:
      - sensor.battery_hallway_switch_dynamic
      - sensor.justin_battery
      - sensor.nicole_battery
+
 automation:
   - alias: Update Phone Battery Levels
     initial_state: true
@@ -88,17 +89,17 @@ automation:
         at: '18:00:00'
     condition:
       condition: template
-      value_template: "{% if states('sensor.low_battery') %}true{% endif %}"
+      value_template: "{% if states('sensor.battery_low') %}true{% endif %}"
     action:
       - service: persistent_notification.create
         data_template:
           title: Low Battery
-          message: "{{ states('sensor.low_battery') }}"
+          message: "{{ states('sensor.battery_low') }}"
           notification_id: low-battery-alert
       - service: notify.html5
         data_template:
           target: justin
-          message:  "Low battery levels: {{ states('sensor.low_battery') }}"
+          message:  "Low battery levels: {{ states('sensor.battery_low') }}"
 
 sensor:
 ###### PHILIPS HUE MOTION SENSOR AND SWITCHES
@@ -107,14 +108,14 @@ sensor:
     value_template: '{{ value_json.config.battery }}'
     unit_of_measurement: '%'
     scan_interval: 1800
-    name: 'battery_finn_sensor'
+    name: 'batteryraw_finn_sensor'
   - platform: template
     sensors:
       battery_finn_sensor_dynamic:
         friendly_name: 'Findlays Room Sensor'
-        value_template: "{{ states.sensor.battery_finn_sensor.state }}"
+        value_template: "{{ states.sensor.batteryraw_finn_sensor.state }}"
         icon_template: >-
-          {% set battery_level = states.sensor.battery_finn_sensor.state|int('unknown') %}
+          {% set battery_level = states.sensor.batteryraw_finn_sensor.state|int('unknown') %}
           {% set battery_round = (battery_level|int / 10)|int * 10 %}
           {% if battery_level == 'unknown' %}
             mdi:battery-unknown
@@ -133,14 +134,14 @@ sensor:
     value_template: '{{ value_json.config.battery }}'
     unit_of_measurement: '%'
     scan_interval: 1800
-    name: 'battery_finn_switch'
+    name: 'batteryraw_finn_switch'
   - platform: template
     sensors:
       battery_finn_switch_dynamic:
         friendly_name: 'Findlays Room Switch'
-        value_template: "{{ states.sensor.battery_finn_switch.state }}"
+        value_template: "{{ states.sensor.batteryraw_finn_switch.state }}"
         icon_template: >-
-          {% set battery_level = states.sensor.battery_finn_switch.state|int('unknown') %}
+          {% set battery_level = states.sensor.batteryraw_finn_switch.state|int('unknown') %}
           {% set battery_round = (battery_level|int / 10)|int * 10 %}
           {% if battery_level == 'unknown' %}
             mdi:battery-unknown
@@ -159,14 +160,14 @@ sensor:
     value_template: '{{ value_json.config.battery }}'
     unit_of_measurement: '%'
     scan_interval: 1800
-    name: 'battery_livingroom_sensor'
+    name: 'batteryraw_livingroom_sensor'
   - platform: template
     sensors:
       battery_livingroom_sensor_dynamic:
         friendly_name: 'Living Room Sensor'
-        value_template: "{{ states.sensor.battery_livingroom_sensor.state }}"
+        value_template: "{{ states.sensor.batteryraw_livingroom_sensor.state }}"
         icon_template: >-
-          {% set battery_level = states.sensor.battery_livingroom_sensor.state|int('unknown') %}
+          {% set battery_level = states.sensor.batteryraw_livingroom_sensor.state|int('unknown') %}
           {% set battery_round = (battery_level|int / 10)|int * 10 %}
           {% if battery_level == 'unknown' %}
             mdi:battery-unknown
@@ -185,14 +186,14 @@ sensor:
     value_template: '{{ value_json.config.battery }}'
     unit_of_measurement: '%'
     scan_interval: 1800
-    name: 'battery_hallway_switch'
+    name: 'batteryraw_hallway_switch'
   - platform: template
     sensors:
       battery_hallway_switch_dynamic:
         friendly_name: 'Hallway Switch'
-        value_template: "{{ states.sensor.battery_hallway_switch.state }}"
+        value_template: "{{ states.sensor.batteryraw_hallway_switch.state }}"
         icon_template: >-
-          {% set battery_level = states.sensor.battery_hallway_switch.state|int('unknown') %}
+          {% set battery_level = states.sensor.batteryraw_hallway_switch.state|int('unknown') %}
           {% set battery_round = (battery_level|int / 10)|int * 10 %}
           {% if battery_level == 'unknown' %}
             mdi:battery-unknown
@@ -211,14 +212,14 @@ sensor:
     value_template: '{{ value_json.config.battery }}'
     unit_of_measurement: '%'
     scan_interval: 1800
-    name: 'battery_diningroom_sensor'
+    name: 'batteryraw_diningroom_sensor'
   - platform: template
     sensors:
       battery_diningroom_sensor_dynamic:
         friendly_name: 'Dining Room Sensor'
-        value_template: "{{ states.sensor.battery_diningroom_sensor.state }}"
+        value_template: "{{ states.sensor.batteryraw_diningroom_sensor.state }}"
         icon_template: >-
-          {% set battery_level = states.sensor.battery_diningroom_sensor.state|int('unknown') %}
+          {% set battery_level = states.sensor.batteryraw_diningroom_sensor.state|int('unknown') %}
           {% set battery_round = (battery_level|int / 10)|int * 10 %}
           {% if battery_level == 'unknown' %}
             mdi:battery-unknown
@@ -340,14 +341,16 @@ sensor:
             mdi:battery-alert
           {% endif %}
 
+###### LIST OF LOW BATTERIES ( sensor.battery_ )
   - platform: template
     sensors:
-      low_battery:
+      battery_low:
         friendly_name: 'Low Battery'
+        icon_template: mdi:battery-alert
         value_template: >-
-          {%- for item in states.sensor if ((item.name[0:8] == 'battery_' and item.state |int > 15) ) -%}
-            {{item.attributes.friendly_name}}
+          {%- for item in states.sensor if ((item.entity_id[0:15] == 'sensor.battery_' and item.state |int < 10)) -%}
+            {{item.name}}
           {%- if not loop.last -%}
-            {{', '}}
-          {%- endif -%}
+          {{', '}}
+            {%- endif -%}
           {%- endfor -%}
