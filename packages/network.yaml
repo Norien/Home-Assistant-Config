@@ -42,6 +42,12 @@ sensor:
     scan_interval: 14400
 ###### SPEEDTEST
   - platform: speedtest
+    minute: 30
+    hour:
+      - 0
+      - 6
+      - 12
+      - 18  
     monitored_conditions:
       - ping
       - download

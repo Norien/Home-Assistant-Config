@@ -84,6 +84,7 @@ logger:
   logs:
     homeassistant.components.switch.command_line: fatal
     homeassistant.components.sensor.command_line: fatal
+    homeassistant.components.sensor.template: fatal
     homeassistant.components.switch.template: fatal
     homeassistant.components.camera.generic: fatal
     homeassistant.components.camera.mjpeg: fatal
@@ -104,7 +105,7 @@ tts:
   platform: google
 
 recorder:
-  db_url: !secret database
+  #db_url: !secret database
   purge_interval: 10
   purge_keep_days: 10
   exclude:
@@ -137,6 +138,7 @@ device_tracker:
       skullcanyon: 192.168.1.115
       roomba: 192.168.1.147
       router: 192.168.1.1
+      camera_baby: 192.168.1.92
 
 wemo:
   static:
@@ -164,8 +166,8 @@ media_player:
     host: 192.168.1.230
   - platform: cast
     host: 192.168.1.231
-  - platform: cast
-    host: 192.168.1.232
+  # - platform: cast
+  #   host: 192.168.1.232
   - platform: cast
     host: 192.168.1.235
   - platform: kodi

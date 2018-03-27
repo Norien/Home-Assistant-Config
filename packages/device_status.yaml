@@ -23,7 +23,7 @@ group:
       #- sensor.raspberry_pi_zero
       - sensor.tracker_doorbell
       - sensor.bedroom_led_strip
-    #  - sensor.room_masterbed
+      - sensor.room_masterbed
     #  - sensor.room_laundry_room_sensor
 
 sensor:

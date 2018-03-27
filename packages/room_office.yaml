@@ -23,7 +23,13 @@ group:
      - sensor.steam_account
      - switch.office_pc
      - switch.office_lightswitch
+     - group.office_led_strip
+     - light.hue_go
      - group.office_energy
+#     - sensor.office_temperature
+#     - sensor.office_humidity
+     - binary_sensor.office_reset_button
+     - binary_sensor.office_power_button
   office_energy:
     icon: mdi:power
     name: Power Strip
@@ -34,6 +40,13 @@ group:
      - sensor.office_voltage
      - sensor.office_today
      - sensor.office_yesterday
+  office_led_strip:
+    name: LED Strip
+    icon: mdi:led-outline
+    entities:
+     - switch.led_strip
+     - input_select.led_scene
+     - input_select.led_color
 
 switch:
 ###### SONOFF POW POWERBAR
@@ -63,6 +76,19 @@ sensor:
     accounts:
       - id: !secret steam_user
         entity_id: "account"
+
+###### MQTT DHT22
+  - platform: mqtt
+    state_topic: '/Office_Sensor/environment/Temperature'
+    name: 'Office Temperature'
+    value_template: '{{ (value | float - 0) | round(1) }}'
+    unit_of_measurement: '°C'
+  - platform: mqtt
+    state_topic: '/Office_Sensor/environment/Humidity'
+    name: 'Office Humidity'
+    value_template: '{{ (value | float + 0) | round }}'
+    unit_of_measurement: '%'
+
 ###### SONOFF POW SENSORS
   - platform: mqtt
     name: "Office Draw"
@@ -99,6 +125,49 @@ sensor:
     unit_of_measurement: "kWh"
     value_template: "{{ value_json.Yesterday }}"
 
+###### POWER & RESET SWITCH ON PC CASE ROUTED TO WEMOS D1 MINI
+binary_sensor:
+  - platform: mqtt
+    name: "Office Reset Button"
+    state_topic: "Office_PC_Buttons/Switch/Switch_2"
+    qos: 0
+    payload_on: 1
+    payload_off: 0
+
+  - platform: mqtt
+    name: "Office Power Button"
+    state_topic: "Office_PC_Buttons/Switch/Switch_1"
+    qos: 0
+    payload_on: 1
+    payload_off: 0
+
+automation:
+  - alias: office_reset_button
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.office_reset_button
+        from: 'off'
+        to: 'on'
+    action:
+      - service: switch.toggle
+        entity_id: switch.led_strip
+      - service_template: >
+          {% if states.light.hue_go.state == 'off' %} script.office_hue_go_on
+          {% elif states.light.hue_go.state == 'on' %} script.office_hue_go_off
+          {% endif %}
+
+  - alias: office_power_button
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.office_power_button
+        from: 'off'
+        to: 'on'
+    action:
+      - service: switch.toggle
+        entity_id: switch.office_pc
+
 script:
   office_pc_on:
     sequence:
@@ -113,6 +182,19 @@ script:
     - wait_template: "{{ states.sensor.office_draw.state|int < 100 }}"
     - service: switch.turn_off
       entity_id: switch.office_powerbar
+  office_hue_go_off:
+    sequence:
+      - service: light.turn_off
+        data:
+          entity_id: light.hue_go
+  office_hue_go_on:
+    sequence:
+    - service: light.turn_on
+      data:
+        entity_id:
+          light.hue_go:
+        brightness: 255
+        rgb_color: [255,0,247]
 
 shell_command:
   office_pc_off: !secret office_pc_off

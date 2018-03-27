@@ -12,6 +12,18 @@ homeassistant:
       friendly_name: 'MySQL'
     sensor.process_dnsmasq:
       friendly_name: 'Pi-Hole'
+    sensor.process_plex_media_server:
+      friendly_name: 'Plex'
+      icon: mdi:plex
+    sensor.plex:
+      friendly_name: 'Current Users'
+      icon: mdi:account
+    sensor.kodi_version:
+      friendly_name: 'Version'
+      icon: mdi:package-variant
+    sensor.process_kodix11:
+      friendly_name: 'Living Room Kodi'
+      icon: mdi:kodi
 
 ###### STATE CARD
 group:
@@ -22,13 +34,47 @@ group:
       - automation.notify_if_service_goes_offline
       - sensor.process_glances
       - sensor.process_mosquitto
-      - sensor.process_mysqld
-      - sensor.process_dnsmasq
+      - group.mysql
+      - group.plex
+      - group.pihole
       - sensor.gif_maker_status
       - sensor.process_flic
+      - group.process_kodi_livingroom
       - sensor.master_bed_kodi
       - sensor.process_life360
-      - sensor.processes_kodi_cpu
+  process_kodi_livingroom:
+    name: Living Room Kodi
+    control: hidden
+    icon: mdi:kodi
+    entities:
+      - sensor.process_kodix11
+      - sensor.kodi_livingroom_state
+      - sensor.kodi_version
+      - script.kodi_restart
+  mysql:
+    name: MySQL
+    control: hidden
+    icon: mdi:memory
+    entities:
+      - sensor.process_mysqld
+      - sensor.mysql_database_size
+      - sensor.mysql_version
+  plex:
+    name: Plex
+    control: hidden
+    icon: mdi:plex
+    entities:
+      - sensor.process_plex_media_server
+      - sensor.plex
+      - sensor.plex_version
+  pihole:
+    name: pihole
+    control: hidden
+    icon: mdi:memory
+    entities:
+      - sensor.process_dnsmasq
+      - sensor.pi_hole_version
+      - script.pihole_update
 
 sensor:
   - platform: systemmonitor
@@ -41,9 +87,17 @@ sensor:
         arg: mysqld
       - type: process
         arg: dnsmasq
+      - type: process
+        arg: Plex Media Server
+      - type: process
+        arg: kodi-x11
 
   - platform: template
     sensors:
+      kodi_livingroom_state:
+        friendly_name: 'State'
+        value_template: "{{states.media_player.kodi_livingroom.state}}"
+        icon_template: "{% if states.media_player.kodi_bedroom_pi.state == 'off' %} mdi:alert-outline {% else %} mdi:kodi {% endif %}"
       master_bed_kodi:
         friendly_name: 'Master Bedroom Kodi'
         value_template: "{% if is_state('media_player.kodi_bedroom_pi', 'off') %}off{% else %}on{% endif %}"
@@ -57,13 +111,10 @@ sensor:
         value_template: "{% if is_state('sensor.life360_sensor', 'running') %}on{% else %}off{% endif %}"
         icon_template: "{% if states.sensor.life360_sensor.state == 'running' %} mdi:account-convert {% else %} mdi:alert-outline {% endif %}"
 
-
   - platform: command_line
-    command: ps -eo pcpu -eo command |grep kodi-x11
-    name: processes_kodi_cpu
-    value_template: '{{value [0:4]|float}}'
-    unit_of_measurement: '%'
-    scan_interval: 60
+    command: kodi --version | head -1 | awk  '{print $1" "$2}'
+    name: kodi_version
+    scan_interval: 86400
 
   - platform: command_line
     name: master_bed_flic

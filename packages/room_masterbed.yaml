@@ -41,7 +41,6 @@ group:
      - switch.bedroom_fan
      - switch.bedroom_tv
      - group.bedroom_white_noise
-     - group.bedroom_led_strip
      # - binary_sensor.flic_80e4da71b68e
 
   bedroom_white_noise:
@@ -50,13 +49,6 @@ group:
     entities:
      - switch.white_noise
      - input_select.white_noise
-  bedroom_led_strip:
-    name: LED Strip
-    icon: mdi:led-outline
-    entities:
-     - switch.led_strip
-     - input_select.led_scene
-     - input_select.led_color
 
 binary_sensor:
   - platform: flic
@@ -236,8 +228,6 @@ automation:
     action:
       - service: switch.toggle
         entity_id: switch.bedroom_lamps_
-      - service: switch.toggle
-        entity_id: switch.led_strip
 
   - alias: 'bedroom flic hold'
     initial_state: 'on'

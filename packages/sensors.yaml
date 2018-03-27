@@ -13,9 +13,6 @@ homeassistant:
     sensor.findlay_room_temperature:
       icon: mdi:thermometer
       friendly_name: Findlay's Room
-    sensor.findlay_room_motion_sensor_battery_level:
-      friendly_name: Findlay's Room Sensor
-      icon: mdi:battery
 
     ######Living room
     sensor.living_room_motion:
@@ -26,9 +23,6 @@ homeassistant:
     sensor.living_room_temperature:
       icon: mdi:thermometer
       friendly_name: Living Room
-    sensor.living_room_motion_sensor_battery_level:
-      friendly_name: Living Room Sensor
-      icon: mdi:battery
 
     ######Dining Room
     sensor.dining_room_motion:
@@ -39,17 +33,6 @@ homeassistant:
     sensor.dining_room_temperature:
       icon: mdi:thermometer
       friendly_name: Dining Room
-    sensor.dining_room_motion_sensor_battery_level:
-      friendly_name: Dining Room Sensor
-      icon: mdi:battery
-
-    #Philips Hue Switches
-    sensor.living_room_dimmer_switch:
-      friendly_name: Living Room Dimmer Switch
-      icon: mdi:battery
-    sensor.findlays_room_dimmer_switch:
-      friendly_name: Findlay's Dimmer Switch
-      icon: mdi:battery
 
 ###### STATE CARDS
 group:
@@ -67,24 +50,12 @@ group:
      - sensor.dark_sky_temperature
      - sensor.hallway_thermostat_temperature
      - sensor.findlay_room_temperature
+     - sensor.office_temperature
      - sensor.master_bed_temperature
      - sensor.living_room_temperature
      - sensor.dining_room_temperature
      - sensor.laundry_temperature
      - sensor.average_whole_home
-  sensor_battery_levels:
-    name: Battery Levels
-    entities:
-     - sensor.kitchen_nest_protect_battery_health
-     - sensor.findlay_room_motion_sensor_battery_level
-     - sensor.living_room_motion_sensor_battery_level
-     - sensor.dining_room_motion_sensor_battery_level
-     - sensor.findlays_room_dimmer_switch
-     - sensor.living_room_dimmer_switch
-     - sensor.justin_battery
-     - sensor.nicole_battery
-     # - input_label.justin_battery
-     # - input_label.nicole_battery
   lux:
     name: Light Level
     entities:
@@ -98,13 +69,18 @@ binary_sensor:
     country: CA
 ###### SENSORS -------------------------------------------------
 sensor:
+  - platform: plex
+    token: !secret plex_token
+    username: !secret plex_username
+    password: !secret plex_password
+
   #####FINDLAYS ROOM SENSOR & DIMMER
   - platform: rest
     resource: !secret finn_room_lux
     value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
     unit_of_measurement: Lux
     name: 'Findlay Room Lux'
-    scan_interval: 80
+    scan_interval: 120
 
   - platform: rest
     resource: !secret finn_room_motion
@@ -120,27 +96,13 @@ sensor:
     name: 'Findlay Room Temperature'
     scan_interval: 120
 
-  - platform: rest
-    resource: !secret finn_room_sensor_battery
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Findlay Room Motion Sensor Battery Level'
-
-  - platform: rest
-    resource: !secret finn_room_switch_battery
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Findlays Room Dimmer Switch'
-
   #####LIVING ROOM SENSOR & DIMMER
   - platform: rest
     resource: !secret livingroom_lux
     value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
     unit_of_measurement: Lux
     name: 'Living Room Lux'
-    scan_interval: 600
+    scan_interval: 700
 
   - platform: rest
     resource: !secret livingroom_motion
@@ -156,27 +118,13 @@ sensor:
     name: 'Living Room Temperature'
     scan_interval: 120
 
-  - platform: rest
-    resource: !secret livingroom_sensor_battery
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Living Room Motion Sensor Battery Level'
-
-  - platform: rest
-    resource: !secret livingroom_sensor_battery
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Living Room Dimmer Switch'
-
   #####DINING ROOM SENSOR
   - platform: rest
     resource: !secret dining_room_lux
     value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
     unit_of_measurement: Lux
     name: 'Dining Room Lux'
-    scan_interval: 600
+    scan_interval: 700
 
   - platform: rest
     resource: !secret dining_room_motion
@@ -192,127 +140,12 @@ sensor:
     name: 'Dining Room Temperature'
     scan_interval: 120
 
-  - platform: rest
-    resource: !secret dining_room_sensor_battery
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Dining Room Motion Sensor Battery Level'
-
   ######DATE TIME
   - platform: yr
   - platform: time_date
     display_options:
       - "date_time"
       - 'time'
-
-  ##### Owntracks Battery Tracker for Cell Phones
-  - platform: mqtt
-    state_topic: "owntracks/justin/justin"
-    name: "Justin's Battery State"
-    value_template: >
-      {% if value_json.charging == 1 %}
-        Charging
-      {% else %}
-        Not Charging
-      {% endif %}
-
-  - platform: mqtt
-    state_topic: "owntracks/justin/justin"
-    name: "Justin's Battery"
-    unit_of_measurement: "%"
-    value_template: "{{ value_json.batt }}"
-
-  - platform: mqtt
-    state_topic: "owntracks/nicole/nicole"
-    name: "Nicole's Battery State"
-    value_template: >
-      {% if value_json.charging == 1 %}
-        Charging
-      {% else %}
-        Not Charging
-      {% endif %}
-
-  - platform: mqtt
-    state_topic: "owntracks/nicole/nicole"
-    name: "Nicole's Battery"
-    unit_of_measurement: "%"
-    value_template: "{{ value_json.batt }}"
-
-  - platform: template
-    sensors:
-      justin_battery:
-        friendly_name: Justin's Phone Battery
-        unit_of_measurement: '%'
-        value_template: "{{ states('sensor.justins_battery')|int(-1) }}"
-        icon_template: >-
-          {% if states('sensor.justin_battery') != "unknown" %}
-            {% set battery_level = states('sensor.justins_battery')|int (-1)%}
-            {% set battery_round = (battery_level|int / 10)|int * 10 %}
-            {% if states.sensor.justins_battery_state.state | lower == "charging" %}
-              {% if battery_level == -1 %}
-                mdi:battery-unknown
-              {% else %}
-                {% if battery_round >= 100 %}
-                  mdi:battery-charging-100
-                {% elif battery_round > 0 %}
-                  mdi:battery-charging-{{ battery_round }}
-                {% else %}
-                  mdi:battery-alert
-                {% endif %}
-              {% endif %}
-            {% else %}
-              {% if battery_level == -1 %}
-                mdi:battery-unknown
-              {% else %}
-                {% if battery_round >= 100 %}
-                  mdi:battery
-                {% elif battery_round > 0 %}
-                  mdi:battery-{{ battery_round }}
-                {% else %}
-                  mdi:battery-alert
-                {% endif %}
-              {% endif %}
-            {% endif %}
-          {% else %}
-            mdi:battery-alert
-          {% endif %}
-      nicole_battery:
-        friendly_name: Nicole's Phone Battery
-        unit_of_measurement: '%'
-        value_template: "{{ states('sensor.nicoles_battery')|int(-1) }}"
-        icon_template: >-
-          {% if states('sensor.nicole_battery') != "unknown" %}
-            {% set battery_level = states('sensor.nicoles_battery')|int (-1)%}
-            {% set battery_round = (battery_level|int / 10)|int * 10 %}
-            {% if states.sensor.nicoles_battery_state.state | lower == "charging" %}
-              {% if battery_level == -1 %}
-                mdi:battery-unknown
-              {% else %}
-                {% if battery_round >= 100 %}
-                  mdi:battery-charging-100
-                {% elif battery_round > 0 %}
-                  mdi:battery-charging-{{ battery_round }}
-                {% else %}
-                  mdi:battery-alert
-                {% endif %}
-              {% endif %}
-            {% else %}
-              {% if battery_level == -1 %}
-                mdi:battery-unknown
-              {% else %}
-                {% if battery_round >= 100 %}
-                  mdi:battery
-                {% elif battery_round > 0 %}
-                  mdi:battery-{{ battery_round }}
-                {% else %}
-                  mdi:battery-alert
-                {% endif %}
-              {% endif %}
-            {% endif %}
-          {% else %}
-            mdi:battery-alert
-          {% endif %}
 
 ###### AVERAGE TEMPERATURE
   - platform: min_max

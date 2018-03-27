@@ -20,28 +20,6 @@ automation:
         data_template:
           person: >-
             {{ trigger.event.data.name }}
-##############################################################################
-  # - alias: Shut Down
-  #   trigger:
-  #     - event: shutdown
-  #       platform: homeassistant
-  #     - event_type: homeassistant.restart
-  #       platform: event
-  #   action:
-  #     - service: script.janet_speech_engine
-  #       data:
-  #         call_bye: 1
-  #         call_shut_down: 1
-  # - alias: Start Up
-  #   trigger:
-  #     - event: start
-  #       platform: homeassistant
-
-    action:
-      - service: script.janet_speech_engine
-        data:
-          call_greeting: 1
-          call_introduction: 1
 
   - alias: Janet Update Available
     trigger:

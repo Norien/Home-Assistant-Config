@@ -20,25 +20,25 @@ homeassistant:
       friendly_name: Steam Launcher
       icon: mdi:steam
 
-    script.auto_cartoons:
-      <<: *customize
-      friendly_name: Cartoons
-      icon: mdi:playlist-play
-
-    script.auto_all_tv:
-      <<: *customize
-      friendly_name: All TV
-      icon: mdi:playlist-play
-
-    script.auto_pawpatrol:
-      <<: *customize
-      friendly_name: Paw Partol
-      icon: mdi:playlist-play
-
-    script.auto_moana:
-      <<: *customize
-      friendly_name: Moana
-      icon: mdi:playlist-play
+    # script.auto_cartoons:
+    #   <<: *customize
+    #   friendly_name: Cartoons
+    #   icon: mdi:playlist-play
+    #
+    # script.auto_all_tv:
+    #   <<: *customize
+    #   friendly_name: All TV
+    #   icon: mdi:playlist-play
+    #
+    # script.auto_pawpatrol:
+    #   <<: *customize
+    #   friendly_name: Paw Partol
+    #   icon: mdi:playlist-play
+    #
+    # script.auto_moana:
+    #   <<: *customize
+    #   friendly_name: Moana
+    #   icon: mdi:playlist-play
 
     script.kodi_play:
       <<: *customize
@@ -120,12 +120,24 @@ homeassistant:
       friendly_name: Clean Audio Library
       icon: mdi:music
 
+    script.kodi_restart:
+      friendly_name: Restart Kodi
+      emulated_hue_hidden: false
+      emulated_hue_name: "Restart Kodi"
+      icon: mdi:kodi
+
+    automation.kodi_clean:
+      <<: *customize
+      friendly_name: Auto Update/Clean
+      icon: mdi:update
+
 ###### STATE CARD
 group:
   kodi_utilities:
     control: hidden
     name: Kodi Utilities
     entities:
+      - automation.kodi_clean
       - script.kodi_update_video_library
       - script.kodi_clean_video_library
       - script.kodi_update_audio_library
@@ -149,56 +161,77 @@ group:
       - script.kodi_nav_right
       - script.kodi_nav_select
 
-  playlists:
-    control: hidden
-    name: Playlists
-    entities:
-      - script.auto_all_tv
-      - script.auto_cartoons
-      - script.auto_pawpatrol
-      - script.auto_moana
-      - script.kodi_youtbe
+  # playlists:
+  #   control: hidden
+  #   name: Playlists
+  #   entities:
+  #     - script.auto_all_tv
+  #     - script.auto_cartoons
+  #     - script.auto_pawpatrol
+  #     - script.auto_moana
+
+automation:
+  - alias: kodi_clean
+    trigger:
+      - platform: time
+        at: '03:00:00'
+    action:
+      - service: script.kodi_update_video_library
+      - delay: '00:02:00'
+      - service: script.kodi_clean_video_library
+
+shell_command:
+  kodi_start: 'sudo bash /home/homeassistant/.homeassistant/shell/kodi_start.sh &>/dev/null &'
+  kodi_kill: 'sudo pkill -9 -f kodi &>/dev/null &'
 
 script:
-  ################################################
-  ## Living Room -CARTOONS
-  ################################################
-  auto_cartoons:
+  kodi_restart:
     sequence:
-      - service_template: >-
-          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
-        data:
-          file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/cartoon2.xsp"
-
-  ################################################
-  ## Living Room - All TV
-  ################################################
-  auto_all_tv:
-    sequence:
-      - service_template: >-
-          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
-        data:
-          file: "special://profile/playlists/video/all.xsp"
-
-  ################################################
-  ## Living Room - Paw Patrol
-  ################################################
-  auto_pawpatrol:
-    sequence:
-      - service_template: >-
-          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
-        data:
-          file: "special://profile/playlists/video/pawpatrol.xsp"
-
-  ################################################
-  ## Living Room -Moana
-  ################################################
-  auto_moana:
-    sequence:
-      - service_template: >-
-          script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
-        data:
-          file: "special://profile/playlists/video/moanag.xsp"
+       - service_template: >-
+          {% if states.media_player.kodi_livingroom.state != 'off' %} shell_command.kodi_kill
+          {% else %} shell_command.blank_shell
+          {% endif %}
+       - delay: 00:00:05
+       - service: shell_command.kodi_start
+  # ################################################
+  # ## Living Room - CARTOONS
+  # ################################################
+  # auto_cartoons:
+  #   sequence:
+  #     - service_template: >-
+  #         script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+  #       data:
+  #         file: "c:/Users/Living Room/AppData/Roaming/Kodi/userdata/playlists/video/cartoon2.xsp"
+  #
+  # ################################################
+  # ## Living Room - All TV
+  # ################################################
+  # auto_all_tv:
+  #   sequence:
+  #     - service_template: >-
+  #         script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+  #       data:
+  #         file: "special://profile/playlists/video/all.xsp"
+  #
+  # ################################################
+  # ## Living Room - Paw Patrol
+  # ################################################
+  # auto_pawpatrol:
+  #   sequence:
+  #     - service_template: >-
+  #         script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+  #       data:
+  #         file: "special://profile/playlists/video/pawpatrol.xsp"
+  #
+  # ################################################
+  # ## Living Room -Moana
+  # ################################################
+  # auto_moana:
+  #   sequence:
+  #     - service_template: >-
+  #         script.kodi_play_file{{ '_bootup' if is_state('switch.living_room_pc', 'off') }}
+  #       data:
+  #         file: "special://profile/playlists/video/moanag.xsp"
 
   ################################################
   ## Kodi Commands
@@ -229,14 +262,14 @@ script:
               item:
                 file: "{{ file }}"
 
-  kodi_play_file_bootup:
-    sequence:
-      - service: switch.turn_on
-        entity_id: switch.living_room_pc
-      - delay: '00:01:30'
-      - service: script.kodi_play_file
-        data_template:
-          file: "{{ file }}"
+  # kodi_play_file_bootup:
+  #   sequence:
+  #     - service: switch.turn_on
+  #       entity_id: switch.living_room_pc
+  #     - delay: '00:01:30'
+  #     - service: script.kodi_play_file
+  #       data_template:
+  #         file: "{{ file }}"
 
 ###### ADDONS
   baby_cam:
@@ -300,6 +333,7 @@ script:
             jsonrpc: "2.0"
             method: "AudioLibrary.Clean"
 
+###### PLAYBACK CONTROLS
   kodi_playpause:
     sequence:
       - service: shell_command.curl

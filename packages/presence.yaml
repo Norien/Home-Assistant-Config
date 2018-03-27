@@ -63,8 +63,8 @@ automation:
         entity_id: group.justin, group.nicole, input_boolean.guest
     action:
       - service_template: >
-          {% if states.group.justin.state == 'off' and states.group.nicole.state == 'off' and states.input_boolean.guest.state == 'off' and states.input_boolean.away.state == 'off' %} homeassistant.turn_on
-          {% elif states.group.justin.state == 'on' or states.group.nicole.state == 'on' or states.input_boolean.guest.state == 'on' and states.input_boolean.away.state == 'on' %} homeassistant.turn_off
+          {% if states.group.justin.state == 'off' and states.group.nicole.state == 'off' and states.input_boolean.guest.state == 'off' and states.input_boolean.away.state == 'off' %} input_boolean.turn_on
+          {% elif states.group.justin.state == 'on' or states.group.nicole.state == 'on' or states.input_boolean.guest.state == 'on' and states.input_boolean.away.state == 'on' %} input_boolean.turn_off
           {% endif %}
         entity_id: input_boolean.away
       - service_template: >

@@ -78,35 +78,21 @@ group:
      - light.kitchen_sink
      - light.hue_color_lamp_1
      - light.hue_color_lamp_3
-     - light.hue_go
-
+     
 light:
   - platform: tplink
     host: 192.168.1.108
     name: 'Couch'
 
 script:
-  delay:
-    sequence:
-      - delay: 00:00:01
   tv:
     sequence:
-      - service_template: >-
+      - service_template: >
           {% if states.switch.tv.state == 'off' %} switch.turn_on
-          {%- elif states.switch.tv.state == 'on' -%} switch.turn_off
-          {%- endif -%}
+          {% elif states.switch.tv.state == 'on' %} switch.turn_off
+          {% endif %}
         data:
           entity_id: switch.tv, switch.receiver
-      - service_template: >-
-          {% if states.media_player.kodi_livingroom.state != 'off' %} shell_command.kodi_kill
-          {% else %} shell_command.blank_shell
-          {% endif %}
-      - service: script.turn_on
-        data_template:
-          entity_id: >-
-            {% if states.switch.tv.state == 'on' %} script.delay
-            {% elif states.switch.tv.state == 'off' %} script.kodi_restart
-            {% endif %}
 
   light_living_room_off:
     sequence:
