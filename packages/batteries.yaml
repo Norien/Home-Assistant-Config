@@ -1,0 +1,353 @@
+################################################################
+## Packages / Batteries
+################################################################
+input_label:
+  nicole_battery:
+  justin_battery:
+  nicole_wifi:
+  justin_wifi:
+
+group:
+  Phone Batteries:
+    entities:
+      - input_label.justin_battery
+      - input_label.nicole_battery
+  Phone WiFi:
+    entities:
+      - input_label.justin_wifi
+      - input_label.nicole_wifi
+  Batteries:
+    name: Battery Levels
+    entities:
+     - sensor.kitchen_nest_protect_battery_health
+     - sensor.battery_finn_sensor_dynamic
+     - sensor.battery_finn_switch_dynamic
+     - sensor.battery_livingroom_sensor_dynamic
+     - sensor.battery_diningroom_sensor_dynamic
+     - sensor.battery_hallway_switch_dynamic
+     - sensor.justin_battery
+     - sensor.nicole_battery
+automation:
+  - alias: Update Phone Battery Levels
+    initial_state: true
+    trigger:
+      platform: mqtt
+      topic: "owntracks/+/+"
+    action:
+      - service: input_label.set_value
+        data_template:
+          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_wifi"
+          value: "{{ 'Yes' if trigger.payload_json.conn == 'w' else 'No' }}"
+      - service: input_label.set_icon
+        data_template:
+          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_wifi"
+          value: "{{ 'mdi:wifi' if trigger.payload_json.conn == 'w' else 'mdi:wifi-off' }}"
+      - service: input_label.set_name
+        data_template:
+          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_wifi"
+          value: "{{trigger.topic.split('/')[-1] | title }}'s phone wifi enabled?"
+
+      - service: input_label.set_value
+        data_template:
+          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_battery"
+          value: '{{ trigger.payload_json.batt | int }}'
+      - service: input_label.set_name
+        data_template:
+          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_battery"
+          value: "{{trigger.topic.split('/')[-1] | title }}'s Battery"
+      - service: input_label.set_icon
+        data_template:
+          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_battery"
+          value: >
+              {% set battery_level = trigger.payload_json.batt | int %}
+              {% set battery_round = (battery_level / 10)|int * 10 %}
+              {% if trigger.payload_json.charging == 1 %}
+                {% if battery_round >= 100 %}
+                  mdi:battery-charging-100
+                {% elif battery_round > 0 %}
+                  mdi:battery-charging-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery
+                {% elif battery_round > 0 %}
+                  mdi:battery-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+
+  - alias: 'Battery Alert'
+    initial_state: 'on'
+    trigger:
+      - platform: time
+        at: '10:00:00'
+      - platform: time
+        at: '18:00:00'
+    condition:
+      condition: template
+      value_template: "{% if states('sensor.low_battery') %}true{% endif %}"
+    action:
+      - service: persistent_notification.create
+        data_template:
+          title: Low Battery
+          message: "{{ states('sensor.low_battery') }}"
+          notification_id: low-battery-alert
+      - service: notify.html5
+        data_template:
+          target: justin
+          message:  "Low battery levels: {{ states('sensor.low_battery') }}"
+
+sensor:
+###### PHILIPS HUE MOTION SENSOR AND SWITCHES
+  - platform: rest
+    resource: !secret finn_room_sensor_battery
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'battery_finn_sensor'
+  - platform: template
+    sensors:
+      battery_finn_sensor_dynamic:
+        friendly_name: 'Findlays Room Sensor'
+        value_template: "{{ states.sensor.battery_finn_sensor.state }}"
+        icon_template: >-
+          {% set battery_level = states.sensor.battery_finn_sensor.state|int('unknown') %}
+          {% set battery_round = (battery_level|int / 10)|int * 10 %}
+          {% if battery_level == 'unknown' %}
+            mdi:battery-unknown
+          {% else %}
+          {% if battery_round >= 100 %}
+            mdi:battery
+          {% elif battery_round > 0 %}
+            mdi:battery-{{ battery_round }}
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+          {% endif %}
+
+  - platform: rest
+    resource: !secret finn_room_switch_battery
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'battery_finn_switch'
+  - platform: template
+    sensors:
+      battery_finn_switch_dynamic:
+        friendly_name: 'Findlays Room Switch'
+        value_template: "{{ states.sensor.battery_finn_switch.state }}"
+        icon_template: >-
+          {% set battery_level = states.sensor.battery_finn_switch.state|int('unknown') %}
+          {% set battery_round = (battery_level|int / 10)|int * 10 %}
+          {% if battery_level == 'unknown' %}
+            mdi:battery-unknown
+          {% else %}
+          {% if battery_round >= 100 %}
+            mdi:battery
+          {% elif battery_round > 0 %}
+            mdi:battery-{{ battery_round }}
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+          {% endif %}
+
+  - platform: rest
+    resource: !secret livingroom_sensor_battery
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'battery_livingroom_sensor'
+  - platform: template
+    sensors:
+      battery_livingroom_sensor_dynamic:
+        friendly_name: 'Living Room Sensor'
+        value_template: "{{ states.sensor.battery_livingroom_sensor.state }}"
+        icon_template: >-
+          {% set battery_level = states.sensor.battery_livingroom_sensor.state|int('unknown') %}
+          {% set battery_round = (battery_level|int / 10)|int * 10 %}
+          {% if battery_level == 'unknown' %}
+            mdi:battery-unknown
+          {% else %}
+          {% if battery_round >= 100 %}
+            mdi:battery
+          {% elif battery_round > 0 %}
+            mdi:battery-{{ battery_round }}
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+          {% endif %}
+
+  - platform: rest
+    resource: !secret livingroom_switch_battery
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'battery_hallway_switch'
+  - platform: template
+    sensors:
+      battery_hallway_switch_dynamic:
+        friendly_name: 'Hallway Switch'
+        value_template: "{{ states.sensor.battery_hallway_switch.state }}"
+        icon_template: >-
+          {% set battery_level = states.sensor.battery_hallway_switch.state|int('unknown') %}
+          {% set battery_round = (battery_level|int / 10)|int * 10 %}
+          {% if battery_level == 'unknown' %}
+            mdi:battery-unknown
+          {% else %}
+          {% if battery_round >= 100 %}
+            mdi:battery
+          {% elif battery_round > 0 %}
+            mdi:battery-{{ battery_round }}
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+          {% endif %}
+
+  - platform: rest
+    resource: !secret dining_room_sensor_battery
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'battery_diningroom_sensor'
+  - platform: template
+    sensors:
+      battery_diningroom_sensor_dynamic:
+        friendly_name: 'Dining Room Sensor'
+        value_template: "{{ states.sensor.battery_diningroom_sensor.state }}"
+        icon_template: >-
+          {% set battery_level = states.sensor.battery_diningroom_sensor.state|int('unknown') %}
+          {% set battery_round = (battery_level|int / 10)|int * 10 %}
+          {% if battery_level == 'unknown' %}
+            mdi:battery-unknown
+          {% else %}
+          {% if battery_round >= 100 %}
+            mdi:battery
+          {% elif battery_round > 0 %}
+            mdi:battery-{{ battery_round }}
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+          {% endif %}
+
+  ##### Owntracks Battery Tracker for Cell Phones
+  - platform: mqtt
+    state_topic: "owntracks/justin/justin"
+    name: "Justin's Battery State"
+    value_template: >
+      {% if value_json.charging == 1 %}
+        Charging
+      {% else %}
+        Not Charging
+      {% endif %}
+
+  - platform: mqtt
+    state_topic: "owntracks/justin/justin"
+    name: "Justin's Battery"
+    unit_of_measurement: "%"
+    value_template: "{{ value_json.batt }}"
+
+  - platform: mqtt
+    state_topic: "owntracks/nicole/nicole"
+    name: "Nicole's Battery State"
+    value_template: >
+      {% if value_json.charging == 1 %}
+        Charging
+      {% else %}
+        Not Charging
+      {% endif %}
+
+  - platform: mqtt
+    state_topic: "owntracks/nicole/nicole"
+    name: "Nicole's Battery"
+    unit_of_measurement: "%"
+    value_template: "{{ value_json.batt }}"
+
+  - platform: template
+    sensors:
+      justin_battery:
+        friendly_name: Justin's Phone Battery
+        unit_of_measurement: '%'
+        value_template: "{{ states('sensor.justins_battery')|int(-1) }}"
+        icon_template: >-
+          {% if states('sensor.justin_battery') != "unknown" %}
+            {% set battery_level = states('sensor.justins_battery')|int (-1)%}
+            {% set battery_round = (battery_level|int / 10)|int * 10 %}
+            {% if states.sensor.justins_battery_state.state | lower == "charging" %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery-charging-100
+                {% elif battery_round > 0 %}
+                  mdi:battery-charging-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+            {% else %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery
+                {% elif battery_round > 0 %}
+                  mdi:battery-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+      nicole_battery:
+        friendly_name: Nicole's Phone Battery
+        unit_of_measurement: '%'
+        value_template: "{{ states('sensor.nicoles_battery')|int(-1) }}"
+        icon_template: >-
+          {% if states('sensor.nicole_battery') != "unknown" %}
+            {% set battery_level = states('sensor.nicoles_battery')|int (-1)%}
+            {% set battery_round = (battery_level|int / 10)|int * 10 %}
+            {% if states.sensor.nicoles_battery_state.state | lower == "charging" %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery-charging-100
+                {% elif battery_round > 0 %}
+                  mdi:battery-charging-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+            {% else %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery
+                {% elif battery_round > 0 %}
+                  mdi:battery-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+
+  - platform: template
+    sensors:
+      low_battery:
+        friendly_name: 'Low Battery'
+        value_template: >-
+          {%- for item in states.sensor if ((item.name[0:8] == 'battery_' and item.state |int > 15) ) -%}
+            {{item.attributes.friendly_name}}
+          {%- if not loop.last -%}
+            {{', '}}
+          {%- endif -%}
+          {%- endfor -%}
