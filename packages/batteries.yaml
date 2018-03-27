@@ -89,7 +89,7 @@ automation:
         at: '18:00:00'
     condition:
       condition: template
-      value_template: "{% if states('sensor.battery_low') %}true{% endif %}"
+      value_template: "{% if states('sensor.battery_low') == 'Low Battery' %}false{%else%}true{% endif %}"
     action:
       - service: persistent_notification.create
         data_template:
@@ -102,6 +102,14 @@ automation:
           message:  "Low battery levels: {{ states('sensor.battery_low') }}"
 
 sensor:
+###### DUMMY SENSOR FOR NEST PROTECT TO NOTIFY
+  - platform: template
+    sensors:
+      battery_nest_protect_kitchen:
+        friendly_name: 'Kitchen Nest Protect'
+        value_template: >-
+          {% set battery = states.sensor.kitchen_nest_protect_battery_health.state %}
+          {% if battery == 'Ok' %}100{% else %}0{% endif %}
 ###### PHILIPS HUE MOTION SENSOR AND SWITCHES
   - platform: rest
     resource: !secret finn_room_sensor_battery
@@ -114,6 +122,7 @@ sensor:
       battery_finn_sensor_dynamic:
         friendly_name: 'Findlays Room Sensor'
         value_template: "{{ states.sensor.batteryraw_finn_sensor.state }}"
+        unit_of_measurement: '%'
         icon_template: >-
           {% set battery_level = states.sensor.batteryraw_finn_sensor.state|int('unknown') %}
           {% set battery_round = (battery_level|int / 10)|int * 10 %}
@@ -140,6 +149,7 @@ sensor:
       battery_finn_switch_dynamic:
         friendly_name: 'Findlays Room Switch'
         value_template: "{{ states.sensor.batteryraw_finn_switch.state }}"
+        unit_of_measurement: '%'
         icon_template: >-
           {% set battery_level = states.sensor.batteryraw_finn_switch.state|int('unknown') %}
           {% set battery_round = (battery_level|int / 10)|int * 10 %}
@@ -166,6 +176,7 @@ sensor:
       battery_livingroom_sensor_dynamic:
         friendly_name: 'Living Room Sensor'
         value_template: "{{ states.sensor.batteryraw_livingroom_sensor.state }}"
+        unit_of_measurement: '%'
         icon_template: >-
           {% set battery_level = states.sensor.batteryraw_livingroom_sensor.state|int('unknown') %}
           {% set battery_round = (battery_level|int / 10)|int * 10 %}
@@ -192,6 +203,7 @@ sensor:
       battery_hallway_switch_dynamic:
         friendly_name: 'Hallway Switch'
         value_template: "{{ states.sensor.batteryraw_hallway_switch.state }}"
+        unit_of_measurement: '%'
         icon_template: >-
           {% set battery_level = states.sensor.batteryraw_hallway_switch.state|int('unknown') %}
           {% set battery_round = (battery_level|int / 10)|int * 10 %}
@@ -218,6 +230,7 @@ sensor:
       battery_diningroom_sensor_dynamic:
         friendly_name: 'Dining Room Sensor'
         value_template: "{{ states.sensor.batteryraw_diningroom_sensor.state }}"
+        unit_of_measurement: '%'
         icon_template: >-
           {% set battery_level = states.sensor.batteryraw_diningroom_sensor.state|int('unknown') %}
           {% set battery_round = (battery_level|int / 10)|int * 10 %}
