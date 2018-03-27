@@ -47,6 +47,17 @@ homeassistant:
       friendly_name: YAML Backup
       icon: mdi:harddisk
 
+    sensor.mysql_database_size:
+      friendly_name: Database Size
+      icon: mdi:database
+    sensor.mysql_version:
+      friendly_name: Version
+      icon: mdi:package-variant
+
+    sensor.plex_version:
+      friendly_name: Version
+      icon: mdi:package-variant
+
 ###### STATE CARD
 group:
   server_status:
@@ -58,6 +69,7 @@ group:
       - sensor.cpu_temperature
       - sensor.glances_disk_overview
       - sensor.glances_ram_overview
+      - sensor.database_size
       - sensor.server_uptime
       - sensor.ha_uptime
       - sensor.ha_version
@@ -79,10 +91,28 @@ weblink:
       url: https://github.com/home-assistant/home-assistant/releases
 
 sensor:
-###### VERSIONS
+###### PLEX
   - platform: command_line
-    command: python3 -c "import requests; print(requests.get('https://pypi.python.org/pypi/homeassistant/json').json()['info']['version'])"
+    command: dpkg -l plexmediaserver | awk '{print $3}'| head -6 | tail -1
+    name: plex_version
+    scan_interval: 43200
+
+###### DATABASE
+  - platform: command_line
+    command: sudo du -h /var/lib/mysql/homeassistant | awk '{print $1}' | rev | cut -c 2- | rev
+    name: mysql_database_size
+    unit_of_measurement: 'GB'
+    scan_interval: 43200
+  - platform: command_line
+    command: mysql -V | awk '{print $3}'
+    name: mysql_version
+    scan_interval: 86400
+
+###### VERSIONS
+  - platform: rest
+    resource: https://pypi.python.org/pypi/homeassistant/json
     name: Current Version
+    value_template: '{{ value_json.info.version }}'
 
   - platform: command_line
     name: Installed Version

@@ -129,6 +129,8 @@ sensor:
             0
           {% elif is_state('sensor.pws_uv', '-1') %}
             0
+          {% elif is_state('sensor.pws_uv', 'unknown') %}
+            0
           {% else %}
             {{ (67 / states.sensor.pws_uv.state | float) | round }}
           {% endif %}

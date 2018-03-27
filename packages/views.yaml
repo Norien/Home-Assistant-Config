@@ -57,7 +57,7 @@ group:
     view: yes
     icon: mdi:power
     entities:
-      - group.sensor_battery_levels
+      - group.batteries
       - group.utilities
       - group.backup
       - group.device_status
