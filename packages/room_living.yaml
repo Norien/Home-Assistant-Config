@@ -78,7 +78,7 @@ group:
      - light.kitchen_sink
      - light.hue_color_lamp_1
      - light.hue_color_lamp_3
-     
+
 light:
   - platform: tplink
     host: 192.168.1.108
@@ -154,12 +154,6 @@ script:
         data:
           entity_id: input_select.light_living_room_scene
           option: "Bright"
-      - service: light.turn_on
-        data:
-          entity_id:
-            - group.lr_lights
-          brightness: 255
-          rgb_color: [255,255,255]
       - service: light.turn_on
         data:
           entity_id:

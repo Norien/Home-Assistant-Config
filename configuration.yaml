@@ -156,6 +156,7 @@ media_player:
     port: !secret kodi_livingroom_port
     username: !secret kodi_livingroom_username
     password: !secret kodi_livingroom_password
+    enable_websocket: false
     turn_off_action:
       service: media_player.kodi_call_method
       data_template:

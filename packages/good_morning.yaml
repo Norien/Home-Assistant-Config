@@ -35,8 +35,6 @@ script:
     - service: script.morning_livingroom_lights
     - service: switch.turn_off
       entity_id: switch.bedroom_fan
-    - service: switch.turn_on
-      entity_id: switch.living_room_pc
     - service: media_player.media_Stop
       entity_id: media_player.kodi_bedroom_pi
     - service: media_player.volume_set
@@ -81,33 +79,26 @@ script:
 
   morning_livingroom_lights:
     sequence:
-    - condition: or
+    - condition: and
       conditions:
-        - condition: state
-          entity_id: 'sun.sun'
-          state: 'below_horizon'
-        - condition: state
-          entity_id: 'sensor.dark_sky_summary'
-          state: 'Cloudy'
-        - condition: state
-          entity_id: 'sensor.dark_sky_summary'
-          state: 'Mostly Cloudy'
-        - condition: state
-          entity_id: 'sensor.dark_sky_summary'
-          state: 'Overcast'
-        - condition: state
-          entity_id: 'sensor.dark_sky_summary'
-          state: 'Breezy and Overcast'
-        - condition: state
-          entity_id: 'sensor.dark_sky_summary'
-          state: 'Humid and Overcast'
-        - condition: state
-          entity_id: 'sensor.dark_sky_summary'
-          state: 'Rain'
-        - condition: state
-          entity_id: 'sensor.dark_sky_summary'
-          state: 'Heavy Rain'
-        - condition: state
-          entity_id: 'sensor.dark_sky_summary'
-          state: 'Light Rain'
-    - service: script.lr_concentrate
+        - condition: numeric_state
+          entity_id: 'sensor.living_room_lux'
+          below: 45
+    - service: light.turn_on
+      data:
+        entity_id:
+          - light.hallway
+          - light.kitchen_sink
+          - light.living_room_lamp
+          - light.hue_color_lamp_1
+          - light.hue_color_lamp_3
+        brightness: 255
+        rgb_color: [255,255,255]
+        transition: 900
+    # - wait_template: "{{ states.light.kitchen_sink.attributes.brightness|int > 250 }}"
+    # - service: light.turn_on
+    #   data:
+    #     entity_id:
+    #       - light.couch
+    #     brightness: 255
+    #     rgb_color: [255,255,255]

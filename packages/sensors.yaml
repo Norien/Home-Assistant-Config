@@ -86,7 +86,7 @@ sensor:
     resource: !secret finn_room_motion
     value_template: '{{ value_json.state.presence }}'
     name: 'Findlay Room Motion'
-    scan_interval: 2
+    scan_interval: 1
     device_class: motion
 
   - platform: rest
