@@ -26,6 +26,7 @@ homeassistant:
       entity_picture: /local/custom_icons/nestprotect.png
     sensor.kitchen_nest_protect_battery_health:
       friendly_name: Kitchen Nest Protect Battery
+      hidden: true
       icon: mdi:battery
 #Script
     script.fan:

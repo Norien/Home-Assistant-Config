@@ -1,32 +1,26 @@
 ################################################################
 ## Packages / Batteries
 ################################################################
+homeassistant:
+  customize:
+    sensor.battery_low:
+      hidden: true
+    group.batteries:
+      friendly_name: Batteries
+
 input_label:
   nicole_battery:
   justin_battery:
   nicole_wifi:
   justin_wifi:
 
-group:
-  Phone Batteries:
-    entities:
-      - input_label.justin_battery
-      - input_label.nicole_battery
-  Phone WiFi:
-    entities:
-      - input_label.justin_wifi
-      - input_label.nicole_wifi
-  Batteries:
-    name: Battery Levels
-    entities:
-     - sensor.kitchen_nest_protect_battery_health
-     - sensor.battery_finn_sensor_dynamic
-     - sensor.battery_finn_switch_dynamic
-     - sensor.battery_livingroom_sensor_dynamic
-     - sensor.battery_diningroom_sensor_dynamic
-     - sensor.battery_hallway_switch_dynamic
-     - sensor.justin_battery
-     - sensor.nicole_battery
+group_globber:
+  groups:
+    group.batteries:
+      - sensor.*nest_protect_battery*
+      - sensor.battery_*
+      - sensor.nicole_battery
+      - sensor.justin_battery
 
 automation:
   - alias: Update Phone Battery Levels
@@ -107,9 +101,13 @@ sensor:
     sensors:
       battery_nest_protect_kitchen:
         friendly_name: 'Kitchen Nest Protect'
+        unit_of_measurement: '%'
         value_template: >-
           {% set battery = states.sensor.kitchen_nest_protect_battery_health.state %}
           {% if battery == 'Ok' %}100{% else %}0{% endif %}
+        icon_template: >-
+          {% set battery = states.sensor.kitchen_nest_protect_battery_health.state %}
+          {% if battery == 'Ok' %}mdi:battery{% else %}mdi:battery-alert{% endif %}
 ###### PHILIPS HUE MOTION SENSOR AND SWITCHES
   - platform: rest
     resource: !secret finn_room_sensor_battery

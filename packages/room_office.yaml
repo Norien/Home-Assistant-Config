@@ -157,6 +157,8 @@ automation:
           {% if states.light.hue_go.state == 'off' %} script.office_hue_go_on
           {% elif states.light.hue_go.state == 'on' %} script.office_hue_go_off
           {% endif %}
+      - service: light.toggle
+        entity_id: light.aurora
 
   - alias: office_power_button
     initial_state: 'on'

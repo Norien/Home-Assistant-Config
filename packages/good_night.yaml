@@ -57,6 +57,8 @@ script:
     - service: switch.turn_off
       entity_id: switch.patio_amplifier
 ###### OFFICE
+    - service: light.turn_off
+      entity_id: light.aurora
     - service: switch.turn_off
       entity_id: switch.office_lightswitch
     - service_template: >
