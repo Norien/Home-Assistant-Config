@@ -1,5 +1,8 @@
 ################################################################
 ## Packages / Batteries
+## Any sensor with the prefix sensor.battery_ will auto add to group and send notify when low.
+## Dependices: Custom Component in use for generating the battery group.
+## https://github.com/Norien/Home-Assistant-Config/blob/master/custom_components/group_globber.py
 ################################################################
 homeassistant:
   customize:
@@ -108,6 +111,14 @@ sensor:
         icon_template: >-
           {% set battery = states.sensor.kitchen_nest_protect_battery_health.state %}
           {% if battery == 'Ok' %}mdi:battery{% else %}mdi:battery-alert{% endif %}
+
+##### TESTING WITH FAKE BATTERY
+      battery_fake_test:
+        friendly_name: 'Test Battery'
+        unit_of_measurement: '%'
+        value_template: >-
+          {% if 'battery' == 'battery' %}10{% else %}0{% endif %}
+
 ###### PHILIPS HUE MOTION SENSOR AND SWITCHES
   - platform: rest
     resource: !secret finn_room_sensor_battery
@@ -359,7 +370,7 @@ sensor:
         friendly_name: 'Low Battery'
         icon_template: mdi:battery-alert
         value_template: >-
-          {%- for item in states.sensor if ((item.entity_id[0:15] == 'sensor.battery_' and item.state |int < 10)) -%}
+          {%- for item in states.sensor if ((item.entity_id[0:15] == 'sensor.battery_' and item.state |int <= 10 and item.name!= 'Low Battery')) -%}
             {{item.name}}
           {%- if not loop.last -%}
           {{', '}}
