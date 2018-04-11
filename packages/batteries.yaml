@@ -363,7 +363,7 @@ sensor:
         friendly_name: 'Low Battery'
         icon_template: mdi:battery-alert
         value_template: >-
-          {%- for item in states.sensor if ((item.entity_id[0:15] == 'sensor.battery_' and item.state |int <= 10 and item.name!= 'Low Battery')) -%}
+          {%- for item in states.sensor if ((item.entity_id[0:15] == 'sensor.battery_' and item.state |int <= 10 and item.name != 'Low Battery' and item.state != "None")) -%}
             {{item.name}}
           {%- if not loop.last -%}
           {{', '}}

@@ -8,6 +8,11 @@ homeassistant:
     automation.vacuum_auto:
       friendly_name: Automatic Vacuum
       icon: mdi:roomba
+    vacuum.roomba:
+      emulated_hue_hidden: false
+      emulated_hue_name: "roomba"
+      google_assistant: true
+      google_assistant_name: "roomba"
 
 ###### STATE CARD
 group:
@@ -15,8 +20,10 @@ group:
     name: Vacuum
     control: hidden
     entities:
-     - automation.vacuum_auto
      - vacuum.roomba
+     - automation.vacuum_auto
+     - sensor.roomba_status
+     - sensor.battery_roomba
 
 vacuum:
   - platform: roomba
@@ -39,6 +46,17 @@ automation:
       - service: vacuum.toggle
         entity_id: vacuum.roomba
 
+  - alias: 'Vacuum Alert'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.roomba_status
+        to: 'Stuck'
+    action:      
+      - service: notify.html5
+        data_template:
+          target: justin
+          message:  "Roomba is Stuck"
 sensor:
 ###### Pull out the battery data for use in battery package.
   - platform: template
@@ -48,3 +66,7 @@ sensor:
         value_template: "{{ states.vacuum.roomba.attributes.battery_level }}"
         unit_of_measurement: '%'
         icon_template: "{{ states.vacuum.roomba.attributes.battery_icon }}"
+      roomba_status:
+        friendly_name: 'Status'
+        value_template: "{{ states.vacuum.roomba.attributes.status }}"
+        icon_template: "{{ states.vacuum.roomba.attributes.icon }}"
