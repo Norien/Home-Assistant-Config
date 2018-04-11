@@ -86,7 +86,7 @@ automation:
         at: '18:00:00'
     condition:
       condition: template
-      value_template: "{% if states('sensor.battery_low') == 'Low Battery' %}false{%else%}true{% endif %}"
+      value_template: "{% if states('sensor.battery_low') == '' %}false{%else%}true{% endif %}"
     action:
       - service: persistent_notification.create
         data_template:
@@ -111,13 +111,6 @@ sensor:
         icon_template: >-
           {% set battery = states.sensor.kitchen_nest_protect_battery_health.state %}
           {% if battery == 'Ok' %}mdi:battery{% else %}mdi:battery-alert{% endif %}
-
-##### TESTING WITH FAKE BATTERY
-      battery_fake_test:
-        friendly_name: 'Test Battery'
-        unit_of_measurement: '%'
-        value_template: >-
-          {% if 'battery' == 'battery' %}10{% else %}0{% endif %}
 
 ###### PHILIPS HUE MOTION SENSOR AND SWITCHES
   - platform: rest

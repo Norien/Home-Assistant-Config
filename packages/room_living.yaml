@@ -68,7 +68,8 @@ group:
      - automation.light_living_room_sunset
      - input_select.light_living_room_scene
      - input_select.live_scene
-     - script.set_random_color_2_all_bulbs
+     #- script.set_random_color_2_all_bulbs
+     - automation.turn_tv_off
   lr_lights:
     name: Lights
     icon: mdi:lightbulb
@@ -196,22 +197,22 @@ script:
           option: "River"
 
 automation:
-  # - alias: 'turn_tv_off'
-  #   initial_state: 'on'
-  #   trigger:
-  #     - platform: state
-  #       entity_id: media_player.kodi_livingroom
-  #       from: 'playing'
-  #       to: 'idle'
-  #       for:
-  #         minutes: 15
-  #   condition:
-  #     - condition: state
-  #       entity_id: 'media_player.kodi_livingroom'
-  #       state: 'idle'
-  #   action:
-  #     - service: switch.turn_off
-  #       entity_id: switch.tv, switch.receiver
+  - alias: 'turn_tv_off'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: media_player.kodi_livingroom
+        from: 'playing'
+        to: 'idle'
+        for:
+          minutes: 15
+    condition:
+      - condition: state
+        entity_id: 'media_player.kodi_livingroom'
+        state: 'idle'
+    action:
+      - service: switch.turn_off
+        entity_id: switch.tv, switch.receiver
 
   - alias: 'light_living_room_sunset'
     initial_state: 'on'

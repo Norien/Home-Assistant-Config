@@ -90,6 +90,28 @@ weblink:
     - name: release_log
       url: https://github.com/home-assistant/home-assistant/releases
 
+automation:
+  - alias: 'Low Disk Space Alert'
+    initial_state: 'on'
+    trigger:
+      - platform: time
+        at: '10:00:00'
+      - platform: time
+        at: '18:00:00'
+    condition:
+      condition: template
+      value_template: "{% if states('sensor.disk_low') == '' %}false{%else%}true{% endif %}"
+    action:
+      - service: persistent_notification.create
+        data_template:
+          title: Low Disk Space
+          message: "{{ states('sensor.disk_low') }}"
+          notification_id: low-disk-alert
+      - service: notify.html5
+        data_template:
+          target: justin
+          message:  "Low Disk Space: {{ states('sensor.disk_low') }}"
+
 sensor:
 ###### PLEX
   - platform: command_line
@@ -209,6 +231,21 @@ sensor:
     name: 'Disk Router USB'
     scan_interval: 3600
     unit_of_measurement: '%'
+###### LOW DISK SENSOR
+  - platform: template
+    sensors:
+      disk_low:
+        friendly_name: 'Low Disk'
+        icon_template: mdi:disk-alert
+        value_template: >-
+          {%- for item in states.sensor if ((item.entity_id[0:12] == 'sensor.disk_' and item.state |int >= 90 and item.name!= 'Low Disk')) -%}
+            {{item.name}}
+          {%- if not loop.last -%}
+          {{', '}}
+            {%- endif -%}
+          {%- endfor -%}
+
+
 ##### CUSTOM RAM DISPLAY
   - platform: template
     sensors:

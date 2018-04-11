@@ -49,7 +49,7 @@ This is my [Home Assistant](https://home-assistant.io/) configuration running on
 * [NodeMcu ESP8266](https://geek.wish.com/search/1pc%20NodeMcu%20Lua%20ESP8266%20CH340G%20WIFI%20Internet%20Development%20Board%20Module#cid=58c646190b362f70c8bbeb10)
 * [Nortek Z-wave Adapter](http://a.co/58q0mCu)
 * [Nanoleaf Aurora Rhythm](https://www.bestbuy.ca/en-ca/product/nanoleaf-aurora-rhythm-smarter-led-light-panel-kit/11540362.aspx?)
-
+* [iRobot Roomba 690](http://a.co/bU3Df5K)
 
 ## Wish List:
 * [ClearOne XAP800](http://www.ebay.ca/itm/CLEARONE-XAP800-Professional-Conferencing-System-910-151-101-Rev-2-5-0-/292069134421?hash=item4400ad5055:g:dYwAAOSwOgdYsjBk)

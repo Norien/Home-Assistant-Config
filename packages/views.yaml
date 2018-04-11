@@ -15,6 +15,7 @@ group:
       - group.office
       - group.backyard
       - group.laundry_room
+      - group.vacuum
   sensor_view:
     name: Sensors
     view: yes

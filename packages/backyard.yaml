@@ -20,6 +20,7 @@ group:
       - light.deck_lights
       - switch.sonoff_1
       - script.backyard_party
+      - switch.pump
 
 # ###### AUTOMATIC CONTROL OF AMPLIFIER
 automation:
@@ -99,3 +100,14 @@ script:
             light.deck_lights:
           brightness: 120
           rgb_color: [255,0,255]
+switch:
+###### SONOFF SV
+  - platform: mqtt
+    name: "Pump"
+    state_topic: "stat/sonoff_sv/POWER"
+    command_topic: "cmnd/sonoff_sv/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 0
+    retain: true
