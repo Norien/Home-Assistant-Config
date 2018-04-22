@@ -1,0 +1,32 @@
+"Starwars Day":
+  primary-color: "#FF0000" # Primary (most of the UI)
+  primary-background-color: "#101010" # Primary background colour (dialogs, e.t.c)
+  secondary-background-color: "#202020" # Secondary background colour (main UI background)
+  paper-card-background-color: "#000000" # Card background colour
+  paper-item-icon-color: "#FF3030" # Icon colour
+  primary-text-color: "#BBBBBB" # Primary text colour
+  secondary-text-color: "#777777)" # Secondary text colour
+  disabled-text-color: "#444444" # Disabled text colour
+  divider-color: "#777777" # Divider colour
+  paper-card-header-color: "#FFFFFF" # Card header text colour
+
+  # Nav Menu #
+  paper-listbox-background-color: "#FFFFFF" # Listbox background colour
+  paper-listbox-color: "#000000" # Listbox text colour
+  paper-grey-200: "#404040" # Listbox selected item background colour
+
+  # Switches #
+  paper-toggle-button-checked-ink-color: "#AAAAAA"
+  paper-toggle-button-checked-button-color: "FF0000"
+  paper-toggle-button-checked-bar-color: "#FFFFFF"
+
+  # Sliders #
+  paper-slider-knob-color: "#FFFFFF"
+  paper-slider-knob-start-color: "#CCCCCC"
+  paper-slider-pin-color: "#FF0000"
+  paper-slider-active-color: "#C00000"
+  paper-slider-secondary-color: "#AAAAAA"
+
+  # Tables #
+  table-row-background-color: "#666666"
+  table-row-alternative-background-color: "#444444"

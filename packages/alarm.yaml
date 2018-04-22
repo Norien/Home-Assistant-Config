@@ -14,6 +14,8 @@ automation:
       - platform: state
         entity_id: sensor.findlay_room_motion, sensor.living_room_motion, sensor.dining_room_motion, binary_sensor.room_masterbed_motion
         to: 'True'
+        for:
+          seconds: 20
     condition:
       condition: or
       conditions:

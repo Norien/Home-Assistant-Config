@@ -43,7 +43,6 @@ group:
     icon: mdi:human
     entities:
       - input_boolean.justin
-      - sensor.find_justin
       - device_tracker.justin_router
       - device_tracker.justin_justin
   nicole:
@@ -220,13 +219,6 @@ sensor:
     password: !secret life360_password
     mqtt_topic: "/life360/data"
     scan_interval: 60
-
-  - platform: rest
-    resource: http://ml.internalpositioning.com/location?group=norien_potato&user=justin
-    value_template: '{{ value_json.users.justin[0].location }}'
-    method: GET
-    name: FIND Justin
-    scan_interval: 10
 
 ###### MODES / PEOPLE
 input_boolean:

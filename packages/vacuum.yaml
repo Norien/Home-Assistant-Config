@@ -6,13 +6,18 @@
 homeassistant:
   customize:
     automation.vacuum_auto:
-      friendly_name: Automatic Vacuum
+      friendly_name: Auto Clean
       icon: mdi:roomba
     vacuum.roomba:
       emulated_hue_hidden: false
       emulated_hue_name: "roomba"
       google_assistant: true
       google_assistant_name: "roomba"
+    sensor.roomba_runtime:
+      friendly_name: Runtime This Week
+    sensor.roomba_last_run:
+      friendly_name: Last Clean
+      icon: mdi:calendar-range
 
 ###### STATE CARD
 group:
@@ -23,7 +28,8 @@ group:
      - vacuum.roomba
      - automation.vacuum_auto
      - sensor.roomba_status
-     - sensor.battery_roomba
+     - sensor.roomba_runtime
+     - sensor.roomba_last_run
 
 vacuum:
   - platform: roomba
@@ -43,22 +49,80 @@ automation:
         entity_id: input_boolean.away
         to: 'off'
     action:
-      - service: vacuum.toggle
+      - service_template: >
+          {%-if states.input_boolean.away.state == 'on'-%} vacuum.turn_on
+          {%-else-%} vacuum.turn_off
+          {%-endif-%}
         entity_id: vacuum.roomba
 
+  - alias: 'vacuum_watchdog'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.roomba_status
+        to: 'Charging'
+      - platform: numeric_state
+        entity_id: sensor.battery_roomba
+        above: 50
+    condition:
+      - condition: state
+        entity_id: input_boolean.away
+        state: 'on'
+      - condition: numeric_state
+        entity_id: sensor.battery_roomba
+        above: 50
+    action:
+      - service: vacuum.on
+        entity_id: vacuum.roomba
+
+  - alias: 'vacuum_status'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.roomba_status
+        from: 'Docking - End Mission'
+        to: 'Charging'
+      - platform: state
+        entity_id: sensor.roomba_status
+        from: 'User Docking'
+        to: 'Charging'
+      - platform: state
+        entity_id: sensor.roomba_status
+        from: 'Docking'
+        to: 'Charging'
+      - platform: state
+        entity_id: sensor.roomba_status
+        from: 'User Docking'
+        to: 'Dead'
+    action:
+      - service: mqtt.publish
+        data_template:
+          topic: homeassistant/vacuum
+          retain: true
+          payload: "{{as_timestamp(now())|timestamp_custom('%h %d,%H:%M')}}"
+
+# NOTIFY IF STUCK or DEAD
   - alias: 'Vacuum Alert'
     initial_state: 'on'
     trigger:
       - platform: state
         entity_id: sensor.roomba_status
         to: 'Stuck'
-    action:      
+      - platform: state
+        entity_id: sensor.roomba_status
+        to: 'Dead'
+    action:
       - service: notify.html5
         data_template:
           target: justin
-          message:  "Roomba is Stuck"
+          message: >-
+            {%-set status = states.vacuum.roomba.attributes.status -%}
+            {%-if status =="Stuck"-%} Roomba is Stuck
+            {%-elif status =="Dead"-%} Roomba is Dead
+            {%-else-%} {{status}}
+            {%-endif-%}
 sensor:
-###### Pull out the battery data for use in battery package.
+###### Pull out the battery and status data for use in frontend display.
   - platform: template
     sensors:
       battery_roomba:
@@ -68,5 +132,38 @@ sensor:
         icon_template: "{{ states.vacuum.roomba.attributes.battery_icon }}"
       roomba_status:
         friendly_name: 'Status'
-        value_template: "{{ states.vacuum.roomba.attributes.status }}"
-        icon_template: "{{ states.vacuum.roomba.attributes.icon }}"
+        value_template: >-
+          {%-set battery = states.vacuum.roomba.attributes.battery_level -%}
+          {%-set status = states.vacuum.roomba.attributes.status -%}
+          {%-set unknown = states.vacuum.roomba.state -%}
+          {%-if battery|int == 100 and status =="Charging"-%} Ready
+          {%-elif battery|int== 0 and status =="Charging"-%} Charging
+          {%-elif battery|int== 0-%} Dead
+          {%-else-%} {{status}}
+          {%-endif-%}
+        icon_template: >-
+          {% if is_state('sensor.roomba_status', "Ready") %} mdi:checkbox-marked-circle
+          {% elif is_state('sensor.roomba_status', "Charging") %} mdi:flash-circle
+          {% elif is_state('sensor.roomba_status', "New Mission") %} mdi:checkbox-marked-circle
+          {% elif is_state('sensor.roomba_status', "Running") %} mdi:donkey
+          {% elif is_state('sensor.roomba_status', "Stuck") %} mdi:alert-circle
+          {% elif is_state('sensor.roomba_status', "User Docking") %} mdi:home-circle
+          {% elif is_state('sensor.roomba_status', "Docking - End Mission") %} mdi:home-circle
+          {% elif is_state('sensor.roomba_status', "Docking") %} mdi:home-circle
+          {% elif is_state('sensor.roomba_status', "Paused") %} mdi:pause-circle
+          {% elif is_state('sensor.roomba_status', "Stopped") %} mdi:stop-circle
+          {% elif is_state('sensor.roomba_status', "Dead") %} mdi:skull
+          {% else %} mdi:checkbox-marked-circle
+          {% endif %}
+  - platform: history_stats
+    name: roomba_runtime
+    entity_id: sensor.roomba_status
+    state: 'Running'
+    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+    end: '{{ now() }}'
+  - platform: mqtt
+    name: roomba_last_run
+    state_topic: "homeassistant/vacuum"
+    type: time
+    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+    end: '{{ now() }}'

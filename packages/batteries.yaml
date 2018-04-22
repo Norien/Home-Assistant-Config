@@ -20,6 +20,7 @@ input_label:
 group_globber:
   groups:
     group.batteries:
+      - input_number.battery_alert
       - sensor.*nest_protect_battery*
       - sensor.battery_*
       - sensor.nicole_battery
@@ -363,9 +364,16 @@ sensor:
         friendly_name: 'Low Battery'
         icon_template: mdi:battery-alert
         value_template: >-
-          {%- for item in states.sensor if ((item.entity_id[0:15] == 'sensor.battery_' and item.state |int <= 10 and item.name != 'Low Battery' and item.state != "None")) -%}
+          {%- for item in states.sensor if ((item.entity_id[0:15] == 'sensor.battery_' and item.state |int <= states.input_number.battery_alert.state|int and item.name != 'Low Battery' and item.state != "None")) -%}
             {{item.name}}
           {%- if not loop.last -%}
           {{', '}}
             {%- endif -%}
           {%- endfor -%}
+input_number:
+  battery_alert:
+    name: Battery Alert %
+    initial: 10
+    min: 1
+    max: 99
+    step: 1
