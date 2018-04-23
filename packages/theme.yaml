@@ -119,7 +119,7 @@ sensor:
             {%- elif is_state('input_select.theme', "Easter Sunday") -%} 255,255,56
             {%- elif is_state('input_select.theme', "Earth Day") -%} 82,255,56
             {%- elif is_state('input_select.theme', "Mother's Day") -%} 255,196,250
-            {% elif is_state('input_select.theme', "Victoria Day") -%} 255,0,0
+            {%- elif is_state('input_select.theme', "Victoria Day") -%} 255,0,0
             {%- elif is_state('input_select.theme', "Father's Day") -%} 56,56,255
             {%- elif is_state('input_select.theme', "Canada Day") -%}  255,0,0
             {%- elif is_state('input_select.theme', "Labour Day") -%} 255,0,0

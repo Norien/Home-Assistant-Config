@@ -72,7 +72,7 @@ automation:
         entity_id: sensor.battery_roomba
         above: 50
     action:
-      - service: vacuum.on
+      - service: vacuum.turn_on
         entity_id: vacuum.roomba
 
   - alias: 'vacuum_status'
