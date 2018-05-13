@@ -112,9 +112,9 @@ group:
     entities:
       - media_player.kodi_bedroom
   media_player3:
-    name: Media Player Bedroom Pi
+    name: Master Bed
     entities:
-       - media_player.kodi_bedroom_pi
+       - media_player.master_bedroom_speaker
   media_player4:
     name: Media Player Chromecast
     entities:

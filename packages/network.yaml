@@ -47,7 +47,7 @@ sensor:
       - 0
       - 6
       - 12
-      - 18  
+      - 18
     monitored_conditions:
       - ping
       - download
@@ -96,7 +96,7 @@ sensor:
         unit_of_measurement: "Days"
         icon_template: "{% if icon == icon %}mdi:calendar-clock{% endif %}"
 
-script:
+automation:
 ###### NOTIFY IF IP CHANGES
   - alias: Notify Of New External IP
     initial_state: 'on'

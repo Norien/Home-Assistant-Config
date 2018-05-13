@@ -7,12 +7,13 @@ homeassistant:
   customize:
     automation.vacuum_auto:
       friendly_name: Auto Clean
-      icon: mdi:roomba
+      icon: mdi:robot-vacuum
     vacuum.roomba:
       emulated_hue_hidden: false
       emulated_hue_name: "roomba"
       google_assistant: true
       google_assistant_name: "roomba"
+      entity_picture: /local/custom_icons/roomba.png
     sensor.roomba_runtime:
       friendly_name: Runtime This Week
     sensor.roomba_last_run:
@@ -115,8 +116,9 @@ automation:
       - service: notify.html5
         data_template:
           target: justin
+          title: "Roomba"
           message: >-
-            {%-set status = states.vacuum.roomba.attributes.status -%}
+            {%-set status = states.sensor.roomba_status.state -%}
             {%-if status =="Stuck"-%} Roomba is Stuck
             {%-elif status =="Dead"-%} Roomba is Dead
             {%-else-%} {{status}}

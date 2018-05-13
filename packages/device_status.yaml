@@ -85,7 +85,7 @@ sensor:
       roomba:
         friendly_name: 'Roomba'
         value_template: "{% if is_state('device_tracker.roomba', 'home') %}Online{% else %}Offline{% endif %}"
-        icon_template: "{% if states.device_tracker.roomba.state == 'home' %} mdi:roomba {% else %} mdi:alert-outline {% endif %}"
+        icon_template: "{% if states.device_tracker.roomba.state == 'home' %} mdi:robot-vacuum {% else %} mdi:alert-outline {% endif %}"
       google_home:
         friendly_name: 'Google Home'
         value_template: "{% if is_state('device_tracker.google_home', 'home') %}Online{% else %}Offline{% endif %}"

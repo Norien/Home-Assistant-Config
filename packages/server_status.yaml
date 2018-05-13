@@ -112,6 +112,16 @@ automation:
           target: justin
           message:  "Low Disk Space: {{ states('sensor.disk_low') }}"
 
+############################# Sets Logging Level
+  - alias: Log Level
+    trigger:
+      - platform: state
+        entity_id: input_select.log_level
+    action:
+      - service: logger.set_level
+        data_template:
+          homeassistant.components: "{{ trigger.to_state.state }}"
+
 sensor:
 ###### PLEX
   - platform: command_line
@@ -272,14 +282,3 @@ input_select:
      - debug
      - notset
     initial: error
-
-############################# Sets Logging Level
-automation:
-  - alias: Log Level
-    trigger:
-      - platform: state
-        entity_id: input_select.log_level
-    action:
-      - service: logger.set_level
-        data_template:
-          homeassistant.components: "{{ trigger.to_state.state }}"

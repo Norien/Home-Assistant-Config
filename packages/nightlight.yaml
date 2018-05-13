@@ -44,10 +44,15 @@ automation:
 script:
   nightlight:
     sequence:
-      - service: hue.hue_activate_scene
+      - service: light.turn_on
         data:
-          group_name: "Living Room"
-          scene_name: "Nightlight"
+          entity_id:
+            - light.kitchen_sink
+            - light.living_room_lamp
+            - light.hue_color_lamp_1
+            - light.hue_color_lamp_3
+          brightness: 10
+          rgb_color: [45,18,0]
       - delay:
           minutes: 4
       - service_template: >

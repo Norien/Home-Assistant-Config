@@ -7,8 +7,6 @@ homeassistant:
       emulated_hue_hidden: false
       friendly_name: 'White Noise'
       icon: mdi:snowflake
-    media_player.kodi_bedroom:
-      friendly_name: Bedroom KODI
     media_player.kodi_bedroom_pi:
       friendly_name: Bedroom KODI PI
     switch.bedroom_fan:
@@ -40,15 +38,8 @@ group:
      - switch.bedroom_lamps_
      - switch.bedroom_fan
      - switch.bedroom_tv
-     - group.bedroom_white_noise
-     # - binary_sensor.flic_80e4da71b68e
-
-  bedroom_white_noise:
-    name: White Noise
-    icon: mdi:snowflake
-    entities:
      - switch.white_noise
-     - input_select.white_noise
+     # - binary_sensor.flic_80e4da71b68e
 
 binary_sensor:
   - platform: flic
@@ -80,7 +71,10 @@ sensor:
   - platform: template
     sensors:
       white_noise:
-        value_template: "{% if is_state('media_player.kodi_bedroom_pi', 'playing') %}on{% else %}Off{% endif %}"
+        value_template: >-
+          {% set state = states.media_player.master_bedroom_speaker.attributes.media_content_id%}
+          {% set object = "http://192.168.1.115/white_noise/blizzard.mp3" %}
+          {% if state == object %}on{% else %}off{% endif %}
       bedroom_pc_status:
         value_template: "{% if is_state('media_player.kodi_bedroom', 'off') %}off{% else %}on{% endif %}"
 ###### Monitor if flic is listed in the log file.
@@ -99,17 +93,8 @@ switch:
           service: script.turn_on
           entity_id: script.white_noise
         turn_off:
-          service: media_player.media_Stop
-          entity_id: media_player.kodi_bedroom_pi
-
-###### BEDROOM PC SWITCH with TV
-  - platform: wake_on_lan
-    mac_address: !secret kodi_bedroom_mac
-    name: "bedroom_pc"
-    host: !secret kodi_bedroom_ip
-    broadcast_address: 255.255.255.255
-    turn_off:
-      service: script.bedroom_kodi_off
+          service: media_player.turn_off
+          entity_id: media_player.master_bedroom_speaker
 
   - platform: template
     switches:
@@ -150,25 +135,12 @@ script:
       - service: switch.turn_off
         entity_id: switch.bedroom_pc
 
-  bedroom_kodi_off:
-    sequence:
-      - service: shell_command.curl
-        data_template:
-          url: !secret kodi_bedroom_json
-          method: "post"
-          headers:
-            content-type: "application/json"
-          payload:
-            jsonrpc: "2.0"
-            method: "System.Hibernate"
-
   white_noise:
     sequence:
-      - delay: 00:00:15
       - service: media_player.play_media
         data:
-          entity_id: media_player.kodi_bedroom_pi
-          media_content_id: "https://192.168.1.115:8123/local/white_noise/blizzard.mp3"
+          entity_id: media_player.master_bedroom_speaker
+          media_content_id: "http://192.168.1.115/white_noise/blizzard.mp3"
           media_content_type: "audio/mp3"
 
 automation:
@@ -188,22 +160,6 @@ automation:
         data_template:
           message: >
             motion detected in our bedroom.
-
-  - alias: 'white_noise'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: input_select.white_noise
-    action:
-      - service: media_player.play_media
-        data_template:
-          entity_id: media_player.kodi_bedroom_pi
-          media_content_id: >
-            {% if is_state('input_select.white_noise', 'Blizzard') %} https://192.168.1.250:8123/local/white_noise/blizzard.mp3
-            {% elif is_state('input_select.white_noise', 'Blizzard2') %} https://192.168.1.250:8123/local/white_noise/blizzard2.mp3
-            {% elif is_state('input_select.white_noise', 'Rain') %} https://192.168.1.250:8123/local/white_noise/rain.mp3
-            {% endif %}
-          media_content_type: 'audio/mp3'
 
   - alias: 'bedroom flic single'
     initial_state: 'on'
@@ -241,19 +197,7 @@ automation:
       - service: script.bedroom_flic_hold
 
 shell_command:
-  bedroom_tv_cec: 'bash /home/homeassistant/.homeassistant/shell/cec.sh'
   bedroom_pi_kodi_on: 'ssh pi@192.168.1.92 nohup /usr/bin/kodi &'
   bedroom_pi_kodi_off: 'ssh pi@192.168.1.92 pkill -9 -f kodi'
   bedroom_pi_restart: 'ssh pi@192.168.1.92 sudo reboot'
-  bedroom_hdmi_off: "ssh pi@192.168.1.92 'tvservice --off'"
   bedroom_pi_flic_restart: 'ssh pi@192.168.1.92 sudo systemctl restart flicd'
-
-input_select:
-  white_noise:
-    name: White Noise
-    options:
-      - Blizzard
-      - Blizzard2
-      - Rain
-    initial: "Blizzard"
-    icon: mdi:bookmark-music

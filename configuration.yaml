@@ -20,6 +20,7 @@ history:
     domains:
       - light
       - switch
+      - vacuum
     entities:
       - device_tracker.justin_justin
       - device_tracker.nicole_nicole
@@ -171,6 +172,8 @@ media_player:
   #   host: 192.168.1.232
   - platform: cast
     host: 192.168.1.235
+  - platform: cast
+    host: 192.168.1.143    
   - platform: kodi
     host: !secret kodi_bedroom_ip
     port: !secret kodi_bedroom_port

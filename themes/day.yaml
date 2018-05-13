@@ -19,8 +19,8 @@
   secondary-text-color: 'hsl(0, 0%, 60%)'
   disabled-text-color: 'hsl(0, 0%, 70%)'
   label-badge-border-color: 'hsl(0, 0%, 100%)'
-  sidebar-text_-_color: 'hsl(0, 0%, 90%)'
-  sidebar-text-color: 'hsl(0, 0%, 90%)'
+  sidebar-text_-_color: 'hsl(0, 0%, 54%)'
+  sidebar-text-color: 'hsl(0, 0%, 54%)'
   # Text Adjustments
   paper-font-headline_-_letter-spacing: '-0.5px'
   paper-font-headline_-_font-weight: '500'
@@ -31,7 +31,7 @@
   paper-grey-200: 'hsl(0, 0%, 95%)'
   # Paper card
   paper-card-header-color: 'hsla(0, 0%, 0%, 0.5)'
-  paper-item-icon-color: 'hsl(0, 0%, 80%)'
+  paper-item-icon-color: 'hsl(0, 0%, 45%)'
   paper-item-icon-active-color: 'var(--paper-item-icon-color)'
   paper-item-icon_-_color: 'var(--paper-item-icon-color)'
   paper-item-selected_-_background-color: 'hsla(0, 0%, 0%, 0.2)'
