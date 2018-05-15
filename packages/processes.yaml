@@ -38,9 +38,9 @@ group:
       - group.plex
       - group.pihole
       - sensor.gif_maker_status
-      - sensor.process_flic
+    #  - sensor.process_flic
       - group.process_kodi_livingroom
-      - sensor.master_bed_kodi
+    #  - sensor.master_bed_kodi
       - sensor.process_life360
   process_kodi_livingroom:
     name: Living Room Kodi
@@ -97,15 +97,15 @@ sensor:
       kodi_livingroom_state:
         friendly_name: 'State'
         value_template: "{{states.media_player.kodi_livingroom.state}}"
-        icon_template: "{% if states.media_player.kodi_bedroom_pi.state == 'off' %} mdi:alert-outline {% else %} mdi:kodi {% endif %}"
-      master_bed_kodi:
-        friendly_name: 'Master Bedroom Kodi'
-        value_template: "{% if is_state('media_player.kodi_bedroom_pi', 'off') %}off{% else %}on{% endif %}"
-        icon_template: "{% if states.media_player.kodi_bedroom_pi.state == 'off' %} mdi:alert-outline {% else %} mdi:kodi {% endif %}"
-      process_flic:
-        friendly_name: 'Flic'
-        value_template: "{% if is_state('sensor.master_bed_flic', 'offline') %}off{% else %}on{% endif %}"
-        icon_template: "{% if states.sensor.master_bed_flic.state == 'online' %} mdi:memory {% else %} mdi:alert-outline {% endif %}"
+        icon_template: "{% if states.media_player.livingroom.state == 'off' %} mdi:alert-outline {% else %} mdi:kodi {% endif %}"
+      # master_bed_kodi:
+      #   friendly_name: 'Master Bedroom Kodi'
+      #   value_template: "{% if is_state('media_player.kodi_bedroom_pi', 'off') %}off{% else %}on{% endif %}"
+      #   icon_template: "{% if states.media_player.kodi_bedroom_pi.state == 'off' %} mdi:alert-outline {% else %} mdi:kodi {% endif %}"
+      # process_flic:
+      #   friendly_name: 'Flic'
+      #   value_template: "{% if is_state('sensor.master_bed_flic', 'offline') %}off{% else %}on{% endif %}"
+      #   icon_template: "{% if states.sensor.master_bed_flic.state == 'online' %} mdi:memory {% else %} mdi:alert-outline {% endif %}"
       process_life360:
         friendly_name: 'Life 360'
         value_template: "{% if is_state('sensor.life360_sensor', 'running') %}on{% else %}off{% endif %}"
@@ -116,11 +116,11 @@ sensor:
     name: kodi_version
     scan_interval: 86400
 
-  - platform: command_line
-    name: master_bed_flic
-    command: 'curl -s http://192.168.1.92/stats.json'
-    value_template: '{{ value_json.processes.flic }}'
-    scan_interval: 900
+  # - platform: command_line
+  #   name: master_bed_flic
+  #   command: 'curl -s http://192.168.1.92/stats.json'
+  #   value_template: '{{ value_json.processes.flic }}'
+  #   scan_interval: 900
 
 automation:
 ###############################################################################
@@ -135,10 +135,9 @@ automation:
         - sensor.process_mysqld
         - sensor.process_dnsmasq
         - sensor.gif_maker_status
-        - sensor.master_bed_kodi
-        - sensor.master_bed_flic
+        # - sensor.master_bed_kodi
+        # - sensor.master_bed_flic
         - sensor.life360_sensor
-
     condition:
       - condition: template
         value_template: "{% if trigger.from_state and trigger.to_state %} True {% else %} False {% endif %}"

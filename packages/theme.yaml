@@ -30,7 +30,13 @@ automation:
       - service: input_select.select_option
         data_template:
           entity_id: input_select.theme
-          option: '{{states.sensor.holiday.state}}'
+          option: >-
+            {% set holiday = states.sensor.holiday.state %}
+            {% set sun= states.sun.sun.state %}
+            {%- if holiday == "Standard" and sun == "above_horizon"-%} Day
+            {%- elif holiday == "Standard" and sun == "below_horizon"-%} Night
+            {%- else -%} {{states.sensor.holiday.state}}
+            {%- endif -%}
       - service: frontend.set_theme
         data_template:
           name: '{{states.input_select.theme.state}}'
@@ -160,5 +166,6 @@ input_select:
       - "Christmas Day"
       - "Boxing Day"
       - "New Year's Eve"
+      - "Standard"
     initial: "Day"
     icon: 'mdi:palette'

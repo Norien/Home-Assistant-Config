@@ -35,8 +35,8 @@ script:
     - service: script.morning_livingroom_lights
     - service: switch.turn_off
       entity_id: switch.bedroom_fan
-    - service: media_player.media_Stop
-      entity_id: media_player.kodi_bedroom_pi
+    - service: media_player.turn_off
+      entity_id: media_player.master_bedroom_speaker
     - service: media_player.volume_set
       data:
         entity_id: media_player.google_home

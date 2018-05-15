@@ -67,6 +67,8 @@ history:
 logbook:
 sun:
 discovery:
+  ignore:
+  - philips_hue
 
 # zwave:
   # usb_path: /dev/zwave
@@ -173,7 +175,7 @@ media_player:
   - platform: cast
     host: 192.168.1.235
   - platform: cast
-    host: 192.168.1.143    
+    host: 192.168.1.143
   - platform: kodi
     host: !secret kodi_bedroom_ip
     port: !secret kodi_bedroom_port

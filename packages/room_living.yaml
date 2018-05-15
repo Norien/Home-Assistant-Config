@@ -94,6 +94,9 @@ script:
           {% endif %}
         data:
           entity_id: switch.tv, switch.receiver
+      - service: media_player.media_stop
+        data:
+          entity_id: media_player.kodi_livingroom
 
   light_living_room_off:
     sequence:

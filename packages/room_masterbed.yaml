@@ -129,7 +129,7 @@ script:
       - service: shell_command.bedroom_tv_cec
 
   bedroom_media_off:
-    sequence:
+    sequence: 
       - service: switch.turn_off
         entity_id: switch.bedroom_tv
       - service: switch.turn_off
