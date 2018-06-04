@@ -189,8 +189,10 @@ sensor:
             unknown
           {%- endif -%}
         icon_template: >-
-          {%- if states.sensor.pihole_status_raw.state.split('[')[2][3:] == 'Pi-hole blocking is Enabled' -%}
+          {%- if states.sensor.pihole_blocking.state == 'Pi-hole blocking is Enabled' -%}
             mdi:checkbox-marked
+          {%-elif states.sensor.pihole_blocking.state == 'Unknown'-%}
+            mdi:checkbox-blank-outline
           {%- else -%}
             mdi:checkbox-blank-outline
           {%- endif -%}
