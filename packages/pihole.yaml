@@ -160,9 +160,17 @@ sensor:
   - platform: template
     sensors:
       pihole_dns:
-        value_template: "{{states.sensor.pihole_status_raw.state.split('[✓]')[1][1:-3]}}"
+        value_template: >-
+          {%-set dns = states.sensor.pihole_status_raw.state.split('[')[1][3:-3]-%}
+          {%-if dns == 'DNS service is running'-%}
+            DNS service is running
+          {%-elif dns != 'DNS service is running'-%}
+            DNS service is Disabled
+          {%-else-%}
+          unknown
+          {%- endif -%}
         icon_template: >-
-          {%- if states.sensor.pihole_status_raw.state.split('[✓]')[1][1:-3] == 'DNS service is running' -%}
+          {%- if states.sensor.pihole_status_raw.state.split('[')[1][3:-3] == 'DNS service is running' -%}
             mdi:checkbox-marked
           {%- else -%}
             mdi:checkbox-blank-outline
@@ -171,9 +179,17 @@ sensor:
   - platform: template
     sensors:
       pihole_blocking:
-        value_template: "{{states.sensor.pihole_status_raw.state.split('[✓]')[2][1:]}}"
+        value_template: >-
+          {%-set blocking = states.sensor.pihole_status_raw.state.split('[')[2][3:]-%}
+          {%-if blocking == 'Pi-hole blocking is Enabled'-%}
+            Pi-hole blocking is Enabled
+          {%-elif blocking != 'Pi-hole blocking is Enabled'-%}
+            Pi-hole blocking is Disabled
+          {%-else-%}
+            unknown
+          {%- endif -%}
         icon_template: >-
-          {%- if states.sensor.pihole_blocking.state == 'Pi-hole blocking is Enabled' -%}
+          {%- if states.sensor.pihole_status_raw.state.split('[')[2][3:] == 'Pi-hole blocking is Enabled' -%}
             mdi:checkbox-marked
           {%- else -%}
             mdi:checkbox-blank-outline

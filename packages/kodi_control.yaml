@@ -171,14 +171,14 @@ group:
   #     - script.auto_moana
 
 automation:
-  - alias: kodi_clean
-    trigger:
-      - platform: time
-        at: '03:00:00'
-    action:
-      - service: script.kodi_update_video_library
-      - delay: '00:02:00'
-      - service: script.kodi_clean_video_library
+  # - alias: kodi_clean
+  #   trigger:
+  #     - platform: time
+  #       at: '03:00:00'
+  #   action:
+  #     - service: script.kodi_update_video_library
+  #     - delay: '00:02:00'
+  #     - service: script.kodi_clean_video_library
 
 shell_command:
   kodi_start: 'sudo bash /home/homeassistant/.homeassistant/shell/kodi_start.sh &>/dev/null &'

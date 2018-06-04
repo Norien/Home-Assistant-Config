@@ -68,7 +68,7 @@ automation:
       - service: media_player.play_media
         data_template:
           entity_id: media_player.google_home
-          media_content_id: "http://192.168.1.92/misc_sound/dog-barking-2-bullmastiff.mp3"
+          media_content_id: "http://192.168.1.115/misc_sound/dog-barking-2-bullmastiff.mp3"
           media_content_type: 'audio/mp3'
       - service: script.notify_camera
       - service: notify.html5
@@ -98,7 +98,7 @@ script:
       data_template:
         entity_id: media_player.google_home
         media_content_id: >
-          http://192.168.1.92/doorbell_tones/
+          http://192.168.1.115/doorbell_tones/
            {%- if is_state('input_select.theme', "New Year's Day") -%} new_years.mp3
            {%- elif is_state('input_select.theme', "Groundhog Day") -%} groundhog_day.mp3
            {%- elif is_state('input_select.theme', "Valentine's Day") -%} valentines_day.mp3

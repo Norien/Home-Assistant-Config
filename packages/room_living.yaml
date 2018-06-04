@@ -79,11 +79,11 @@ group:
      - light.kitchen_sink
      - light.hue_color_lamp_1
      - light.hue_color_lamp_3
-
-light:
-  - platform: tplink
-    host: 192.168.1.108
-    name: 'Couch'
+     
+# light:
+#   - platform: tplink
+#     host: 192.168.1.108
+#     name: 'Couch'
 
 script:
   tv:

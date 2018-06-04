@@ -115,6 +115,7 @@ sensor:
     pws_id: !secret wunderground_station
     monitored_conditions:
       - UV
+      - precip_1d
 
 #######  UV
 # http://beautyinthebackcountry.com/2013/04/09/uv-index-and-spf-explained/

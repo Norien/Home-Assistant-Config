@@ -49,6 +49,7 @@ script:
       entity_id: switch.tv
     - service: switch.turn_off
       entity_id: switch.receiver
+    - service: script.nightlight
 ###### BACKYARD
     - service: light.turn_off
       entity_id: light.deck_lights

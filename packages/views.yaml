@@ -111,6 +111,7 @@ group:
     name: Media Player Bedroom
     entities:
       - media_player.kodi_bedroom
+      - media_player.bathroom_speaker
   media_player3:
     name: Master Bed
     entities:

@@ -30,6 +30,7 @@ script:
     - condition: time
       after: '06:00:00'
       before: '13:00:00'
+    - service: script.nightlight_off      
     - service: homeassistant.turn_off
       entity_id: input_boolean.finn_sleep
     - service: script.morning_livingroom_lights
