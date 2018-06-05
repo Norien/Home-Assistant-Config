@@ -71,6 +71,7 @@ automation:
           message: "Motion Detected in the Driveway"
           target: "justin"
 
+
   - alias: 'Auto Start Gif Maker'
     initial_state: 'on'
     trigger:
@@ -101,7 +102,13 @@ script:
       - service: shell_command.driveway
       - service: shell_command.driveway2
       - delay: '00:00:30'
-      - service: shell_command.push_image
+      #- service: shell_command.push_image
+      - service: notify.justin
+        data:
+          title: 'Driveway Alert'
+          message: 'Motion Detected in the Driveway'
+          data:
+            url: !secret driveway_camera_url
 
 sensor:
   - platform: zoneminder
@@ -128,4 +135,4 @@ shell_command:
   push_image: 'bash /home/homeassistant/.homeassistant/shell/push_image.sh'
   start_gifmaker: bash /home/homeassistant/.homeassistant/shell/gif_maker.sh
   driveway: !secret driveway_camera_photo_url
-  driveway2: curl -o /home/homeassistant/.homeassistant/www/camera_shots/drive1.gif "localhost:8080/gif?camera=drive1&duration=60&interval=0.25"
+  driveway2: curl -o /home/homeassistant/.homeassistant/www/camera_shots/drive1.gif "localhost:8060/gif?camera=drive1&duration=60&interval=0.25"

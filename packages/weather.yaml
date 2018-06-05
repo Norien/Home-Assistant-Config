@@ -9,10 +9,10 @@ homeassistant:
     sensor.dark_sky_apparent_temperature:
       friendly_name: 'Current Temperature'
       icon: mdi:thermometer
-    sensor.dark_sky_daily_high_apparent_temperature:
+    sensor.dark_sky_daytime_high_apparent_temperature:
       friendly_name: 'Daily High'
       icon: mdi:thermometer
-    sensor.dark_sky_daily_low_apparent_temperature:
+    sensor.dark_sky_overnight_low_temperature:
       friendly_name: 'Daily Low'
       icon: mdi:thermometer
     sensor.dark_sky_humidity:
@@ -42,8 +42,8 @@ group:
     control: hidden
     entities:
       - weather.openweathermap
-      - sensor.dark_sky_daily_high_apparent_temperature
-      - sensor.dark_sky_daily_low_apparent_temperature
+      - sensor.dark_sky_daytime_high_apparent_temperature
+      - sensor.dark_sky_overnight_low_temperature
       - sensor.dark_sky_precip_probability
       - sensor.pws_uv
       - sensor.uv_burn_time
@@ -67,7 +67,7 @@ sensor:
     sensors:
       weather_report:
         value_template: >
-          The weather is {{states('sensor.dark_sky_minutely_summary')[:-1]|lower}} and {{states('sensor.dark_sky_apparent_temperature') | round}} degrees. Today's high is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}.
+          The weather is {{states('sensor.dark_sky_minutely_summary')[:-1]|lower}} and {{states('sensor.dark_sky_apparent_temperature') | round}} degrees. Today's high is {{states('sensor.dark_sky_daytime_high_apparent_temperature')| round}} with a low of {{states('sensor.dark_sky_overnight_low_temperature') | round}}.
           {%- if states.sensor.pws_uv.state|int == 0 -%}
           {%- else -%}
           {{' '}}The current UV index is {{states('sensor.pws_uv')}} with a burn time of {{states('sensor.uv_burn_time')}} minutes.
@@ -103,10 +103,10 @@ sensor:
       - minutely_summary
       - hourly_summary
       - daily_summary
-      - temperature_max
-      - temperature_min
-      - apparent_temperature_max
-      - apparent_temperature_min
+      - temperature_high
+      - temperature_low
+      - apparent_temperature_high
+      - apparent_temperature_low
       - precip_intensity_max
 
 ###### wunderground

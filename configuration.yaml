@@ -8,6 +8,7 @@ homeassistant:
   time_zone: !secret time_zone
   customize: !include_dir_merge_named customizations
   packages: !include_dir_named packages
+  whitelist_external_dirs: !secret camera_dir
 frontend:
   themes: !include_dir_merge_named themes/
 config:
@@ -170,14 +171,14 @@ media_player:
     host: 192.168.1.230
   - platform: cast
     host: 192.168.1.231
-  # - platform: cast
-  #   host: 192.168.1.232
+  - platform: cast
+    host: 192.168.1.232
   - platform: cast
     host: 192.168.1.235
   - platform: cast
     host: 192.168.1.143
   - platform: cast
-    host: 192.168.1.119    
+    host: 192.168.1.119
   - platform: kodi
     host: !secret kodi_bedroom_ip
     port: !secret kodi_bedroom_port
