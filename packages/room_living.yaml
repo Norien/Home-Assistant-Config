@@ -9,6 +9,9 @@ homeassistant:
     switch.tv:
       icon: mdi:monitor
       friendly_name: TV
+    switch.tv_custom:
+      icon: mdi:monitor
+      friendly_name: TV
     switch.receiver:
       icon: mdi:speaker
       friendly_name: Receiver
@@ -54,36 +57,23 @@ homeassistant:
       google_assistant: true
       google_assistant_name: "TV"
       friendly_name: TV
+    binary_sensor.door_front:
+      device_class: door
+    binary_sensor.door_side:
+      device_class: door
+    binary_sensor.door_back:
+      device_class: door
 
-###### STATE CARD
 group:
-  livingroom:
-    name: Living Room
-    control: hidden
-    entities:
-     - switch.tv
-     - switch.receiver
-     - group.lr_lights
-     - automation.night_light
-     - automation.light_living_room_sunset
-     - input_select.light_living_room_scene
-     - input_select.live_scene
-     #- script.set_random_color_2_all_bulbs
-     - automation.turn_tv_off
   lr_lights:
     name: Lights
     icon: mdi:lightbulb
     entities:
      - light.living_room_lamp
-     - light.couch
      - light.kitchen_sink
      - light.hue_color_lamp_1
      - light.hue_color_lamp_3
-     
-# light:
-#   - platform: tplink
-#     host: 192.168.1.108
-#     name: 'Couch'
+     - light.hue_go
 
 script:
   tv:
@@ -301,6 +291,19 @@ input_select:
 
 ######
 switch:
+  - platform: template
+    switches:
+      tv_custom:
+        value_template: '{{ states.switch.tv.state }}'
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.tv, switch.receiver
+        turn_off:
+          - service: switch.turn_off
+            entity_id: switch.tv, switch.receiver
+          - service: media_player.media_stop
+            data:
+              entity_id: media_player.kodi_livingroom
 ###### SONOFF DUAL 1
   - platform: mqtt
     name: "tv"

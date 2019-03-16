@@ -1,6 +1,9 @@
 ###### Configuration
 homeassistant:
   name: " "
+  whitelist_external_dirs:
+  - /docker/database-home_assistant
+  - /config
   latitude: !secret latitude
   longitude: !secret longitude
   elevation: 264
@@ -8,20 +11,31 @@ homeassistant:
   time_zone: !secret time_zone
   customize: !include_dir_merge_named customizations
   packages: !include_dir_named packages
-  whitelist_external_dirs: !secret camera_dir
+################################################################################
 frontend:
   themes: !include_dir_merge_named themes/
+lovelace:
+  mode: yaml
 config:
 python_script:
 conversation:
 map:
 updater:
+owntracks:
+system_health:
+person:
+custom_updater:
+  card_urls:
+    - https://raw.githubusercontent.com/kalkih/mini-graph-card/master/tracker.json
+    - https://raw.githubusercontent.com/kalkih/mini-media-player/master/tracker.json
+    - https://raw.githubusercontent.com/nervetattoo/simple-thermostat/master/tracker.json
 history:
   include:
     domains:
       - light
       - switch
       - vacuum
+      - script
     entities:
       - device_tracker.justin_justin
       - device_tracker.nicole_nicole
@@ -31,9 +45,6 @@ history:
       - input_boolean.guest
       - input_boolean.away
       - input_boolean.finn_sleep
-      - script.backup_config
-      - script.hassctl_restart_ha
-      - script.hassctl_update_ha
       - sensor.dark_sky_apparent_temperature
       - sensor.dark_sky_temperature
       - sensor.dark_sky_cloud_coverage
@@ -61,21 +72,18 @@ history:
       - sensor.office_today
       - sensor.office_voltage
       - sensor.office_yesterday
+      - sensor.server_yesterday
+      - sensor.washing_machine_today_kwh
       - sensor.pws_uv
       - sensor.uv_burn_time
       - sun.sun
 
 logbook:
 sun:
-discovery:
-  ignore:
-  - philips_hue
+# discovery:
 
-# zwave:
-  # usb_path: /dev/zwave
-
-# zigbee:
-  # device: /dev/zigbee
+zwave:
+  usb_path: /dev/zwave
 
 emulated_hue:
   host_ip: !secret emulated_hue_url
@@ -100,24 +108,30 @@ http:
    api_password: !secret api_password
    ssl_certificate: !secret ssl_certificate
    ssl_key: !secret ssl_key
+   ssl_profile: intermediate
 
 duckdns:
-  domain: !secret domain
-  access_token: !secret access_token
+   domain: !secret domain
+   access_token: !secret access_token
 
 tts:
   platform: google
 
 recorder:
-  #db_url: !secret database
+  db_url: !secret database
   purge_interval: 10
   purge_keep_days: 10
-  exclude:
-    entities:
-      - sensor.pihole_status_raw
+
 hue:
   bridges:
     - host: !secret philips_hue_ip
+
+tplink:
+  discovery: false
+  light:
+    - host: 192.168.1.108
+  switch:
+    - host: 192.168.1.211
 
 mqtt:
   broker: !secret mqtt_url
@@ -130,12 +144,6 @@ mqtt:
   discovery_prefix: homeassistant
 
 device_tracker:
-  - platform: ddwrt
-    host: !secret router_host
-    username: !secret router_username
-    password: !secret router_password
-    interval_seconds: 10
-  - platform: owntracks
   - platform: ping
     hosts:
       philips_hue_hub: 192.168.1.13
@@ -143,6 +151,11 @@ device_tracker:
       roomba: 192.168.1.147
       router: 192.168.1.1
       camera_baby: 192.168.1.92
+      seed_box: 192.168.1.93
+  - platform: unifi
+    username: !secret unifi_user
+    password: !secret unifi_password
+    verify_ssl: false
 
 wemo:
   static:
@@ -153,6 +166,15 @@ wemo:
     - 192.168.1.204
     - 192.168.1.205
     - 192.168.1.206
+cast:
+  media_player:
+  - host: 192.168.1.230
+  - host: 192.168.1.231
+  - host: 192.168.1.232
+  - host: 192.168.1.235
+  - host: 192.168.1.119
+  - host: 192.168.1.143
+  - host: 192.168.1.185
 
 media_player:
   - platform: kodi
@@ -167,33 +189,3 @@ media_player:
         entity_id: '{{ entity_id }}'
         method: System.Shutdown
     name: kodi_livingroom
-  - platform: cast
-    host: 192.168.1.230
-  - platform: cast
-    host: 192.168.1.231
-  - platform: cast
-    host: 192.168.1.232
-  - platform: cast
-    host: 192.168.1.235
-  - platform: cast
-    host: 192.168.1.143
-  - platform: cast
-    host: 192.168.1.119
-  - platform: kodi
-    host: !secret kodi_bedroom_ip
-    port: !secret kodi_bedroom_port
-    name: kodi_bedroom
-    turn_off_action:
-      service: media_player.kodi_call_method
-      data_template:
-        entity_id: '{{ entity_id }}'
-        method: System.Hibernate
-  - platform: kodi
-    host: !secret kodi_bedroom_pi_ip
-    port: !secret kodi_bedroom_pi_port
-    name: kodi_bedroom_pi
-    turn_off_action:
-      service: media_player.kodi_call_method
-      data_template:
-        entity_id: '{{ entity_id }}'
-        method: Application.Quit

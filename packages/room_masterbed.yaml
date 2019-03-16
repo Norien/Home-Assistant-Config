@@ -7,13 +7,14 @@ homeassistant:
       emulated_hue_hidden: false
       friendly_name: 'White Noise'
       icon: mdi:snowflake
-    media_player.kodi_bedroom_pi:
-      friendly_name: Bedroom KODI PI
+    switch.bedroom_tv:
+      friendly_name: TV
+      icon: mdi:monitor
     switch.bedroom_fan:
       emulated_hue_hidden: false
       icon: mdi:fan
       friendly_name: Bedroom Fan
-    switch.bedroom_lamps_:
+    switch.bedroom_lamps:
       emulated_hue_hidden: false
       icon: mdi:lamp
       friendly_name: Bedroom Lamp
@@ -28,46 +29,7 @@ homeassistant:
     sensor.master_bed_temperature:
       friendly_name: "Master Bed"
 
-###### STATE CARD
-group:
-  bedroom:
-    name: Master Bedroom
-    control: hidden
-    entities:
-     - switch.bedroom_media
-     - switch.bedroom_lamps_
-     - switch.bedroom_fan
-     - switch.bedroom_tv
-     - switch.white_noise
-     # - binary_sensor.flic_80e4da71b68e
-
-binary_sensor:
-#   - platform: flic
-#     host: 192.168.1.92
-#     discovery: false
-
-###### motion SENSOR
-  - platform: mqtt
-    name: 'room_masterbed_motion'
-    state_topic: "/room_masterbed/motion/Switch"
-    qos: 0
-    payload_on: "1"
-    payload_off: "0"
-    device_class: motion
-
 sensor:
-###### MQTT DHT22
-  - platform: mqtt
-    state_topic: '/room_masterbed/dht22/Temperature'
-    name: 'Master Bed Temperature'
-    value_template: '{{ (value | float - 0) | round(1) }}'
-    unit_of_measurement: '°C'
-  - platform: mqtt
-    state_topic: '/room_masterbed/dht22/Humidity'
-    name: 'Master Bed Humidity'
-    value_template: '{{ (value | float - 0) | round }}'
-    unit_of_measurement: '%'
-
   - platform: template
     sensors:
       white_noise:
@@ -75,13 +37,6 @@ sensor:
           {% set state = states.media_player.master_bedroom_speaker.attributes.media_content_id%}
           {% set object = "http://192.168.1.115/white_noise/blizzard.mp3" %}
           {% if state == object %}on{% else %}off{% endif %}
-      bedroom_pc_status:
-        value_template: "{% if is_state('media_player.kodi_bedroom', 'off') %}off{% else %}on{% endif %}"
-###### Monitor if flic is listed in the log file.
-  - platform: command_line
-    command: "python /home/homeassistant/.homeassistant/python_scripts/flic.py"
-    name: 'flic_log'
-    scan_interval: 120
 
 switch:
 ###### Switch for White Noise
@@ -108,23 +63,12 @@ switch:
           entity_id: script.bedroom_media_off
 
 script:
-  bedroom_flic_hold:
-    sequence:
-      - service_template: >
-          {% if is_state('sun.sun', 'below_horizon') %}
-            script.good_night
-          {% else %}
-            script.good_morning
-          {% endif %}
-
   bedroom_media_on:
     sequence:
       - service: shell_command.bedroom_hdmi_off
       - service: switch.turn_on
         entity_id: switch.bedroom_tv
       - delay: '00:00:10'
-      - service: switch.turn_on
-        entity_id: switch.bedroom_pc
       - delay: '00:00:05'
       - service: shell_command.bedroom_tv_cec
 
@@ -132,34 +76,18 @@ script:
     sequence:
       - service: switch.turn_off
         entity_id: switch.bedroom_tv
-      - service: switch.turn_off
-        entity_id: switch.bedroom_pc
 
   white_noise:
     sequence:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.master_bedroom_speaker
+          volume_level: 0.5
       - service: media_player.play_media
         data:
           entity_id: media_player.master_bedroom_speaker
           media_content_id: "http://192.168.1.115/white_noise/blizzard.mp3"
           media_content_type: "audio/mp3"
-
-automation:
-  - alias: Notify on Bedroom Motion If Guest Mode is on
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: binary_sensor.room_masterbed_motion
-        from: 'off'
-        to: 'on'
-    condition:
-      - condition: state
-        entity_id: 'input_boolean.guest'
-        state: 'on'
-    action:
-      - service: notify.justin
-        data_template:
-          message: >
-            motion detected in our bedroom.
 
   # - alias: 'bedroom flic single'
   #   initial_state: 'on'
@@ -183,7 +111,7 @@ automation:
   #       click_type: double
   #   action:
   #     - service: switch.toggle
-  #       entity_id: switch.bedroom_lamps_
+  #       entity_id: switch.bedroom_lamps
   #
   # - alias: 'bedroom flic hold'
   #   initial_state: 'on'
@@ -195,9 +123,3 @@ automation:
   #       click_type: hold
   #   action:
   #     - service: script.bedroom_flic_hold
-
-shell_command:
-  bedroom_pi_kodi_on: 'ssh pi@192.168.1.92 nohup /usr/bin/kodi &'
-  bedroom_pi_kodi_off: 'ssh pi@192.168.1.92 pkill -9 -f kodi'
-  bedroom_pi_restart: 'ssh pi@192.168.1.92 sudo reboot'
-  bedroom_pi_flic_restart: 'ssh pi@192.168.1.92 sudo systemctl restart flicd'

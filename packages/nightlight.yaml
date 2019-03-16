@@ -51,13 +51,12 @@ script:
             - light.living_room_lamp
             - light.hue_color_lamp_1
             - light.hue_color_lamp_3
-            - light.couch
           brightness: 10
           rgb_color: [255,104,18]
       - delay:
           minutes: 4
       - service_template: >
-          {% if is_state_attr('light.kitchen_sink', 'rgb_color', (255, 104, 21)) %}
+          {% if is_state_attr('light.living_room', 'rgb_color', (255, 104, 21)) %}
             script.nightlight_off
           {% else %}
             script.nightlight
@@ -72,4 +71,3 @@ script:
             - light.hue_color_lamp_3
             - light.kitchen_sink
             - light.living_room_lamp
-            - light.couch

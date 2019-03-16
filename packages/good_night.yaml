@@ -15,13 +15,14 @@ google_assistant:
   entity_config:
     script.good_night:
       expose: true
-      alias: 'Good Night'
       name: 'Good Night'
-      type: script
 
 script:
   good_night:
     sequence:
+    - condition: time
+      after: '20:30:00'
+      before: '00:00:00'
     - service: light.turn_off
       entity_id: light.front_door
 ###### HALLWAY
@@ -33,7 +34,7 @@ script:
     - service: switch.turn_off
       entity_id: switch.led_strip
     - service: switch.turn_off
-      entity_id: switch.bedroom_lamps_
+      entity_id: switch.bedroom_lamps
     - service: switch.turn_on
       entity_id: switch.bedroom_fan
     - service: switch.turn_on
@@ -43,8 +44,6 @@ script:
       entity_id: light.living_room
     - service: light.turn_off
       entity_id: light.kitchen_sink
-    - service: media_player.turn_off
-      entity_id: media_player.kitchen
     - service: switch.turn_off
       entity_id: switch.tv
     - service: switch.turn_off
@@ -68,4 +67,4 @@ script:
        {%- else -%}
          switch.turn_off
        {%- endif %}
-      entity_id: switch.office_pc
+      entity_id: switch.pc

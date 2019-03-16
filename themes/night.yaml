@@ -41,7 +41,8 @@
   paper-item-selected_-_background-color: 'hsla(0, 0%, 0%, 0.2)'
   paper-tabs-selection-bar-color: 'hsla(0, 0%, 0%, 0.2)'
   # Labels
-  label-badge-red: 'var(--paper-card-background-color)'
+  #label-badge-red: 'var(--paper-card-background-color)'
+  label-badge-red: '#FF0000'
   label-badge-border-color: 'var(--label-badge-red)'
   label-badge-background-color: 'var(--paper-card-background-color)'
   label-badge-text-color: 'var(--primary-text-color)'

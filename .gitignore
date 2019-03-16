@@ -53,3 +53,17 @@ www/googlea02a5401c8e2879c.html
 packages/zones.yaml
 entity_registry.yaml
 .config_entries.json
+.storage/core.config_entries
+crontab.txt
+docker-compose.yaml
+zwave_device_config.yaml
+www/lovelace/room_masterbed_on.jpg
+www/lovelace/room_living.jpg
+www/deluge_ip
+python_scripts/godaddy_ddns.py
+python_scripts/godaddy-ddns.config
+packages/zones.yaml
+packages/notify.yaml
+.storage/*
+custom_components
+packages/zones.yaml

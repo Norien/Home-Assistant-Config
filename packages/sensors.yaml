@@ -34,45 +34,51 @@ homeassistant:
       icon: mdi:thermometer
       friendly_name: Dining Room
 
-###### STATE CARDS
-group:
-  motion_sensors:
-    name: Motion
-    entities:
-     - sensor.findlay_room_motion
-     - sensor.living_room_motion
-     - sensor.dining_room_motion
-     - binary_sensor.room_masterbed_motion
-     - binary_sensor.laundry_motion
-  all_temps:
-    name: Temperature
-    entities:
-     - sensor.dark_sky_temperature
-     - sensor.hallway_thermostat_temperature
-     - sensor.findlay_room_temperature
-     - sensor.office_temperature
-     - sensor.master_bed_temperature
-     - sensor.living_room_temperature
-     - sensor.dining_room_temperature
-     - sensor.laundry_temperature
-     - sensor.average_whole_home
-  lux:
-    name: Light Level
-    entities:
-      - sensor.findlay_room_lux
-      - sensor.living_room_lux
-      - sensor.dining_room_lux
-
 ###### BINARY SENSORS ------------------------------------------
 binary_sensor:
+  - platform: huesensor
   - platform: workday
     country: CA
 ###### SENSORS -------------------------------------------------
 sensor:
-  - platform: plex
-    token: !secret plex_token
-    username: !secret plex_username
-    password: !secret plex_password
+  - platform: huesensor
+### tautulli and plex monitor
+  - platform: tautulli
+    api_key: !secret tautulli_api
+    host: !secret tautulli_host
+  - platform: template
+    sensors:
+      tautulli_lan:
+        friendly_name: "tautulli_lan"
+        entity_id: sensor.tautulli
+        unit_of_measurement: 'Mbps'
+        value_template: "{{states.sensor.tautulli.attributes.lan_bandwidth|float / 1000}}"
+      tautulli_wan:
+        friendly_name: "tautulli_wan"
+        entity_id: sensor.tautulli
+        unit_of_measurement: 'Mbps'
+        value_template: "{{states.sensor.tautulli.attributes.wan_bandwidth|float / 1000}}"
+      tautulli_total:
+        friendly_name: "tautulli_total"
+        entity_id: sensor.tautulli
+        unit_of_measurement: 'Mbps'
+        value_template: "{{states.sensor.tautulli.attributes.total_bandwidth|float / 1000}}"
+### SCRAPE CURRENT ENERGY TIER
+  # - platform: scrape
+  #   resource: !secret energy_scrape_url2
+  #   name: Electricity Price
+  #   select: ".sml-landing-tou .sml-align-center"
+  #   value_template: "{{value.split('/')[0].split('|')[1]|replace('¢','')|replace(' ','')}}"
+  #   unit_of_measurement: "¢/kWh"
+  #   scan_interval: 600
+
+  - platform: scrape
+    resource: !secret energy_scrape_url
+    name: Electricity Price
+    select: ".off-peakactive .value"
+    value_template: "{{value.split('/')[0]|replace('¢','')}}"
+    unit_of_measurement: "¢/kWh"
+    scan_interval: 600
 
   #####FINDLAYS ROOM SENSOR & DIMMER
   - platform: rest
@@ -87,7 +93,6 @@ sensor:
     value_template: '{{ value_json.state.presence }}'
     name: 'Findlay Room Motion'
     scan_interval: 1
-    device_class: motion
 
   - platform: rest
     resource: !secret finn_room_temp
@@ -109,7 +114,6 @@ sensor:
     value_template: '{{ value_json.state.presence }}'
     name: 'Living Room Motion'
     scan_interval: 2
-    device_class: motion
 
   - platform: rest
     resource: !secret livingroom_temp
@@ -131,7 +135,6 @@ sensor:
     value_template: '{{ value_json.state.presence }}'
     name: 'Dining Room Motion'
     scan_interval: 2
-    device_class: motion
 
   - platform: rest
     resource: !secret dining_room_temp
@@ -140,13 +143,6 @@ sensor:
     name: 'Dining Room Temperature'
     scan_interval: 120
 
-  ######DATE TIME
-  - platform: yr
-  - platform: time_date
-    display_options:
-      - "date_time"
-      - 'time'
-
 ###### AVERAGE TEMPERATURE
   - platform: min_max
     type: mean
@@ -154,10 +150,15 @@ sensor:
     entity_ids:
       - sensor.hallway_thermostat_temperature
       - sensor.findlay_room_temperature
-      - sensor.master_bed_temperature
       - sensor.living_room_temperature
       - sensor.dining_room_temperature
-     # - sensor.laundry_temperature
+
+###### DATE TIME
+  - platform: yr
+  - platform: time_date
+    display_options:
+      - "date_time"
+      - 'time'
 
 ###### DAY OF THE WEEK
   - platform: template
@@ -170,15 +171,3 @@ sensor:
     sensors:
       date_month:
         value_template: "{{as_timestamp(now())|timestamp_custom('%B', True)}}"
-
-###### test
-  - platform: template
-    sensors:
-      online_cameras:
-        value_template: >
-          {% set comma = joiner(", ") %}
-          {%- for state in states.device_tracker -%}
-          {%- if state.state == 'home' and state.name[0:7] == 'camera_' -%}
-          {{ comma() }}{{state.name[7:]}}
-          {%-endif -%}
-          {%- endfor %}

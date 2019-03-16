@@ -1,0 +1,77 @@
+################################################################
+## Packages / Hallway
+################################################################
+homeassistant:
+switch:
+  - platform: flux
+    name: hallway_flux
+    mode: mired
+    interval: 1
+    transition: 3
+    lights:
+      - light.hallway
+
+automation:
+  - alias: 'hallway_switch_1'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.hallway_switch
+    condition:
+      - condition: state
+        entity_id: sensor.hallway_switch
+        state: '1_click_up'
+    action:
+      - service: switch.hallway_flux_update
+      - service: light.toggle
+        data:
+          entity_id: light.hallway
+      - service: switch.hallway_flux_update
+
+  - alias: 'hallway_switch_2'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.hallway_switch
+    condition:
+      - condition: state
+        entity_id: sensor.hallway_switch
+        state: '2_click_up'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id:
+            - light.hallway
+          brightness: 255
+          rgb_color: [255,255,255]
+
+  - alias: 'hallway_switch_3'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.hallway_switch
+    condition:
+      - condition: state
+        entity_id: sensor.hallway_switch
+        state: '3_click_up'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id:
+            - light.hallway
+          brightness: 20
+          rgb_color: [255,255,255]
+
+  - alias: 'hallway_switch_4'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.hallway_switch
+    condition:
+      - condition: state
+        entity_id: sensor.hallway_switch
+        state: '4_click_up'
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.hallway

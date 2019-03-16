@@ -27,7 +27,7 @@ homeassistant:
     sensor.glances_ram_overview:
       friendly_name: RAM
       icon: mdi:chip
-    sensor.glances_linux_distro:
+    sensor.linux_distro:
       friendly_name: Linux Distro
       icon: mdi:ubuntu
 
@@ -37,126 +37,37 @@ homeassistant:
     sensor.disk_media_vault:
       friendly_name: Media Vault
       icon: mdi:harddisk
-    sensor.disk_zoneminder:
-      friendly_name: Zoneminder
-      icon: mdi:harddisk
-    sensor.disk_backup:
-      friendly_name: Snapshot Backup
-      icon: mdi:harddisk
-    sensor.disk_router_usb:
-      friendly_name: YAML Backup
-      icon: mdi:harddisk
 
-    sensor.mysql_database_size:
-      friendly_name: Database Size
-      icon: mdi:database
-    sensor.mysql_version:
-      friendly_name: Version
-      icon: mdi:package-variant
+script:
+  restart_hass:
+    sequence:
+      - service: shell_command.restart_hass
 
-    sensor.plex_version:
-      friendly_name: Version
-      icon: mdi:package-variant
-
-###### STATE CARD
-group:
-  server_status:
-    name: Server Status
-    control: hidden
-    entities:
-      - sensor.glances_cpu_load
-      - sensor.cpu_speed
-      - sensor.cpu_temperature
-      - sensor.glances_disk_overview
-      - sensor.glances_ram_overview
-      - sensor.database_size
-      - sensor.server_uptime
-      - sensor.ha_uptime
-      - sensor.ha_version
-      - input_select.log_level
-      - weblink.release_log
-      - sensor.glances_linux_distro
-  server_status_disks:
-    name: Disks
-    control: hidden
-    entities:
-      - sensor.disk_file_system
-      - sensor.disk_media_vault
-      - sensor.disk_zoneminder
-      - sensor.disk_backup
-      - sensor.disk_router_usb
 weblink:
   entities:
-    - name: release_log
-      url: https://github.com/home-assistant/home-assistant/releases
-
-automation:
-  - alias: 'Low Disk Space Alert'
-    initial_state: 'on'
-    trigger:
-      - platform: time
-        at: '10:00:00'
-      - platform: time
-        at: '18:00:00'
-    condition:
-      condition: template
-      value_template: "{% if states('sensor.disk_low') == '' %}false{%else%}true{% endif %}"
-    action:
-      - service: persistent_notification.create
-        data_template:
-          title: Low Disk Space
-          message: "{{ states('sensor.disk_low') }}"
-          notification_id: low-disk-alert
-      - service: notify.html5
-        data_template:
-          target: justin
-          message:  "Low Disk Space: {{ states('sensor.disk_low') }}"
-
-############################# Sets Logging Level
-  - alias: Log Level
-    trigger:
-      - platform: state
-        entity_id: input_select.log_level
-    action:
-      - service: logger.set_level
-        data_template:
-          homeassistant.components: "{{ trigger.to_state.state }}"
+    - name: Release Log
+      url: https://github.com/home-assistant/home-assistant/releases/latest
 
 sensor:
-###### PLEX
-  - platform: command_line
-    command: dpkg -l plexmediaserver | awk '{print $3}'| head -6 | tail -1
-    name: plex_version
-    scan_interval: 43200
-
-###### DATABASE
-  - platform: command_line
-    command: sudo du -h /var/lib/mysql/homeassistant | awk '{print $1}' | rev | cut -c 2- | rev
-    name: mysql_database_size
-    unit_of_measurement: 'GB'
-    scan_interval: 43200
-  - platform: command_line
-    command: mysql -V | awk '{print $3}'
-    name: mysql_version
-    scan_interval: 86400
-
-###### VERSIONS
-  - platform: rest
-    resource: https://pypi.python.org/pypi/homeassistant/json
-    name: Current Version
-    value_template: '{{ value_json.info.version }}'
-
+###### VERSIONS CUSTOM COMPONENT
   - platform: command_line
     name: Installed Version
-    command: /srv/homeassistant/bin/hass --version
-
+    command: "cat /config/.HA_VERSION"
+## VERSION ( DOCKER )
+  - platform: version
+    source: docker
+## DATABASE % CONFIG SIZE
+  - platform: folder
+    folder: /docker/database-home_assistant
+  - platform: folder
+    folder: /config
 ###### CUSTOM HA/Version
   - platform: template
     sensors:
       ha_version:
-        value_template: "{%- if states.sensor.current_version.state == states.sensor.installed_version.state-%}{{states.sensor.installed_version.state}} {% else %}{{states.sensor.current_version.state}} Available{% endif%}"
+        value_template: "{%- if states.sensor.latest_version.state == states.sensor.installed_version.state-%}{{states.sensor.installed_version.state}} {%-else-%}{{states.sensor.latest_version.state}} Available{%-endif-%}"
         icon_template: >-
-          {% if states.sensor.current_version.state == states.sensor.installed_version.state %}
+          {% if states.sensor.latest_version.state == states.sensor.installed_version.state %}
             mdi:checkbox-marked
           {% else %}
             mdi:checkbox-blank-outline
@@ -164,9 +75,8 @@ sensor:
 
 ###### CUSTOM LINUX VERSION
   - platform: command_line
-    command: curl -X GET http://localhost:61208/api/2/system
-    name: 'glances_linux_distro'
-    value_template: '{{ value_json.linux_distro }}'
+    command: cat /config/www/linux_distro
+    name: 'linux_distro'
     scan_interval: 604800
 
 ###### UPTIMES
@@ -174,7 +84,7 @@ sensor:
     name: 'HA Uptime'
 
   - platform: command_line
-    command: curl -X GET http://localhost:61208/api/2/uptime
+    command: curl -X GET http://127.0.0.1:61208/api/3/uptime
     name: 'Server Uptime'
     value_template: '{{ value[1:-1] }}'
     scan_interval: 720
@@ -182,14 +92,15 @@ sensor:
 ###### CPU TEMPERATURE
   - platform: command_line
     name: CPU Temperature
-    command: sensors | grep -A 0 'Package'| cut -c17-20
+    command: curl -X GET http://127.0.0.1:61208/api/3/sensors
     unit_of_measurement: '°C'
+    value_template: '{{ value_json[8].value }}'
 ###### CPU SPEED
   - platform: cpuspeed
     name: 'CPU Speed'
 ###### CPU LOAD
   - platform: command_line
-    command: curl -X GET http://localhost:61208/api/2/load
+    command: curl -X GET http://127.0.0.1:61208/api/3/load
     name: 'glances_cpu_load'
     value_template: '{{ value_json.min5 }}'
     unit_of_measurement: '%'
@@ -197,7 +108,8 @@ sensor:
 
 ###### GLANCES
   - platform: glances
-    host: localhost
+    host: 127.0.0.1
+    version: 3
     resources:
       - 'disk_free'
       - 'disk_use'
@@ -205,13 +117,8 @@ sensor:
       - 'memory_free'
 
 ###### HARD DRIVE DISPLAY
-  - platform: template
-    sensors:
-      glances_disk_overview:
-        value_template: "{{states.sensor.glances_disk_used.state|float}} GB / {{(states.sensor.glances_disk_total.state|int/1024/1024/1024)|round(0)}} GB"
-
   - platform: command_line
-    command: curl -X GET http://localhost:61208/api/2/fs
+    command: curl -X GET http://127.0.0.1:61208/api/2/fs
     name: 'glances_disk_total'
     value_template: '{{ value_json[0].size }}'
     scan_interval: 604800
@@ -222,63 +129,36 @@ sensor:
     scan_interval: 3600
     unit_of_measurement: '%'
   - platform: command_line
-    command: df -h /mnt/media_vault | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
+    command: df -h /mnt/barricade/media | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
     scan_interval: 3600
     unit_of_measurement: '%'
     name: 'Disk Media Vault'
-  - platform: command_line
-    command: df -h /mnt/backup | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
-    name: 'Disk Backup'
-    scan_interval: 3600
-    unit_of_measurement: '%'
-  - platform: command_line
-    command: df -h /mnt/zoneminder | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
-    name: 'Disk Zoneminder'
-    scan_interval: 3600
-    unit_of_measurement: '%'
-  - platform: command_line
-    command: df -h /mnt/router_usb | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
-    name: 'Disk Router USB'
-    scan_interval: 3600
-    unit_of_measurement: '%'
-###### LOW DISK SENSOR
-  - platform: template
-    sensors:
-      disk_low:
-        friendly_name: 'Low Disk'
-        icon_template: mdi:disk-alert
-        value_template: >-
-          {%- for item in states.sensor if ((item.entity_id[0:12] == 'sensor.disk_' and item.state |int >= 90 and item.name!= 'Low Disk')) -%}
-            {{item.name}}
-          {%- if not loop.last -%}
-          {{', '}}
-            {%- endif -%}
-          {%- endfor -%}
-
 
 ##### CUSTOM RAM DISPLAY
-  - platform: template
-    sensors:
-      glances_ram_overview:
-        value_template: "{{states.sensor.glances_ram_used.state|int}} MB / {{(states.sensor.glances_ram_total.state|int/1024/1024+1)|round(0)}} MB"
-
   - platform: command_line
-    command: curl -X GET http://localhost:61208/api/2/mem/total
+    command: curl -X GET http://127.0.0.1:61208/api/3/mem/total
     name: 'glances_ram_total'
     value_template: '{{ value_json.total }}'
     scan_interval: 604800
 
-################### Logger level
-input_select:
-  log_level:
-    name: Log Level
-    options:
-     - warn
-     - fatal
-     - error
-     - warning
-     - warn
-     - info
-     - debug
-     - notset
-    initial: error
+  - platform: template
+    sensors:
+      glances_ram_used_gb:
+        value_template: '{{(states.sensor.glances_ram_used.state|float/1000)|round(1)}}'
+        unit_of_measurement: 'GB'
+
+###### DOCKER CONTROL POINTS
+switch:
+  - platform: hadockermon
+    host: 127.0.0.1
+    port: 8126
+  - platform: hadockermon
+    host: 192.168.1.174
+    port: 8126
+input_boolean:
+  docker_control:
+    name: 'Docker Control'
+    icon: mdi:docker
+
+shell_command:
+  restart_hass: curl -s http://127.0.0.1:8126/container/Home_Assistant/restart

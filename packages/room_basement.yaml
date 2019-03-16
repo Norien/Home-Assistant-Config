@@ -1,0 +1,112 @@
+################################################################
+## Packages / Basement
+################################################################
+homeassistant:
+  customize:
+    light.couch:
+      emulated_hue_hidden: false
+      friendly_name: Basement Light
+
+sensor:
+###### motion SENSOR
+  - platform: mqtt
+    name: 'Server Room Motion'
+    state_topic: "/server_room/motion/motion"
+    qos: 0
+    payload_available: "1"
+    payload_not_available: "0"
+
+###### SONOFF POW SENSORS
+  - platform: mqtt
+    name: "Server Draw"
+    state_topic: "tele/sonoff_server/SENSOR"
+    qos: 0
+    unit_of_measurement: "W"
+    value_template: "{{ value_json['ENERGY'].Power }}"
+
+  - platform: mqtt
+    name: "Server Voltage"
+    state_topic: "tele/sonoff_server/SENSOR"
+    qos: 0
+    unit_of_measurement: "V"
+    value_template: "{{ value_json['ENERGY'].Voltage }}"
+
+  - platform: mqtt
+    name: "Server Today"
+    state_topic: "tele/sonoff_server/SENSOR"
+    qos: 0
+    unit_of_measurement: "kWh"
+    value_template: "{{ value_json['ENERGY'].Today }}"
+
+  - platform: mqtt
+    name: "Server Current"
+    state_topic: "tele/sonoff_server/SENSOR"
+    qos: 0
+    unit_of_measurement: "A"
+    value_template: "{{ value_json['ENERGY'].Current }}"
+
+  - platform: mqtt
+    name: "Server Yesterday"
+    state_topic: "tele/sonoff_server/SENSOR"
+    qos: 0
+    unit_of_measurement: "kWh"
+    value_template: "{{ value_json['ENERGY'].Yesterday }}"
+
+###### MQTT DHT22
+  - platform: mqtt
+    state_topic: '/server_room/environment/Temperature'
+    name: 'Server Room Temperature'
+    value_template: '{{ (value | float - 0) | round(1) }}'
+    unit_of_measurement: '°C'
+  - platform: mqtt
+    state_topic: '/server_room/environment/Humidity'
+    name: 'Server Room Humidity'
+    value_template: '{{ (value | float - 0) | round }}'
+    unit_of_measurement: '%'
+
+switch:
+###### SONOFF POW POWERBAR
+  - platform: mqtt
+    name: "Server Room Network"
+    state_topic: "stat/sonoff_server/POWER"
+    command_topic: "cmnd/sonoff_server/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 0
+    retain: true
+
+  - platform: mqtt
+    name: "Server Room lights"
+    state_topic: "stat/sonoff_server_light/POWER"
+    command_topic: "cmnd/sonoff_server_light/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 0
+    retain: true
+
+automation:
+  - alias: 'light_server_room_on'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.server_room_motion
+        to: '1'
+    action:
+      - service: switch.turn_on
+        data_template:
+          entity_id: switch.server_room_lights
+
+  - alias: 'light_server_room_off'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.server_room_motion
+        to: '0'
+        for:
+          minutes: 3
+    action:
+      - service: switch.turn_off
+        data_template:
+          entity_id: switch.server_room_lights

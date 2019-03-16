@@ -9,10 +9,10 @@ homeassistant:
     sensor.dark_sky_apparent_temperature:
       friendly_name: 'Current Temperature'
       icon: mdi:thermometer
-    sensor.dark_sky_daytime_high_apparent_temperature:
+    sensor.dark_sky_daytime_high_apparent_temperature_0:
       friendly_name: 'Daily High'
       icon: mdi:thermometer
-    sensor.dark_sky_overnight_low_temperature:
+    sensor.dark_sky_overnight_low_apparent_temperature_0:
       friendly_name: 'Daily Low'
       icon: mdi:thermometer
     sensor.dark_sky_humidity:
@@ -21,13 +21,6 @@ homeassistant:
       friendly_name: 'Current Temperature'
     sensor.dark_sky_daily_summary:
       friendly_name: 'Daily Summary'
-    # UV
-    sensor.pws_uv:
-      friendly_name: 'UV Index'
-      icon: mdi:white-balance-sunny
-    sensor.uv_burn_time:
-      friendly_name: 'Burn Time'
-      icon: mdi:fire
     # WEATHER report
     script.weather_report:
       friendly_name: 'Weather Report'
@@ -35,31 +28,19 @@ homeassistant:
       google_assistant: true
       google_assistant_name: 'Weather Report'
 
-###### STATE CARD
-group:
-  Weather:
-    name: Weather
-    control: hidden
-    entities:
-      - weather.openweathermap
-      - sensor.dark_sky_daytime_high_apparent_temperature
-      - sensor.dark_sky_overnight_low_temperature
-      - sensor.dark_sky_precip_probability
-      - sensor.pws_uv
-      - sensor.uv_burn_time
-      - camera.radar
-
-
 weather:
   - platform: openweathermap
     api_key: !secret openweathermap
     name: openweathermap
 
-###### WEATHER MAP
-camera:
-  - platform: generic
-    still_image_url: !secret weather_radar
-    name: Radar
+openuv:
+  api_key: !secret openuv
+  sensors:
+    monitored_conditions:
+      - current_ozone_level
+      - current_uv_index
+      - current_uv_level
+      - max_uv_index
 
 sensor:
   ## Custom Weather Report
@@ -67,11 +48,12 @@ sensor:
     sensors:
       weather_report:
         value_template: >
-          The weather is {{states('sensor.dark_sky_minutely_summary')[:-1]|lower}} and {{states('sensor.dark_sky_apparent_temperature') | round}} degrees. Today's high is {{states('sensor.dark_sky_daytime_high_apparent_temperature')| round}} with a low of {{states('sensor.dark_sky_overnight_low_temperature') | round}}.
-          {%- if states.sensor.pws_uv.state|int == 0 -%}
-          {%- else -%}
-          {{' '}}The current UV index is {{states('sensor.pws_uv')}} with a burn time of {{states('sensor.uv_burn_time')}} minutes.
-          {%- endif -%}
+          The weather is {{states('sensor.dark_sky_minutely_summary')[:-1]|lower}} and {{states('sensor.dark_sky_apparent_temperature') | round}} degrees. Today's high is {{states('sensor.dark_sky_daytime_high_apparent_temperature_0')| round}} with a low of {{states('sensor.dark_sky_overnight_low_apparent_temperature_0') | round}}.
+###### UV HAS EXPIRED NEED TO FIND A NEW SOURCE
+          # {%- if states.sensor.pws_uv.state|int == 0 -%}
+          # {%- else -%}
+          # {{' '}}The current UV index is {{states('sensor.pws_uv')}} with a burn time of {{states('sensor.uv_burn_time')}} minutes.
+          # {%- endif -%}
       weather_inside_vs_outside:
         value_template: >
           {% if (states.sensor.average_whole_home.state | float) >  (states.sensor.dark_sky_apparent_temperature.state | float) %}
@@ -82,6 +64,8 @@ sensor:
 ###### DARKSKY
   - platform: darksky
     api_key: !secret darksky_api_key
+    forecast:
+      - 0
     monitored_conditions:
       - summary
       - icon
@@ -93,12 +77,12 @@ sensor:
       - temperature
       - apparent_temperature
       - dew_point
-      - wind_speed
-      - wind_bearing
+      #- wind_speed
+      #- wind_bearing
       - cloud_cover
       - humidity
-      - pressure
-      - visibility
+      #- pressure
+      #- visibility
       - ozone
       - minutely_summary
       - hourly_summary
@@ -109,32 +93,24 @@ sensor:
       - apparent_temperature_low
       - precip_intensity_max
 
-###### wunderground
-  - platform: wunderground
-    api_key: !secret wunderground_key
-    pws_id: !secret wunderground_station
-    monitored_conditions:
-      - UV
-      - precip_1d
-
 #######  UV
 # http://beautyinthebackcountry.com/2013/04/09/uv-index-and-spf-explained/
-  - platform: template
-    sensors:
-      uv_burn_time:
-        unit_of_measurement: Minutes
-### SUB IN CORRECT VALUE FOR YOUR SKIN#################################################################################################################################
-### Celtic"all babies and children" = 67Min // caucasian = 100Min // Central Europe = 200Min // south american = 200Min // Middle Eastern = 400Min // African = 500Min
-        value_template: >
-          {% if is_state('sensor.pws_uv', '0') %}
-            0
-          {% elif is_state('sensor.pws_uv', '-1') %}
-            0
-          {% elif is_state('sensor.pws_uv', 'unknown') %}
-            0
-          {% else %}
-            {{ (67 / states.sensor.pws_uv.state | float) | round }}
-          {% endif %}
+#   - platform: template
+#     sensors:
+#       uv_burn_time:
+#         unit_of_measurement: Minutes
+# ### SUB IN CORRECT VALUE FOR YOUR SKIN#################################################################################################################################
+# ### Celtic"all babies and children" = 67Min // caucasian = 100Min // Central Europe = 200Min // south american = 200Min // Middle Eastern = 400Min // African = 500Min
+#         value_template: >
+#           {% if is_state('sensor.pws_uv', '0') %}
+#             0
+#           {% elif is_state('sensor.pws_uv', '-1') %}
+#             0
+#           {% elif is_state('sensor.pws_uv', 'unknown') %}
+#             0
+#           {% else %}
+#             {{ (67 / states.sensor.pws_uv.state | float) | round }}
+#           {% endif %}
 
 script:
   weather_report:

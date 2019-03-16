@@ -5,19 +5,6 @@
 ## Change Doorbell tone to match theme
 ## Color Picker - https://www.google.ca/search?q=rgb+color+picker&rlz=1C1GGRV_enCA749CA749&oq=rgb+color+picker&aqs=chrome.0.0l6.3705j0j4&sourceid=chrome&ie=UTF-8
 ################################################################
-
-###### STATE CARD
-group:
-  theme:
-    name: Theme
-    control: hidden
-    entities:
-      - sensor.holiday
-      - input_select.theme
-      - automation.theme_light
-      - sensor.theme_color
-      - sensor.theme_sound
-
 automation:
   - alias: 'theme_set'
     initial_state: 'on'
@@ -33,7 +20,7 @@ automation:
           option: >-
             {% set holiday = states.sensor.holiday.state %}
             {% set sun= states.sun.sun.state %}
-            {%- if holiday == "Standard" and sun == "above_horizon"-%} Day
+            {%- if holiday == "Standard" and sun == "above_horizon"-%} Night
             {%- elif holiday == "Standard" and sun == "below_horizon"-%} Night
             {%- else -%} {{states.sensor.holiday.state}}
             {%- endif -%}

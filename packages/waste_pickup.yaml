@@ -16,39 +16,28 @@ homeassistant:
       friendly_name: Garbage Tracker
       emulated_hue_hidden: false
 
-###### STATE CARD
-group:
-  waste_pickup:
-    name: Waste Pickup
-    entities:
-      - sensor.waste_pickup_garbage_recycling
-      - sensor.waste_pickup_yard_waste
-      - sensor.waste_pickup_container
-
 google_assistant:
   entity_config:
     script.garbage_tracker:
       expose: true
-      alias: 'Garbage Tracker'
       name: 'Garbage Tracker'
-      type: script
 
 sensor:
 ######  GARBAGE AND RECYCLE
   - platform: command_line
-    command: "python /home/homeassistant/.homeassistant/python_scripts/waste_pickup_garbage_recycle.py"
+    command: "cat /config/www/waste_pickup_garbage_recycle.txt"
     name: 'Waste Pickup Garbage Recycling'
     scan_interval: 43200
     value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
 ######  YARD WASTE
   - platform: command_line
-    command: "python /home/homeassistant/.homeassistant/python_scripts/waste_pickup_yard_waste.py"
+    command: "cat /config/www/waste_pickup_yard_waste.txt"
     name: 'Waste Pickup Yard Waste'
     scan_interval: 43200
     value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'
 ######  3 Container Exemption
   - platform: command_line
-    command: "python /home/homeassistant/.homeassistant/python_scripts/waste_pickup_container.py"
+    command: "cat /config/www/waste_pickup_container.txt"
     name: 'Waste Pickup Container'
     scan_interval: 43200
     value_template: '{{value | int | timestamp_custom("%A %B %d", true)}}'

@@ -5,23 +5,41 @@ zone:
 - name: Home
   latitude: !secret latitude
   longitude: !secret longitude
-  radius: 150
+  radius: 190
   icon: mdi:account-multiple
 
 - name: Work Old South
   latitude: !secret latitude_work_oldsouth
   longitude: !secret longitude_work_oldsouth
-  radius: 250
+  radius: 190
   icon: mdi:worker
 
 - name: Work Westmount
   latitude: !secret latitude_work_westmount
   longitude: !secret longitude_work_westmount
-  radius: 250
+  radius: 260
   icon: mdi:worker
 
 - name: Work Whitehills
   latitude: !secret latitude_work_whitehills
   longitude: !secret longitude_work_whitehills
-  radius: 250
+  radius: 190
+  icon: mdi:worker
+
+- name: Victoria Hospital
+  latitude: !secret latitude_victoria
+  longitude: !secret longitude_victoria
+  radius: 280
+  icon: mdi:worker
+
+- name: Daycare
+  latitude: !secret latitude_daycare
+  longitude: !secret longitude_daycare
+  radius: 50
+  icon: mdi:baby
+
+- name: University Hospital
+  latitude: !secret latitude_UH
+  longitude: !secret longitude_UH
+  radius: 190
   icon: mdi:worker

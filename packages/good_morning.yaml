@@ -13,11 +13,32 @@ google_assistant:
   entity_config:
     script.good_morning:
       expose: true
-      alias: 'Good Morning'
       name: 'Good Morning'
-      type: script
 
 sensor:
+  - platform: template
+    sensors:
+      good_night_morning_button:
+        entity_id: sensor.time, script.morning_livingroom_lights
+        friendly_name: 'good_night_morning_button'
+        value_template: >
+          {%-set trigger= states('sensor.good_morning_last_triggered')-%}
+          {%-set now = as_timestamp(now())-%}
+          {%-set time = states.sensor.time.state-%}
+          {%-if time >= '06:00' and time <= '12:00' and now|float-trigger|float > 25200 -%}
+            morning
+          {%- elif time >= '20:30' and time <= '24:00' -%}
+            night
+          {%- else -%}
+            nothing
+          {%- endif -%}
+
+### CREATE SENSOR FROM MQTT DATA
+  - platform: mqtt
+    name: good_morning_last_triggered
+    state_topic: "homeassistant/good_morning"
+    force_update: on
+
   - platform: rest
     name: quote_of_the_day
     resource: http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en
@@ -30,9 +51,15 @@ script:
     - condition: time
       after: '06:00:00'
       before: '13:00:00'
-    - service: script.nightlight_off      
-    - service: homeassistant.turn_off
-      entity_id: input_boolean.finn_sleep
+### PUSH MQTT DATA FOR RETAINED TIMESTAMP
+    - service: mqtt.publish
+      data_template:
+        topic: "homeassistant/good_morning"
+        retain: true
+        payload_template: "{{as_timestamp(now())}}"
+    - service: script.nightlight_off
+    - service: switch.turn_off
+      entity_id: switch.sleep_finn
     - service: script.morning_livingroom_lights
     - service: switch.turn_off
       entity_id: switch.bedroom_fan
@@ -85,21 +112,10 @@ script:
         - condition: numeric_state
           entity_id: 'sensor.living_room_lux'
           below: 45
-    - service: light.turn_on
+    - service: homeassistant.turn_on
       data:
         entity_id:
-          - light.hallway
-          - light.kitchen_sink
-          - light.living_room_lamp
-          - light.hue_color_lamp_1
-          - light.hue_color_lamp_3
+          - group.lr_lights
         brightness: 255
         rgb_color: [255,255,255]
         transition: 900
-    # - wait_template: "{{ states.light.kitchen_sink.attributes.brightness|int > 250 }}"
-    # - service: light.turn_on
-    #   data:
-    #     entity_id:
-    #       - light.couch
-    #     brightness: 255
-    #     rgb_color: [255,255,255]

@@ -1,0 +1,112 @@
+################################################################
+## Packages / Freenas
+## Dependencies / Freenas Server
+################################################################
+sensor:
+  - platform: rest
+    name: FreeNAS_Media
+    json_attributes:
+      - name
+      - status
+      - used_pct
+      - is_decrypted
+    resource: http://192.168.1.189/api/v1.0/storage/volume/Media/?format=json
+    value_template: '{{ value_json.status }}'
+    username: !secret freenas_user
+    password: !secret freenas_pass
+    authentication: basic
+    scan_interval: 3600
+    headers:
+      Content-Type: application/json
+  - platform: template
+    sensors:
+      freenas_media_pct:
+        friendly_name: "freenas_media_pct"
+        entity_id: sensor.freenas_media
+        unit_of_measurement: '%'
+        value_template: "{{states.sensor.freenas_media.attributes.used_pct[0:-1]}}"
+
+  - platform: rest
+    name: FreeNAS_Television2
+    json_attributes:
+      - name
+      - status
+      - used_pct
+      - is_decrypted
+    resource: http://192.168.1.189/api/v1.0/storage/volume/Television2/?format=json
+    value_template: '{{ value_json.status }}'
+    username: !secret freenas_user
+    password: !secret freenas_pass
+    authentication: basic
+    scan_interval: 3600
+    headers:
+      Content-Type: application/json
+  - platform: template
+    sensors:
+      freenas_television2_pct:
+        friendly_name: "freenas_television2_pct"
+        entity_id: sensor.freenas_television2
+        unit_of_measurement: '%'
+        value_template: "{{states.sensor.freenas_television2.attributes.used_pct[0:-1]}}"
+
+  - platform: rest
+    name: FreeNAS_Movies
+    json_attributes:
+      - name
+      - status
+      - used_pct
+      - is_decrypted
+    resource: http://192.168.1.189/api/v1.0/storage/volume/Movies/?format=json
+    value_template: '{{ value_json.status }}'
+    username: !secret freenas_user
+    password: !secret freenas_pass
+    authentication: basic
+    scan_interval: 3600
+    headers:
+      Content-Type: application/json
+  - platform: template
+    sensors:
+      freenas_movies_pct:
+        friendly_name: "freenas_movies_pct"
+        entity_id: sensor.freenas_movies
+        unit_of_measurement: '%'
+        value_template: "{{states.sensor.freenas_movies.attributes.used_pct[0:-1]}}"
+
+  - platform: rest
+    name: FreeNAS_Cloud
+    json_attributes:
+      - name
+      - status
+      - used_pct
+      - is_decrypted
+    resource: http://192.168.1.189/api/v1.0/storage/volume/Cloud/?format=json
+    value_template: '{{ value_json.status }}'
+    username: !secret freenas_user
+    password: !secret freenas_pass
+    authentication: basic
+    scan_interval: 3600
+    headers:
+      Content-Type: application/json
+  - platform: template
+    sensors:
+      freenas_cloud_pct:
+        friendly_name: "freenas_cloud_pct"
+        entity_id: sensor.freenas_cloud
+        unit_of_measurement: '%'
+        value_template: "{{states.sensor.freenas_cloud.attributes.used_pct[0:-1]}}"
+
+## Version
+  - platform: rest
+    name: FreeNAS_version
+    json_attributes:
+      - fullversion
+      - name
+      - version
+    resource: http://192.168.1.189/api/v1.0/system/version/?format=json
+    value_template: '{{ value_json.fullversion }}'
+    username: !secret freenas_user
+    password: !secret freenas_pass
+    authentication: basic
+    scan_interval: 3600
+    headers:
+      Content-Type: application/json

@@ -6,36 +6,85 @@ homeassistant:
     script.pc:
       emulated_hue_hidden: false
       friendly_name: 'PC'
-    script.bedroom_pc:
+    script.kodi_pause:
       emulated_hue_hidden: false
-      friendly_name: 'Bedroom PC'
-    script.office_pc:
+      friendly_name: 'pause'
+    script.kodi_play:
       emulated_hue_hidden: false
-      friendly_name: 'Office PC'
+      friendly_name: 'play'
+    script.kodi_stop:
+      emulated_hue_hidden: false
+      friendly_name: 'stop'
+    script.kodi_nav_select:
+      emulated_hue_hidden: false
+      friendly_name: 'select'
+    script.kodi_next:
+      emulated_hue_hidden: false
+      friendly_name: 'next'
+    script.kodi_previous:
+      emulated_hue_hidden: false
+      friendly_name: 'previous'
+    script.kodi_nav_up:
+      emulated_hue_hidden: false
+      friendly_name: 'up'
+    script.kodi_nav_down:
+      emulated_hue_hidden: false
+      friendly_name: 'down'
+    script.kodi_nav_left:
+      emulated_hue_hidden: false
+      friendly_name: 'left'
+    script.kodi_nav_right:
+      emulated_hue_hidden: false
+      friendly_name: 'right'
 
 google_assistant:
   project_id: !secret google_assistant_project_id
-  client_id: !secret google_assistant_client_id
-  access_token: !secret google_assistant_access_token
   api_key: !secret google_assistant_api
   exposed_domains:
     - switch
   entity_config:
     script.pc:
       expose: true
-      alias: 'PC'
       name: 'PC'
-      type: switch
-    script.bedroom_pc:
+    switch.bedroom_fan:
+      expose: True
+      name: 'fan'
+    input_boolean.finn_sleep:
+      expose: True
+      name: 'sleep'
+    light.deck_lights:
       expose: true
-      alias: 'Bedroom PC'
-      name: 'Bedroom PC'
-      type: switch
-    script.office_pc:
+      name: 'backyard lights'
+    script.kodi_pause:
       expose: true
-      alias: 'Office PC'
-      name: 'BOffice PC'
-      type: switch
+      name: 'pause'
+    script.kodi_play:
+      expose: true
+      name: 'play'
+    script.kodi_stop:
+      expose: true
+      name: 'stop'
+    script.kodi_nav_select:
+      expose: true
+      name: 'select'
+    script.kodi_next:
+      expose: true
+      name: 'next'
+    script.kodi_previous:
+      expose: true
+      name: 'previous'
+    script.kodi_nav_up:
+      expose: true
+      name: 'up'
+    script.kodi_nav_down:
+      expose: true
+      name: 'down'
+    script.kodi_nav_left:
+      expose: true
+      name: 'left'
+    script.kodi_nav_right:
+      expose: true
+      name: 'right'
 
 automation:
   - alias: 'google_home_volume'
@@ -56,19 +105,4 @@ script:
   pc:
     sequence:
       - service: switch.toggle
-        entity_id: switch.living_room_pc
-
-###### ALEXA TURN ON or OFF BEDROOM PC
-  bedroom_pc:
-    sequence:
-      - service: switch.toggle
-        entity_id: switch.bedroom_pc
-
-###### ALEXA TURN ON or OFF OFFICE PC
-  office_pc:
-    sequence:
-      - service: switch.toggle
         entity_id: switch.office_pc
-
-shell_command:
-  baby_cam: 'bash /home/homeassistant/.homeassistant/shell/baby_cam.sh'

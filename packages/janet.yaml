@@ -1,28 +1,4 @@
 homeassistant:
-group:
-  janet_notification_modes:
-    name: Modes
-    entities:
-      - input_boolean.janet_guest_mode
-      - input_boolean.janet_alert_mode
-  janet_notification_notifications:
-    name: Notifications
-    entities:
-      - input_boolean.janet_speech_notifications
-      - input_boolean.janet_text_notifications
-  janet_notification_settings:
-    name: Settings
-    entities:
-      - input_select.janet_notification_media_player
-      - input_number.janet_notification_volume
-      - input_number.janet_notification_witty
-  janet_notification_skills:
-    name: Skills
-    entities:
-      - automation.janet_new_device_connected
-      - automation.janet_update_available
-      - automation.janet_start_up
-      - automation.janet_shut_down
 
 input_boolean:
   janet_guest_mode:
@@ -43,7 +19,7 @@ input_boolean:
   janet_text_notifications:
     name: Text Notifications
     icon: mdi:message-text-outline
-    initial: off
+    initial: on
 
 input_number:
   janet_notification_volume:
@@ -414,11 +390,11 @@ script:
         entity_id: input_boolean.janet_text_notifications
         state: 'on'
 
-      - service: notify.html5
+      - service: notify.discord
         data_template:
           #TODO
           title: "Janet:"
-          target: justin
+          target: !secret discord
           message: >-
             {{ speech_message | replace("\n","") | replace("   ","") |
                replace("eight hundred and sixty one thousand","861.000") }}

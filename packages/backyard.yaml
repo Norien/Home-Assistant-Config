@@ -3,24 +3,9 @@
 ################################################################
 homeassistant:
   customize:
-    script.backyard_party:
-      emulated_hue_hidden: false
-      friendly_name: Party Time
-      icon: mdi:pizza
     switch.sonoff_1:
       friendly_name: Patio Amplifier
       icon: mdi:amplifier
-
-###### STATE CARD
-group:
-  backyard:
-    control: hidden
-    name: Backyard
-    entities:
-      - light.deck_lights
-      - switch.sonoff_1
-      - script.backyard_party
-      - switch.pump
 
 # ###### AUTOMATIC CONTROL OF AMPLIFIER
 automation:
@@ -54,60 +39,3 @@ automation:
     action:
       - service: switch.turn_on
         entity_id: switch.sonoff_1
-
-  - alias: "Backyard Party"
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: sensor.find_justin
-        to: 'backyard'
-        for:
-          seconds: 30
-    action:
-      - service: script.backyard_party
-
-###### 1 PRESS TO START MUSIC AND LIGHTS
-script:
-  backyard_party:
-    sequence:
-      - service: script.backyard_lights
-      - service: switch.turn_on
-        entity_id: switch.sonoff_1
-      - service: media_player.volume_set
-        data:
-          entity_id: media_player.backyard
-          volume_level: '0.30'
-      - service: tts.google_say
-        data_template:
-          entity_id: media_player.backyard
-          message: "It's Party Time."
-          cache: false
-      - service: media_player.play_media
-        data_template:
-          entity_id: media_player.backyard
-          media_content_id: http://149.56.23.7:20254/stream
-          media_content_type: 'audio/mp3'
-
-###### TURN ON LIGHT IF DARK TO PURPLE
-  backyard_lights:
-    sequence:
-      - condition: state
-        entity_id: 'sun.sun'
-        state: 'below_horizon'
-      - service: light.turn_on
-        data:
-          entity_id:
-            light.deck_lights:
-          brightness: 120
-          rgb_color: [255,0,255]
-switch:
-###### SONOFF SV
-  - platform: mqtt
-    name: "Pump"
-    state_topic: "stat/sonoff_sv/POWER"
-    command_topic: "cmnd/sonoff_sv/POWER"
-    payload_on: "ON"
-    payload_off: "OFF"
-    optimistic: false
-    qos: 0
-    retain: true

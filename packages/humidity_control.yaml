@@ -13,57 +13,30 @@ homeassistant:
       friendly_name: Automatic Dehumidifier
       icon: mdi:water-percent
 
-###### STATE CARD
-group:
-  all_humidity:
-    control: hidden
-    name: Humidity
-    entities:
-      - sensor.dark_sky_humidity
-      - sensor.master_bed_humidity
-      - sensor.laundry_humidity
-      - sensor.office_humidity
-      - sensor.hallway_thermostat_humidity
-      - sensor.average_humidity
-      - sensor.mold_indicator
-      - switch.dehumidifier
-      - automation.dehumidifier
-
 sensor:
   - platform: mold_indicator
     indoor_temp_sensor: sensor.mold_indoor_temp
     indoor_humidity_sensor: sensor.mold_indoor_humidity
     outdoor_temp_sensor: sensor.dark_sky_apparent_temperature
-    calibration_factor: 1.15
+    calibration_factor: 1.25
 ###### Bufer Sensors to bybass startup errors
   - platform: template
     sensors:
       mold_indoor_temp:
         unit_of_measurement: °C
-        value_template: >-
-          {%- if is_state('sensor.average_whole_home', 'unknown') -%}
-          {{ 19 | int }}
-          {%- else -%}
-          {{states.sensor.average_whole_home.state | int}}
-          {%- endif -%}
+        value_template: "{{states.sensor.average_whole_home.state|int|default(19)}}"
       mold_indoor_humidity:
         unit_of_measurement: '%'
-        value_template: >-
-          {%- if is_state('sensor.average_humidity', 'unknown') -%}
-          {{ states.sensor.hallway_thermostat_humidity.state | int}}
-          {%- else -%}
-          {{ 50 | int }}
-          {%- endif -%}
+        value_template: "{{states.sensor.hallway_thermostat_humidity.state|int|default(50)}}"
 
 ###### AVERAGE HUMIDITY
   - platform: min_max
     type: mean
     name: Average Humidity
     entity_ids:
-      - sensor.master_bed_humidity
-    #  - sensor.laundry_humidity
+      - sensor.server_room_humidity
       - sensor.hallway_thermostat_humidity
-      - sensor.office_humidity
+
 automation:
   - alias: 'dehumidifier'
     initial_state: 'on'
@@ -73,8 +46,6 @@ automation:
           {% if float(states.sensor.mold_indicator.state) > float(65) or float(states.sensor.mold_indicator.state) < float(64) %} true
           {% else %} false
           {% endif %}
-      -  platform: time
-         hours: 1
     action:
     - service_template: >
         {% if states.sensor.mold_indicator.state | float > 65 %} switch.turn_on
@@ -97,11 +68,11 @@ automation:
         entity_id: sensor.mold_indicator
         above: 69
     action:
-      - service: notify.html5
+      - service: notify.discord
         data_template:
           title: "Possible Mold Growth"
           message: "It's possible to have mold growth because the mold indicator is {{ states.sensor.mold_indicator.state }}"
-          target: "justin"
+          target: !secret discord
       - service: automation.turn_off
         data:
           entity_id: automation.notify_if_mold_sensor_is_too_high
@@ -109,18 +80,3 @@ automation:
       - service: automation.turn_on
         data:
           entity_id: automation.notify_if_mold_sensor_is_too_high
-
-  - alias: 'Notify if Dehumidifier is on too long'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: switch.dehumidifier
-        to: 'on'
-        for:
-          hours: 2
-    action:
-      - service: notify.html5
-        data_template:
-          title: "dehumidifier Warning"
-          message: "It's possible the dehumidifier water bucket if full."
-          target: "justin"

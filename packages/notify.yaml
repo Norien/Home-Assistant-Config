@@ -3,35 +3,60 @@
 ################################################################
 
 notify:
-  - platform: pushbullet
-    name: justin
-    api_key: !secret pushbullet_api_key_justin
-  - platform: pushbullet
-    name: nicole
-    api_key: !secret pushbullet_api_key_nicole
-
+  - platform: discord
+    name: discord
+    token: !secret discord_token
 automation:
 ###### NOTIFY IF NICOLE HAS LEFT ONE OF HER WORKPLACES
   - alias: Notify If Left Work
     initial_state: 'on'
     trigger:
-      - platform: state
-        entity_id: device_tracker.bigdrakar_nicole
-        from: 'Work Westmount'
-        to: 'not_home'
-      - platform: state
-        entity_id: device_tracker.bigdrakar_nicole
-        from: 'Work Old South'
-        to: 'not_home'
-      - platform: state
-        entity_id: device_tracker.bigdrakar_nicole
-        from: 'Work Whitehills'
-        to: 'not_home'
+      - platform: zone
+        entity_id: device_tracker.nicole_nicole
+        zone: zone.work_whitehills
+        event: leave
+      - platform: zone
+        entity_id: device_tracker.nicole_nicole
+        zone: zone.work_westmount
+        event: leave
+      - platform: zone
+        entity_id: device_tracker.nicole_nicole
+        zone: zone.work_old_south
+        event: leave
+      - platform: zone
+        entity_id: device_tracker.nicole_nicole
+        zone: zone.victoria_hospital
+        event: leave
+      - platform: zone
+        entity_id: device_tracker.nicole_nicole
+        zone: zone.daycare
+        event: leave
     action:
-      - service: notify.justin
+      - service: notify.discord
         data_template:
+          target: !secret discord
           message: >
-            {{ trigger.to_state.attributes.friendly_name }} has left work.
+            {{ trigger.to_state.attributes.friendly_name }} has left {{ trigger.zone.attributes.friendly_name }}
+      - service: script.janet_speech_engine
+        data:
+          call_greeting: 1
+        data_template:
+          CustomMessage: >
+            {{ trigger.to_state.attributes.friendly_name }} has left {{ trigger.zone.attributes.friendly_name }}
+
+# Announce new devices on the network. Thanks to @robotsandcakes
+  - alias: "Notify if New device connected"
+    initial_state: 'on'
+    trigger:
+      - platform: event
+        event_type: device_tracker_new_device
+    action:
+      - service: script.janet_speech_engine
+        data:
+          call_introduction: 1
+        data_template:
+          CustomMessage: >
+            New entity ID {{ trigger.event.data.entity_id }} and hostname {{ trigger.event.data.host_name }}
 
 ###### NOTIFY IF VACATION MODE toggled
   - alias: 'Notify Vacation Mode'
@@ -40,9 +65,11 @@ automation:
       - platform: state
         entity_id: input_boolean.vacation
     action:
-      - service: notify.justin
+      - service: script.janet_speech_engine
         data:
-          message: 'Vacation Mode is now {{states.input_boolean.vacation.state}}'
+          call_greeting: 1
+        data_template:
+          CustomMessage: 'Vacation Mode is now {{states.input_boolean.vacation.state}}'
 
 ###### NOTIFY IF GUEST MODE toggled
   - alias: 'Notify Guest Mode'
@@ -51,47 +78,42 @@ automation:
       - platform: state
         entity_id: input_boolean.guest
     action:
-      - service: notify.justin
+      - service: script.janet_speech_engine
         data:
-          message: 'Guest Mode is now {{states.input_boolean.guest.state}}'
+          call_greeting: 1
+        data_template:
+          CustomMessage: 'Guest Mode is now {{states.input_boolean.guest.state}}'
 
-###### NOTIFY IF UPDATE TO HOME ASSISTANT IS Available and then POST an issue to github to update it
+###### NOTIFY IF UPDATE TO HOME ASSISTANT IS AVAILABLE
   - alias: 'notify if update available'
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: sensor.current_version
+        entity_id: sensor.ha_version
     action:
-      - service: shell_command.post_git_issue
-      - service: notify.justin
+      - service: notify.discord
         data:
-          message: 'Update for Home Assistant is available. Visit https://github.com/home-assistant/home-assistant/releases for details.'
-
-###### NOTIFY IF IP CHANGES
-  - alias: Notify Of New External IP
-    initial_state: 'on'
-    trigger:
-      platform: state
-      entity_id: sensor.external_ip
-    condition:
-      - condition: template
-        value_template: "{% if trigger.from_state and trigger.to_state %} True {% else %} False {% endif %}"
-    action:
-      - service: notify.justin
+          target: !secret discord
+          message: "Home Assistant {{ states('sensor.ha_version') }} for update."
+      - service: persistent_notification.create
         data_template:
-          message: "Your External IP changed from {{ trigger.from_state.state }} to {{ trigger.to_state.state }}"
+          title: Update Available
+          message: "Home Assistant {{ states('sensor.ha_version') }} for update."
+          notification_id: Update Available
 
-# Announce new devices on the network. Thanks 2 @robotsandcakes
-  - alias: "Notify if New device connected"
-    initial_state: 'on'
-    trigger:
-      - platform: event
-        event_type: device_tracker_new_device
-    action:
-      - service: notify.justin
-        data_template:
-          message: >
-            New entity ID {{ trigger.event.data.entity_id }} and hostname {{ trigger.event.data.host_name }}
-
-shell_command:
-  post_git_issue: 'python /home/homeassistant/.homeassistant/shell/make_github_issue.py'
+  # - alias: Notify on Bedroom Motion If Guest Mode is on
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: binary_sensor.room_masterbed_motion
+  #       from: 'off'
+  #       to: 'on'
+  #   condition:
+  #     - condition: state
+  #       entity_id: 'input_boolean.guest'
+  #       state: 'on'
+  #   action:
+  #     - service: notify.discord
+  #       data:
+  #         target: !secret discord
+  #         message: 'motion detected in our bedroom.'

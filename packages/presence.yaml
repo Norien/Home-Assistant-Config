@@ -23,36 +23,7 @@ google_assistant:
   entity_config:
     script.location:
       expose: true
-      alias: 'location'
       name: 'location'
-      type: script
-
-###### STATE CARD
-group:
-  presence:
-    control: hidden
-    name: Presence
-    entities:
-      - group.justin
-      - group.nicole
-      - input_boolean.guest
-      - input_boolean.away
-      - input_boolean.vacation
-  justin:
-    name: Justin
-    icon: mdi:human
-    entities:
-      - input_boolean.justin
-      - device_tracker.justin_router
-      - device_tracker.justin_justin
-  nicole:
-    name: Nicole
-    icon: mdi:human-female
-    entities:
-      - input_boolean.nicole
-      - device_tracker.nicole_router
-      - device_tracker.nicole_nicole
-      - sensor.nicole_phone_to_home
 
 automation:
   - alias: house_mode_away
@@ -153,11 +124,46 @@ automation:
         data:
           entity_id: climate.hallway
           away_mode: 'false'
-      - wait_template: "{{ states.sensor.living_room_motion.state == 'True' }}"
-      - service: tts.google_say
-        data_template:
-          entity_id: media_player.google_home
-          message: "Welcome Home"
+
+  # - alias: 'welcome_home_greeting'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: device_tracker.justin_justin, device_tracker.nicole_nicole
+  #       to: 'home'
+  #   action:
+  #     - wait_template: "{{ states.binary_sensor.door_front.state == 'on' }}"
+  #     - service: script.janet_speech_engine
+  #       data_template:
+  #         person: >
+  #           {%set nicole = states.device_tracker.nicole_nicole.state%}
+  #           {%set nicole_ = states.device_tracker.nicole_nicole%}
+  #           {%set justin = states.device_tracker.justin_justin.state%}
+  #           {%set justin_ = states.device_tracker.justin_justin%}
+  #           {%-if nicole != "home" and justin == "home"-%}
+  #             Justin
+  #           {%elif nicole == "home" and justin != "home"%}
+  #             Nicole
+  #           {%elif nicole == "home" and justin == "home" and (now() - nicole_.last_changed).total_seconds() < 600 and (now() - justin_.last_changed).total_seconds() < 600 %}
+  #             Nicole and Justin
+  #           {%elif nicole == "home" and justin == "home" and (now() - nicole_.last_changed).total_seconds() > 600 and (now() - justin_.last_changed).total_seconds() < 600 %}
+  #             Justin
+  #           {%elif nicole == "home" and justin == "home" and (now() - nicole_.last_changed).total_seconds() < 600 and (now() - justin_.last_changed).total_seconds() > 600 %}
+  #             Nicole
+  #           {%else%}
+  #           {%endif%}
+  #         message: >
+  #           {{ ["Welcome back home PERSON",
+  #               "Guess who is home. PERSON is!",
+  #               "PERSON is now in the house.",
+  #               "Welcome Home PERSON.  We have missed you. Or at least I did.",
+  #               "Our home is now complete, Rest your head and relax your feet, Welcome Back PERSON",
+  #               "Life is like a song, you’re back where you belong, Welcome home PERSON",
+  #               "Hey there PERSON Welcome Home!",
+  #               "Knock Knock. Who is There? PERSON is!",
+  #               "PERSON, you are home!",
+  #               "I know a secret. PERSON is home!"
+  #              ] | random }}
 
 script:
   location:
@@ -184,16 +190,17 @@ script:
             {%- for state in states.light if state.entity_id != 'light.front_door' -%}
             {{- "," if not loop.first-}}{{ state.entity_id }}{{-endif-}}
             {%- endfor -%}
-      - service: switch.turn_off
-        data_template:
-          entity_id: >
-            {%- for state in states.switch if
-            state.entity_id != 'switch.washing_machine' and
-            state.entity_id != 'switch.dehumidifier' and
-            state.entity_id != 'switch.office_powerbar' and
-            state.entity_id != 'switch.pihole'-%}
-            {{- "," if not loop.first-}}{{ state.entity_id }}{{-endif-}}
-            {%- endfor -%}
+## this started turning off all my docker switches killing my whole system everytime we left the house!
+      # - service: switch.turn_off
+      #   data_template:
+      #     entity_id: >
+      #       {%- for state in states.switch if
+      #       state.entity_id != 'switch.washing_machine' and
+      #       state.entity_id != 'switch.dehumidifier' and
+      #       state.entity_id != 'switch.office_powerbar' and
+      #       state.entity_id != 'switch.pihole'-%}
+      #       {{- "," if not loop.first-}}{{ state.entity_id }}{{-endif-}}
+      #       {%- endfor -%}
       - service: media_player.turn_off
         data_template:
           entity_id: >
@@ -240,3 +247,9 @@ input_boolean:
   nicole:
     name: Nicole
     icon: mdi:account
+  map_justin:
+    name: map
+    icon: mdi:map-search-outline
+  map_nicole:
+    name: map
+    icon: mdi:map-search-outline

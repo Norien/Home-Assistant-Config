@@ -5,55 +5,36 @@ homeassistant:
    customize:
     script.notify_camera:
       friendly_name: Email Camera Photo
-    script.start_gifmaker:
-      friendly_name: Start Gif Maker
-    sensor.gif_maker_cpu:
-      friendly_name: Gif Maker CPU Usage
-    sensor.gif_maker_status:
-      friendly_name: Gif Maker
-      icon: mdi:memory
 
-###### STATE CARD
-group:
-  all_cameras:
-    name: Cameras
-    control: hidden
-    entities:
-     - camera.findlay
-     - camera.driveway
-  camera_control:
-    name: Camera Controls
-    control: hidden
-    entities:
-     - script.notify_camera
-     - script.start_gifmaker
-     - sensor.gif_maker_cpu
-     - sensor.gif_maker_status
-     - sensor.driveway_events
-     - sensor.driveway_status
-     - sensor.findlay_events
-     - sensor.findlay_status
-
-zoneminder:
-  host: !secret zm_host
-  username: !secret zm_username
-  password: !secret zm_password
-
+# zoneminder:
+#   host: !secret zm_host
+#   path: /zm/
+#   username: !secret zm_username
+#   password: !secret zm_password
+android_ip_webcam:
+  - host: !secret android_ip_webcam_host
+    port: 8080
+    name: driveway_wide
+    sensors:
+      - battery_level
+      - battery_temp
+      - motion
+      - light
+      - pressure
 camera:
-  - platform: zoneminder
+#  - platform: zoneminder
 
-  # - platform: generic
-  #   name: Baby Monitor
-  #   still_image_url: !secret dlink_camera_link
-  #   username: !secret dlink_camera_username
-  #   password: !secret dlink_camera_password
-  #
-  # - platform: mjpeg
-  #   name: Driveway
-  #   mjpeg_url: !secret dlink2_camera_mjpeg
-  #   still_image_url: !secret dlink2_camera_link
-  #   username: !secret dlink2_camera_username
-  #   password: !secret dlink2_camera_password
+  - platform: mjpeg
+    name: findlay
+    mjpeg_url: !secret dlink_camera_link
+    username: !secret dlink_camera_username
+    password: !secret dlink_camera_password
+
+  - platform: mjpeg
+    name: driveway
+    mjpeg_url: !secret dlink2_camera_mjpeg
+    username: !secret dlink2_camera_username
+    password: !secret dlink2_camera_password
 
 automation:
   - alias: driveway_motion_detected
@@ -66,73 +47,28 @@ automation:
         entity_id: input_boolean.away
         state: 'on'
     action:
-      - service: notify.html5
+      - service: notify.discord
         data:
           message: "Motion Detected in the Driveway"
-          target: "justin"
-
-
-  - alias: 'Auto Start Gif Maker'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: automation.startup_workaround
-        from: 'on'
-        to: 'off'
-    action:
-      - service: script.start_gifmaker
-
-  - alias: 'Auto Restart Gif Maker'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: sensor.gif_maker_status
-        from: 'on'
-        to: 'off'
-    action:
-      - service: script.start_gifmaker
+          target: !secret discord
 
 script:
-  start_gifmaker:
-    sequence:
-      - service: shell_command.start_gifmaker
   notify_camera:
     sequence:
       - service: shell_command.clear_images
       - service: shell_command.driveway
       - service: shell_command.driveway2
       - delay: '00:00:30'
-      #- service: shell_command.push_image
-      - service: notify.justin
+      - service: notify.discord
         data:
-          title: 'Driveway Alert'
-          message: 'Motion Detected in the Driveway'
-          data:
-            url: !secret driveway_camera_url
+          target: !secret discord
+          message: !secret notify_camera_message
 
-sensor:
-  - platform: zoneminder
-    include_archived: false
-###### GET CPU USAGE OF THE GIF MAKER SCRIPT
-  - platform: command_line
-    command: ps -eo pcpu -eo command |grep python |grep buffer.py
-    name: gif_maker_cpu
-    value_template: '{{value [0:4]|float}}'
-    unit_of_measurement: '%'
-###### CREATE STATUS SENSOR TO USE IN AUTOMATION
-  - platform: template
-    sensors:
-      gif_maker_status:
-        value_template: >-
-          {%- if states.sensor.gif_maker_cpu.state | float == 0.0 -%}
-            off
-          {% else %}
-            on
-          {% endif %}
+# sensor:
+#   - platform: zoneminder
+#     include_archived: false
 
 shell_command:
-  clear_images: rm /home/homeassistant/.homeassistant/www/camera_shots/*
-  push_image: 'bash /home/homeassistant/.homeassistant/shell/push_image.sh'
-  start_gifmaker: bash /home/homeassistant/.homeassistant/shell/gif_maker.sh
+  clear_images: rm /config/www/camera_shots/*
   driveway: !secret driveway_camera_photo_url
-  driveway2: curl -o /home/homeassistant/.homeassistant/www/camera_shots/drive1.gif "localhost:8060/gif?camera=drive1&duration=60&interval=0.25"
+  driveway2: curl -o /config/www/camera_shots/drive1.gif "127.0.0.1:3333/gif?camera=drive1&duration=60&interval=0.25"

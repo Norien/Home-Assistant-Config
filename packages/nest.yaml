@@ -41,23 +41,6 @@ homeassistant:
       emulated_hue_hidden: false
       friendly_name: 'Colder'
 
-###### STATE CARD
-group:
-  thermostat:
-    name: Thermostat
-    entities:
-     - climate.hallway
-     - binary_sensor.hallway_thermostat_fan
-     - script.fan
-     - sensor.hallway_thermostat_hvac_state
-     - sensor.hallway_thermostat_operation_mode
-  smoke_gas:
-    name: "Smoke & CO"
-    entities:
-      - binary_sensor.kitchen_nest_protect_online
-      - sensor.kitchen_nest_protect_co_status
-      - sensor.kitchen_nest_protect_smoke_status
-
 nest:
   client_id: !secret nest_client_id
   client_secret: !secret nest_client_secret
@@ -99,31 +82,26 @@ automation:
         data:
           group_name: "Living Room"
           scene_name: "Alarm"
-  # bedroom LIGHT STRIP - RED
-      - service: shell_command.led_send_payload
-        data:
-          rgb_hex: 'ff0000'
-          host: !secret H801WIFI_url
 
-  - alias: 'nest open a window'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: sensor.weather_inside_vs_outside
-        from: 'false'
-        to: 'true'
-    condition:
-      - condition: state
-        entity_id: climate.hallway
-        state: 'cool'
-    action:
-      - service: notify.html5
-        data:
-          message: 'It is cooler outside then inside and the AC is on. You should open a window!'
-      - service: automation.turn_off
-        data:
-          entity_id: automation.nest_open_a_window
-      - delay: '01:00:00'
-      - service: automation.turn_on
-        data:
-          entity_id: automation.nest_open_a_window
+  # - alias: 'nest open a window'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: sensor.weather_inside_vs_outside
+  #       from: 'false'
+  #       to: 'true'
+  #   condition:
+  #     - condition: state
+  #       entity_id: climate.hallway
+  #       state: 'cool'
+  #   action:
+  #     - service: notify.html5
+  #       data:
+  #         message: 'It is cooler outside then inside and the AC is on. You should open a window!'
+  #     - service: automation.turn_off
+  #       data:
+  #         entity_id: automation.nest_open_a_window
+  #     - delay: '01:00:00'
+  #     - service: automation.turn_on
+  #       data:
+  #         entity_id: automation.nest_open_a_window

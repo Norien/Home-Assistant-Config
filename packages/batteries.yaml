@@ -8,23 +8,12 @@ homeassistant:
   customize:
     sensor.battery_low:
       hidden: true
-    group.batteries:
-      friendly_name: Batteries
 
 input_label:
   nicole_battery:
   justin_battery:
   nicole_wifi:
   justin_wifi:
-
-group_globber:
-  groups:
-    group.batteries:
-      - input_number.battery_alert
-      - sensor.*nest_protect_battery*
-      - sensor.battery_*
-      - sensor.nicole_battery
-      - sensor.justin_battery
 
 automation:
   - alias: Update Phone Battery Levels
@@ -94,10 +83,6 @@ automation:
           title: Low Battery
           message: "{{ states('sensor.battery_low') }}"
           notification_id: low-battery-alert
-      - service: notify.html5
-        data_template:
-          target: justin
-          message:  "Low battery levels: {{ states('sensor.battery_low') }}"
 
 sensor:
 ###### DUMMY SENSOR FOR NEST PROTECT TO NOTIFY
@@ -252,7 +237,7 @@ sensor:
   ##### Owntracks Battery Tracker for Cell Phones
   - platform: mqtt
     state_topic: "owntracks/justin/justin"
-    name: "Justin's Battery State"
+    name: "Justin Battery State"
     value_template: >
       {% if value_json.charging == 1 %}
         Charging
@@ -262,13 +247,13 @@ sensor:
 
   - platform: mqtt
     state_topic: "owntracks/justin/justin"
-    name: "Justin's Battery"
+    name: "Justin Battery"
     unit_of_measurement: "%"
     value_template: "{{ value_json.batt }}"
 
   - platform: mqtt
     state_topic: "owntracks/nicole/nicole"
-    name: "Nicole's Battery State"
+    name: "Nicole Battery State"
     value_template: >
       {% if value_json.charging == 1 %}
         Charging
@@ -278,21 +263,21 @@ sensor:
 
   - platform: mqtt
     state_topic: "owntracks/nicole/nicole"
-    name: "Nicole's Battery"
+    name: "Nicole Battery"
     unit_of_measurement: "%"
     value_template: "{{ value_json.batt }}"
 
   - platform: template
     sensors:
-      justin_battery:
-        friendly_name: Justin's Phone Battery
+      justin_battery_template:
+        friendly_name: Justin Phone Battery
         unit_of_measurement: '%'
-        value_template: "{{ states('sensor.justins_battery')|int(-1) }}"
+        value_template: "{{ states('sensor.justin_battery')|int(-1) }}"
         icon_template: >-
           {% if states('sensor.justin_battery') != "unknown" %}
-            {% set battery_level = states('sensor.justins_battery')|int (-1)%}
+            {% set battery_level = states('sensor.justin_battery')|int (-1)%}
             {% set battery_round = (battery_level|int / 10)|int * 10 %}
-            {% if states.sensor.justins_battery_state.state | lower == "charging" %}
+            {% if states.sensor.justin_battery_state.state | lower == "charging" %}
               {% if battery_level == -1 %}
                 mdi:battery-unknown
               {% else %}
@@ -320,15 +305,15 @@ sensor:
           {% else %}
             mdi:battery-alert
           {% endif %}
-      nicole_battery:
-        friendly_name: Nicole's Phone Battery
+      nicole_battery_template:
+        friendly_name: Nicole Phone Battery
         unit_of_measurement: '%'
-        value_template: "{{ states('sensor.nicoles_battery')|int(-1) }}"
+        value_template: "{{ states('sensor.nicole_battery')|int(-1) }}"
         icon_template: >-
           {% if states('sensor.nicole_battery') != "unknown" %}
-            {% set battery_level = states('sensor.nicoles_battery')|int (-1)%}
+            {% set battery_level = states('sensor.nicole_battery')|int (-1)%}
             {% set battery_round = (battery_level|int / 10)|int * 10 %}
-            {% if states.sensor.nicoles_battery_state.state | lower == "charging" %}
+            {% if states.sensor.nicole_battery_state.state | lower == "charging" %}
               {% if battery_level == -1 %}
                 mdi:battery-unknown
               {% else %}
@@ -363,17 +348,30 @@ sensor:
       battery_low:
         friendly_name: 'Low Battery'
         icon_template: mdi:battery-alert
+        entity_id:
+          - sensor.battery_diningroom_sensor_dynamic
+          - sensor.battery_finn_sensor_dynamic
+          - sensor.battery_finn_switch_dynamic
+          - sensor.battery_hallway_switch_dynamic
+          - sensor.battery_livingroom_sensor_dynamic
+          - sensor.battery_nest_protect_kitchen
+          - sensor.battery_roomba
         value_template: >-
-          {%- for item in states.sensor if ((item.entity_id[0:15] == 'sensor.battery_' and item.state |int <= states.input_number.battery_alert.state|int and item.name != 'Low Battery' and item.state != "None")) -%}
+          {%- for item in states.sensor if ((item.entity_id[0:15] == 'sensor.battery_' and item.state|int <= 10 and item.name != 'Low Battery' and item.state != 'None')) -%}
             {{item.name}}
           {%- if not loop.last -%}
           {{', '}}
             {%- endif -%}
           {%- endfor -%}
-input_number:
-  battery_alert:
-    name: Battery Alert %
-    initial: 10
-    min: 1
-    max: 99
-    step: 1
+      batterystatus:
+        friendly_name: 'Low Battery Status'
+        icon_template: mdi:battery-alert
+        entity_id:
+          - sensor.battery_low
+        value_template: >-
+          {% set battery = states.sensor.battery_low.state %}
+          {% if battery == '' %}
+            Low Battery
+          {% else %}
+            {{battery}}
+          {% endif %}
