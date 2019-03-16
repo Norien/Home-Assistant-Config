@@ -4,12 +4,6 @@
 ################################################################
 homeassistant:
   customize:
-    sensor.ha_uptime:
-      friendly_name: Home Assistant Uptime
-      icon: mdi:timer
-    sensor.server_uptime:
-      friendly_name: Server Uptime
-      icon: mdi:timer
     sensor.cpu_temperature:
       friendly_name: CPU Temperature
       icon: mdi:thermometer
@@ -30,12 +24,8 @@ homeassistant:
     sensor.linux_distro:
       friendly_name: Linux Distro
       icon: mdi:ubuntu
-
     sensor.disk_file_system:
       friendly_name: File System
-      icon: mdi:harddisk
-    sensor.disk_media_vault:
-      friendly_name: Media Vault
       icon: mdi:harddisk
 
 script:
@@ -128,11 +118,6 @@ sensor:
     name: 'Disk File System'
     scan_interval: 3600
     unit_of_measurement: '%'
-  - platform: command_line
-    command: df -h /mnt/barricade/media | awk '{print $5}' | grep -v -e "Use%" | sed 's/.$//'
-    scan_interval: 3600
-    unit_of_measurement: '%'
-    name: 'Disk Media Vault'
 
 ##### CUSTOM RAM DISPLAY
   - platform: command_line

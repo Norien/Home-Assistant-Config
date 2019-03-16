@@ -13,7 +13,6 @@ homeassistant:
       emulated_hue_name: "roomba"
       google_assistant: true
       google_assistant_name: "roomba"
-      entity_picture: /local/custom_icons/roomba.png
     sensor.roomba_runtime:
       friendly_name: Runtime This Week
     sensor.roomba_last_run:
