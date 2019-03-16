@@ -20,18 +20,6 @@ homeassistant:
       friendly_name: Last Clean
       icon: mdi:calendar-range
 
-###### STATE CARD
-group:
-  vacuum:
-    name: Vacuum
-    control: hidden
-    entities:
-     - vacuum.roomba
-     - automation.vacuum_auto
-     - sensor.roomba_status
-     - sensor.roomba_runtime
-     - sensor.roomba_last_run
-
 vacuum:
   - platform: roomba
     host: !secret roomba_ip
@@ -166,6 +154,3 @@ sensor:
   - platform: mqtt
     name: roomba_last_run
     state_topic: "homeassistant/vacuum"
-    type: time
-    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
-    end: '{{ now() }}'
