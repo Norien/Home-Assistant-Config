@@ -77,9 +77,6 @@ script:
   deactivate_alarm:
     sequence:
       - service: script.morning_livingroom_lights
-      - service: switch.turn_off
-        data:
-          entity_id: switch.led_strip
       - service: homeassistant.turn_on
         data:
           entity_id: input_boolean.guest

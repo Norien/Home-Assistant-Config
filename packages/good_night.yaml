@@ -32,8 +32,6 @@ script:
     - service: switch.turn_off
       entity_id: switch.bedroom_media
     - service: switch.turn_off
-      entity_id: switch.led_strip
-    - service: switch.turn_off
       entity_id: switch.bedroom_lamps
     - service: switch.turn_on
       entity_id: switch.bedroom_fan

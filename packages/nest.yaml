@@ -75,9 +75,13 @@ automation:
         entity_id: sensor.kitchen_nest_protect_co_status,sensor.kitchen_nest_protect_smoke_status
         to: 'emergency'
     action:
-      - service: notify.html5
+      - service: script.janet_speech_engine
         data:
-          message: 'Nest has detected Smoke or CO in the Kitchen.'
+          call_greeting: 1
+          call_inform: 1
+        data_template:
+          CustomMessage: >-
+            'Nest has detected Smoke or CO in the Kitchen.'
       - service: hue.hue_activate_scene
         data:
           group_name: "Living Room"

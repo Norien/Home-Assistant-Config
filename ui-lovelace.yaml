@@ -20,6 +20,8 @@ resources:
     type: module
   - url: /local/lovelace/simple-thermostat.js?track=true
     type: module
+  - url: /local/lovelace/cards/upcoming-media-card.js?track=true
+    type: js
 views:
   - title: Home
     icon: mdi:home-assistant
@@ -28,6 +30,10 @@ views:
     cards:
 ###### CUSTOM HEADER -----------------------------------------------
       - type: custom:compact-custom-header
+        background_image: url("/local/lovelace/header2.png")
+        background_color: rgb(34, 35, 58)
+        active_tab_color: rgb(255, 183, 18)
+        tab_indicator_color: rgb(255, 183, 18)
         main_config: true
         menu: overflow
         options: clock
@@ -423,6 +429,7 @@ views:
             show_progress: true
             hide_power: true
             hide_controls: true
+
   ### HIDE GOOGLE HOME
         - type: conditional
           conditions:
@@ -526,6 +533,12 @@ views:
     cards:
 ###### CUSTOM HEADER -----------------------------------------------
       - type: custom:compact-custom-header
+        background_image: url("/local/lovelace/header2.png")
+        background_color: rgb(34, 35, 58)
+        active_tab_color: rgb(255, 183, 18)
+        tab_indicator_color: rgb(255, 183, 18)
+        notify_indicator_color: rgb(255, 183, 18)
+        notify_text_color: rgb(0, 0, 0)
         main_config: true
         menu: overflow
         options: clock
@@ -541,19 +554,10 @@ views:
             - font-size: 14px
             - font-weight: bold
             - background-color: rgb(34, 35, 58)
+            - height: 24px
+            - padding: 3px
         - type: thermostat
           entity: climate.hallway
-        # - type: custom:simple-thermostat
-        #   entity: climate.hallway
-        #   step_size: '0.5'
-        #   icon:
-        #     heat: mdi:fire
-        #     cool: mdi:snowflake
-        #     eco: mdi:leaf
-        #     off: mdi:power
-        #     auto: mdi:autorenew
-        #     idle: mdi:power
-        #     away: mdi:leaf
         - type: entities
           show_header_toggle: false
           entities:
@@ -569,6 +573,8 @@ views:
             - font-size: 14px
             - font-weight: bold
             - background-color: rgb(34, 35, 58)
+            - height: 24px
+            - padding: 3px
       - type: horizontal-stack
         cards:
           - type: gauge
@@ -607,6 +613,8 @@ views:
                 - font-size: 14px
                 - font-weight: bold
                 - background-color: rgb(34, 35, 58)
+                - height: 24px
+                - padding: 3px
             - type: horizontal-stack
               cards:
               - type: "custom:button-card"
@@ -617,6 +625,7 @@ views:
                 action: more_info
                 show_state: true
                 style:
+                  - padding: 3px
                   - font-size: 14px
                   - background-color: rgb(34, 35, 37)
               - type: "custom:button-card"
@@ -627,6 +636,7 @@ views:
                 action: more_info
                 show_state: true
                 style:
+                  - padding: 3px
                   - font-size: 14px
                   - background-color: rgb(34, 35, 37)
             - type: custom:mini-graph-card
@@ -656,6 +666,8 @@ views:
               - font-size: 14px
               - font-weight: bold
               - background-color: rgb(34, 35, 58)
+              - height: 24px
+              - padding: 3px
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
@@ -668,6 +680,8 @@ views:
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
+                - height: 26px
+                - padding: 3px
             - type: "custom:button-card"
               color_type: card
               color: rgb(28, 128, 199)
@@ -678,6 +692,8 @@ views:
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
+                - height: 26px
+                - padding: 3px
           - type: horizontal-stack
             cards:
             - type: gauge
@@ -728,6 +744,7 @@ views:
             style:
               - font-size: 14px
               - font-weight: bold
+              - padding: 3px
           - type: conditional
             conditions:
               - entity: input_boolean.docker_control
@@ -757,51 +774,43 @@ views:
             style:
               - font-size: 14px
               - font-weight: bold
+              - height: 24px
+              - padding: 3px
 
           - type: horizontal-stack
             cards:
-            - type: custom:gauge-card
-              title: Media
+            - type: gauge
+              name: Media
+              unit: '%'
               entity: sensor.freenas_media_pct
-              min: 0
-              max: 100
-              scale: 35px
               severity:
-                red: 80
-                amber: 50
                 green: 0
-            - type: custom:gauge-card
-              title: Television2
+                yellow: 50
+                red: 80
+            - type: gauge
+              name: Television2
+              unit: '%'
               entity: sensor.freenas_television2_pct
-              min: 0
-              max: 100
-              scale: 35px
               severity:
-                red: 80
-                amber: 50
                 green: 0
-          - type: horizontal-stack
-            cards:
-            - type: custom:gauge-card
-              title: Movies
+                yellow: 50
+                red: 80
+            - type: gauge
+              name: Movies
+              unit: '%'
               entity: sensor.freenas_movies_pct
-              min: 0
-              max: 100
-              scale: 35px
               severity:
-                red: 80
-                amber: 50
                 green: 0
-            - type: custom:gauge-card
-              title: Cloud
+                yellow: 50
+                red: 80
+            - type: gauge
+              name: Cloud
+              unit: '%'
               entity: sensor.freenas_cloud_pct
-              min: 0
-              max: 100
-              scale: 35px
               severity:
-                red: 80
-                amber: 50
                 green: 0
+                yellow: 50
+                red: 80
 ###### SEEDBOX VM
       - type: horizontal-stack
         cards:
@@ -816,6 +825,8 @@ views:
             style:
               - font-size: 14px
               - font-weight: bold
+              - height: 24px
+              - padding: 3px
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
@@ -827,6 +838,8 @@ views:
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
+                - height: 24px
+                - padding: 3px
             - type: "custom:button-card"
               color_type: card
               color: rgb(28, 128, 199)
@@ -836,6 +849,8 @@ views:
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
+                - height: 24px
+                - padding: 3px
           - type: custom:mini-graph-card
             name: "Transfer Rate"
             show:
@@ -857,6 +872,7 @@ views:
             style:
               - font-size: 14px
               - font-weight: bold
+              - padding: 6px
 ###### HOME ASSISTANT
       - type: horizontal-stack
         cards:
@@ -868,9 +884,11 @@ views:
             entity: weblink.release_log
             action: more_info
             style:
+              - background-color: rgb(34, 35, 58)
               - font-size: 14px
               - font-weight: bold
-              - background-color: rgb(34, 35, 58)
+              - height: 24px
+              - padding: 3px
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
@@ -883,6 +901,8 @@ views:
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
+                - height: 24px
+                - padding: 3px
             - type: "custom:button-card"
               color_type: card
               color: rgb(28, 128, 199)
@@ -893,6 +913,8 @@ views:
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
+                - height: 24px
+                - padding: 3px
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
@@ -905,6 +927,8 @@ views:
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
+                - height: 24px
+                - padding: 3px
             - type: "custom:button-card"
               color_type: card
               color: rgb(28, 128, 199)
@@ -915,6 +939,8 @@ views:
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
+                - height: 24px
+                - padding: 3px
           - type: "custom:button-card"
             color_type: card
             color_off: rgb(34, 35, 37)
@@ -930,7 +956,13 @@ views:
             style:
               - font-size: 14px
               - font-weight: bold
-          - type: custom:tracker-card
+              - padding: 6px
+          - type: conditional
+            conditions:
+              - entity: sensor.custom_update_available
+                state: "on"
+            card:
+              type: custom:tracker-card
 ###### DOORS
       - type: horizontal-stack
         cards:
@@ -940,6 +972,9 @@ views:
             color_type: card
             color: rgb(34, 35, 58)
             name: 'DOORS'
+            style:
+              - height: 24px
+              - padding: 3px
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
@@ -948,6 +983,7 @@ views:
               icon: mdi:door
               action: more_info
               show_state: false
+              size: 25px
               state:
                 - value: 'off'
                   color: rgb(255, 0, 0)
@@ -959,6 +995,7 @@ views:
               icon: mdi:door
               action: more_info
               show_state: false
+              size: 25px
               state:
                 - value: 'off'
                   color: rgb(255, 0, 0)
@@ -970,70 +1007,77 @@ views:
               icon: mdi:door
               action: more_info
               show_state: false
+              size: 25px
               state:
                 - value: 'off'
                   color: rgb(255, 0, 0)
                 - value: 'on'
                   color: rgb(0, 255, 0)
 ###### MOTION SENSORS
-      - type: horizontal-stack
-        cards:
-        - type: vertical-stack
-          cards:
-          - type: "custom:button-card"
-            color_type: card
-            color: rgb(34, 35, 58)
-            name: "MOTION"
           - type: horizontal-stack
             cards:
-            - type: "custom:button-card"
-              entity: binary_sensor.findlays_motion_room
-              name: "Finn's Room"
-              icon: mdi:run
-              action: more_info
-              show_state: false
-              state:
-                - value: 'off'
-                  color: rgb(255, 0, 0)
-                - value: 'on'
-                  color: rgb(0, 255, 0)
-            - type: "custom:button-card"
-              entity: binary_sensor.living_room_motion_sensor
-              name: Living Room
-              icon: mdi:run
-              action: more_info
-              show_state: false
-              state:
-                - value: 'off'
-                  color: rgb(255, 0, 0)
-                - value: 'on'
-                  color: rgb(0, 255, 0)
-            - type: "custom:button-card"
-              entity: binary_sensor.dining_room_motion_sensor
-              name: Dining Room
-              icon: mdi:run
-              action: more_info
-              show_state: false
-              state:
-                - value: 'off'
-                  color: rgb(255, 0, 0)
-                - value: 'on'
-                  color: rgb(0, 255, 0)
-            - type: "custom:button-card"
-              entity: sensor.server_room_motion
-              name: Server Room
-              icon: mdi:run
-              action: more_info
-              show_state: false
-              state:
-                - value: '0'
-                  color: rgb(255, 0, 0)
-                - value: 'unknown'
-                  color: rgb(255, 0, 0)
-                - value: '1'
-                  color: rgb(0, 255, 0)
-
-###### JANET NOTIFICATIONS
+            - type: vertical-stack
+              cards:
+              - type: "custom:button-card"
+                color_type: card
+                color: rgb(34, 35, 58)
+                name: "MOTION"
+                style:
+                  - height: 24px
+                  - padding: 3px
+              - type: horizontal-stack
+                cards:
+                - type: "custom:button-card"
+                  entity: binary_sensor.findlays_motion_room
+                  name: "Finn's Room"
+                  icon: mdi:run
+                  action: more_info
+                  show_state: false
+                  size: 25px
+                  state:
+                    - value: 'off'
+                      color: rgb(255, 0, 0)
+                    - value: 'on'
+                      color: rgb(0, 255, 0)
+                - type: "custom:button-card"
+                  entity: binary_sensor.living_room_motion_sensor
+                  name: Living Room
+                  icon: mdi:run
+                  action: more_info
+                  show_state: false
+                  size: 25px
+                  state:
+                    - value: 'off'
+                      color: rgb(255, 0, 0)
+                    - value: 'on'
+                      color: rgb(0, 255, 0)
+                - type: "custom:button-card"
+                  entity: binary_sensor.dining_room_motion_sensor
+                  name: Dining Room
+                  icon: mdi:run
+                  action: more_info
+                  show_state: false
+                  size: 25px
+                  state:
+                    - value: 'off'
+                      color: rgb(255, 0, 0)
+                    - value: 'on'
+                      color: rgb(0, 255, 0)
+                - type: "custom:button-card"
+                  entity: sensor.server_room_motion
+                  name: Server Room
+                  icon: mdi:run
+                  action: more_info
+                  show_state: false
+                  size: 25px
+                  state:
+                    - value: '0'
+                      color: rgb(255, 0, 0)
+                    - value: 'unknown'
+                      color: rgb(255, 0, 0)
+                    - value: '1'
+                      color: rgb(0, 255, 0)
+###### NOTIFICATIONS
       - type: vertical-stack
         cards:
         - type: "custom:button-card"
@@ -1043,6 +1087,8 @@ views:
             - font-size: 14px
             - font-weight: bold
             - background-color: rgb(34, 35, 58)
+            - height: 24px
+            - padding: 3px
         - type: entities
           show_header_toggle: false
           entities:
@@ -1051,7 +1097,6 @@ views:
             - input_boolean.janet_guest_mode
             - input_boolean.janet_alert_mode
             - input_number.janet_notification_volume
-
 ###### HUMIDITY
       - type: vertical-stack
         cards:
@@ -1062,7 +1107,8 @@ views:
             - font-size: 14px
             - font-weight: bold
             - background-color: rgb(34, 35, 58)
-
+            - height: 24px
+            - padding: 3px
         - type: custom:mini-graph-card
           show:
             icon: false
@@ -1096,7 +1142,8 @@ views:
               - font-size: 14px
               - font-weight: bold
               - background-color: rgb(34, 35, 58)
-
+              - height: 24px
+              - padding: 3px
           - type: vertical-stack
             cards:
             - type: horizontal-stack
@@ -1159,6 +1206,8 @@ views:
               - font-size: 14px
               - font-weight: bold
               - background-color: rgb(34, 35, 58)
+              - height: 24px
+              - padding: 3px
           - type: vertical-stack
             cards:
             - type: "custom:button-card"
@@ -1169,6 +1218,8 @@ views:
               name: 'Electricity Price:'
               style:
                 - font-weight: bold
+                - height: 33px
+                - padding: 4px
               state:
                 - value: '6.5'
                   color: rgb(21, 158, 56)
@@ -1183,7 +1234,7 @@ views:
                   - entity: sensor.office_yesterday
                 hours_to_show: 168
                 name: PC USAGE
-                points_per_hour: '0.06'
+                points_per_hour: '.07'
                 show:
                   graph: bar
                   icon: false
@@ -1203,7 +1254,7 @@ views:
                   - entity: sensor.server_yesterday
                 hours_to_show: 168
                 name: SERVER USAGE
-                points_per_hour: '0.06'
+                points_per_hour: '0.07'
                 show:
                   graph: bar
                   icon: false
@@ -1223,7 +1274,7 @@ views:
                   - entity:  sensor.washing_machine_today_kwh
                 hours_to_show: 168
                 name: WASH USAGE
-                points_per_hour: '0.06'
+                points_per_hour: '0.07'
                 show:
                   graph: bar
                   icon: false
@@ -1236,3 +1287,160 @@ views:
                 show:
                   graph: line
                   icon: false
+################################################################################
+###### KODI VIEW -------------------------------------------------------------
+################################################################################
+  - title: Sensor
+    theme: Night
+    icon: mdi:kodi
+    cards:
+###### CUSTOM HEADER -----------------------------------------------
+      - type: custom:compact-custom-header
+        background_image: url("/local/lovelace/header2.png")
+        background_color: rgb(34, 35, 58)
+        active_tab_color: rgb(255, 183, 18)
+        tab_indicator_color: rgb(255, 183, 18)
+        notify_indicator_color: rgb(255, 183, 18)
+        notify_text_color: rgb(0, 0, 0)
+        main_config: true
+        menu: overflow
+        options: clock
+        voice: hide
+        clock_format: 12
+      - type: vertical-stack
+        cards:
+### POWER
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            entity: switch.tv
+            color_type: card
+            name: 'TV'
+            action: toggle
+            style:
+              - font-size: 14px
+              - font-weight: bold
+              - background-color: rgb(34, 35, 58)
+              - height: 24px
+              - padding: 3px
+          - type: "custom:button-card"
+            entity: switch.receiver
+            color_type: card
+            name: 'Receiver'
+            action: toggle
+            style:
+              - font-size: 14px
+              - font-weight: bold
+              - background-color: rgb(34, 35, 58)
+              - height: 24px
+              - padding: 3px
+  ### KODI PLAYER
+        - type: custom:mini-media-player
+          entity: media_player.kodi_livingroom
+          icon: mdi:kodi
+          artwork: full-cover
+          name: Living Room
+          replace_mute: stop
+          volume_stateless: true
+          show_source: false
+          show_progress: true
+          background: '/local/lovelace/kodi_idle.jpg'
+          hide:
+            power: true
+            icon: true
+  ###### CONTROLS
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            color_type: blank-card
+          - type: "custom:button-card"
+            entity: script.kodi_nav_up
+            color_type: card
+            icon: mdi:chevron-up-circle
+            size: 75%
+            action: service
+            service:
+              domain: script
+              action: turn_on
+              data:
+                entity_id: script.kodi_nav_up
+            style:
+              - background-color: rgb(34, 35, 58)
+          - type: "custom:button-card"
+            color_type: blank-card
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            entity: script.kodi_nav_left
+            color_type: card
+            icon: mdi:chevron-left-circle
+            size: 75%
+            action: service
+            service:
+              domain: script
+              action: turn_on
+              data:
+                entity_id: script.kodi_nav_left
+            style:
+              - background-color: rgb(34, 35, 58)
+          - type: "custom:button-card"
+            entity: script.kodi_nav_select
+            color_type: card
+            icon: mdi:circle-slice-8
+            size: 75%
+            action: service
+            service:
+              domain: script
+              action: turn_on
+              data:
+                entity_id: script.kodi_nav_select
+            style:
+              - background-color: rgb(34, 35, 58)
+          - type: "custom:button-card"
+            entity: script.kodi_nav_right
+            color_type: card
+            icon: mdi:chevron-right-circle
+            size: 75%
+            action: service
+            service:
+              domain: script
+              action: turn_on
+              data:
+                entity_id: script.kodi_nav_right
+            style:
+              - background-color: rgb(34, 35, 58)
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            entity: script.kodi_nav_back
+            color_type: card
+            icon: mdi:chevron-left
+            size: 75%
+            action: service
+            service:
+              domain: script
+              action: turn_on
+              data:
+                entity_id: script.kodi_nav_back
+            style:
+              - background-color: rgb(34, 35, 58)
+          - type: "custom:button-card"
+            entity: script.kodi_nav_down
+            color_type: card
+            icon: mdi:chevron-down-circle
+            size: 75%
+            action: service
+            service:
+              domain: script
+              action: turn_on
+              data:
+                entity_id: script.kodi_nav_down
+            style:
+              - background-color: rgb(34, 35, 58)
+          - type: "custom:button-card"
+            color_type: blank-card
+
+        - type: custom:upcoming-media-card
+          entity: sensor.sonarr_upcoming_media
+          image_style: fanart
+          all_shadows: true

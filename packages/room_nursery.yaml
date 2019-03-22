@@ -8,7 +8,7 @@ homeassistant:
       icon: mdi:lightbulb
 
 light:
-  - platform: nanoleaf_aurora
+  - platform: nanoleaf
     name: aurora
     host: 192.168.1.101
     token: !secret nanoleaf

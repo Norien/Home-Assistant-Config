@@ -41,6 +41,12 @@ binary_sensor:
     country: CA
 ###### SENSORS -------------------------------------------------
 sensor:
+  - platform: sonarr_upcoming_media
+    api_key: !secret sonarr_api_key
+    host: localhost
+    port: 9118
+    days: 60
+
   - platform: huesensor
 ### tautulli and plex monitor
   - platform: tautulli
@@ -64,19 +70,10 @@ sensor:
         unit_of_measurement: 'Mbps'
         value_template: "{{states.sensor.tautulli.attributes.total_bandwidth|float / 1000}}"
 ### SCRAPE CURRENT ENERGY TIER
-  # - platform: scrape
-  #   resource: !secret energy_scrape_url2
-  #   name: Electricity Price
-  #   select: ".sml-landing-tou .sml-align-center"
-  #   value_template: "{{value.split('/')[0].split('|')[1]|replace('¢','')|replace(' ','')}}"
-  #   unit_of_measurement: "¢/kWh"
-  #   scan_interval: 600
-
-  - platform: scrape
-    resource: !secret energy_scrape_url
+  - platform: command_line
     name: Electricity Price
-    select: ".off-peakactive .value"
-    value_template: "{{value.split('/')[0]|replace('¢','')}}"
+    command: !secret energy_scrape_url
+    value_template: "{{value.split('>')[4]|replace('&cent;/kWh</span','')}}"
     unit_of_measurement: "¢/kWh"
     scan_interval: 600
 
@@ -164,10 +161,12 @@ sensor:
   - platform: template
     sensors:
       date_weekday:
+        entity_id: sensor.date
         value_template: "{{as_timestamp(now())|timestamp_custom('%A', True)}}"
 
 ###### MONTH OF THE YEAR
   - platform: template
     sensors:
       date_month:
+        entity_id: sensor.date
         value_template: "{{as_timestamp(now())|timestamp_custom('%B', True)}}"

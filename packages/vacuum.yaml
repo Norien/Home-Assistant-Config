@@ -100,11 +100,12 @@ automation:
         entity_id: sensor.roomba_status
         to: 'Dead'
     action:
-      - service: notify.html5
+      - service: script.janet_speech_engine
+        data:
+          call_greeting: 1
+          call_inform: 1
         data_template:
-          target: justin
-          title: "Roomba"
-          message: >-
+          CustomMessage: >-
             {%-set status = states.sensor.roomba_status.state -%}
             {%-if status =="Stuck"-%} Roomba is Stuck
             {%-elif status =="Dead"-%} Roomba is Dead
