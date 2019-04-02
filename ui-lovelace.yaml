@@ -941,6 +941,32 @@ views:
                 - background-color: rgb(34, 35, 37)
                 - height: 24px
                 - padding: 3px
+          - type: horizontal-stack
+            cards:
+            - type: "custom:button-card"
+              color_type: card
+              color: rgb(223, 255, 97)
+              entity: sensor.home_assistant_config_issues
+              name: 'Open Issues:'
+              show_state: true
+              action: more_info
+              style:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+                - height: 24px
+                - padding: 3px
+            - type: "custom:button-card"
+              color_type: card
+              color: rgb(28, 128, 199)
+              entity: sensor.home_assistant_config_stars
+              name: 'Stars:'
+              show_state: true
+              action: more_info
+              style:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+                - height: 24px
+                - padding: 3px
           - type: "custom:button-card"
             color_type: card
             color_off: rgb(34, 35, 37)
@@ -1293,6 +1319,7 @@ views:
   - title: Sensor
     theme: Night
     icon: mdi:kodi
+    background: rgb(34, 35, 37)
     cards:
 ###### CUSTOM HEADER -----------------------------------------------
       - type: custom:compact-custom-header

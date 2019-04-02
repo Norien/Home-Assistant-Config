@@ -39,6 +39,16 @@ weblink:
       url: https://github.com/home-assistant/home-assistant/releases/latest
 
 sensor:
+  - platform: github
+    access_token: !secret github_access_token
+    repositories:
+      - path: 'Norien/Home-Assistant-Config'
+  - platform: template # Breakout Stars and issue count
+    sensors:
+      home_assistant_config_issues:
+        value_template: "{{states.sensor.home_assistant_config.attributes.open_issues}}"
+      home_assistant_config_stars:
+        value_template: "{{states.sensor.home_assistant_config.attributes.stargazers}}"
 ###### VERSIONS CUSTOM COMPONENT
   - platform: command_line
     name: Installed Version
@@ -47,10 +57,13 @@ sensor:
   - platform: version
     source: docker
 ## DATABASE % CONFIG SIZE
-  - platform: folder
-    folder: /docker/database-home_assistant
-  - platform: folder
-    folder: /config
+  - platform: command_line
+    name: database_home_assistant
+    command: du -sh /docker/database-home_assistant/ | awk '{print $1}' | head -c-2
+    unit_of_measurement: 'GB'
+  - platform: command_line
+    name: config
+    command: du -sh /config/ | awk '{print $1}'
 ###### CUSTOM HA/Version
   - platform: template
     sensors:
@@ -62,7 +75,7 @@ sensor:
           {% else %}
             mdi:checkbox-blank-outline
           {% endif %}
-###### SENSOR FOR CONDITIONAL CARD ( CUSTOM COMPONENT AND CARD VERSIONS )          
+###### SENSOR FOR CONDITIONAL CARD ( CUSTOM COMPONENT AND CARD VERSIONS )
       custom_update_available:
         value_template: >
           {%-set card=states('sensor.custom_card_tracker')-%}

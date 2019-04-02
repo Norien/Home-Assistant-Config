@@ -14,7 +14,7 @@ sensor:
   - platform: rest
     resource: https://raw.githubusercontent.com/Norien/Home-Assistant-Config/master/www/holiday.json
     name: holiday_data
-    scan_interval: 60
+    scan_interval: 200
     value_template: >
       {% set today = now().month  ~ '/' ~ now().day  %}
       {% set holiday =  value_json.MAJOR_CA.static[ today ] %}

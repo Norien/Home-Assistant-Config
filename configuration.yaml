@@ -2,8 +2,8 @@
 homeassistant:
   name: " "
   whitelist_external_dirs:
-  - /docker/database-home_assistant
-  - /config
+  - /docker/database-home_assistant/
+  - /config/
   latitude: !secret latitude
   longitude: !secret longitude
   elevation: 264
@@ -108,6 +108,8 @@ http:
    ssl_certificate: !secret ssl_certificate
    ssl_key: !secret ssl_key
    ssl_profile: intermediate
+   ip_ban_enabled: True
+   login_attempts_threshold: 3
 
 duckdns:
    domain: !secret domain
