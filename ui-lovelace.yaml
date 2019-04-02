@@ -427,8 +427,10 @@ views:
             volume_stateless: true
             show_source: false
             show_progress: true
-            hide_power: true
             hide_controls: true
+            hide:
+              power: true
+              icon: true
 
   ### HIDE GOOGLE HOME
         - type: conditional
@@ -444,9 +446,12 @@ views:
             volume_stateless: true
             show_source: false
             show_progress: true
-            hide_power: true
             hide_controls: true
             replace_mute: stop
+            hide:
+              power: true
+              icon: true
+
 ###### COMPUTER DESK
       - type: picture-glance
         title: " "
@@ -495,9 +500,10 @@ views:
           volume_stateless: true
           show_source: false
           show_progress: true
-          hide_power: true
           hide_controls: true
           replace_mute: stop
+          hide:
+            power: true
 ###### BUTTONS =================================================================
       - type: horizontal-stack
         cards:

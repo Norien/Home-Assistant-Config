@@ -1,20 +1,21 @@
 # Home Assistant Configuration by [@Norien](https://gitter.im/norien)
 
-This is my [Home Assistant](https://home-assistant.io/) configuration running on an [Intel SkullCanyon NUC](http://a.co/butNrCY)
+This is my [Home Assistant](https://home-assistant.io/) configuration running in docker on an [Intel SkullCanyon NUC](http://a.co/butNrCY)
 
 ## Software on the server:
-* [Ubuntu Desktop 16.04](https://www.ubuntu.com/download/desktop)
+* [Ubuntu Desktop 18.04](https://www.ubuntu.com/download/desktop)
 * [Home Assistant](https://home-assistant.io/)
 * [Glances](https://nicolargo.github.io/glances/)
 * [Mosquitto](https://mosquitto.org/)
 * [Pi-Hole](https://pi-hole.net/)
 * [Kodi](https://kodi.tv/)
-* [RetroPie](https://retropie.org.uk/)
-* [Plex](https://plex.tv/)
+* [Plex w Pass](https://plex.tv/)
 * [Zoneminder](https://zoneminder.com/)
 
 ## Devices in Use:
-* [Netgear R6300](http://a.co/hKI7tOr) - [DD-WRT Firmware](https://goo.gl/d3qFQP)
+* [UniFi USG](https://www.ui.com/unifi-routing/usg/)
+* [UniFi AC-PRO](https://www.ui.com/unifi/unifi-ap-ac-pro/)
+* [UniFi UAP](https://www.ui.com/unifi/unifi-ap/)
 * [Nest Thermostat - 2nd Gen](http://a.co/6BsUg19)
 * [Nest Protect - 1st Gen](http://a.co/5p5p97O)
 * [Echo Dot Gen 2](http://amzn.to/2hvCexj)
@@ -51,8 +52,3 @@ This is my [Home Assistant](https://home-assistant.io/) configuration running on
 * [Nortek Z-wave Adapter](http://a.co/58q0mCu)
 * [Nanoleaf Aurora Rhythm](https://www.bestbuy.ca/en-ca/product/nanoleaf-aurora-rhythm-smarter-led-light-panel-kit/11540362.aspx?)
 * [iRobot Roomba 690](http://a.co/bU3Df5K)
-
-## Wish List:
-* [ClearOne XAP800](http://www.ebay.ca/itm/CLEARONE-XAP800-Professional-Conferencing-System-910-151-101-Rev-2-5-0-/292069134421?hash=item4400ad5055:g:dYwAAOSwOgdYsjBk)
-* [Kinter MA-180](http://a.co/3HSlurg)
-* [Broadlink Black Bean](http://a.co/2RBPKni)
