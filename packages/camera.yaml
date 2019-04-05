@@ -6,11 +6,8 @@ homeassistant:
     script.notify_camera:
       friendly_name: Email Camera Photo
 
-# zoneminder:
-#   host: !secret zm_host
-#   path: /zm/
-#   username: !secret zm_username
-#   password: !secret zm_password
+stream:
+
 android_ip_webcam:
   - host: !secret android_ip_webcam_host
     port: 8080
@@ -22,17 +19,18 @@ android_ip_webcam:
       - light
       - pressure
 camera:
-#  - platform: zoneminder
-
   - platform: mjpeg
     name: findlay
-    mjpeg_url: !secret dlink_camera_link
+    mjpeg_url: !secret dlink_camera_mjpeg
+    still_image_url: !secret dlink_still_image_url
     username: !secret dlink_camera_username
     password: !secret dlink_camera_password
 
-  - platform: mjpeg
+  - platform: generic
     name: driveway
-    mjpeg_url: !secret dlink2_camera_mjpeg
+    framerate: 25
+    stream_source: !secret dlink2_camera_rtsp
+    still_image_url: !secret dlink2_camera_link
     username: !secret dlink2_camera_username
     password: !secret dlink2_camera_password
 
@@ -64,11 +62,7 @@ script:
           target: !secret discord
           message: !secret notify_camera_message
 
-# sensor:
-#   - platform: zoneminder
-#     include_archived: false
-
 shell_command:
   clear_images: rm /config/www/camera_shots/*
   driveway: !secret driveway_camera_photo_url
-  driveway2: curl -o /config/www/camera_shots/drive1.gif "127.0.0.1:3333/gif?camera=drive1&duration=60&interval=0.25"
+  driveway2: /usr/bin/curl -o /config/www/camera_shots/drive1.gif "127.0.0.1:3333/gif?camera=drive1&duration=60&interval=0.25"

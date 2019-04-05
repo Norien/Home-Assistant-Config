@@ -92,7 +92,7 @@ sensor:
     name: 'HA Uptime'
 
   - platform: command_line
-    command: curl -X GET http://127.0.0.1:61208/api/3/uptime
+    command: /usr/bin/curl -X GET http://127.0.0.1:61208/api/3/uptime
     name: 'Server Uptime'
     value_template: '{{ value[1:-1] }}'
     scan_interval: 720
@@ -100,7 +100,7 @@ sensor:
 ###### CPU TEMPERATURE
   - platform: command_line
     name: CPU Temperature
-    command: curl -X GET http://127.0.0.1:61208/api/3/sensors
+    command: /usr/bin/curl -X GET http://127.0.0.1:61208/api/3/sensors
     unit_of_measurement: '°C'
     value_template: '{{ value_json[8].value }}'
 ###### CPU SPEED
@@ -108,7 +108,7 @@ sensor:
     name: 'CPU Speed'
 ###### CPU LOAD
   - platform: command_line
-    command: curl -X GET http://127.0.0.1:61208/api/3/load
+    command: /usr/bin/curl -X GET http://127.0.0.1:61208/api/3/load
     name: 'glances_cpu_load'
     value_template: '{{ value_json.min5 }}'
     unit_of_measurement: '%'
@@ -126,7 +126,7 @@ sensor:
 
 ###### HARD DRIVE DISPLAY
   - platform: command_line
-    command: curl -X GET http://127.0.0.1:61208/api/2/fs
+    command: /usr/bin/curl -X GET http://127.0.0.1:61208/api/2/fs
     name: 'glances_disk_total'
     value_template: '{{ value_json[0].size }}'
     scan_interval: 604800
@@ -139,7 +139,7 @@ sensor:
 
 ##### CUSTOM RAM DISPLAY
   - platform: command_line
-    command: curl -X GET http://127.0.0.1:61208/api/3/mem/total
+    command: /usr/bin/curl -X GET http://127.0.0.1:61208/api/3/mem/total
     name: 'glances_ram_total'
     value_template: '{{ value_json.total }}'
     scan_interval: 604800
@@ -164,4 +164,4 @@ input_boolean:
     icon: mdi:docker
 
 shell_command:
-  restart_hass: curl -s http://127.0.0.1:8126/container/Home_Assistant/restart
+  restart_hass: /usr/bin/curl -s http://127.0.0.1:8126/container/Home_Assistant/restart

@@ -1,4 +1,4 @@
-import "./compact-custom-header-editor.js?v=1.0.2b5";
+import "./compact-custom-header-editor.js?v=1.0.2b8";
 
 export const LitElement = Object.getPrototypeOf(
   customElements.get("ha-panel-lovelace")
@@ -264,7 +264,7 @@ if (!customElements.get("compact-custom-header")) {
         }
 
         if (this.cchConfig.conditional_styles) {
-          this.conditionalStyling(header, buttons, tabs);
+          this.notifMonitor(header, buttons, tabs);
           this.hass.connection.socket.addEventListener("message", event => {
             this.conditionalStyling(header, buttons, tabs);
           });
@@ -380,18 +380,18 @@ if (!customElements.get("compact-custom-header")) {
       }
 
       // Style header all icons, all tab icons, and selection indicator.
-      let tab_indicator_color = this.cchConfig.tab_indicator_color;
+      let indicator = this.cchConfig.tab_indicator_color;
       let all_tabs_color =
         this.cchConfig.all_tabs_color || "var(--cch-all-tabs-color)";
-      if (tab_indicator_color) {
+      if (indicator) {
         if (!root.querySelector('[id="cch_header_colors"]') && !this.editMode) {
           let style = document.createElement("style");
           style.setAttribute("id", "cch_header_colors");
           style.innerHTML = `
             paper-tabs {
               ${
-                tab_indicator_color
-                  ? `--paper-tabs-selection-bar-color: ${tab_indicator_color} !important`
+                indicator
+                  ? `--paper-tabs-selection-bar-color: ${indicator} !important`
                   : "var(--cch-tab-indicator-color) !important"
               }
             }
@@ -555,9 +555,9 @@ if (!customElements.get("compact-custom-header")) {
         style.innerHTML = `
           .indicator {
             background-color:${this.cchConfig.notify_indicator_color ||
-              "var(--cch-notify-indicator-color)"};
+              "var(--cch-notify-indicator-color)"} !important;
             color: ${this.cchConfig.notify_text_color ||
-              "var(--cch-notify-text-color, var(--primary-text-color))"};
+              "var(--cch-notify-text-color), var(--primary-text-color)"};
           }
         `;
         buttons.notifications.shadowRoot.appendChild(style);
@@ -746,6 +746,14 @@ if (!customElements.get("compact-custom-header")) {
         }
         if (onIcon && iconElem) iconElem.setAttribute("icon", onIcon);
         if (hide && elem !== "background" && !this.editMode) {
+          let tabContainer = tabs[0].parentNode;
+          if (elem.nodeName.includes("MENU")) {
+            let marginL = parseInt(tabContainer.style.marginLeft.slice(0, -2));
+            tabContainer.style.marginLeft = `${marginL - 45}px`
+          } else if (elem.nodeName.includes("BUTTON")) {
+            let marginR = parseInt(tabContainer.style.marginRight.slice(0, -2));
+            tabContainer.style.marginRight = `${marginR - 45}px`
+          }
           elem.style.display = "none";
         }
       };
@@ -771,14 +779,15 @@ if (!customElements.get("compact-custom-header")) {
       for (let i = 0; i < styling.length; i++) {
         let entity = styling[i].entity;
         if (
-          !this.editMode && this.hass.states[entity] == undefined &&
+          !this.editMode &&
+          this.hass.states[entity] == undefined &&
           entity !== "notifications"
         ) {
           throw new Error(`${entity} does not exist.`);
         }
         if (entity == "notifications") {
           window.hassConnection.then(function(result) {
-            window.cchState[i] = !!(result.conn._ntf.state.length);
+            window.cchState[i] = !!result.conn._ntf.state.length;
           });
         } else {
           window.hassConnection.then(function(result) {
@@ -848,7 +857,11 @@ if (!customElements.get("compact-custom-header")) {
             } else if (less && window.cchState[i] < below) {
               styleElements(element, color, hide, image, onIcon, iconElement);
             } else {
-              if (hide && element.style.display == "none") {
+              if (
+                element !== "background" &&
+                hide &&
+                element.style.display == "none"
+              ) {
                 element.style.display = "";
               }
               if (color && image && element == "background") {
@@ -861,7 +874,7 @@ if (!customElements.get("compact-custom-header")) {
               } else if (
                 obj !== "background" &&
                 obj !== "entity" &&
-                obj != "condition"
+                obj !== "condition"
               ) {
                 element.style.color = this.prevColor[key];
               }
@@ -873,6 +886,19 @@ if (!customElements.get("compact-custom-header")) {
         }
       }
       fireEvent(this, "iron-resize");
+    }
+
+    notifMonitor(header, buttons, tabs) {
+      let notification =
+        !!buttons.notifications.shadowRoot.querySelector(".indicator")
+      if (notification !== window.cchNotification) {
+        this.conditionalStyling(header, buttons, tabs);
+        window.cchNotification = notification;
+      }
+      window.setTimeout(() =>
+        this.notifMonitor(header, buttons, tabs),
+        1000
+      );
     }
 
     // Walk the DOM to find element.
