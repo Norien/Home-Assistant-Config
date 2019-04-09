@@ -22,6 +22,8 @@ resources:
     type: module
   - url: /local/lovelace/cards/upcoming-media-card.js?track=true
     type: js
+  - url: /local/lovelace/cards/bignumber-card.js
+    type: js
 views:
   - title: Home
     icon: mdi:home-assistant
@@ -30,8 +32,7 @@ views:
     cards:
 ###### CUSTOM HEADER -----------------------------------------------
       - type: custom:compact-custom-header
-        background_image: url("/local/lovelace/header2.png")
-        background_color: rgb(34, 35, 58)
+        background: "rgb(34, 35, 58) url('/local/lovelace/header2.png')"
         active_tab_color: rgb(255, 183, 18)
         tab_indicator_color: rgb(255, 183, 18)
         main_config: true
@@ -463,7 +464,6 @@ views:
           - switch.office_pc
           - switch.office_powerbar
           - light.hue_go
-          - sensor.steam_account
 ###### OUTSITE ( TESTING )
       - type: picture-glance
         title: " "
@@ -507,27 +507,165 @@ views:
 ###### BUTTONS =================================================================
       - type: horizontal-stack
         cards:
-          - type: entity-button
-            theme: Earth Day
-            name: " "
-            entity: vacuum.roomba
-            tap_action:
-              action: call-service
-              service: vacuum.toggle
-              service_data:
-                entity_id: vacuum.roomba
-            hold_action:
-              action: more-info
-          - type: entity-button
-            theme: Thanksgiving Day
-            icon: mdi:trash-can
-            name: " "
-            entity: script.garbage_tracker
-            tap_action:
-              action: call-service
-              service: script.turn_on
-              service_data:
-                entity_id: script.garbage_tracker
+          - type: vertical-stack
+            cards:
+            - type: "custom:button-card"
+              color_type: card
+              color: rgb(28, 128, 199)
+              entity: vacuum.roomba
+              name: 'ROOMBA'
+              show_state: false
+              action: more_info
+              style:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 58)
+                - height: 24px
+                - padding: 3px
+            - type: "custom:button-card"
+              color_type: card
+              color: rgb(28, 128, 199)
+              entity: sensor.roomba_status
+              name: 'STATUS:'
+              show_state: true
+              style:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+                - height: 22px
+                - padding: 3px
+            - type: horizontal-stack
+              cards:
+              - type: "custom:button-card"
+                color_type: icon
+                color: rgb(28, 128, 199)
+                entity: vacuum.roomba
+                icon: mdi:play-pause
+                size: 27px
+                action: service
+                service:
+                  domain: vacuum
+                  action: start_pause
+                  data:
+                    entity_id: vacuum.roomba
+                show_state: false
+                style:
+                  - background-color: rgb(34, 35, 37)
+                  - padding: 0px
+              - type: "custom:button-card"
+                color_type: icon
+                color: rgb(28, 128, 199)
+                entity: vacuum.roomba
+                icon: mdi:stop
+                size: 27px
+                action: service
+                service:
+                  domain: vacuum
+                  action: stop
+                  data:
+                    entity_id: vacuum.roomba
+                show_state: false
+                style:
+                  - background-color: rgb(34, 35, 37)
+                  - padding: 0px
+              - type: "custom:button-card"
+                color_type: icon
+                color: rgb(28, 128, 199)
+                entity: vacuum.roomba
+                icon: mdi:home
+                size: 27px
+                action: service
+                service:
+                  domain: vacuum
+                  action: return_to_base
+                  data:
+                    entity_id: vacuum.roomba
+                show_state: false
+                style:
+                  - background-color: rgb(34, 35, 37)
+                  - padding: 0px
+            - type: horizontal-stack
+              cards:
+              - type: custom:bignumber-card
+                entity: sensor.battery_roomba
+                scale: 12px
+                from: left
+                min: 0
+                max: 100
+                severity:
+                - value: 30
+                  style: 'var(--label-badge-red)'
+                - value: 70
+                  style: 'var(--label-badge-yellow)'
+                - value: 100
+                  style: 'var(--label-badge-green)'
+              - type: "custom:button-card"
+                color_type: card
+                color: rgb(28, 128, 199)
+                entity: sensor.roomba_runtime
+                show_state: true
+                style:
+                  - font-size: 14px
+                  - background-color: rgb(34, 35, 37)
+                  - height: 22px
+                  - padding: 3px
+                  - text-align: center
+###### WASTE PICKUP
+          - type: vertical-stack
+            cards:
+            - type: "custom:button-card"
+              color_type: card
+              color: rgb(28, 128, 199)
+              entity: script.garbage_tracker
+              name: 'WASTE PICKUP'
+              show_state: false
+              action: toggle
+              style:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 58)
+                - height: 24px
+                - padding: 3px
+            - type: "custom:button-card"
+              color_type: card
+              color: rgb(28, 128, 199)
+              entity: sensor.waste_pickup_garbage_recycling
+              name: 'G:'
+              show_state: true
+              style:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+                - height: 22px
+                - padding: 3px
+            - type: "custom:button-card"
+              color_type: card
+              color: rgb(28, 128, 199)
+              entity: sensor.waste_pickup_yard_waste
+              name: 'Y:'
+              show_state: true
+              style:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+                - height: 22px
+                - padding: 3px
+            - type: "custom:button-card"
+              color_type: card
+              color: rgb(28, 128, 199)
+              entity: sensor.waste_pickup_container
+              name: '3+:'
+              show_state: true
+              style:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+                - height: 22px
+                - padding: 3px
+            # - type: entity-button
+            #   theme: Thanksgiving Day
+            #   icon: mdi:trash-can
+            #   name: " "
+            #   entity: script.garbage_tracker
+            #   tap_action:
+            #     action: call-service
+            #     service: script.turn_on
+            #     service_data:
+            #       entity_id: script.garbage_tracker
 
 ################################################################################
 ###### SENSOR VIEW -------------------------------------------------------------
@@ -539,8 +677,7 @@ views:
     cards:
 ###### CUSTOM HEADER -----------------------------------------------
       - type: custom:compact-custom-header
-        background_image: url("/local/lovelace/header2.png")
-        background_color: rgb(34, 35, 58)
+        background: "rgb(34, 35, 58) url('/local/lovelace/header2.png')"
         active_tab_color: rgb(255, 183, 18)
         tab_indicator_color: rgb(255, 183, 18)
         notify_indicator_color: rgb(255, 183, 18)
@@ -1266,7 +1403,7 @@ views:
                   - entity: sensor.office_yesterday
                 hours_to_show: 168
                 name: PC USAGE
-                points_per_hour: '.07'
+                points_per_hour: '.040'
                 show:
                   graph: bar
                   icon: false
@@ -1286,7 +1423,7 @@ views:
                   - entity: sensor.server_yesterday
                 hours_to_show: 168
                 name: SERVER USAGE
-                points_per_hour: '0.07'
+                points_per_hour: '.040'
                 show:
                   graph: bar
                   icon: false
@@ -1306,7 +1443,7 @@ views:
                   - entity:  sensor.washing_machine_today_kwh
                 hours_to_show: 168
                 name: WASH USAGE
-                points_per_hour: '0.07'
+                points_per_hour: '.040'
                 show:
                   graph: bar
                   icon: false
@@ -1329,8 +1466,7 @@ views:
     cards:
 ###### CUSTOM HEADER -----------------------------------------------
       - type: custom:compact-custom-header
-        background_image: url("/local/lovelace/header2.png")
-        background_color: rgb(34, 35, 58)
+        background: "rgb(34, 35, 58) url('/local/lovelace/header2.png')"
         active_tab_color: rgb(255, 183, 18)
         tab_indicator_color: rgb(255, 183, 18)
         notify_indicator_color: rgb(255, 183, 18)

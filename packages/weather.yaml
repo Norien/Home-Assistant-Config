@@ -48,7 +48,7 @@ sensor:
     sensors:
       weather_report:
         value_template: >
-          The weather is {{states('sensor.dark_sky_minutely_summary')[:-1]|lower}} and {{states('sensor.dark_sky_apparent_temperature') | round}} degrees. Today's high is {{states('sensor.dark_sky_daytime_high_apparent_temperature_0')| round}} with a low of {{states('sensor.dark_sky_overnight_low_apparent_temperature_0') | round}}.
+          The weather is {{states('sensor.dark_sky_minutely_summary')[:-1]|lower}} and {{states('sensor.dark_sky_apparent_temperature') | round}} degrees. Today's high is {{states('sensor.dark_sky_daytime_high_apparent_temperature_0d')| round}} with a low of {{states('sensor.dark_sky_overnight_low_apparent_temperature_0d') | round}}.
 ###### UV HAS EXPIRED NEED TO FIND A NEW SOURCE
           # {%- if states.sensor.pws_uv.state|int == 0 -%}
           # {%- else -%}

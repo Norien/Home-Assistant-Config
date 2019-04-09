@@ -33,13 +33,6 @@ switch:
           service: script.office_pc_off
 
 sensor:
-###### STEAM COMPONENT
-  - platform: steam_online
-    api_key: !secret steam_api
-    accounts:
-      - id: !secret steam_user
-        entity_id: "account"
-
 ###### SONOFF POW SENSORS
   - platform: mqtt
     name: "Office Draw"
