@@ -693,19 +693,282 @@ views:
         - type: "custom:button-card"
           color_type: card
           name: 'NEST'
+          entity: climate.hallway
+          action: more_info
           style:
             - font-size: 14px
             - font-weight: bold
             - background-color: rgb(34, 35, 58)
             - height: 24px
             - padding: 3px
-        - type: thermostat
-          entity: climate.hallway
-        - type: entities
-          show_header_toggle: false
-          entities:
-            - sensor.kitchen_nest_protect_co_status
-            - sensor.kitchen_nest_protect_smoke_status
+### NEST TEMPS
+################## heat/cool
+        - type: horizontal-stack
+          cards:
+          - type: conditional
+            conditions:
+              - entity: sensor.nest_operation_mode
+                state_not: "eco"
+              - entity: sensor.nest_operation_mode
+                state_not: "auto"
+            card:
+              type: "custom:button-card"
+              color_type: card
+              color: rgb(223, 255, 97)
+              entity: sensor.nest_target_temperature
+              name: 'Target:'
+              action: more_info
+              show_state: true
+              style:
+                - padding: 3px
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+          - type: conditional
+            conditions:
+              - entity: sensor.nest_operation_mode
+                state_not: "eco"
+              - entity: sensor.nest_operation_mode
+                state_not: "auto"
+            card:
+              type: "custom:button-card"
+              color_type: card
+              color: rgb(28, 128, 199)
+              entity: sensor.nest_current_temperature
+              name: 'Current:'
+              action: more_info
+              show_state: true
+              style:
+                - padding: 3px
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+################## eco/away
+          - type: conditional
+            conditions:
+              - entity: sensor.nest_operation_mode
+                state_not: "heat"
+              - entity: sensor.nest_operation_mode
+                state_not: "cool"
+            card:
+              type: "custom:button-card"
+              color_type: card
+              color: rgb(223, 255, 97)
+              entity: sensor.nest_target_temp_low
+              name: 'Low:'
+              action: more_info
+              show_state: true
+              style:
+                - padding: 3px
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+          - type: conditional
+            conditions:
+              - entity: sensor.nest_operation_mode
+                state_not: "heat"
+              - entity: sensor.nest_operation_mode
+                state_not: "cool"
+            card:
+              type: "custom:button-card"
+              color_type: card
+              color: rgb(223, 255, 97)
+              entity: sensor.nest_target_temp_high
+              name: 'High:'
+              action: more_info
+              show_state: true
+              style:
+                - padding: 3px
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+          - type: conditional
+            conditions:
+              - entity: sensor.nest_operation_mode
+                state_not: "heat"
+              - entity: sensor.nest_operation_mode
+                state_not: "cool"
+            card:
+              type: "custom:button-card"
+              color_type: card
+              color: rgb(28, 128, 199)
+              entity: sensor.nest_current_temperature
+              name: 'Current:'
+              action: more_info
+              show_state: true
+              style:
+                - padding: 3px
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+### MODES
+#HEAT
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            color_type: icon
+            color: rgb(223, 255, 97)
+            entity: sensor.nest_operation_mode
+            name: 'HEAT'
+            icon: mdi:fire
+            action: service
+            service:
+              domain: climate
+              action: set_operation_mode
+              data:
+                entity_id: climate.hallway
+                operation_mode: 'heat'
+            show_state: false
+            state:
+              - value: 'heat'
+                color: rgb(232, 23, 37)
+            style:
+              - padding: 3px
+              - font-size: 14px
+              - background-color: rgb(34, 35, 37)
+#COOL
+          - type: "custom:button-card"
+            color_type: icon
+            color: rgb(28, 128, 199)
+            entity: sensor.nest_current_temperature
+            name: 'COOL'
+            icon: mdi:snowflake
+            action: service
+            service:
+              domain: climate
+              action: set_operation_mode
+              data:
+                entity_id: climate.hallway
+                operation_mode: 'cool'
+            show_state: false
+            state:
+              - value: 'cool'
+                color: rgb(0, 123, 232)
+            style:
+              - padding: 3px
+              - font-size: 14px
+              - background-color: rgb(34, 35, 37)
+#AWAY
+          - type: "custom:button-card"
+            color_type: icon
+            color: rgb(223, 255, 97)
+            entity: switch.nest_away
+            name: 'AWAY'
+            icon: mdi:account-supervisor-circle
+            action: toggle
+            show_state: false
+            state:
+              - value: 'on'
+                color: rgb(232, 156, 44)
+            style:
+              - padding: 3px
+              - font-size: 14px
+              - background-color: rgb(34, 35, 37)
+#AUTO
+          - type: "custom:button-card"
+            color_type: icon
+            color: rgb(28, 128, 199)
+            entity: sensor.nest_operation_mode
+            name: 'AUTO'
+            icon: mdi:autorenew
+            action: service
+            service:
+              domain: climate
+              action: set_operation_mode
+              data:
+                entity_id: climate.hallway
+                operation_mode: 'auto'
+            show_state: false
+            state:
+              - value: 'auto'
+                color: rgb(232, 0, 232)
+            style:
+              - padding: 3px
+              - font-size: 14px
+              - background-color: rgb(34, 35, 37)
+#ECO
+          - type: "custom:button-card"
+            color_type: icon
+            color: rgb(28, 128, 199)
+            entity: sensor.nest_operation_mode
+            name: 'ECO'
+            icon: mdi:leaf
+            action: service
+            service:
+              domain: climate
+              action: set_operation_mode
+              data:
+                entity_id: climate.hallway
+                operation_mode: 'eco'
+            show_state: false
+            state:
+              - value: 'eco'
+                color: rgb(64, 232, 109)
+            style:
+              - padding: 3px
+              - font-size: 14px
+              - background-color: rgb(34, 35, 37)
+### INCREASE/DECREASE/FAN
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            color_type: card
+            size: 22px
+            entity: script.colder
+            icon: mdi:minus
+            action: toggle
+            show_state: false
+            style:
+              - padding: 3px
+              - background-color: rgb(34, 35, 37)
+          - type: "custom:button-card"
+            color_type: icon
+            color_off: rgb(233, 233, 233)
+            color: rgb(64, 232, 109)
+            size: 22px
+            entity: switch.nest_fan
+            icon: mdi:fan
+            action: toggle
+            show_state: false
+            style:
+              - padding: 3px
+              - background-color: rgb(34, 35, 37)
+          - type: "custom:button-card"
+            color_type: icon
+            size: 22px
+            entity: script.hotter
+            icon: mdi:plus
+            action: toggle
+            show_state: false
+            style:
+              - padding: 3px
+              - background-color: rgb(34, 35, 37)
+### NEST PROTECT
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            color_type: card
+            entity: sensor.kitchen_nest_protect_co_status
+            name: 'Carbon Dioxide'
+            action: more_info
+            show_state: false
+            state:
+              - value: 'Ok'
+                color: rgb(21, 158, 56)
+              - value: 'emergency'
+                color: rgb(255, 0, 0)
+            style:
+              - padding: 3px
+              - font-size: 14px
+          - type: "custom:button-card"
+            color_type: card
+            entity: sensor.kitchen_nest_protect_smoke_status
+            name: 'Smoke'
+            action: more_info
+            show_state: false
+            state:
+              - value: 'Ok'
+                color: rgb(21, 158, 56)
+              - value: 'emergency'
+                color: rgb(255, 0, 0)
+            style:
+              - padding: 3px
+              - font-size: 14px
 ###### PLEX
       - type: vertical-stack
         cards:

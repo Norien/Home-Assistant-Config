@@ -15,7 +15,7 @@ sensor:
     username: !secret freenas_user
     password: !secret freenas_pass
     authentication: basic
-    scan_interval: 3600
+    scan_interval: 21600
     headers:
       Content-Type: application/json
   - platform: template
@@ -38,7 +38,7 @@ sensor:
     username: !secret freenas_user
     password: !secret freenas_pass
     authentication: basic
-    scan_interval: 3600
+    scan_interval: 21600
     headers:
       Content-Type: application/json
   - platform: template
@@ -61,7 +61,7 @@ sensor:
     username: !secret freenas_user
     password: !secret freenas_pass
     authentication: basic
-    scan_interval: 3600
+    scan_interval: 21600
     headers:
       Content-Type: application/json
   - platform: template
@@ -84,7 +84,7 @@ sensor:
     username: !secret freenas_user
     password: !secret freenas_pass
     authentication: basic
-    scan_interval: 3600
+    scan_interval: 21600
     headers:
       Content-Type: application/json
   - platform: template
@@ -107,6 +107,6 @@ sensor:
     username: !secret freenas_user
     password: !secret freenas_pass
     authentication: basic
-    scan_interval: 3600
+    scan_interval: 86400
     headers:
       Content-Type: application/json

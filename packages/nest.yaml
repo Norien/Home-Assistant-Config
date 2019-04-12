@@ -52,19 +52,59 @@ script:
       - service: climate.set_temperature
         data_template:
           entity_id: climate.hallway
-          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) +0.5 }}"
+          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) +1 }}"
   colder:
     sequence:
       - service: climate.set_temperature
         data_template:
           entity_id: climate.hallway
-          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) -0.5 }}"
+          temperature: "{{ (states.climate.hallway.attributes.current_temperature | float) -1 }}"
   fan:
     sequence:
       - service: climate.set_fan_mode
         data:
           entity_id: climate.hallway
           fan_mode: 'on'
+
+switch:
+  - platform: template
+    switches:
+      nest_fan:
+        value_template: >-
+          {%-set fan = states.climate.hallway.attributes.fan_mode-%}
+          {%-if fan == 'on' -%}
+            on
+          {%- else -%}
+            off
+          {%- endif -%}
+        turn_on:
+          service: climate.set_fan_mode
+          data:
+            entity_id: climate.hallway
+            fan_mode: 'on'
+        turn_off:
+          service: climate.set_fan_mode
+          data:
+            entity_id: climate.hallway
+            fan_mode: 'off'
+      nest_away:
+        value_template: >-
+          {%-set away = states.climate.hallway.attributes.away_mode-%}
+          {%-if away == 'on' -%}
+            on
+          {%- else -%}
+            off
+          {%- endif -%}
+        turn_on:
+          service: climate.set_away_mode
+          data:
+            entity_id: climate.hallway
+            away_mode: 'true'
+        turn_off:
+          service: climate.set_away_mode
+          data:
+            entity_id: climate.hallway
+            away_mode: 'false'
 
 automation:
   ###### Nest protect states are - ok warning emergency
@@ -86,6 +126,39 @@ automation:
         data:
           group_name: "Living Room"
           scene_name: "Alarm"
+sensor:
+    - platform: template
+      sensors:
+# TEMPS
+        nest_target_temperature:
+          friendly_name: "Target Temperature"
+          entity_id: climate.hallway
+          unit_of_measurement: "°C"
+          value_template: "{{states.climate.hallway.attributes.temperature}}"
+        nest_current_temperature:
+          friendly_name: "Current Temperature"
+          entity_id: climate.hallway
+          unit_of_measurement: "°C"
+          value_template: "{{states.climate.hallway.attributes.current_temperature}}"
+        nest_target_temp_high:
+          friendly_name: "target_temp_high"
+          entity_id: climate.hallway
+          unit_of_measurement: "°C"
+          value_template: "{{states.climate.hallway.attributes.target_temp_high}}"
+        nest_target_temp_low:
+          friendly_name: "target_temp_low"
+          entity_id: climate.hallway
+          unit_of_measurement: "°C"
+          value_template: "{{states.climate.hallway.attributes.target_temp_low}}"
+# MODES
+        nest_operation_mode:
+          friendly_name: "Operation Mode"
+          entity_id: climate.hallway
+          value_template: "{{states.climate.hallway.attributes.operation_mode}}"
+        nest_away_mode:
+          friendly_name: "Operation Mode"
+          entity_id: climate.hallway
+          value_template: "{{states.climate.hallway.attributes.away_mode}}"
 
   # - alias: 'nest open a window'
   #   initial_state: 'on'
