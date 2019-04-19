@@ -178,6 +178,15 @@ cast:
   - host: 192.168.1.185
 
 media_player:
+  - platform: plex
+    entity_namespace: 'plex'
+    include_non_clients: true
+    scan_interval: 5
+    show_all_controls: false
+    use_custom_entity_ids: true
+    use_episode_art: true
+    remove_unavailable_clients: true
+    client_remove_interval: 600
   - platform: kodi
     host: !secret kodi_livingroom_ip
     port: !secret kodi_livingroom_port

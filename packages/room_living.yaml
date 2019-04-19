@@ -76,6 +76,15 @@ group:
      - light.hue_go
 
 script:
+### PLEX to KODI on LR TV
+  plex_finn:
+    sequence:
+      - service: media_player.play_media
+        entity_id: media_player.plex_kodi
+        data:
+          media_content_type: Video
+          media_content_id:  '{ "library_name" : "Television Children", "shuffle": "1" }'
+
   tv:
     sequence:
       - service_template: >
