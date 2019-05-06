@@ -2,41 +2,9 @@
 ## Packages / Sensors
 ################################################################
 homeassistant:
-  customize:
-    #philips hue motion sensors
-    ######Findlays Room
-    sensor.findlay_room_motion:
-      friendly_name: "Findlay's Room"
-      icon: mdi:run
-    sensor.findlay_room_lux:
-      icon: mdi:theme-light-dark
-    sensor.findlay_room_temperature:
-      icon: mdi:thermometer
-      friendly_name: Findlay's Room
-
-    ######Living room
-    sensor.living_room_motion:
-      friendly_name: "Living Room"
-      icon: mdi:run
-    sensor.living_room_lux:
-      icon: mdi:theme-light-dark
-    sensor.living_room_temperature:
-      icon: mdi:thermometer
-      friendly_name: Living Room
-
-    ######Dining Room
-    sensor.dining_room_motion:
-      friendly_name: "Dining Room"
-      icon: mdi:run
-    sensor.dining_room_lux:
-      icon: mdi:theme-light-dark
-    sensor.dining_room_temperature:
-      icon: mdi:thermometer
-      friendly_name: Dining Room
 
 ###### BINARY SENSORS ------------------------------------------
 binary_sensor:
-  - platform: huesensor
   - platform: workday
     country: CA
 ###### SENSORS -------------------------------------------------
@@ -76,69 +44,6 @@ sensor:
     value_template: "{{value.split('>')[4]|replace('&cent;/kWh</span','')}}"
     unit_of_measurement: "¢/kWh"
     scan_interval: 600
-
-  #####FINDLAYS ROOM SENSOR & DIMMER
-  - platform: rest
-    resource: !secret finn_room_lux
-    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
-    unit_of_measurement: Lux
-    name: 'Findlay Room Lux'
-    scan_interval: 120
-
-  - platform: rest
-    resource: !secret finn_room_motion
-    value_template: '{{ value_json.state.presence }}'
-    name: 'Findlay Room Motion'
-    scan_interval: 1
-
-  - platform: rest
-    resource: !secret finn_room_temp
-    value_template: '{{ (value_json.state.temperature | float / 100 + 1.6) | round(1) }}'
-    unit_of_measurement: °C
-    name: 'Findlay Room Temperature'
-    scan_interval: 120
-
-  #####LIVING ROOM SENSOR & DIMMER
-  - platform: rest
-    resource: !secret livingroom_lux
-    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
-    unit_of_measurement: Lux
-    name: 'Living Room Lux'
-    scan_interval: 700
-
-  - platform: rest
-    resource: !secret livingroom_motion
-    value_template: '{{ value_json.state.presence }}'
-    name: 'Living Room Motion'
-    scan_interval: 2
-
-  - platform: rest
-    resource: !secret livingroom_temp
-    value_template: '{{ (value_json.state.temperature | float / 100 + 0.35) | round(1) }}'
-    unit_of_measurement: °C
-    name: 'Living Room Temperature'
-    scan_interval: 120
-
-  #####DINING ROOM SENSOR
-  - platform: rest
-    resource: !secret dining_room_lux
-    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
-    unit_of_measurement: Lux
-    name: 'Dining Room Lux'
-    scan_interval: 700
-
-  - platform: rest
-    resource: !secret dining_room_motion
-    value_template: '{{ value_json.state.presence }}'
-    name: 'Dining Room Motion'
-    scan_interval: 2
-
-  - platform: rest
-    resource: !secret dining_room_temp
-    value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
-    unit_of_measurement: °C
-    name: 'Dining Room Temperature'
-    scan_interval: 120
 
 ###### AVERAGE TEMPERATURE
   - platform: min_max

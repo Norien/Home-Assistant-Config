@@ -52,30 +52,30 @@ views:
           entities:
             - sensor.battery_low
 ###### OFFLINE DEVICE POP-UP
-      - type: custom:monster-card
-        show_empty: false
-        card:
-          type: entities
-          title: Offline Devices
-          show_header_toggle: false
-        filter:
-          include:
-            - entity_id: device_tracker.camera*
-            - entity_id: device_tracker.chromecast*
-            - entity_id: device_tracker.echodot
-            - entity_id: device_tracker.philips_hue_hub
-            - entity_id: device_tracker.google_home*
-            - entity_id: device_tracker.light*
-            - entity_id: device_tracker.nest
-            - entity_id: device_tracker.office*
-            - entity_id: device_tracker.roomba
-            - entity_id: device_tracker.sonoff*
-            - entity_id: device_tracker.wemo*
-            - entity_id: device_tracker.washing_machine
-            - entity_id: device_tracker.findlaysipad
-          exclude:
-            - state: 'Home'
-            - state: 'home'
+      # - type: custom:monster-card
+      #   show_empty: false
+      #   card:
+      #     type: entities
+      #     title: Offline Devices
+      #     show_header_toggle: false
+      #   filter:
+      #     include:
+      #       - entity_id: device_tracker.camera*
+      #       - entity_id: device_tracker.chromecast*
+      #       - entity_id: device_tracker.echodot
+      #       - entity_id: device_tracker.philips_hue_hub
+      #       - entity_id: device_tracker.google_home*
+      #       - entity_id: device_tracker.light*
+      #       - entity_id: device_tracker.nest
+      #       - entity_id: device_tracker.office*
+      #       - entity_id: device_tracker.roomba
+      #       - entity_id: device_tracker.sonoff*
+      #       - entity_id: device_tracker.wemo*
+      #       - entity_id: device_tracker.washing_machine
+      #       - entity_id: device_tracker.findlaysipad
+      #     exclude:
+      #       - state: 'Home'
+      #       - state: 'home'
 ###### CONDITIONAL GOOD MORNING / GOOD NIGHT BUTTONS
       - type: conditional
         conditions:
@@ -118,6 +118,7 @@ views:
               entity: input_boolean.justin
               aspect_ratio: 2:1
               entities:
+                - device_tracker.life360_justin
                 - input_boolean.justin
                 - input_boolean.map_justin
                 - sensor.justin_battery_template
@@ -129,6 +130,7 @@ views:
               entity: input_boolean.nicole
               aspect_ratio: 2:1
               entities:
+                - device_tracker.life360_nicole
                 - input_boolean.nicole
                 - input_boolean.map_nicole
                 - sensor.nicole_phone_to_home
@@ -164,7 +166,7 @@ views:
             entity: input_select.light_living_room_scene
             icon: mdi:star-circle
             tap_action:
-              action: service
+              action: call-service
               service: script.turn_on
               service_data:
                 entity_id: script.lr_concentrate
@@ -177,7 +179,7 @@ views:
             entity: input_select.light_living_room_scene
             icon: mdi:brightness-6
             tap_action:
-              action: service
+              action: call-service
               service: script.turn_on
               service_data:
                 entity_id: script.lr_relax
@@ -190,7 +192,7 @@ views:
             entity: input_select.light_living_room_scene
             icon: mdi:brightness-2
             tap_action:
-              action: service
+              action: call-service
               service: script.turn_on
               service_data:
                 entity_id: script.lr_dimmed
@@ -203,7 +205,7 @@ views:
             entity: input_select.light_living_room_scene
             icon: mdi:flower
             tap_action:
-              action: service
+              action: call-service
               service: script.turn_on
               service_data:
                 entity_id: script.lr_springblossom
@@ -216,7 +218,7 @@ views:
             entity: input_select.light_living_room_scene
             icon: mdi:ceiling-light
             tap_action:
-              action: service
+              action: call-service
               service: homeassistant.turn_off
               service_data:
                 entity_id: group.lr_lights
@@ -275,12 +277,22 @@ views:
             color: rgb(66, 192, 244)
             action: toggle
             size: 25px
+            show_name: false
+            state:
+              - value: 'on'
+                color: rgb(4, 96, 224)
+                spin: true
+              - value: 'off'
+                color: rgb(227, 228, 230)
           - type: "custom:button-card"
             entity: script.nurse
             icon: mdi:baby
-            color: rgb(66, 192, 244)
             action: toggle
             size: 25px
+            show_name: false
+            state:
+              - value: 'off'
+                color: rgb(227, 228, 230)
 ###### ROOMS -------------------------------------------------------------------
 ###### FINDLAYS ROOM
       - type: vertical-stack
@@ -290,11 +302,13 @@ views:
           camera_image: camera.findlay
           entities:
             - light.findlay_s_room
-            - sensor.findlay_room_temperature
-            - sensor.findlay_room_motion
-            - sensor.findlay_room_lux
+            - sensor.findlays_room_temperature
+            - binary_sensor.findlays_room_motion
+            - sensor.findlays_room_light_level
             - switch.sleep_finn
-  ## HIDE SPEAKER IF NOT PLAYING
+      - type: vertical-stack
+        cards:
+  ## HIDE FINDLAY'S SPEAKER IF NOT PLAYING
         - type: conditional
           conditions:
             - entity: media_player.findlays_speaker
@@ -305,6 +319,30 @@ views:
             icon: mdi:google-home
             artwork: cover
             name: "Findlay's Speaker"
+            volume_stateless: true
+            show_source: false
+            show_progress: true
+            hide_power: true
+            hide_controls: true
+            replace_mute: stop
+###### NURSERY
+        - type: picture-glance
+          title: " "
+          camera_image: camera.nursery
+          entities:
+            - light.aurora
+            - switch.white_noise_nursery
+  ## HIDE NURSERY SPEAKER IF NOT PLAYING
+        - type: conditional
+          conditions:
+            - entity: media_player.nursery_speaker
+              state: "playing"
+          card:
+            type: custom:mini-media-player
+            entity: media_player.nursery_speaker
+            icon: mdi:google-home
+            artwork: cover
+            name: "Nursery Speaker"
             volume_stateless: true
             show_source: false
             show_progress: true
@@ -340,15 +378,70 @@ views:
 ###### MASTER BEDROOM
       - type: vertical-stack
         cards:
-        - type: picture-glance
-          title: " "
-          image: /local/lovelace/room_masterbed_on.jpg
-          aspect_ratio: 16x9
-          entities:
-            - switch.bedroom_lamps
-            - switch.bedroom_tv
-            - switch.bedroom_fan
-            - switch.white_noise
+        - type: "custom:button-card"
+          color_type: card
+          color: rgb(34, 35, 58)
+          name: 'MASTER BEDROOM'
+          show_state: false
+          show_icon: false
+          styles:
+            card:
+              - background-color: rgb(34, 35, 58)
+              - font-size: 14px
+              - font-weight: bold
+              - height: 24px
+              - padding: 3px
+              - transform: translate(-0%, 10%)
+#BEDROOM BUTTONS
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            entity: switch.bedroom_lamps
+            icon: mdi:lamp
+            show_state: false
+            show_name: false
+            name: LAMP
+            state:
+              - value: 'on'
+                color: rgb(254, 255, 63)
+              - value: 'off'
+                color: rgb(227, 228, 230)
+          - type: "custom:button-card"
+            entity: switch.bedroom_tv
+            icon: mdi:monitor
+            show_state: false
+            show_name: false
+            name: TV
+            state:
+              - value: 'on'
+                color: rgb(254, 255, 63)
+              - value: 'off'
+                color: rgb(227, 228, 230)
+          - type: "custom:button-card"
+            entity: switch.bedroom_fan
+            icon: mdi:fan
+            show_state: false
+            show_name: false
+            name: FAN
+            state:
+              - value: 'on'
+                color: rgb(29, 189, 229)
+                spin: true
+              - value: 'off'
+                color: rgb(227, 228, 230)
+          - type: "custom:button-card"
+            entity: switch.white_noise
+            icon: mdi:snowflake
+            show_state: false
+            show_name: false
+            name: WHITE NOISE
+            state:
+              - value: 'on'
+                color: rgb(29, 189, 229)
+                spin: true
+              - value: 'off'
+                color: rgb(227, 228, 230)
+  ## HIDE BEDROOM TV IF NOT PLAYING
         - type: conditional
           conditions:
             - entity: switch.bedroom_tv
@@ -365,6 +458,7 @@ views:
             show_progress: true
             hide_power: true
             idle_view: true
+  ## HIDE BEDROOM SPEAKER IF NOT PLAYING
         - type: conditional
           conditions:
             - entity:  media_player.master_bedroom_speaker
@@ -384,19 +478,74 @@ views:
 ###### LIVINGROOM
       - type: vertical-stack
         cards:
-        - type: picture-glance
-          title: " "
-          image: /local/lovelace/room_living.jpg
-          aspect_ratio: 16x9
-          entities:
-            - sensor.living_room_temperature
-            - sensor.living_room_motion
-            - sensor.living_room_lux
-            - switch.tv
-            - switch.receiver
-            - light.living_room_lamp
-            - light.living_room
-            - automation.night_light
+        - type: "custom:button-card"
+          color_type: card
+          color: rgb(34, 35, 58)
+          name: 'LIVING ROOM'
+          show_state: false
+          show_icon: false
+          styles:
+            card:
+              - background-color: rgb(34, 35, 58)
+              - font-size: 14px
+              - font-weight: bold
+              - height: 24px
+              - padding: 3px
+              - transform: translate(-0%, 10%)
+## LIVINGROOM BUTTONS
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            entity: switch.tv
+            icon: mdi:monitor
+            show_state: false
+            show_name: false
+            name: TV
+            state:
+              - value: 'on'
+                color: rgb(255, 183, 18)
+              - value: 'off'
+                color: rgb(227, 228, 230)
+          - type: "custom:button-card"
+            entity: switch.receiver
+            show_state: false
+            show_name: false
+            name: RECEIVER
+            state:
+              - value: 'on'
+                color: rgb(255, 183, 18)
+              - value: 'off'
+                color: rgb(227, 228, 230)
+          - type: "custom:button-card"
+            entity: light.living_room
+            show_state: false
+            show_name: false
+            name: LIGHTS
+            state:
+              - value: 'on'
+                color: rgb(29, 189, 229)
+              - value: 'off'
+                color: rgb(227, 228, 230)
+          - type: "custom:button-card"
+            entity: automation.night_light
+            show_state: false
+            show_name: false
+            name: NIGHTLIGHT
+            state:
+              - value: 'on'
+                color: rgb(29, 189, 229)
+              - value: 'off'
+                color: rgb(227, 228, 230)
+          - type: "custom:button-card"
+            entity: switch.white_noise_living_room
+            icon: mdi:snowflake
+            show_name: false
+            state:
+              - value: 'on'
+                color: rgb(4, 96, 224)
+                spin: true
+              - value: 'off'
+                color: rgb(227, 228, 230)
   ### KODI FOR TV
         - type: conditional
           conditions:
@@ -416,7 +565,6 @@ views:
             hide:
               power: true
               icon: true
-
   ### HIDE GOOGLE HOME
         - type: conditional
           conditions:
@@ -436,7 +584,6 @@ views:
             hide:
               power: true
               icon: true
-
 ###### COMPUTER DESK
       - type: picture-glance
         title: " "
@@ -485,79 +632,93 @@ views:
           - type: vertical-stack
             cards:
             - type: "custom:button-card"
-              color_type: label-card
-              color: rgb(34, 35, 58)
+              color_type: card
+              color: rgb(255, 0, 0)
               entity: vacuum.roomba
               name: 'ROOMBA'
               show_state: false
               show_icon: false
               tap_action:
                 action: more-info
-              style:
-                - background-color: rgb(34, 35, 58)
-                - font-size: 14px
-                - font-weight: bold
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+              state:
+                - value: "on"
+                  color: rgb(34, 35, 58)
+                - value: "off"
+                  color: rgb(34, 35, 58)
+              styles:
+                card:
+                  - font-size: 14px
+                  - font-weight: bold
+                  - height: 24px
+                  - padding: 3px
+                  - transform: translate(-0%, 10%)
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
-              name: 'STATUS:'
+              name: 'STATUS'
               entity: sensor.roomba_status
               show_state: true
               show_icon: false
-              style:
-                - font-size: 14px
-                - height: 22px
-                - padding: 3px
-                - transform: translate(-0%, 7%)
-                - display: flex
-                - justify-content: center
+              layout: name_state
+              styles:
+                card:
+                  - font-size: 14px
+                  - height: 24px
+                  - padding: 3px
+                  - transform: translate(-0%, 7%)
             - type: horizontal-stack
               cards:
               - type: "custom:button-card"
                 color_type: icon
                 entity: vacuum.roomba
                 icon: mdi:play-pause
-                size: 27px
+                size: 24px
                 tap_action:
-                  action: service
+                  action: call-service
                   service: vacuum.start_pause
                   service_data:
                     entity_id: vacuum.roomba
                 show_state: false
-                style:
-                  - background-color: rgb(34, 35, 37)
-                  - padding: 0px
+                show_name: false
+                styles:
+                  card:
+                    - background-color: rgb(34, 35, 37)
+                    - padding: 0px
+                    - height: 24px
               - type: "custom:button-card"
                 color_type: icon
                 entity: vacuum.roomba
                 icon: mdi:stop
-                size: 27px
+                size: 24px
                 tap_action:
-                  action: service
+                  action: call-service
                   service: vacuum.stop
                   service_data:
                     entity_id: vacuum.roomba
                 show_state: false
-                style:
-                  - background-color: rgb(34, 35, 37)
-                  - padding: 0px
+                show_name: false
+                styles:
+                  card:
+                    - background-color: rgb(34, 35, 37)
+                    - padding: 0px
+                    - height: 24px
               - type: "custom:button-card"
                 color_type: icon
                 entity: vacuum.roomba
                 icon: mdi:home
-                size: 27px
+                size: 24px
                 tap_action:
-                  action: service
+                  action: call-service
                   service: vacuum.return_to_base
                   service_data:
                     entity_id: vacuum.roomba
                 show_state: false
-                style:
-                  - background-color: rgb(34, 35, 37)
-                  - padding: 0px
+                show_name: false
+                styles:
+                  card:
+                    - background-color: rgb(34, 35, 37)
+                    - padding: 0px
+                    - height: 24px
             - type: horizontal-stack
               cards:
               - type: custom:bignumber-card
@@ -578,13 +739,17 @@ views:
                 color: rgb(34, 35, 58)
                 entity: sensor.roomba_runtime
                 show_state: true
+                show_name: false
                 show_icon: false
-                style:
-                  - font-size: 14px
-                  - font-weight: bold
-                  - background-color: rgb(34, 35, 37)
-                  - height: 22px
-                  - padding: 3px
+                layout: name_state
+                styles:
+                  card:
+                    - font-size: 14px
+                    - font-weight: bold
+                    - background-color: rgb(34, 35, 37)
+                    - height: 28px
+                    - padding: 3px
+                    - transform: translate(-0%, 7%)
 ###### WASTE PICKUP
           - type: vertical-stack
             cards:
@@ -595,55 +760,65 @@ views:
               name: 'WASTE'
               show_state: false
               show_icon: false
-              style:
-                - background-color: rgb(34, 35, 58)
-                - font-size: 14px
-                - font-weight: bold
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+              styles:
+                card:
+                  - background-color: rgb(34, 35, 58)
+                  - font-size: 14px
+                  - font-weight: bold
+                  - height: 24px
+                  - padding: 3px
+                  - transform: translate(-0%, 10%)
             - type: "custom:button-card"
               color_type: card
               entity: sensor.waste_pickup_garbage_recycling
-              name: 'G:'
+              name: 'G'
               show_state: true
-              show_icon: false
+              show_icon: true
+              show_name: false
+              size: 20px
               color: rgb(34, 35, 37)
-              style:
-                - font-size: 14px
-                - height: 22px
-                - padding: 3px
-                - transform: translate(-0%, 7%)
-                - display: flex
-                - justify-content: center
+              layout: icon_state
+              styles:
+                card:
+                  - font-size: 14px
+                  - height: 24px
+                  - padding: 3px
+                  - transform: translate(-0%, 7%)
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.waste_pickup_yard_waste
-              name: 'Y:'
+              name: 'Y'
+              layout: icon_state
               show_state: true
-              show_icon: false
-              style:
-                - font-size: 14px
-                - height: 22px
-                - padding: 3px
-                - transform: translate(-0%, 7%)
-                - display: flex
-                - justify-content: center
+              show_icon: true
+              show_name: false
+              size: 20px
+              icon: 'mdi:tree'
+              styles:
+                card:
+                  - font-size: 14px
+                  - height: 24px
+                  - padding: 3px
+                  - transform: translate(-0%, 7%)
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.waste_pickup_container
-              name: '3+:'
+              name: '3+'
+              icon: 'mdi:home-floor-3'
+              layout: icon_state
               show_state: true
-              show_icon: false
-              style:
-                - font-size: 14px
-                - height: 22px
-                - padding: 3px
-                - transform: translate(-0%, 7%)
-                - display: flex
-                - justify-content: center
+              show_icon: true
+              show_name: false
+              size: 20px
+              styles:
+                card:
+                  - font-size: 14px
+                  - height: 24px
+                  - padding: 3px
+                  - transform: translate(-0%, 7%)
+
 ################################################################################
 ###### SENSOR VIEW -------------------------------------------------------------
 ################################################################################
@@ -697,7 +872,8 @@ views:
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.nest_target_temperature
-              name: 'Target:'
+              name: 'Target'
+              layout: name_state
               tap_action:
                 action: more-info
               show_state: true
@@ -706,8 +882,6 @@ views:
                 - padding: 3px
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
-                - display: flex
-                - justify-content: center
           - type: conditional
             conditions:
               - entity: sensor.nest_operation_mode
@@ -719,7 +893,8 @@ views:
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.nest_current_temperature
-              name: 'Current:'
+              name: 'Current'
+              layout: name_state
               tap_action:
                 action: more-info
               show_state: true
@@ -728,8 +903,6 @@ views:
                 - padding: 3px
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
-                - display: flex
-                - justify-content: center
 ################## eco/away
           - type: conditional
             conditions:
@@ -742,7 +915,8 @@ views:
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.nest_target_temp_low
-              name: 'Low:'
+              name: 'Low'
+              layout: name_state
               tap_action:
                 action: more-info
               show_state: true
@@ -751,8 +925,6 @@ views:
                 - padding: 3px
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
-                - display: flex
-                - justify-content: center
           - type: conditional
             conditions:
               - entity: sensor.nest_operation_mode
@@ -764,16 +936,15 @@ views:
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.nest_target_temp_high
-              name: 'High:'
+              name: 'High'
               action: more_info
               show_state: true
               show_icon: false
+              layout: name_state
               style:
                 - padding: 3px
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
-                - display: flex
-                - justify-content: center
           - type: conditional
             conditions:
               - entity: sensor.nest_operation_mode
@@ -785,16 +956,15 @@ views:
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.nest_current_temperature
-              name: 'Current:'
+              name: 'Current'
               action: more_info
               show_state: true
               show_icon: false
+              layout: name_state
               style:
                 - padding: 3px
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
-                - display: flex
-                - justify-content: center
 ### MODES
 #HEAT
         - type: horizontal-stack
@@ -805,7 +975,7 @@ views:
             name: 'HEAT'
             icon: mdi:fire
             tap_action:
-              action: service
+              action: call-service
               service: climate.set_operation_mode
               service_data:
                 entity_id: climate.hallway
@@ -825,7 +995,7 @@ views:
             name: 'COOL'
             icon: mdi:snowflake
             tap_action:
-              action: service
+              action: call-service
               service: climate.set_operation_mode
               service_data:
                 entity_id: climate.hallway
@@ -833,6 +1003,7 @@ views:
             show_state: false
             state:
               - value: 'cool'
+                spin: true
                 color: rgb(0, 123, 232)
             style:
               - padding: 3px
@@ -862,7 +1033,7 @@ views:
             name: 'AUTO'
             icon: mdi:autorenew
             tap_action:
-              action: service
+              action: call-service
               service: climate.set_operation_mode
               service_data:
                 entity_id: climate.hallway
@@ -870,6 +1041,7 @@ views:
             show_state: false
             state:
               - value: 'auto'
+                spin: true
                 color: rgb(232, 0, 232)
             style:
               - padding: 3px
@@ -882,7 +1054,7 @@ views:
             name: 'ECO'
             icon: mdi:leaf
             tap_action:
-              action: service
+              action: call-service
               service: climate.set_operation_mode
               service_data:
                 entity_id: climate.hallway
@@ -906,6 +1078,7 @@ views:
             tap_action:
               action: toggle
             show_state: false
+            show_name: false
             state:
               - value: 'off'
                 color: rgb(227, 228, 230)
@@ -920,9 +1093,11 @@ views:
             tap_action:
               action: toggle
             show_state: false
+            show_name: false
             state:
               - value: 'on'
                 color: rgb(29, 189, 229)
+                spin: true
               - value: 'off'
                 color: rgb(227, 228, 230)
             style:
@@ -936,6 +1111,7 @@ views:
             tap_action:
               action: toggle
             show_state: false
+            show_name: false
             state:
               - value: 'off'
                 color: rgb(227, 228, 230)
@@ -982,6 +1158,9 @@ views:
           color_type: card
           color: rgb(34, 35, 58)
           name: 'PLEX'
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/2/
           style:
             - font-size: 14px
             - font-weight: bold
@@ -1037,32 +1216,30 @@ views:
                 color_type: card
                 color: rgb(34, 35, 37)
                 entity: sensor.certificate
-                name: 'Certificate:'
+                name: 'Certificate'
                 tap_action:
                   action: more-info
                 show_state: true
                 show_icon: false
+                layout: name_state
                 style:
                   - padding: 3px
                   - font-size: 14px
                   - background-color: rgb(34, 35, 37)
-                  - display: flex
-                  - justify-content: center
               - type: "custom:button-card"
                 color_type: card
                 color: rgb(34, 35, 37)
                 entity: sensor.external_ip
-                name: 'External IP:'
+                name: 'External IP'
                 tap_action:
                   action: more-info
                 show_state: true
                 show_icon: false
+                layout: name_state
                 style:
                   - padding: 3px
                   - font-size: 14px
                   - background-color: rgb(34, 35, 37)
-                  - display: flex
-                  - justify-content: center
             - type: custom:mini-graph-card
               name: Network Usage
               icon: mdi:earth
@@ -1100,34 +1277,34 @@ views:
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.linux_distro
-              name: 'Linux:'
+              name: 'Linux'
               tap_action:
                 action: more-info
               show_state: true
               show_icon: false
+              layout: name_state
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
                 - height: 26px
                 - padding: 3px
-                - display: flex
-                - justify-content: center
+                - transform: translate(-0%, 10%)
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.server_uptime
-              name: 'Uptime:'
+              name: 'Uptime'
               tap_action:
                 action: more-info
               show_state: true
               show_icon: false
+              layout: name_state
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
                 - height: 26px
                 - padding: 3px
-                - display: flex
-                - justify-content: center
+                - transform: translate(-0%, 10%)
           - type: horizontal-stack
             cards:
             - type: gauge
@@ -1199,7 +1376,6 @@ views:
                 filter:
                   include:
                     - entity_id: switch.ha_docker*
-
 ###### FREENAS
       - type: horizontal-stack
         cards:
@@ -1276,23 +1452,24 @@ views:
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.seedbox_vpn_status
-              name: 'VPN:'
+              name: 'VPN'
               show_state: true
               show_icon: false
+              layout: name_state
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
                 - height: 24px
                 - padding: 3px
-                - display: flex
-                - justify-content: center
+                - transform: translate(-0%, 10%)
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.seedbox_ip
-              name: 'IP:'
+              name: 'IP'
               show_state: true
               show_icon: false
+              layout: name_state
               tap_action:
                 action: more-info
               style:
@@ -1300,8 +1477,7 @@ views:
                 - background-color: rgb(34, 35, 37)
                 - height: 24px
                 - padding: 3px
-                - display: flex
-                - justify-content: center
+                - transform: translate(-0%, 10%)
           - type: custom:mini-graph-card
             name: "Transfer Rate"
             show:
@@ -1319,6 +1495,7 @@ views:
             color: rgb(34, 35, 37)
             name: 'Restart'
             show_icon: false
+            confirmation: 'Are you Sure you want to restart?'
             entity: switch.ha_dockermon_delugevpn
             state:
               - value: "off"
@@ -1336,9 +1513,9 @@ views:
             color_type: card
             color: rgb(34, 35, 58)
             name: 'HOME ASSISTANT'
-            entity: weblink.release_log
             tap_action:
-              action: more-info
+              action: url
+              url: 'https://github.com/home-assistant/home-assistant/releases/tag/0.91.4'
             show_icon: false
             show_state: false
             style:
@@ -1354,9 +1531,10 @@ views:
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.ha_uptime
-              name: 'Uptime:'
+              name: 'Uptime'
               show_state: true
               show_icon: false
+              layout: name_state
               tap_action:
                 action: more-info
               style:
@@ -1364,33 +1542,34 @@ views:
                 - background-color: rgb(34, 35, 37)
                 - height: 24px
                 - padding: 3px
-                - display: flex
-                - justify-content: center
+                - transform: translate(-0%, 10%)
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.ha_version
-              name: 'Version:'
+              name: 'Version'
               show_state: true
               show_icon: false
+              layout: name_state
               tap_action:
-                action: more-info
+                action: url
+                url: 'https://github.com/home-assistant/home-assistant/releases'
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
                 - height: 24px
                 - padding: 3px
-                - display: flex
-                - justify-content: center
+                - transform: translate(-0%, 10%)
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.config
-              name: 'Config:'
+              name: 'Config'
               show_state: true
               show_icon: false
+              layout: name_state
               tap_action:
                 action: more-info
               style:
@@ -1398,15 +1577,15 @@ views:
                 - background-color: rgb(34, 35, 37)
                 - height: 24px
                 - padding: 3px
-                - display: flex
-                - justify-content: center
+                - transform: translate(-0%, 10%)
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.database_home_assistant
-              name: 'Database:'
+              name: 'Database'
               show_state: true
               show_icon: false
+              layout: name_state
               tap_action:
                 action: more-info
               style:
@@ -1414,42 +1593,43 @@ views:
                 - background-color: rgb(34, 35, 37)
                 - height: 24px
                 - padding: 3px
-                - display: flex
-                - justify-content: center
+                - transform: translate(-0%, 10%)
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.home_assistant_config_issues
-              name: 'Open Issues:'
+              name: 'Open Issues'
               show_state: true
               show_icon: false
+              layout: name_state
               tap_action:
-                action: more-info
+                action: url
+                url: 'https://github.com/Norien/Home-Assistant-Config/issues'
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
                 - height: 24px
                 - padding: 3px
-                - display: flex
-                - justify-content: center
+                - transform: translate(-0%, 10%)
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
               entity: sensor.home_assistant_config_stars
-              name: 'Stars:'
+              name: 'Stars'
               show_state: true
               show_icon: false
+              layout: name_state
               tap_action:
-                action: more-info
+                action: url
+                url: 'https://github.com/Norien/Home-Assistant-Config/stargazers'
               style:
                 - font-size: 14px
                 - background-color: rgb(34, 35, 37)
                 - height: 24px
                 - padding: 3px
-                - display: flex
-                - justify-content: center
+                - transform: translate(-0%, 10%)
           - type: "custom:button-card"
             color_type: label
             color: rgb(34, 35, 37)
@@ -1457,9 +1637,10 @@ views:
             entity: script.restart_hass
             show_icon: false
             show_state: false
+            confirmation: 'Are you Sure you want to restart?'
             tap_action:
-              action: service
-              service: script.restart_hass
+              action: call-service
+              service: shell_command.restart_hass
             style:
               - background-color: rgb(34, 35, 37)
               - font-size: 14px
@@ -1494,39 +1675,45 @@ views:
             - type: "custom:button-card"
               entity: binary_sensor.door_front
               name: Front
-              icon: mdi:door
-              action: more_info
+              tap_action:
+                action: more-info
               show_state: false
               size: 25px
               state:
                 - value: 'off'
                   color: rgb(255, 0, 0)
+                  icon: mdi:door
                 - value: 'on'
                   color: rgb(0, 255, 0)
+                  icon: mdi:door-open
             - type: "custom:button-card"
               entity: binary_sensor.door_side
               name: Side
-              icon: mdi:door
-              action: more_info
+              tap_action:
+                action: more-info
               show_state: false
               size: 25px
               state:
                 - value: 'off'
                   color: rgb(255, 0, 0)
+                  icon: mdi:door
                 - value: 'on'
                   color: rgb(0, 255, 0)
+                  icon: mdi:door-open
             - type: "custom:button-card"
               entity: binary_sensor.door_back
               name: Back
-              icon: mdi:door
-              action: more_info
+              tap_action:
+                action: more-info
               show_state: false
               size: 25px
               state:
                 - value: 'off'
                   color: rgb(255, 0, 0)
+                  icon: mdi:door
                 - value: 'on'
                   color: rgb(0, 255, 0)
+                  icon: mdi:door-open
 ###### MOTION SENSORS
           - type: horizontal-stack
             cards:
@@ -1546,55 +1733,65 @@ views:
               - type: horizontal-stack
                 cards:
                 - type: "custom:button-card"
-                  entity: binary_sensor.findlays_motion_room
+                  entity: binary_sensor.findlays_room_motion
                   name: "Finn's Room"
-                  icon: mdi:run
-                  action: more_info
+                  tap_action:
+                    action: more-info
                   show_state: false
+                  show_label: true
                   size: 25px
                   state:
                     - value: 'off'
                       color: rgb(255, 0, 0)
+                      icon: mdi:run
                     - value: 'on'
                       color: rgb(0, 255, 0)
+                      icon: mdi:run-fast
                 - type: "custom:button-card"
-                  entity: binary_sensor.living_room_motion_sensor
+                  entity: binary_sensor.living_room_sensor_motion
                   name: Living Room
-                  icon: mdi:run
-                  action: more_info
+                  tap_action:
+                    action: more-info
                   show_state: false
                   size: 25px
                   state:
                     - value: 'off'
                       color: rgb(255, 0, 0)
+                      icon: mdi:run
                     - value: 'on'
                       color: rgb(0, 255, 0)
+                      icon: mdi:run-fast
                 - type: "custom:button-card"
-                  entity: binary_sensor.dining_room_motion_sensor
+                  entity: binary_sensor.dining_room_sensor_motion
                   name: Dining Room
-                  icon: mdi:run
-                  action: more_info
+                  tap_action:
+                    action: more-info
                   show_state: false
                   size: 25px
                   state:
                     - value: 'off'
                       color: rgb(255, 0, 0)
+                      icon: mdi:run
                     - value: 'on'
                       color: rgb(0, 255, 0)
+                      icon: mdi:run-fast
                 - type: "custom:button-card"
                   entity: sensor.server_room_motion
                   name: Server Room
-                  icon: mdi:run
-                  action: more_info
+                  tap_action:
+                    action: more-info
                   show_state: false
                   size: 25px
                   state:
                     - value: '0'
                       color: rgb(255, 0, 0)
+                      icon: mdi:run
                     - value: 'unknown'
                       color: rgb(255, 0, 0)
+                      icon: mdi:run
                     - value: '1'
                       color: rgb(0, 255, 0)
+                      icon: mdi:run-fast
 ###### NOTIFICATIONS
       - type: vertical-stack
         cards:
@@ -1688,10 +1885,10 @@ views:
                   show:
                     icon: false
                   entities:
-                    - entity: sensor.findlay_room_temperature
+                    - entity: sensor.findlays_room_temperature
                       name: Temperature
                       color: '#e20029'
-                    - entity: sensor.findlay_room_lux
+                    - entity: sensor.findlays_room_light_level
                       name: Illumination
                       color: '#00c3e2'
             - type: horizontal-stack
@@ -1701,10 +1898,10 @@ views:
                   show:
                     icon: false
                   entities:
-                    - entity: sensor.living_room_temperature
+                    - entity: sensor.living_room_sensor_temperature
                       name: Temperature
                       color: '#e20029'
-                    - entity: sensor.living_room_lux
+                    - entity: sensor.living_room_sensor_light_level
                       name: Illumination
                       color: '#00c3e2'
                 - type: custom:mini-graph-card
@@ -1712,10 +1909,10 @@ views:
                   show:
                     icon: false
                   entities:
-                    - entity: sensor.dining_room_temperature
+                    - entity: sensor.dining_room_sensor_temperature
                       name: Temperature
                       color: '#e20029'
-                    - entity: sensor.dining_room_lux
+                    - entity: sensor.dining_room_sensor_light_level
                       name: Illumination
                       color: '#00c3e2'
   ###### ENERGY CONSUMPTION
@@ -1742,19 +1939,20 @@ views:
               show_state: true
               show_icon: false
               action: more_info
-              name: 'Electricity Price:'
-              style:
-                - font-weight: bold
-                - height: 33px
-                - padding: 4px
-                - display: flex
-                - justify-content: center
+              name: 'Electricity Price'
+              layout: name_state
+              styles:
+                card:
+                  - font-weight: bold
+                  - height: 33px
+                  - padding: 4px
+                  - transform: translate(-0%, 10%)
               state:
                 - value: '6.5'
                   color: rgb(21, 158, 56)
                 - value: '9.4'
                   color: rgb(255, 183, 18)
-                - value: '13.2'
+                - value: '13.4'
                   color: rgb(224, 0, 45)
             - type: horizontal-stack # PC DESK
               cards:
@@ -1845,7 +2043,8 @@ views:
             entity: switch.tv
             color_type: card
             name: 'TV'
-            action: toggle
+            action:
+            show_icon: false
             style:
               - font-size: 14px
               - font-weight: bold
@@ -1857,6 +2056,7 @@ views:
             color_type: card
             name: 'Receiver'
             action: toggle
+            show_icon: false
             style:
               - font-size: 14px
               - font-weight: bold
@@ -1866,19 +2066,6 @@ views:
   ### KODI PLAYER
         - type: custom:mini-media-player
           entity: media_player.kodi_livingroom
-          icon: mdi:kodi
-          artwork: full-cover
-          name: Living Room
-          replace_mute: stop
-          volume_stateless: true
-          show_source: false
-          show_progress: true
-          background: '/local/lovelace/kodi_idle.jpg'
-          hide:
-            power: true
-            icon: true
-        - type: custom:mini-media-player
-          entity: media_player.plex_plex_2cjxphfsgs9j1gfbd6fhdow1
           icon: mdi:kodi
           artwork: full-cover
           name: Living Room
@@ -1900,7 +2087,7 @@ views:
             color_type: card
             icon: mdi:chevron-up-circle
             size: 75%
-            action: service
+            action: call-service
             service:
               domain: script
               action: turn_on
@@ -1917,7 +2104,7 @@ views:
             color_type: card
             icon: mdi:chevron-left-circle
             size: 75%
-            action: service
+            action: call-service
             service:
               domain: script
               action: turn_on
@@ -1930,7 +2117,7 @@ views:
             color_type: card
             icon: mdi:circle-slice-8
             size: 75%
-            action: service
+            action: call-service
             service:
               domain: script
               action: turn_on
@@ -1943,7 +2130,7 @@ views:
             color_type: card
             icon: mdi:chevron-right-circle
             size: 75%
-            action: service
+            action: call-service
             service:
               domain: script
               action: turn_on
@@ -1958,7 +2145,7 @@ views:
             color_type: card
             icon: mdi:chevron-left
             size: 75%
-            action: service
+            action: call-service
             service:
               domain: script
               action: turn_on
@@ -1971,7 +2158,7 @@ views:
             color_type: card
             icon: mdi:chevron-down-circle
             size: 75%
-            action: service
+            action: call-service
             service:
               domain: script
               action: turn_on

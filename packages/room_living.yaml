@@ -76,15 +76,18 @@ group:
      - light.hue_go
 
 script:
-### PLEX to KODI on LR TV
-  plex_finn:
-    sequence:
-      - service: media_player.play_media
-        entity_id: media_player.plex_kodi
-        data:
-          media_content_type: Video
-          media_content_id:  '{ "library_name" : "Television Children", "shuffle": "1" }'
 
+  white_noise_living_room:
+    sequence:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.google_home
+          volume_level: 0.5
+      - service: media_player.play_media
+        data:
+          entity_id: media_player.google_home
+          media_content_id: "http://192.168.1.115/white_noise/blizzard.mp3"
+          media_content_type: "audio/mp3"
   tv:
     sequence:
       - service_template: >
@@ -216,31 +219,6 @@ automation:
       - service: switch.turn_off
         entity_id: switch.tv, switch.receiver
 
-  - alias: 'light_living_room_sunset'
-    initial_state: 'on'
-    trigger:
-      - platform: sun
-        event: sunset
-    condition:
-      - condition: state
-        entity_id: 'input_boolean.away'
-        state: 'off'
-      - condition: state
-        entity_id: 'switch.living_room_pc'
-        state: 'on'
-      - condition: state
-        entity_id: 'light.living_room_lamp'
-        state: 'off'
-    action:
-      - service: hue.hue_activate_scene
-        data:
-          group_name: "Living Room"
-          scene_name: "Spring blossom"
-      - service: input_select.select_option
-        data:
-          entity_id: input_select.light_living_room_scene
-          option: "Spring Blossom"
-
   - alias: 'light_living_room_scene'
     initial_state: 'on'
     trigger:
@@ -276,7 +254,7 @@ automation:
     initial_state: 'on'
     trigger:
       - platform: numeric_state
-        entity_id: 'sensor.living_room_lux'
+        entity_id: 'sensor.living_room_sensor_light_level'
         above: 45
     action:
       - service: light.turn_off
@@ -313,6 +291,15 @@ switch:
           - service: media_player.media_stop
             data:
               entity_id: media_player.kodi_livingroom
+###### Switch for White Noise
+      white_noise_living_room:
+        value_template: '{{ states.sensor.white_noise_living_room.state }}'
+        turn_on:
+          service: script.turn_on
+          entity_id: script.white_noise_living_room
+        turn_off:
+          service: media_player.turn_off
+          entity_id: media_player.google_home
 ###### SONOFF DUAL 1
   - platform: mqtt
     name: "tv"
@@ -333,3 +320,12 @@ switch:
     optimistic: false
     qos: 0
     retain: true
+
+sensor:
+  - platform: template
+    sensors:
+      white_noise_living_room:
+        value_template: >-
+          {% set state = states.media_player.google_home.attributes.media_content_id%}
+          {% set object = "http://192.168.1.115/white_noise/blizzard.mp3" %}
+          {% if state == object %}on{% else %}off{% endif %}

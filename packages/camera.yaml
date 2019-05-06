@@ -7,17 +7,6 @@ homeassistant:
       friendly_name: Email Camera Photo
 
 stream:
-
-android_ip_webcam:
-  - host: !secret android_ip_webcam_host
-    port: 8080
-    name: driveway_wide
-    sensors:
-      - battery_level
-      - battery_temp
-      - motion
-      - light
-      - pressure
 camera:
   - platform: mjpeg
     name: findlay
@@ -26,13 +15,15 @@ camera:
     username: !secret dlink_camera_username
     password: !secret dlink_camera_password
 
-  - platform: generic
-    name: driveway
-    framerate: 25
-    stream_source: !secret dlink2_camera_rtsp
-    still_image_url: !secret dlink2_camera_link
+  - platform: mjpeg
+    name: nursery
+    mjpeg_url: !secret dlink2_camera_mjpeg
     username: !secret dlink2_camera_username
     password: !secret dlink2_camera_password
+
+  - platform: ffmpeg
+    name: driveway
+    input: !secret wyze_rtsp
 
 automation:
   - alias: driveway_motion_detected

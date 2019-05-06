@@ -9,64 +9,7 @@ homeassistant:
     sensor.battery_low:
       hidden: true
 
-input_label:
-  nicole_battery:
-  justin_battery:
-  nicole_wifi:
-  justin_wifi:
-
 automation:
-  - alias: Update Phone Battery Levels
-    initial_state: true
-    trigger:
-      platform: mqtt
-      topic: "owntracks/+/+"
-    action:
-      - service: input_label.set_value
-        data_template:
-          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_wifi"
-          value: "{{ 'Yes' if trigger.payload_json.conn == 'w' else 'No' }}"
-      - service: input_label.set_icon
-        data_template:
-          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_wifi"
-          value: "{{ 'mdi:wifi' if trigger.payload_json.conn == 'w' else 'mdi:wifi-off' }}"
-      - service: input_label.set_name
-        data_template:
-          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_wifi"
-          value: "{{trigger.topic.split('/')[-1] | title }}'s phone wifi enabled?"
-
-      - service: input_label.set_value
-        data_template:
-          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_battery"
-          value: '{{ trigger.payload_json.batt | int }}'
-      - service: input_label.set_name
-        data_template:
-          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_battery"
-          value: "{{trigger.topic.split('/')[-1] | title }}'s Battery"
-      - service: input_label.set_icon
-        data_template:
-          entity_id: "input_label.{{trigger.topic.split('/')[-1]}}_battery"
-          value: >
-              {% set battery_level = trigger.payload_json.batt | int %}
-              {% set battery_round = (battery_level / 10)|int * 10 %}
-              {% if trigger.payload_json.charging == 1 %}
-                {% if battery_round >= 100 %}
-                  mdi:battery-charging-100
-                {% elif battery_round > 0 %}
-                  mdi:battery-charging-{{ battery_round }}
-                {% else %}
-                  mdi:battery-alert
-                {% endif %}
-              {% else %}
-                {% if battery_round >= 100 %}
-                  mdi:battery
-                {% elif battery_round > 0 %}
-                  mdi:battery-{{ battery_round }}
-                {% else %}
-                  mdi:battery-alert
-                {% endif %}
-              {% endif %}
-
   - alias: 'Battery Alert'
     initial_state: 'on'
     trigger:
@@ -234,50 +177,17 @@ sensor:
           {% endif %}
           {% endif %}
 
-  ##### Owntracks Battery Tracker for Cell Phones
-  - platform: mqtt
-    state_topic: "owntracks/justin/justin"
-    name: "Justin Battery State"
-    value_template: >
-      {% if value_json.charging == 1 %}
-        Charging
-      {% else %}
-        Not Charging
-      {% endif %}
-
-  - platform: mqtt
-    state_topic: "owntracks/justin/justin"
-    name: "Justin Battery"
-    unit_of_measurement: "%"
-    value_template: "{{ value_json.batt }}"
-
-  - platform: mqtt
-    state_topic: "owntracks/nicole/nicole"
-    name: "Nicole Battery State"
-    value_template: >
-      {% if value_json.charging == 1 %}
-        Charging
-      {% else %}
-        Not Charging
-      {% endif %}
-
-  - platform: mqtt
-    state_topic: "owntracks/nicole/nicole"
-    name: "Nicole Battery"
-    unit_of_measurement: "%"
-    value_template: "{{ value_json.batt }}"
-
   - platform: template
     sensors:
       justin_battery_template:
         friendly_name: Justin Phone Battery
         unit_of_measurement: '%'
-        value_template: "{{ states('sensor.justin_battery')|int(-1) }}"
+        value_template: "{{ states.device_tracker.life360_justin.attributes.battery |int(-1) }}"
         icon_template: >-
-          {% if states('sensor.justin_battery') != "unknown" %}
-            {% set battery_level = states('sensor.justin_battery')|int (-1)%}
+          {% if states.device_tracker.life360_justin.attributes.battery != "unknown" %}
+            {% set battery_level = states.device_tracker.life360_justin.attributes.battery|int (-1)%}
             {% set battery_round = (battery_level|int / 10)|int * 10 %}
-            {% if states.sensor.justin_battery_state.state | lower == "charging" %}
+            {% if states.device_tracker.life360_justin.attributes.battery_charging|lower == "true" %}
               {% if battery_level == -1 %}
                 mdi:battery-unknown
               {% else %}
@@ -308,12 +218,12 @@ sensor:
       nicole_battery_template:
         friendly_name: Nicole Phone Battery
         unit_of_measurement: '%'
-        value_template: "{{ states('sensor.nicole_battery')|int(-1) }}"
+        value_template: "{{ states.device_tracker.life360_nicole.attributes.battery |int(-1) }}"
         icon_template: >-
-          {% if states('sensor.nicole_battery') != "unknown" %}
-            {% set battery_level = states('sensor.nicole_battery')|int (-1)%}
+          {% if states.device_tracker.life360_nicole.attributes.battery != "unknown" %}
+            {% set battery_level = states.device_tracker.life360_nicole.attributes.battery|int (-1)%}
             {% set battery_round = (battery_level|int / 10)|int * 10 %}
-            {% if states.sensor.nicole_battery_state.state | lower == "charging" %}
+            {% if states.device_tracker.life360_nicole.attributes.battery_charging|lower == "true"  %}
               {% if battery_level == -1 %}
                 mdi:battery-unknown
               {% else %}

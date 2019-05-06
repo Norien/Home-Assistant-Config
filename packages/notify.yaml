@@ -12,23 +12,23 @@ automation:
     initial_state: 'on'
     trigger:
       - platform: zone
-        entity_id: device_tracker.nicole_nicole
+        entity_id: device_tracker.life360_nicole
         zone: zone.work_whitehills
         event: leave
       - platform: zone
-        entity_id: device_tracker.nicole_nicole
+        entity_id: device_tracker.life360_nicole
         zone: zone.work_westmount
         event: leave
       - platform: zone
-        entity_id: device_tracker.nicole_nicole
+        entity_id: device_tracker.life360_nicole
         zone: zone.work_old_south
         event: leave
       - platform: zone
-        entity_id: device_tracker.nicole_nicole
+        entity_id: device_tracker.life360_nicole
         zone: zone.victoria_hospital
         event: leave
       - platform: zone
-        entity_id: device_tracker.nicole_nicole
+        entity_id: device_tracker.life360_nicole
         zone: zone.daycare
         event: leave
     action:

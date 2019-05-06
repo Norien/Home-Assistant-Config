@@ -10,9 +10,6 @@ homeassistant:
     sensor.nicole_home_to_work:
       friendly_name: 'Nicole Home to Work'
       icon: mdi:car
-    # OTHER
-    sensor.life360_sensor:
-      friendly_name: Life 360
 
     script.location:
       emulated_hue_hidden: false
@@ -82,11 +79,11 @@ automation:
           for:
             minutes: 10
         - platform: state
-          entity_id: device_tracker.justin_justin
+          entity_id: device_tracker.life360_justin
     action:
       - service_template: >
-          {% if states.device_tracker.justin_justin.state == 'home' or states.device_tracker.justin_router.state == 'home' and states.input_boolean.justin.state == 'off' %} homeassistant.turn_on
-          {% elif states.device_tracker.justin_justin.state != 'home' or states.device_tracker.justin_router.state != 'home' and states.input_boolean.justin.state == 'off' and states.device_tracker.justin_justin.attributes.battery | int > 7 %} homeassistant.turn_off
+          {% if states.device_tracker.life360_justin.state == 'home' or states.device_tracker.justin_router.state == 'home' and states.input_boolean.justin.state == 'off' %} homeassistant.turn_on
+          {% elif states.device_tracker.life360_justin.state != 'home' or states.device_tracker.justin_router.state != 'home' and states.input_boolean.justin.state == 'off' and states.device_tracker.life360_justin.attributes.battery | int > 7 %} homeassistant.turn_off
           {% endif %}
         entity_id: input_boolean.justin
 
@@ -99,11 +96,11 @@ automation:
           for:
             minutes: 10
         - platform: state
-          entity_id: device_tracker.nicole_nicole
+          entity_id: device_tracker.life360_nicole
     action:
       - service_template: >
-          {% if states.device_tracker.nicole_nicole.state == 'home' or states.device_tracker.nicole_router.state == 'home' and states.input_boolean.nicole.state == 'off' %} homeassistant.turn_on
-          {% elif states.device_tracker.nicole_nicole.state != 'home' or states.device_tracker.nicole_router.state != 'home' and states.input_boolean.nicole.state == 'off' and states.device_tracker.nicole_nicole.attributes.battery | int > 7%} homeassistant.turn_off
+          {% if states.device_tracker.life360_nicole.state == 'home' or states.device_tracker.nicole_router.state == 'home' and states.input_boolean.nicole.state == 'off' %} homeassistant.turn_on
+          {% elif states.device_tracker.life360_nicole.state != 'home' or states.device_tracker.nicole_router.state != 'home' and states.input_boolean.nicole.state == 'off' and states.device_tracker.life360_nicole.attributes.battery | int > 7%} homeassistant.turn_off
           {% endif %}
         entity_id: input_boolean.nicole
 
@@ -129,17 +126,17 @@ automation:
   #   initial_state: 'on'
   #   trigger:
   #     - platform: state
-  #       entity_id: device_tracker.justin_justin, device_tracker.nicole_nicole
+  #       entity_id: device_tracker.life360_justin, device_tracker.life360_nicole
   #       to: 'home'
   #   action:
   #     - wait_template: "{{ states.binary_sensor.door_front.state == 'on' }}"
   #     - service: script.janet_speech_engine
   #       data_template:
   #         person: >
-  #           {%set nicole = states.device_tracker.nicole_nicole.state%}
-  #           {%set nicole_ = states.device_tracker.nicole_nicole%}
-  #           {%set justin = states.device_tracker.justin_justin.state%}
-  #           {%set justin_ = states.device_tracker.justin_justin%}
+  #           {%set nicole = states.device_tracker.life360_nicole.state%}
+  #           {%set nicole_ = states.device_tracker.life360_nicole%}
+  #           {%set justin = states.device_tracker.life360_justin.state%}
+  #           {%set justin_ = states.device_tracker.life360_justin%}
   #           {%-if nicole != "home" and justin == "home"-%}
   #             Justin
   #           {%elif nicole == "home" and justin != "home"%}
@@ -173,8 +170,8 @@ script:
          call_location_inquiry: 1
        data_template:
          person: >-
-           {%set nicole = states.device_tracker.nicole_nicole.state%}
-           {%set justin = states.device_tracker.justin_justin.state%}
+           {%set nicole = states.device_tracker.life360_nicole.state%}
+           {%set justin = states.device_tracker.life360_justin.state%}
            {%if nicole != "home" and justin == "home"%}
            nicole
            {%elif nicole == "home" and justin != "home"%}
@@ -218,14 +215,14 @@ sensor:
   - platform: google_travel_time
     name: Nicole Phone To Home
     api_key: !secret google_secret
-    origin: device_tracker.nicole_nicole
+    origin: device_tracker.life360_nicole
     destination: zone.home
 
+device_tracker:
   - platform: life360
     username: !secret life360_username
     password: !secret life360_password
-    mqtt_topic: "/life360/data"
-    scan_interval: 60
+    prefix: 'life360'
 
 ###### MODES / PEOPLE
 input_boolean:

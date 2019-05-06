@@ -373,7 +373,7 @@ script:
           volume_level: >-
             {{ states.input_number.janet_notification_volume.state }}
 
-      - service: tts.google_say
+      - service: tts.google_translate_say
         data_template:
           entity_id: >
             {{ media_player }}

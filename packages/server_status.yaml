@@ -28,16 +28,6 @@ homeassistant:
       friendly_name: File System
       icon: mdi:harddisk
 
-script:
-  restart_hass:
-    sequence:
-      - service: shell_command.restart_hass
-
-weblink:
-  entities:
-    - name: Release Log
-      url: https://github.com/home-assistant/home-assistant/releases/latest
-
 sensor:
   - platform: github
     access_token: !secret github_access_token

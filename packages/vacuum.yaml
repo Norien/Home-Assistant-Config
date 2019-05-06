@@ -117,7 +117,7 @@ sensor:
     sensors:
       battery_roomba:
         friendly_name: 'Roomba'
-        value_template: "{{ states.vacuum.roomba.attributes.battery_level }}"
+        value_template: "{{ states.vacuum.roomba.attributes.battery_level|int }}"
         unit_of_measurement: '%'
         icon_template: "{{ states.vacuum.roomba.attributes.battery_icon }}"
       roomba_status:

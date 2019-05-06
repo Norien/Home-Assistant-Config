@@ -69,7 +69,7 @@ script:
       data:
         entity_id: media_player.google_home
         volume_level: '0.70'
-    - wait_template: "{{ states.sensor.living_room_motion.state == 'True' }}"
+    - wait_template: "{{ states.binary_sensor.living_room_sensor_motion.state == 'on' }}"
     - service: script.good_morning_tts
 
   good_morning_tts:
@@ -110,7 +110,7 @@ script:
     - condition: and
       conditions:
         - condition: numeric_state
-          entity_id: 'sensor.living_room_lux'
+          entity_id: 'sensor.living_room_sensor_light_level'
           below: 45
     - service: homeassistant.turn_on
       data:
