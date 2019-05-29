@@ -24,10 +24,48 @@ resources:
     type: js
   - url: /local/lovelace/cards/bignumber-card.js
     type: js
+
+###### STYLE TEMPLATES FOR BUTTON CARD
+button_card_templates:
+  header:
+    color_type: card
+    color: rgb(34, 35, 58)
+    show_state: false
+    show_icon: false
+    styles:
+      card:
+        - background-color: rgba(34, 35, 58, 0.9)
+        - font-size: 14px
+        - font-weight: bold
+        - height: 24px
+        - padding: 3px
+        - transform: translate(-0%, 12%)
+  sensor_label:
+    color_type: card
+    color: rgb(34, 35, 37)
+    tap_action:
+      action: more-info
+    show_state: true
+    show_icon: false
+    layout: name_state
+    styles:
+      card:
+        - padding: 3px
+        - font-size: 14px
+  button_long:
+    color_type: card
+    color: rgb(34, 35, 37)
+    show_icon: false
+    styles:
+      card:
+        - font-size: 14px
+        - font-weight: bold
+        - padding: 6px
+
 views:
   - title: Home
     icon: mdi:home-assistant
-    background: center / cover no-repeat url("/local/lovelace/animated4.gif") fixed
+    background: center / cover no-repeat url("/local/lovelace/bg.jpg") fixed
     theme: Night
     cards:
 ###### CUSTOM HEADER -----------------------------------------------
@@ -81,6 +119,8 @@ views:
         conditions:
           - entity: sensor.good_night_morning_button
             state: "morning"
+          - entity: switch.tv
+            state_not: "on"
         card:
           type: entity-button
           name: Good Morning
@@ -95,6 +135,8 @@ views:
         conditions:
           - entity: sensor.good_night_morning_button
             state: "night"
+          - entity: switch.white_noise
+            state_not: "on"
         card:
           type: entity-button
           name: Good Night
@@ -293,13 +335,15 @@ views:
             state:
               - value: 'off'
                 color: rgb(227, 228, 230)
-###### ROOMS -------------------------------------------------------------------
+###### ROOMS/AREA -------------------------------------------------------------------
+###### CHILDREN
 ###### FINDLAYS ROOM
       - type: vertical-stack
         cards:
         - type: picture-glance
           title: " "
           camera_image: camera.findlay
+          aspect_ratio: 16x9
           entities:
             - light.findlay_s_room
             - sensor.findlays_room_temperature
@@ -325,73 +369,51 @@ views:
             hide_power: true
             hide_controls: true
             replace_mute: stop
+      - type: horizontal-stack
+        cards:
 ###### NURSERY
         - type: picture-glance
           title: " "
           camera_image: camera.nursery
           entities:
             - light.aurora
+            - switch.office_lightswitch
             - switch.white_noise_nursery
   ## HIDE NURSERY SPEAKER IF NOT PLAYING
-        - type: conditional
-          conditions:
-            - entity: media_player.nursery_speaker
-              state: "playing"
-          card:
-            type: custom:mini-media-player
-            entity: media_player.nursery_speaker
-            icon: mdi:google-home
-            artwork: cover
-            name: "Nursery Speaker"
-            volume_stateless: true
-            show_source: false
-            show_progress: true
-            hide_power: true
-            hide_controls: true
-            replace_mute: stop
+      - type: conditional
+        conditions:
+          - entity: media_player.nursery_speaker
+            state: "playing"
+        card:
+          type: custom:mini-media-player
+          entity: media_player.nursery_speaker
+          icon: mdi:google-home
+          artwork: cover
+          name: "Nursery Speaker"
+          volume_stateless: true
+          show_source: false
+          show_progress: true
+          hide_power: true
+          hide_controls: true
+          replace_mute: stop
 ###### OUTSIDE
       - type: vertical-stack
         cards:
         - type: picture-glance
           title: " "
           camera_image: camera.driveway
+          aspect_ratio: 16x9
           entities:
             - light.front_door
-            - light.deck_lights
-            - switch.sonoff_1
             - binary_sensor.door_front
-        - type: conditional
-          conditions:
-            - entity: switch.sonoff_1
-              state: "on"
-          card:
-            type: custom:mini-media-player
-            entity: media_player.backyard
-            icon: mdi:google-chrome
-            artwork: cover
-            name: Back Patio
-            volume_stateless: true
-            show_source: false
-            show_progress: true
-            hide_power: true
-            hide_controls: true
 ###### MASTER BEDROOM
       - type: vertical-stack
         cards:
         - type: "custom:button-card"
-          color_type: card
-          color: rgb(34, 35, 58)
           name: 'MASTER BEDROOM'
           show_state: false
           show_icon: false
-          styles:
-            card:
-              - background-color: rgb(34, 35, 58)
-              - font-size: 14px
-              - font-weight: bold
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
+          template: header
 #BEDROOM BUTTONS
         - type: horizontal-stack
           cards:
@@ -479,19 +501,8 @@ views:
       - type: vertical-stack
         cards:
         - type: "custom:button-card"
-          color_type: card
-          color: rgb(34, 35, 58)
           name: 'LIVING ROOM'
-          show_state: false
-          show_icon: false
-          styles:
-            card:
-              - background-color: rgb(34, 35, 58)
-              - font-size: 14px
-              - font-weight: bold
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
+          template: header
 ## LIVINGROOM BUTTONS
         - type: horizontal-stack
           cards:
@@ -603,10 +614,7 @@ views:
           "off": /local/lovelace/laundry_off.jpg
         entity: switch.washing_machine
         aspect_ratio: 16x6
-        entities:
-          - switch.washing_machine
-          - sensor.washing_machine_watts
-          - sensor.washing_machine_status
+        entities: []
 ###### BASEMENT
 ## HIDE SPEAKER IF NOT PLAYING
       - type: conditional
@@ -626,7 +634,105 @@ views:
           replace_mute: stop
           hide:
             power: true
-###### BUTTONS =================================================================
+###### BACKYARD
+      - type: vertical-stack
+        cards:
+        - type: "custom:button-card"
+          name: 'BACKYARD'
+          template: header
+## BACKYARD BUTTONS
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            entity: switch.pool_pump
+            color_type: card
+            icon: mdi:pool
+            show_state: false
+            show_name: false
+            name: Pool
+            show_label: true
+            hold_action:
+              action: more-info
+            label_template: >
+              return 'Runtime: ' + states['sensor.pool_runtime'].state
+            state:
+              - value: 'on'
+                color: rgb(255, 183, 18)
+              - value: 'off'
+                color: rgb(34, 35, 37)
+            styles:
+              card:
+                - font-size: 14px
+                - height: 70px
+          - type: "custom:button-card"
+            color_type: card
+            entity: input_boolean.pool_auto_pump
+            name: 'Auto Pump'
+            show_state: false
+            show_name: false
+            icon: mdi:flash-auto
+            layout: name_state
+            show_label: true
+            label_template: >
+              return states['automation.pool_pump_on'].state +' / '+ states['automation.pool_pump_off'].state
+            styles:
+              card:
+                - font-size: 14px
+                - height: 70px
+            state:
+              - value: 'on'
+                color: rgb(255, 183, 18)
+              - value: 'off'
+                color: rgb(34, 35, 37)
+          - type: "custom:button-card"
+            entity: switch.sonoff_1
+            icon: mdi:amplifier
+            show_state: false
+            show_name: false
+            name: Amp
+            state:
+              - value: 'on'
+                color: rgb(255, 183, 18)
+              - value: 'off'
+                color: rgb(227, 228, 230)
+            styles:
+              card:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+                - height: 70px
+          - type: "custom:button-card"
+            entity: light.deck_lights
+            color: auto
+            show_state: false
+            show_name: false
+            tap_action:
+              action: more-info
+            name: Lights
+            state:
+              - value: 'off'
+                color: rgb(227, 228, 230)
+            styles:
+              card:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+                - height: 70px
+### HIDE MEDIA PLAYER IF NOT IN USE
+        - type: conditional
+          conditions:
+            - entity: switch.sonoff_1
+              state: "on"
+          card:
+            type: custom:mini-media-player
+            entity: media_player.backyard
+            icon: mdi:google-chrome
+            artwork: cover
+            name: Back Patio
+            volume_stateless: true
+            show_source: false
+            show_progress: true
+            hide_power: true
+            hide_controls: true
+###### ROOMBA AND WASTE BUTTONS ================================================
       - type: horizontal-stack
         cards:
           - type: vertical-stack
@@ -636,8 +742,7 @@ views:
               color: rgb(255, 0, 0)
               entity: vacuum.roomba
               name: 'ROOMBA'
-              show_state: false
-              show_icon: false
+              template: header
               tap_action:
                 action: more-info
               state:
@@ -645,27 +750,10 @@ views:
                   color: rgb(34, 35, 58)
                 - value: "off"
                   color: rgb(34, 35, 58)
-              styles:
-                card:
-                  - font-size: 14px
-                  - font-weight: bold
-                  - height: 24px
-                  - padding: 3px
-                  - transform: translate(-0%, 10%)
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               name: 'STATUS'
               entity: sensor.roomba_status
-              show_state: true
-              show_icon: false
-              layout: name_state
-              styles:
-                card:
-                  - font-size: 14px
-                  - height: 24px
-                  - padding: 3px
-                  - transform: translate(-0%, 7%)
+              template: sensor_label
             - type: horizontal-stack
               cards:
               - type: "custom:button-card"
@@ -734,40 +822,22 @@ views:
                   style: 'var(--label-badge-yellow)'
                 - value: 100
                   style: 'var(--label-badge-green)'
+                - value: 'Unknown'
+                  style: 'var(--label-badge-red)'
               - type: "custom:button-card"
                 color_type: card
-                color: rgb(34, 35, 58)
                 entity: sensor.roomba_runtime
-                show_state: true
-                show_name: false
+                template: sensor_label
                 show_icon: false
-                layout: name_state
-                styles:
-                  card:
-                    - font-size: 14px
-                    - font-weight: bold
-                    - background-color: rgb(34, 35, 37)
-                    - height: 28px
-                    - padding: 3px
-                    - transform: translate(-0%, 7%)
+                show_name: false
+                show_state: true
 ###### WASTE PICKUP
           - type: vertical-stack
             cards:
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 58)
               entity: script.waste_pickup
               name: 'WASTE'
-              show_state: false
-              show_icon: false
-              styles:
-                card:
-                  - background-color: rgb(34, 35, 58)
-                  - font-size: 14px
-                  - font-weight: bold
-                  - height: 24px
-                  - padding: 3px
-                  - transform: translate(-0%, 10%)
+              template: header
             - type: "custom:button-card"
               color_type: card
               entity: sensor.waste_pickup_garbage_recycling
@@ -779,11 +849,20 @@ views:
               color: rgb(34, 35, 37)
               layout: icon_state
               styles:
+                icon:
+                  - color: brown
                 card:
                   - font-size: 14px
                   - height: 24px
                   - padding: 3px
                   - transform: translate(-0%, 7%)
+                grid:
+                  - grid-template-areas: '"i s"'
+                  - grid-template-columns: auto
+                img_cell:
+                  - align-self: start
+                  - text-align: end
+
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
@@ -796,11 +875,19 @@ views:
               size: 20px
               icon: 'mdi:tree'
               styles:
+                icon:
+                  - color: green
                 card:
                   - font-size: 14px
                   - height: 24px
                   - padding: 3px
                   - transform: translate(-0%, 7%)
+                grid:
+                  - grid-template-areas: '"i s"'
+                  - grid-template-columns: auto
+                img_cell:
+                  - align-self: start
+                  - text-align: end
             - type: "custom:button-card"
               color_type: card
               color: rgb(34, 35, 37)
@@ -813,17 +900,25 @@ views:
               show_name: false
               size: 20px
               styles:
+                icon:
+                  - color: orange
                 card:
                   - font-size: 14px
                   - height: 24px
                   - padding: 3px
                   - transform: translate(-0%, 7%)
+                grid:
+                  - grid-template-areas: '"i s"'
+                  - grid-template-columns: auto
+                img_cell:
+                  - align-self: start
+                  - text-align: end
 
 ################################################################################
 ###### SENSOR VIEW -------------------------------------------------------------
 ################################################################################
   - title: Sensor
-    background: center / cover no-repeat url("/local/lovelace/animated4.gif") fixed
+    background: center / cover no-repeat url("/local/lovelace/bg.jpg") fixed
     theme: Night
     icon: mdi:death-star-variant
     cards:
@@ -843,20 +938,11 @@ views:
       - type: vertical-stack
         cards:
         - type: "custom:button-card"
-          color_type: card
-          color: rgb(34, 35, 58)
           name: 'NEST'
           entity: climate.hallway
           tap_action:
             action: more-info
-          show_icon: false
-          style:
-            - font-size: 14px
-            - font-weight: bold
-            - background-color: rgb(34, 35, 58)
-            - height: 24px
-            - padding: 3px
-            - transform: translate(-0%, 10%)
+          template: header
 ### NEST TEMPS
 ################## heat/cool
         - type: horizontal-stack
@@ -1122,52 +1208,38 @@ views:
         - type: horizontal-stack
           cards:
           - type: "custom:button-card"
-            color_type: card
             entity: sensor.kitchen_nest_protect_co_status
             name: 'Carbon Dioxide'
-            action: more_info
-            show_state: false
-            show_icon: false
+            template: sensor_label
             state:
               - value: 'Ok'
                 color: rgb(21, 158, 56)
-              - value: 'emergency'
+              - value: 'Emergency'
                 color: rgb(255, 0, 0)
-            style:
-              - padding: 3px
-              - font-size: 14px
+                styles:
+                  card:
+                    - animation: blink 2s ease infinite
           - type: "custom:button-card"
-            color_type: card
             entity: sensor.kitchen_nest_protect_smoke_status
             name: 'Smoke'
-            action: more_info
-            show_state: false
-            show_icon: false
+            template: sensor_label
             state:
               - value: 'Ok'
                 color: rgb(21, 158, 56)
-              - value: 'emergency'
+              - value: 'Emergency'
                 color: rgb(255, 0, 0)
-            style:
-              - padding: 3px
-              - font-size: 14px
+                styles:
+                  card:
+                    - animation: blink 2s ease infinite
 ###### PLEX
       - type: vertical-stack
         cards:
         - type: "custom:button-card"
-          color_type: card
-          color: rgb(34, 35, 58)
           name: 'PLEX'
           tap_action:
             action: navigate
             navigation_path: /lovelace/2/
-          style:
-            - font-size: 14px
-            - font-weight: bold
-            - background-color: rgb(34, 35, 58)
-            - height: 24px
-            - padding: 3px
-            - transform: translate(-0%, 10%)
+          template: header
       - type: horizontal-stack
         cards:
           - type: gauge
@@ -1200,54 +1272,113 @@ views:
           - type: vertical-stack
             cards:
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 58)
               name: 'NETWORK'
-              style:
-                - font-size: 14px
-                - font-weight: bold
-                - background-color: rgb(34, 35, 58)
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+              template: header
             - type: horizontal-stack
               cards:
               - type: "custom:button-card"
-                color_type: card
-                color: rgb(34, 35, 37)
                 entity: sensor.certificate
                 name: 'Certificate'
-                tap_action:
-                  action: more-info
-                show_state: true
-                show_icon: false
-                layout: name_state
-                style:
-                  - padding: 3px
-                  - font-size: 14px
-                  - background-color: rgb(34, 35, 37)
+                template: sensor_label
               - type: "custom:button-card"
-                color_type: card
-                color: rgb(34, 35, 37)
                 entity: sensor.external_ip
                 name: 'External IP'
-                tap_action:
-                  action: more-info
-                show_state: true
-                show_icon: false
-                layout: name_state
-                style:
-                  - padding: 3px
-                  - font-size: 14px
-                  - background-color: rgb(34, 35, 37)
+                template: sensor_label
+            - type: horizontal-stack
+              cards:
+              - type: "custom:button-card"
+                entity: sensor.unifi_gateway_firmware_upgradable
+                name: 'Firmware Updates'
+                template: sensor_label
+                state:
+                  - value: '0'
+                    operator: '=='
+                    color: rgb(21, 158, 56)
+                  - value: '0'
+                    operator: '>'
+                    color: rgb(255, 0, 0)
+              - type: "custom:button-card"
+                entity: sensor.unifi_gateway_alerts
+                name: 'Alerts'
+                template: sensor_label
+                state:
+                  - value: '0'
+                    operator: '=='
+                    color: rgb(21, 158, 56)
+                  - value: '0'
+                    operator: '>'
+                    color: rgb(255, 0, 0)
+            - type: horizontal-stack
+              cards:
+              - type: "custom:button-card"
+                entity: sensor.unifi_gateway_lan_num_user
+                name: 'Wired'
+                template: sensor_label
+              - type: "custom:button-card"
+                entity: sensor.unifi_gateway_wlan_num_user
+                name: 'Wifi'
+                template: sensor_label
+### USG CPU/RAM USAGE
+            - type: horizontal-stack
+              cards:
+              - type: custom:bignumber-card
+                entity: sensor.unifi_gateway_www_cpu
+                title: CPU
+                scale: 18px
+                from: left
+                min: 0
+                max: 100
+                severity:
+                - value: 30
+                  style: 'var(--label-badge-green)'
+                - value: 70
+                  style: 'var(--label-badge-yellow)'
+                - value: 100
+                  style: 'var(--label-badge-red)'
+                - value: 'Unknown'
+                  style: 'var(--label-badge-red)'
+              - type: custom:bignumber-card
+                entity: sensor.unifi_gateway_www_mem
+                title: MEMORY
+                scale: 18px
+                from: left
+                min: 0
+                max: 100
+                severity:
+                - value: 30
+                  style: 'var(--label-badge-green)'
+                - value: 70
+                  style: 'var(--label-badge-yellow)'
+                - value: 100
+                  style: 'var(--label-badge-red)'
+                - value: 'Unknown'
+                  style: 'var(--label-badge-red)'
+##Network Usage Graphs
             - type: custom:mini-graph-card
-              name: Network Usage
+              name: Current Network Usage
+              icon: mdi:earth
+              hours_to_show: 1
+              points_per_hour: 120
+              show:
+                icon: false
+                name: true
+              entities:
+                - entity: sensor.unifi_gateway_www_rx
+                  name: Download
+                  color: '#00c3e2'
+                  show_state: true
+                - entity: sensor.unifi_gateway_www_tx
+                  name: Upload
+                  color: '#e20029'
+                  show_state: true
+            - type: custom:mini-graph-card
+              name: Total Monthly Usage
               icon: mdi:earth
               hours_to_show: 260
               points_per_hour: 0.1
               show:
                 icon: false
-                name: false
+                name: true
               entities:
                 - entity: sensor.usage_total_usage
                   name: Total
@@ -1261,50 +1392,18 @@ views:
         - type: vertical-stack
           cards:
           - type: "custom:button-card"
-            color_type: card
-            color: rgb(34, 35, 58)
             name: 'NUC'
-            style:
-              - font-size: 14px
-              - font-weight: bold
-              - background-color: rgb(34, 35, 58)
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
+            template: header
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               entity: sensor.linux_distro
               name: 'Linux'
-              tap_action:
-                action: more-info
-              show_state: true
-              show_icon: false
-              layout: name_state
-              style:
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
-                - height: 26px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+              template: sensor_label
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               entity: sensor.server_uptime
               name: 'Uptime'
-              tap_action:
-                action: more-info
-              show_state: true
-              show_icon: false
-              layout: name_state
-              style:
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
-                - height: 26px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+              template: sensor_label
           - type: horizontal-stack
             cards:
             - type: gauge
@@ -1347,21 +1446,12 @@ views:
                     red: 85
     ###### DOCKER SWITCH POP-UP
           - type: "custom:button-card"
-            color_type: card
-            color: rgb(255, 0, 0)
             name: 'Docker Control'
+            template: button_long
             entity: input_boolean.docker_control
-            show_icon: false
             state:
               - value: "off"
                 color: rgb(34, 35, 37)
-            style:
-              - background-color: rgb(34, 35, 37)
-              - font-size: 14px
-              - font-weight: bold
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
           - type: conditional
             conditions:
               - entity: input_boolean.docker_control
@@ -1382,19 +1472,11 @@ views:
         - type: vertical-stack
           cards:
           - type: "custom:button-card"
-            color_type: card
-            color: rgb(34, 35, 58)
             name: 'FREENAS'
+            template: header
             entity: sensor.freenas_version
-            show_icon: false
             tap_action:
               action: more-info
-            style:
-              - font-size: 14px
-              - font-weight: bold
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
           - type: horizontal-stack
             cards:
             - type: gauge
@@ -1435,49 +1517,19 @@ views:
         - type: vertical-stack
           cards:
           - type: "custom:button-card"
-            color_type: card
-            color: rgb(34, 35, 58)
             name: 'SEEDBOX'
+            template: header
             entity: switch.deluge_switch
-            show_icon: false
-            style:
-              - font-size: 14px
-              - font-weight: bold
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               entity: sensor.seedbox_vpn_status
               name: 'VPN'
-              show_state: true
-              show_icon: false
-              layout: name_state
-              style:
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+              template: sensor_label
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               entity: sensor.seedbox_ip
               name: 'IP'
-              show_state: true
-              show_icon: false
-              layout: name_state
-              tap_action:
-                action: more-info
-              style:
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+              template: sensor_label
           - type: custom:mini-graph-card
             name: "Transfer Rate"
             show:
@@ -1487,167 +1539,108 @@ views:
               - entity: sensor.deluge_down_speed
                 name: Download
                 color: '#e20029'
+                show_state: true
               - entity: sensor.deluge_up_speed
                 name: Upload
                 color: '#00c3e2'
+                show_state: true
           - type: "custom:button-card"
-            color_type: card
-            color: rgb(34, 35, 37)
             name: 'Restart'
-            show_icon: false
+            template: button_long
             confirmation: 'Are you Sure you want to restart?'
             entity: switch.ha_dockermon_delugevpn
             state:
               - value: "off"
                 color: rgb(255, 0, 0)
-            style:
-              - font-size: 14px
-              - font-weight: bold
-              - padding: 6px
+
 ###### HOME ASSISTANT
       - type: horizontal-stack
         cards:
         - type: vertical-stack
           cards:
           - type: "custom:button-card"
-            color_type: card
-            color: rgb(34, 35, 58)
+            template: header
             name: 'HOME ASSISTANT'
             tap_action:
               action: url
-              url: 'https://github.com/home-assistant/home-assistant/releases/tag/0.91.4'
-            show_icon: false
-            show_state: false
-            style:
-              - background-color: rgb(34, 35, 58)
-              - font-size: 14px
-              - font-weight: bold
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
+              url: 'https://github.com/home-assistant/home-assistant/releases'
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               entity: sensor.ha_uptime
               name: 'Uptime'
-              show_state: true
-              show_icon: false
-              layout: name_state
-              tap_action:
-                action: more-info
-              style:
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+              template: sensor_label
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               entity: sensor.ha_version
               name: 'Version'
-              show_state: true
-              show_icon: false
-              layout: name_state
+              template: sensor_label
               tap_action:
                 action: url
                 url: 'https://github.com/home-assistant/home-assistant/releases'
-              style:
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               entity: sensor.config
               name: 'Config'
-              show_state: true
-              show_icon: false
-              layout: name_state
-              tap_action:
-                action: more-info
-              style:
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+              template: sensor_label
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               entity: sensor.database_home_assistant
               name: 'Database'
-              show_state: true
-              show_icon: false
-              layout: name_state
-              tap_action:
-                action: more-info
-              style:
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+              template: sensor_label
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               entity: sensor.home_assistant_config_issues
               name: 'Open Issues'
-              show_state: true
-              show_icon: false
-              layout: name_state
+              template: sensor_label
               tap_action:
                 action: url
                 url: 'https://github.com/Norien/Home-Assistant-Config/issues'
-              style:
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
             - type: "custom:button-card"
-              color_type: card
-              color: rgb(34, 35, 37)
               entity: sensor.home_assistant_config_stars
               name: 'Stars'
-              show_state: true
-              show_icon: false
-              layout: name_state
+              template: sensor_label
               tap_action:
                 action: url
                 url: 'https://github.com/Norien/Home-Assistant-Config/stargazers'
-              style:
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
-                - height: 24px
-                - padding: 3px
-                - transform: translate(-0%, 10%)
+#Component Counts
+          - type: horizontal-stack
+            cards:
+            - type: "custom:button-card"
+              entity: sensor.count_automations
+              name: 'Automations'
+              template: sensor_label
+            - type: "custom:button-card"
+              entity: sensor.count_binary_sensors
+              name: 'Binary Sensors'
+              template: sensor_label
+            - type: "custom:button-card"
+              entity: sensor.count_sensors
+              name: 'Sensors'
+              template: sensor_label
+          - type: horizontal-stack
+            cards:
+            - type: "custom:button-card"
+              entity: sensor.count_switches
+              name: 'Switches'
+              template: sensor_label
+            - type: "custom:button-card"
+              entity: sensor.count_device_trackers
+              name: 'Device Trackers'
+              template: sensor_label
+            - type: "custom:button-card"
+              entity: sensor.count_input_booleans
+              name: 'Input Boolean'
+              template: sensor_label
           - type: "custom:button-card"
             color_type: label
-            color: rgb(34, 35, 37)
             name: 'Restart'
+            template: button_long
             entity: script.restart_hass
-            show_icon: false
-            show_state: false
             confirmation: 'Are you Sure you want to restart?'
             tap_action:
               action: call-service
               service: shell_command.restart_hass
-            style:
-              - background-color: rgb(34, 35, 37)
-              - font-size: 14px
-              - font-weight: bold
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
           - type: conditional
             conditions:
               - entity: sensor.custom_update_available
@@ -1660,16 +1653,8 @@ views:
         - type: vertical-stack
           cards:
           - type: "custom:button-card"
-            color_type: card
-            color: rgb(34, 35, 58)
             name: 'DOORS'
-            style:
-              - background-color: rgb(34, 35, 58)
-              - font-size: 14px
-              - font-weight: bold
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
+            template: header
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
@@ -1720,16 +1705,8 @@ views:
             - type: vertical-stack
               cards:
               - type: "custom:button-card"
-                color_type: card
-                color: rgb(34, 35, 58)
                 name: "MOTION"
-                style:
-                  - background-color: rgb(34, 35, 58)
-                  - font-size: 14px
-                  - font-weight: bold
-                  - height: 24px
-                  - padding: 3px
-                  - transform: translate(-0%, 10%)
+                template: header
               - type: horizontal-stack
                 cards:
                 - type: "custom:button-card"
@@ -1796,16 +1773,8 @@ views:
       - type: vertical-stack
         cards:
         - type: "custom:button-card"
-          color_type: card
-          color: rgb(34, 35, 58)
           name: 'NOTIFICATIONS'
-          style:
-            - background-color: rgb(34, 35, 58)
-            - font-size: 14px
-            - font-weight: bold
-            - height: 24px
-            - padding: 3px
-            - transform: translate(-0%, 10%)
+          template: header
         - type: entities
           show_header_toggle: false
           entities:
@@ -1818,21 +1787,16 @@ views:
       - type: vertical-stack
         cards:
         - type: "custom:button-card"
-          color_type: card
-          color: rgb(34, 35, 58)
           name: 'HUMIDITY'
-          style:
-            - background-color: rgb(34, 35, 58)
-            - font-size: 14px
-            - font-weight: bold
-            - height: 24px
-            - padding: 3px
-            - transform: translate(-0%, 10%)
+          template: header
         - type: custom:mini-graph-card
           show:
             icon: false
             name: false
           entities:
+            - entity: sensor.average_humidity
+              name: Average
+              color: rgb(0, 255, 0)
             - entity: sensor.dark_sky_humidity
               name: Outside
               color: '#FFFFFF'
@@ -1845,7 +1809,6 @@ views:
         - type: entities
           show_header_toggle: false
           entities:
-            - sensor.average_humidity
             - sensor.mold_indicator
             - switch.dehumidifier
             - automation.dehumidifier
@@ -1855,16 +1818,8 @@ views:
         - type: vertical-stack
           cards:
           - type: "custom:button-card"
-            color_type: card
-            color: rgb(34, 35, 58)
             name: 'SENSORS'
-            style:
-              - background-color: rgb(34, 35, 58)
-              - font-size: 14px
-              - font-weight: bold
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
+            template: header
           - type: vertical-stack
             cards:
             - type: horizontal-stack
@@ -1915,105 +1870,6 @@ views:
                     - entity: sensor.dining_room_sensor_light_level
                       name: Illumination
                       color: '#00c3e2'
-  ###### ENERGY CONSUMPTION
-      - type: horizontal-stack
-        cards:
-        - type: vertical-stack
-          cards:
-          - type: "custom:button-card"
-            color_type: card
-            color: rgb(34, 35, 58)
-            name: 'ENERGY'
-            style:
-              - font-size: 14px
-              - font-weight: bold
-              - background-color: rgb(34, 35, 58)
-              - height: 24px
-              - padding: 3px
-              - transform: translate(-0%, 10%)
-          - type: vertical-stack
-            cards:
-            - type: "custom:button-card"
-              entity: sensor.electricity_price
-              color_type: card
-              show_state: true
-              show_icon: false
-              action: more_info
-              name: 'Electricity Price'
-              layout: name_state
-              styles:
-                card:
-                  - font-weight: bold
-                  - height: 33px
-                  - padding: 4px
-                  - transform: translate(-0%, 10%)
-              state:
-                - value: '6.5'
-                  color: rgb(21, 158, 56)
-                - value: '9.4'
-                  color: rgb(255, 183, 18)
-                - value: '13.4'
-                  color: rgb(224, 0, 45)
-            - type: horizontal-stack # PC DESK
-              cards:
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.office_yesterday
-                hours_to_show: 168
-                name: PC USAGE
-                points_per_hour: '.040'
-                show:
-                  graph: bar
-                  icon: false
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.office_draw
-                hours_to_show: 24
-                name: PC WATTS
-                points_per_hour: '6'
-                show:
-                  graph: line
-                  icon: false
-            - type: horizontal-stack #SERVER
-              cards:
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.server_yesterday
-                hours_to_show: 168
-                name: SERVER USAGE
-                points_per_hour: '.040'
-                show:
-                  graph: bar
-                  icon: false
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.server_draw
-                hours_to_show: 24
-                name: SERVER WATTS
-                points_per_hour: '4'
-                show:
-                  graph: line
-                  icon: false
-            - type: horizontal-stack #WASHING MACHINE
-              cards:
-              - type: custom:mini-graph-card
-                entities:
-                  - entity:  sensor.washing_machine_today_kwh
-                hours_to_show: 168
-                name: WASH USAGE
-                points_per_hour: '.040'
-                show:
-                  graph: bar
-                  icon: false
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.washing_machine_watts
-                hours_to_show: 24
-                name: WASH WATTS
-                points_per_hour: '4'
-                show:
-                  graph: line
-                  icon: false
 ################################################################################
 ###### KODI VIEW -------------------------------------------------------------
 ################################################################################
@@ -2173,3 +2029,151 @@ views:
           entity: sensor.sonarr_upcoming_media
           image_style: fanart
           all_shadows: true
+  - title: Energy
+    icon: mdi:flash
+    background: center / cover no-repeat url("/local/lovelace/bg.jpg") fixed
+    theme: Night
+    cards:
+###### CUSTOM HEADER -----------------------------------------------
+      - type: custom:compact-custom-header
+        background: "rgb(34, 35, 58) url('/local/lovelace/header2.png')"
+        active_tab_color: rgb(255, 183, 18)
+        tab_indicator_color: rgb(255, 183, 18)
+        main_config: true
+        menu: overflow
+        options: clock
+        voice: hide
+        clock_format: 12
+  ###### ENERGY CONSUMPTION
+      - type: horizontal-stack
+        cards:
+        - type: vertical-stack
+          cards:
+          - type: "custom:button-card"
+            name: 'ENERGY'
+            template: header
+          - type: vertical-stack
+            cards:
+            - type: "custom:button-card"
+              entity: sensor.electricity_price
+              color_type: card
+              show_state: true
+              show_icon: false
+              tap_action:
+                action: more-info
+              name: 'Electricity Price'
+              layout: name_state
+              styles:
+                card:
+                  - font-weight: bold
+                  - height: 33px
+                  - padding: 4px
+                  - transform: translate(-0%, 10%)
+              state:
+                - value: '6.5'
+                  color: rgb(21, 158, 56)
+                - value: '9.4'
+                  color: rgb(255, 183, 18)
+                - value: '13.4'
+                  color: rgb(224, 0, 45)
+
+            - type: horizontal-stack # TOTALS
+              cards:
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.energy_yesterday_total
+                hours_to_show: 168
+                name: Total Yesterday
+                points_per_hour: '.040'
+                show:
+                  graph: line
+                  icon: false
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.energy_week_total
+                hours_to_show: 168
+                name: Total Week
+                points_per_hour: '.040'
+                show:
+                  graph: line
+                  icon: false
+            - type: horizontal-stack # PC DESK
+              cards:
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.office_yesterday
+                hours_to_show: 168
+                name: PC USAGE
+                points_per_hour: '.040'
+                show:
+                  graph: bar
+                  icon: false
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.office_draw
+                hours_to_show: 24
+                name: PC WATTS
+                points_per_hour: '6'
+                show:
+                  graph: line
+                  icon: false
+            - type: horizontal-stack #SERVER
+              cards:
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.server_yesterday
+                hours_to_show: 168
+                name: SERVER USAGE
+                points_per_hour: '.040'
+                show:
+                  graph: bar
+                  icon: false
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.server_draw
+                hours_to_show: 24
+                name: SERVER WATTS
+                points_per_hour: '4'
+                show:
+                  graph: line
+                  icon: false
+            - type: horizontal-stack #WASHING MACHINE
+              cards:
+              - type: custom:mini-graph-card
+                entities:
+                  - entity:  sensor.washing_machine_today_kwh
+                hours_to_show: 168
+                name: WASH USAGE
+                points_per_hour: '.040'
+                show:
+                  graph: bar
+                  icon: false
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.washing_machine_watts
+                hours_to_show: 24
+                name: WASH WATTS
+                points_per_hour: '4'
+                show:
+                  graph: line
+                  icon: false
+            - type: horizontal-stack #POOL
+              cards:
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.pool_yesterday
+                hours_to_show: 168
+                name: POOL USAGE
+                points_per_hour: '.040'
+                show:
+                  graph: bar
+                  icon: false
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.pool_draw
+                hours_to_show: 24
+                name: POOL WATTS
+                points_per_hour: '4'
+                show:
+                  graph: line
+                  icon: false

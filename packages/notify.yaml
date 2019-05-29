@@ -89,8 +89,8 @@ automation:
   - alias: 'notify if update available'
     initial_state: 'on'
     trigger:
-      - platform: state
-        entity_id: sensor.ha_version
+      - platform: template
+        value_template: "{{states.sensor.ha_version.attributes.icon != 'mdi:checkbox-marked'}}"
     action:
       - service: notify.discord
         data:

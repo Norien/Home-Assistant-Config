@@ -1,0 +1,49 @@
+################################################################
+## Packages / Energy
+################################################################
+homeassistant:
+
+sensor:
+  - platform: template
+    sensors:
+      energy_yesterday_total:
+        friendly_name: "Energy Yesterday Total"
+        unit_of_measurement: 'kWh'
+        entity_id: sensor.time, sensor.washing_machine_today_kwh, sensor.server_yesterday, sensor.office_yesterday
+        value_template: >
+          {% set office = states('sensor.office_yesterday') %}
+          {% set server = states('sensor.server_yesterday') %}
+          {% set pool = states('sensor.pool_yesterday') %}
+          {% set wash = states('sensor.washing_machine_today_kwh') %}
+          {{ office|float + server|float + wash|float + pool|float}}
+
+###### ENERGY SENSORS
+  - platform: mqtt
+    name: energy_week_total
+    state_topic: "homeassistant/energy_week_total"
+    unit_of_measurement: 'kWh'
+    value_template: '{{value | round(3)}}'
+
+automation:
+  - alias: 'energy_total_week_record'
+    initial_state: 'on'
+    trigger:
+      - platform: time
+        at: '00:00:00'
+    action:
+      - service: mqtt.publish
+        data_template:
+          topic: 'homeassistant/energy_week_total'
+          retain: true
+          payload: >
+            {% set week = states('sensor.energy_week_total') %}
+            {% set today = states('sensor.energy_yesterday_total') %}
+            {% set day = states('sensor.date_weekday') %}
+            {%- if day == "Monday"-%} {{today}}
+            {%- elif day == "Tuesday"-%} {{week|float + today|float}}
+            {%- elif day == "Wednesday"-%} {{week|float + today|float}}
+            {%- elif day == "Thursday"-%} {{week|float + today|float}}
+            {%- elif day == "Friday"-%} {{week|float + today|float}}
+            {%- elif day == "Saturday"-%} {{week|float + today|float}}
+            {%- else -%} {{week|float + today|float}}
+            {%- endif -%}

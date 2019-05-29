@@ -3,31 +3,6 @@
 ## Dependencies / Glances - https://nicolargo.github.io/glances/
 ################################################################
 homeassistant:
-  customize:
-    sensor.cpu_temperature:
-      friendly_name: CPU Temperature
-      icon: mdi:thermometer
-    sensor.ha_version:
-      friendly_name: Home Assistant Version
-    sensor.glances_cpu_load:
-      friendly_name: CPU Usage
-      icon: mdi:desktop-tower
-    sensor.glances_disk_overview:
-      friendly_name: Disk
-      icon: mdi:harddisk
-    sensor.disk_temperature:
-      friendly_name: Disk Temperature
-      icon: mdi:thermometer
-    sensor.glances_ram_overview:
-      friendly_name: RAM
-      icon: mdi:chip
-    sensor.linux_distro:
-      friendly_name: Linux Distro
-      icon: mdi:ubuntu
-    sensor.disk_file_system:
-      friendly_name: File System
-      icon: mdi:harddisk
-
 sensor:
   - platform: github
     access_token: !secret github_access_token
@@ -39,11 +14,11 @@ sensor:
         value_template: "{{states.sensor.home_assistant_config.attributes.open_issues}}"
       home_assistant_config_stars:
         value_template: "{{states.sensor.home_assistant_config.attributes.stargazers}}"
-###### VERSIONS CUSTOM COMPONENT
+###### VERSION ( LOCAL INSTALLED )
   - platform: command_line
     name: Installed Version
     command: "cat /config/.HA_VERSION"
-## VERSION ( DOCKER )
+###### VERSION ( AVAILABLE DOCKER )
   - platform: version
     source: docker
 ## DATABASE % CONFIG SIZE
@@ -76,17 +51,14 @@ sensor:
     command: cat /config/www/linux_distro
     name: 'linux_distro'
     scan_interval: 604800
-
 ###### UPTIMES
   - platform: uptime
     name: 'HA Uptime'
-
   - platform: command_line
     command: /usr/bin/curl -X GET http://127.0.0.1:61208/api/3/uptime
     name: 'Server Uptime'
     value_template: '{{ value[1:-1] }}'
     scan_interval: 720
-
 ###### CPU TEMPERATURE
   - platform: command_line
     name: CPU Temperature
@@ -103,7 +75,6 @@ sensor:
     value_template: '{{ value_json.min5 }}'
     unit_of_measurement: '%'
     scan_interval: 300
-
 ###### GLANCES
   - platform: glances
     host: 127.0.0.1
@@ -113,7 +84,6 @@ sensor:
       - 'disk_use'
       - 'memory_use'
       - 'memory_free'
-
 ###### HARD DRIVE DISPLAY
   - platform: command_line
     command: /usr/bin/curl -X GET http://127.0.0.1:61208/api/2/fs
@@ -126,19 +96,164 @@ sensor:
     name: 'Disk File System'
     scan_interval: 3600
     unit_of_measurement: '%'
-
 ##### CUSTOM RAM DISPLAY
   - platform: command_line
     command: /usr/bin/curl -X GET http://127.0.0.1:61208/api/3/mem/total
     name: 'glances_ram_total'
     value_template: '{{ value_json.total }}'
     scan_interval: 604800
-
   - platform: template
     sensors:
       glances_ram_used_gb:
         value_template: '{{(states.sensor.glances_ram_used.state|float/1000)|round(1)}}'
         unit_of_measurement: 'GB'
+###### Home Assistant Component counts
+  - platform: template
+    sensors:
+    #----- Count Automations
+      count_automations:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['automation'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Count Scripts
+      count_scripts:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['script'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Count Device Trackers
+      count_device_trackers:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['device_tracker'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Count Binary Sensors
+      count_binary_sensors:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['binary_sensor'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Count Sensors
+      count_sensors:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['sensor'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Count Switches
+      count_switches:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['switch'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Count Zones
+      count_zones:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['zone'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Input Booleans
+      count_input_booleans:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['input_boolean'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Input Numbers
+      count_input_numbers:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['input_number'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Input Texts
+      count_input_texts:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['input_text'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Input Selects
+      count_input_selects:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['input_select'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
+    #----- Input Date Times
+      count_input_datetimes:
+        entity_id: sensor.date
+        value_template: >
+          {%- set domains = ['input_datetime'] -%}
+          {%- for domain in domains -%}
+            {%- for item in states[domain] -%}
+              {% if loop.first %}
+                {{loop.length}}
+              {% endif %}
+            {%- endfor -%}
+          {%- endfor -%}
 
 ###### DOCKER CONTROL POINTS
 switch:

@@ -86,12 +86,10 @@ automation:
   - alias: 'theme_light_auto_off'
     initial_state: 'on'
     trigger:
-      - platform: template
-        value_template: "{% if is_state('light.front_door', 'on') %}true{% endif %}"
-    condition:
-      - condition: state
-        entity_id: 'sun.sun'
-        state: 'above_horizon'
+      - platform: state
+        entity_id: sun.sun
+        from: "below_horizon"
+        to: "above_horizon"
     action:
       - service: light.turn_off
         data:

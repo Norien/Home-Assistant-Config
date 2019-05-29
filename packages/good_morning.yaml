@@ -25,7 +25,7 @@ sensor:
           {%-set trigger= states('sensor.good_morning_last_triggered')-%}
           {%-set now = as_timestamp(now())-%}
           {%-set time = states.sensor.time.state-%}
-          {%-if time >= '06:00' and time <= '12:00' and now|float-trigger|float > 25200 -%}
+          {%-if time >= '06:00' and time <= '11:00' and now|float-trigger|float > 25200 -%}
             morning
           {%- elif time >= '20:30' and time <= '24:00' -%}
             night
@@ -63,6 +63,8 @@ script:
     - service: script.morning_livingroom_lights
     - service: switch.turn_off
       entity_id: switch.bedroom_fan
+    - service: switch.turn_off
+      entity_id: switch.white_noise_living_room
     - service: media_player.turn_off
       entity_id: media_player.master_bedroom_speaker
     - service: media_player.volume_set
@@ -71,6 +73,8 @@ script:
         volume_level: '0.70'
     - wait_template: "{{ states.binary_sensor.living_room_sensor_motion.state == 'on' }}"
     - service: script.good_morning_tts
+    - service: automation.turn_on
+      entity_id: automation.night_light
 
   good_morning_tts:
     sequence:

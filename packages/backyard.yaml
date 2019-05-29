@@ -7,8 +7,28 @@ homeassistant:
       friendly_name: Patio Amplifier
       icon: mdi:amplifier
 
-# ###### AUTOMATIC CONTROL OF AMPLIFIER
 automation:
+###### NOTIFY IF FILTER IS CLOGGED
+  - alias: 'Pool Filter is clogged'
+    initial_state: 'on'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.pool_draw
+        below: 37
+        for: '00:00:05'
+    condition:
+      - condition: numeric_state
+        entity_id: sensor.pool_draw
+        above: 20
+    action:
+      - service: switch.turn_off
+        entity_id: switch.pool_pump
+      - service: script.janet_speech_engine
+        data:
+          call_greeting: 1
+        data_template:
+          CustomMessage: 'The Pool Filter needs Cleaning!'
+####### AUTOMATIC CONTROL OF AMPLIFIER
   - alias: "Backyard Amp Off"
     initial_state: 'on'
     trigger:
@@ -39,3 +59,142 @@ automation:
     action:
       - service: switch.turn_on
         entity_id: switch.sonoff_1
+####### AUTOMATIC CONTROL OF POOL PUMP
+  - alias: "Pool Pump On"
+    initial_state: 'on'
+    trigger:
+      - platform: time_pattern
+        minutes: '/20'
+      - platform: state
+        entity_id: sensor.electricity_price
+        to: '6.5'
+    condition:
+      condition: and
+      conditions:
+        - condition: template
+          value_template: '{{ states.sensor.pool_runtime.state|float < 8 }}'
+        - condition: state
+          entity_id: 'sensor.electricity_price'
+          state: '6.5'
+    action:
+      - service: switch.turn_on
+        entity_id: switch.pool_pump
+
+  - alias: "Pool Pump Off"
+    initial_state: 'on'
+    trigger:
+      - platform: time_pattern
+        minutes: '/20'
+      - platform: state
+        entity_id: sensor.electricity_price
+        to: '9.4'
+      - platform: state
+        entity_id: sensor.electricity_price
+        to: '13.4'
+    condition:
+      condition: or
+      conditions:
+        - condition: template
+          value_template: '{{ states.sensor.pool_runtime.state|float > 8 }}'
+        - condition: state
+          entity_id: 'sensor.electricity_price'
+          state: '9.4'
+        - condition: state
+          entity_id: 'sensor.electricity_price'
+          state: '13.4'
+    action:
+      - service: switch.turn_off
+        entity_id: switch.pool_pump
+
+  - alias: "Pool Pump Auto State"
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: input_boolean.pool_auto_pump
+        to: 'on'
+      - platform: state
+        entity_id: input_boolean.pool_auto_pump
+        to: 'off'
+    action:
+      - service: automation.toggle
+        entity_id: automation.pool_pump_off
+      - service: automation.toggle
+        entity_id: automation.pool_pump_on
+      - service_template: >
+          {% if states.input_boolean.pool_auto_pump.state == 'off' %} switch.turn_on
+          {% else %} switch.turn_off
+          {% endif %}
+        entity_id: switch.pool_pump
+
+  - alias: "Pool Pump Auto Reset"
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: input_boolean.pool_auto_pump
+        to: 'off'
+        for:
+          hours: 2
+    action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.pool_auto_pump
+
+switch:
+###### SONOFF POW
+  - platform: mqtt
+    name: "Pool Pump"
+    state_topic: "stat/pool/POWER"
+    command_topic: "cmnd/pool/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 0
+    retain: true
+
+sensor:
+###### SONOFF POW SENSORS
+  - platform: mqtt
+    name: "Pool Draw"
+    state_topic: "tele/pool/SENSOR"
+    qos: 0
+    unit_of_measurement: "W"
+    value_template: "{{ value_json['ENERGY'].Power }}"
+
+  - platform: mqtt
+    name: "Pool Voltage"
+    state_topic: "tele/pool/SENSOR"
+    qos: 0
+    unit_of_measurement: "V"
+    value_template: "{{ value_json['ENERGY'].Voltage }}"
+
+  - platform: mqtt
+    name: "Pool Today"
+    state_topic: "tele/pool/SENSOR"
+    qos: 0
+    unit_of_measurement: "kWh"
+    value_template: "{{ value_json['ENERGY'].Today }}"
+
+  - platform: mqtt
+    name: "Pool Current"
+    state_topic: "tele/pool/SENSOR"
+    qos: 0
+    unit_of_measurement: "A"
+    value_template: "{{ value_json['ENERGY'].Current }}"
+
+  - platform: mqtt
+    name: "Pool Yesterday"
+    state_topic: "tele/pool/SENSOR"
+    qos: 0
+    unit_of_measurement: "kWh"
+    value_template: "{{ value_json['ENERGY'].Yesterday }}"
+
+  - platform: history_stats
+    name: Pool Runtime
+    entity_id: switch.pool_pump
+    state: 'on'
+    type: time
+    start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    end: '{{ now() }}'
+
+input_boolean:
+  pool_auto_pump:
+    name: pool_auto_pump

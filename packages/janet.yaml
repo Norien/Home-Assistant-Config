@@ -14,7 +14,6 @@ input_boolean:
   janet_speech_notifications:
     name: Speech Notifications
     icon: mdi:bell-outline
-    initial: on
 
   janet_text_notifications:
     name: Text Notifications

@@ -202,6 +202,35 @@ script:
           option: "River"
 
 automation:
+  - alias: 'livingroom_sleep_mode'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: light.hue_go
+        from: 'on'
+        to: 'off'
+      - platform: state
+        entity_id: switch.white_noise_living_room
+        from: 'off'
+        to: 'on'
+    condition:
+      - condition: state
+        entity_id: switch.white_noise_living_room
+        state: 'on'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.hue_go
+          brightness: 45
+          rgb_color: [174,140,79]
+      - service: light.turn_off
+        data:
+          entity_id: light.living_room_lamp,light.kitchen_sink,light.hue_color_lamp_1,light.hue_color_lamp_3
+      - service: switch.turn_off
+        entity_id: switch.tv, switch.receiver
+      - service: automation.turn_off
+        entity_id: automation.night_light
+
   - alias: 'turn_tv_off'
     initial_state: 'on'
     trigger:

@@ -5,6 +5,44 @@
 homeassistant:
 
 sensor:
+  - platform: unifigateway
+    host: localhost
+    username: !secret unifi_user
+    password: !secret unifi_password
+    monitored_conditions:
+      - www
+      - wlan
+      - lan
+      - wan
+      - alerts
+      - firmware
+## BREAKOUT UNIFI FOR LOVELACE
+  - platform: template
+    sensors:
+      unifi_gateway_www_rx:
+        entity_id: sensor.unifi_gateway_www
+        unit_of_measurement: 'kB/s'
+        value_template: "{{ state_attr('sensor.unifi_gateway_www', 'rx_bytes-r') / 1000}}"
+      unifi_gateway_www_tx:
+        entity_id: sensor.unifi_gateway_www
+        unit_of_measurement: 'kB/s'
+        value_template: "{{ state_attr('sensor.unifi_gateway_www', 'tx_bytes-r') / 1000}}"
+      unifi_gateway_www_cpu:
+        entity_id: sensor.unifi_gateway_wan
+        unit_of_measurement: '%'
+        value_template: "{{states.sensor.unifi_gateway_wan.attributes['gw_system-stats']['cpu']}}"
+      unifi_gateway_www_mem:
+        entity_id: sensor.unifi_gateway_wan
+        unit_of_measurement: '%'
+        value_template: "{{states.sensor.unifi_gateway_wan.attributes['gw_system-stats']['mem']}}"
+      unifi_gateway_lan_num_user:
+        entity_id: sensor.unifi_gateway_lan
+        unit_of_measurement: 'Users'
+        value_template: "{{states.sensor.unifi_gateway_lan.attributes['num_user']}}"
+      unifi_gateway_wlan_num_user:
+        entity_id: sensor.unifi_gateway_wlan
+        unit_of_measurement: 'Users'
+        value_template: "{{states.sensor.unifi_gateway_wlan.attributes['num_user']}}"
   ###### SENSOR FOR SEEXBOX DELUGE
   - platform: deluge
     host: !secret deluge_host

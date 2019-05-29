@@ -6,14 +6,14 @@ homeassistant:
     script.notify_camera:
       friendly_name: Email Camera Photo
 
-stream:
+#stream:
 camera:
-  - platform: mjpeg
-    name: findlay
-    mjpeg_url: !secret dlink_camera_mjpeg
-    still_image_url: !secret dlink_still_image_url
-    username: !secret dlink_camera_username
-    password: !secret dlink_camera_password
+  # - platform: mjpeg
+  #   name: findlay
+  #   mjpeg_url: !secret dlink_camera_mjpeg
+  #   still_image_url: !secret dlink_still_image_url
+  #   username: !secret dlink_camera_username
+  #   password: !secret dlink_camera_password
 
   - platform: mjpeg
     name: nursery
@@ -24,6 +24,10 @@ camera:
   - platform: ffmpeg
     name: driveway
     input: !secret wyze_rtsp
+
+  - platform: ffmpeg
+    name: findlay
+    input: !secret wyze_2_rtsp
 
 automation:
   - alias: driveway_motion_detected

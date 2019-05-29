@@ -2,48 +2,23 @@
 ## Packages / Laundry Room
 ################################################################
 homeassistant:
-  customize:
-###### Washing Machine ENERGY READINGS
-    sensor.washing_machine_amps:
-      friendly_name: "Amps"
-      icon: mdi:power-plug
-    sensor.washing_machine_watts:
-      friendly_name: "Watts"
-      icon: mdi:power-plug
-    sensor.washing_machine_kw:
-      friendly_name: "KW"
-      icon: mdi:power-plug
-    sensor.washing_machine_volts:
-      friendly_name: "Volttage"
-      icon: mdi:power-plug
-    sensor.washing_machine_status:
-      friendly_name: "Wash Status"
-      icon: mdi:clipboard-outline
-    switch.washing_machine:
-      friendly_name: "Washing Machine"
-      icon: mdi:washing-machine
-
 sensor:
   ###### WASHING MACHINE ENERGY SENSORS
   - platform: template
     sensors:
       washing_machine_amps:
-        #value_template: '{{ states.switch.washing_machine.attributes["current_a"] | replace(" A", "") | float }}'
         friendly_name_template: "{{ states.switch.washing_machine.name}} Current"
         value_template: '{{ states.switch.washing_machine.attributes["current_a"] | float }}'
         unit_of_measurement: 'A'
       washing_machine_watts:
-        #value_template: '{{ states.switch.washing_machine.attributes["current_power_w"] | replace(" W", "") | float }}'
         friendly_name_template: "{{ states.switch.washing_machine.name}} Current Consumption"
         value_template: '{{ states.switch.washing_machine.attributes["current_power_w"] | float }}'
         unit_of_measurement: 'W'
       washing_machine_kw:
-        #value_template: '{{ states.switch.washing_machine.attributes["total_energy_kwh"] | replace(" kW", "") | float }}'
         friendly_name_template: "{{ states.switch.washing_machine.name}} Total Consumption"
         value_template: '{{ states.switch.washing_machine.attributes["total_energy_kwh"] | float }}'
         unit_of_measurement: 'kW'
       washing_machine_volts:
-        #value_template: '{{ states.switch.washing_machine.attributes["voltage"] | replace(" V", "") | float }}'
         friendly_name_template: "{{ states.switch.washing_machine.name}} Today's Consumption"
         value_template: '{{ states.switch.washing_machine.attributes["today_energy_kwh"] | float }}'
         unit_of_measurement: 'V'
@@ -74,6 +49,7 @@ automation:
     action:
       - service: switch.turn_off
         entity_id: switch.washing_machine
+      - service: script.laundy_light_alert
       - service: script.laundry_tts
 
 script:
@@ -84,3 +60,30 @@ script:
         call_greeting: 1
         call_inform: 1
         CustomMessage: "The Washing machine has completed it's cycle."
+  laundy_light_alert:
+    sequence:
+      - service: light.turn_on
+        data:
+          entity_id: light.hue_go
+      - delay:
+          milliseconds: 600
+      - service: light.turn_off
+        data:
+          entity_id: light.hue_go
+      - delay:
+          milliseconds: 600
+  laundy_light_alert_10:
+    sequence:
+      - service: script.laundy_light_alert
+      - wait_template: "{{ is_state('script.laundy_light_alert', 'off') }}"
+      - service: script.laundy_light_alert
+      - wait_template: "{{ is_state('script.laundy_light_alert', 'off') }}"
+      - service: script.laundy_light_alert
+      - wait_template: "{{ is_state('script.laundy_light_alert', 'off') }}"
+      - service: script.laundy_light_alert
+      - wait_template: "{{ is_state('script.laundy_light_alert', 'off') }}"
+      - service: script.laundy_light_alert
+      - wait_template: "{{ is_state('script.laundy_light_alert', 'off') }}"
+      - service: script.laundy_light_alert
+      - wait_template: "{{ is_state('script.laundy_light_alert', 'off') }}"
+      - service: script.laundy_light_alert
