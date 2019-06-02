@@ -34,15 +34,16 @@ button_card_templates:
     show_icon: false
     styles:
       card:
-        - background-color: rgba(34, 35, 58, 0.9)
+        - background-color: rgba(34, 35, 58, 0.6)
         - font-size: 14px
         - font-weight: bold
         - height: 24px
         - padding: 3px
         - transform: translate(-0%, 12%)
+        - box-shadow: 0px 0px 1px 1px rgb(101, 109, 122)
   sensor_label:
     color_type: card
-    color: rgb(34, 35, 37)
+    color: rgb(57, 58, 61)
     tap_action:
       action: more-info
     show_state: true
@@ -71,13 +72,28 @@ views:
 ###### CUSTOM HEADER -----------------------------------------------
       - type: custom:compact-custom-header
         background: "rgb(34, 35, 58) url('/local/lovelace/header2.png')"
-        active_tab_color: rgb(255, 183, 18)
         tab_indicator_color: rgb(255, 183, 18)
         main_config: true
         menu: overflow
         options: clock
         voice: hide
         clock_format: 12
+        swipe: true
+        swipe_animate: flip
+        conditional_styles:
+          template:
+            - tab:
+                1:
+                - icon: >
+                    if (states["sensor.home_assistant_config_issues"].state == "0") "mdi:death-star";
+                    else "mdi:death-star-variant";
+            - tab:
+                3:
+                - color: >
+                    if (states["sensor.electricity_price"].state == "6.5") "rgb(21, 158, 56)";
+                    else if (states["sensor.electricity_price"].state == "9.4") "rgb(255, 183, 18)";
+                    else "rgb(224, 0, 45)";
+
 ###### LOW BATTERY POP-UP
       - type: conditional
         conditions:
@@ -89,7 +105,7 @@ views:
           show_header_toggle: false
           entities:
             - sensor.battery_low
-###### OFFLINE DEVICE POP-UP
+##### OFFLINE DEVICE POP-UP
       # - type: custom:monster-card
       #   show_empty: false
       #   card:
@@ -920,20 +936,10 @@ views:
   - title: Sensor
     background: center / cover no-repeat url("/local/lovelace/bg.jpg") fixed
     theme: Night
-    icon: mdi:death-star-variant
+    icon: mdi:death-star
     cards:
 ###### CUSTOM HEADER -----------------------------------------------
       - type: custom:compact-custom-header
-        background: "rgb(34, 35, 58) url('/local/lovelace/header2.png')"
-        active_tab_color: rgb(255, 183, 18)
-        tab_indicator_color: rgb(255, 183, 18)
-        notify_indicator_color: rgb(255, 183, 18)
-        notify_text_color: rgb(0, 0, 0)
-        main_config: true
-        menu: overflow
-        options: clock
-        voice: hide
-        clock_format: 12
 ###### NEST
       - type: vertical-stack
         cards:
@@ -1253,7 +1259,7 @@ views:
               yellow: 3
               red: 6
           - type: custom:mini-graph-card
-            name: Network Usage
+            name: Plex Network Usage
             hours_to_show: 10
             points_per_hour: 15
             show:
@@ -1266,6 +1272,7 @@ views:
                 name: LAN
               - entity: sensor.tautulli_wan
                 name: WAN
+                color: '#e20029'
 ###### NETWORK
       - type: horizontal-stack
         cards:
@@ -1384,8 +1391,10 @@ views:
                   name: Total
                 - entity: sensor.usage_downloaded
                   name: Downloaded
+                  color: '#00c3e2'
                 - entity: sensor.usage_uploaded
                   name: Uploaded
+                  color: '#e20029'
 ###### NUC SERVER STATUS
       - type: horizontal-stack
         cards:
@@ -1545,7 +1554,7 @@ views:
                 color: '#00c3e2'
                 show_state: true
           - type: "custom:button-card"
-            name: 'Restart'
+            name: 'RESTART'
             template: button_long
             confirmation: 'Are you Sure you want to restart?'
             entity: switch.ha_dockermon_delugevpn
@@ -1634,7 +1643,7 @@ views:
               template: sensor_label
           - type: "custom:button-card"
             color_type: label
-            name: 'Restart'
+            name: 'RESTART'
             template: button_long
             entity: script.restart_hass
             confirmation: 'Are you Sure you want to restart?'
@@ -1880,16 +1889,6 @@ views:
     cards:
 ###### CUSTOM HEADER -----------------------------------------------
       - type: custom:compact-custom-header
-        background: "rgb(34, 35, 58) url('/local/lovelace/header2.png')"
-        active_tab_color: rgb(255, 183, 18)
-        tab_indicator_color: rgb(255, 183, 18)
-        notify_indicator_color: rgb(255, 183, 18)
-        notify_text_color: rgb(0, 0, 0)
-        main_config: true
-        menu: overflow
-        options: clock
-        voice: hide
-        clock_format: 12
       - type: vertical-stack
         cards:
 ### POWER
@@ -2036,14 +2035,6 @@ views:
     cards:
 ###### CUSTOM HEADER -----------------------------------------------
       - type: custom:compact-custom-header
-        background: "rgb(34, 35, 58) url('/local/lovelace/header2.png')"
-        active_tab_color: rgb(255, 183, 18)
-        tab_indicator_color: rgb(255, 183, 18)
-        main_config: true
-        menu: overflow
-        options: clock
-        voice: hide
-        clock_format: 12
   ###### ENERGY CONSUMPTION
       - type: horizontal-stack
         cards:
