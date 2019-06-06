@@ -24,12 +24,9 @@ updater:
 owntracks:
 system_health:
 person:
-custom_updater:
-  component_urls:
-    - https://raw.githubusercontent.com/pnbruckner/homeassistant-config/master/custom_components.json
-  card_urls:
-    - https://raw.githubusercontent.com/kalkih/mini-graph-card/master/tracker.json
-    - https://raw.githubusercontent.com/kalkih/mini-media-player/master/tracker.json
+breaking_changes:
+hacs:
+  token: !secret github_access_token
 history:
   include:
     domains:

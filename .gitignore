@@ -23,6 +23,7 @@ config
 .gitignore
 .gitattributes
 .HA_VERSION
+www/community/*
 shell/waste_pickup_yard_waste.py
 shell/waste_pickup_garbage_recycle.py
 shell/update_ha.log

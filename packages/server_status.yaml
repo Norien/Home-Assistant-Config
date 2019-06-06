@@ -40,12 +40,6 @@ sensor:
           {% else %}
             mdi:checkbox-blank-outline
           {% endif %}
-###### SENSOR FOR CONDITIONAL CARD ( CUSTOM COMPONENT AND CARD VERSIONS )
-      custom_update_available:
-        value_template: >
-          {%-set card=states('sensor.custom_card_tracker')-%}
-          {%-set component=states('sensor.custom_component_tracker')-%}
-          {%- if card|int != 0|int or component|int != 0|int -%}on{%-else-%}off{%-endif-%}
 ###### CUSTOM LINUX VERSION
   - platform: command_line
     command: cat /config/www/linux_distro

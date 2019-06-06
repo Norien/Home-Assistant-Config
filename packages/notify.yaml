@@ -101,31 +101,3 @@ automation:
           title: Update Available
           message: "Home Assistant {{ states('sensor.ha_version') }} for update."
           notification_id: Update Available
-##CUSTOM CARD/COMPONENT
-#CHECK
-  - alias: 'check if custom update available'
-    initial_state: 'on'
-    trigger:
-      - platform: time_pattern
-        minutes: '/30'
-    action:
-      - service: custom_updater.check_all
-#NOTIFY
-  - alias: 'notify if custom update available'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id:
-          - sensor.custom_card_tracker
-          - sensor.custom_component_tracker
-    action:
-      - service: notify.discord
-        data:
-          target: !secret discord
-        data_template:
-          message: "There are {{ states(trigger.entity_id) }} update(s) pending, for {{ state_attr(trigger.entity_id, 'has_update') }}"
-      - service: persistent_notification.create
-        data_template:
-          title: Update Available
-          message: "There are {{ states(trigger.entity_id) }} update(s) pending, for {{ state_attr(trigger.entity_id, 'has_update') }}"
-          notification_id: Update Available

@@ -1,30 +1,21 @@
 title: Assistant
 resources:
-  - url: /customcards/github/custom-cards/tracker-card.js?track=true
+  - url: /local/lovelace/cards/mini-media-player-bundle.js?track=true
     type: module
-  - url: /local/my-custom-card.js?track=true
+  - url: /local/lovelace/cards/compact-custom-header.js?track=true
+    type: module
+  - url: /local/lovelace/cards/gauge-card.js
     type: js
-  - url: /local/my-webfont.css
-    type: css
-  - url: /local/lovelace/mini-media-player-bundle.js?track=true
+  - url: /local/lovelace/cards/mini-graph-card-bundle.js?track=true
     type: module
-  - url: /local/lovelace/compact-custom-header.js?track=true
+###### HACS
+  - url: /community_plugin/button-card/button-card.js
     type: module
-  - url: /local/lovelace/gauge-card.js
+  - url: /community_plugin/monster-card/monster-card.js
+  - url: /community_plugin/upcoming-media-card/upcoming-media-card.js
     type: js
-  - url: /local/lovelace/monster-card.js?track=true
+  - url: /community_plugin/bar-card/bar-card.js
     type: js
-  - url: /customcards/github/custom-cards/button-card.js?track=true
-    type: module
-  - url: /local/lovelace/mini-graph-card-bundle.js?track=true
-    type: module
-  - url: /local/lovelace/simple-thermostat.js?track=true
-    type: module
-  - url: /local/lovelace/cards/upcoming-media-card.js?track=true
-    type: js
-  - url: /local/lovelace/cards/bignumber-card.js
-    type: js
-
 ###### STYLE TEMPLATES FOR BUTTON CARD
 button_card_templates:
   header:
@@ -93,79 +84,73 @@ views:
                     if (states["sensor.electricity_price"].state == "6.5") "rgb(21, 158, 56)";
                     else if (states["sensor.electricity_price"].state == "9.4") "rgb(255, 183, 18)";
                     else "rgb(224, 0, 45)";
-
-###### LOW BATTERY POP-UP
-      - type: conditional
-        conditions:
-          - entity: sensor.batterystatus
-            state_not: "Low Battery"
-        card:
-          type: glance
-          title: ""
-          show_header_toggle: false
-          entities:
-            - sensor.battery_low
-##### OFFLINE DEVICE POP-UP
-      # - type: custom:monster-card
-      #   show_empty: false
-      #   card:
-      #     type: entities
-      #     title: Offline Devices
-      #     show_header_toggle: false
-      #   filter:
-      #     include:
-      #       - entity_id: device_tracker.camera*
-      #       - entity_id: device_tracker.chromecast*
-      #       - entity_id: device_tracker.echodot
-      #       - entity_id: device_tracker.philips_hue_hub
-      #       - entity_id: device_tracker.google_home*
-      #       - entity_id: device_tracker.light*
-      #       - entity_id: device_tracker.nest
-      #       - entity_id: device_tracker.office*
-      #       - entity_id: device_tracker.roomba
-      #       - entity_id: device_tracker.sonoff*
-      #       - entity_id: device_tracker.wemo*
-      #       - entity_id: device_tracker.washing_machine
-      #       - entity_id: device_tracker.findlaysipad
-      #     exclude:
-      #       - state: 'Home'
-      #       - state: 'home'
+##### POP UP NOTIFICATIONS
+      - type: vertical-stack
+        cards:
+        - type: conditional
+          conditions:
+            - entity: sensor.batterystatus
+              state_not: "Low Battery"
+          card:
+            type: "custom:button-card"
+            name: 'NOTIFICATIONS'
+            template: header
+        - type: vertical-stack
+          cards:
+    ###### LOW BATTERY POP-UP
+          - type: conditional
+            conditions:
+              - entity: sensor.batterystatus
+                state_not: "Low Battery"
+            card:
+              type: "custom:button-card"
+              entity: sensor.battery_low
+              icon: mdi:battery
+              show_state: true
+              show_name: true
+              show_icon: false
+              layout: name_state
+              name: Low Battery
+              size: 9px
 ###### CONDITIONAL GOOD MORNING / GOOD NIGHT BUTTONS
-      - type: conditional
-        conditions:
-          - entity: sensor.good_night_morning_button
-            state: "morning"
-          - entity: switch.tv
-            state_not: "on"
-        card:
-          type: entity-button
-          name: Good Morning
-          icon: mdi:weather-sunny
-          entity: script.good_morning
-          tap_action:
-            action: call-service
-            service: script.turn_on
-            service_data:
-              entity_id: script.good_morning
-      - type: conditional
-        conditions:
-          - entity: sensor.good_night_morning_button
-            state: "night"
-          - entity: switch.white_noise
-            state_not: "on"
-        card:
-          type: entity-button
-          name: Good Night
-          icon: mdi:weather-night
-          entity: script.good_night
-          tap_action:
-            action: call-service
-            service: script.turn_on
-            service_data:
-              entity_id: script.good_night
+          - type: conditional
+            conditions:
+              - entity: sensor.good_night_morning_button
+                state: "morning"
+              - entity: switch.tv
+                state_not: "on"
+            card:
+              type: entity-button
+              name: Good Morning
+              icon: mdi:weather-sunny
+              entity: script.good_morning
+              tap_action:
+                action: call-service
+                service: script.turn_on
+                service_data:
+                  entity_id: script.good_morning
+          - type: conditional
+            conditions:
+              - entity: sensor.good_night_morning_button
+                state: "night"
+              - entity: switch.white_noise
+                state_not: "on"
+            card:
+              type: entity-button
+              name: Good Night
+              icon: mdi:weather-night
+              entity: script.good_night
+              tap_action:
+                action: call-service
+                service: script.turn_on
+                service_data:
+                  entity_id: script.good_night
 ###### PRESENCE -----------------------------------------------
       - type: vertical-stack
         cards:
+        - type: "custom:button-card"
+          name: 'PEOPLE'
+          template: header
         - type: horizontal-stack
           cards:
             - type: picture-glance
@@ -215,9 +200,14 @@ views:
             entities:
               - device_tracker.nicole_nicole
               - zone.home
-###### LIGHT SCENES
+###### ROOMS/AREA -------------------------------------------------------------------
+###### LIVINGROOM
       - type: vertical-stack
         cards:
+        - type: "custom:button-card"
+          name: 'LIVING ROOM'
+          template: header
+###### LIGHT SCENES
         - type: horizontal-stack
           cards:
           - type: "custom:button-card"
@@ -285,56 +275,43 @@ views:
             state:
               - value: 'off'
                 color: var(--disabled-text-color)
-  ###### ADDITIONAL LIGHTS
+## LIVINGROOM BUTTONS
         - type: horizontal-stack
           cards:
           - type: "custom:button-card"
-            entity: light.aurora
-            name: 'Aurora'
-            icon: mdi:triangle-outline
-            color: auto
-            tap_action:
-              action: more-info
-            size: 25px
+            entity: switch.tv
+            icon: mdi:monitor
+            show_state: false
+            show_name: false
+            name: TV
+            state:
+              - value: 'on'
+                color: rgb(255, 183, 18)
+              - value: 'off'
+                color: rgb(227, 228, 230)
           - type: "custom:button-card"
-            entity: switch.office_lightswitch
-            name: 'Nursery'
-            icon: mdi:ceiling-light
-            color: rgb(254, 255, 63)
-            action: toggle
-            size: 25px
+            entity: switch.receiver
+            show_state: false
+            show_name: false
+            name: RECEIVER
+            state:
+              - value: 'on'
+                color: rgb(255, 183, 18)
+              - value: 'off'
+                color: rgb(227, 228, 230)
           - type: "custom:button-card"
-            entity: light.couch
-            name: 'ManCave'
-            icon: mdi:lightbulb
-            color: auto
-            tap_action:
-              action: more-info
-            size: 23px
+            entity: automation.night_light
+            show_state: false
+            show_name: false
+            name: NIGHTLIGHT
+            state:
+              - value: 'on'
+                color: rgb(29, 189, 229)
+              - value: 'off'
+                color: rgb(227, 228, 230)
           - type: "custom:button-card"
-            entity: light.hallway
-            name: 'Hallway'
-            icon: mdi:ceiling-light
-            color: rgb(254, 255, 63)
-            action: toggle
-            size: 25px
-          - type: "custom:button-card"
-            entity: light.deck_lights
-            name: 'Deck'
-            icon: mdi:alarm-light
-            color: auto
-            tap_action:
-              action: more-info
-            size: 25px
-### NURSERY WHITE NOISE BUTTON
-        - type: horizontal-stack
-          cards:
-          - type: "custom:button-card"
-            entity: switch.white_noise_nursery
+            entity: switch.white_noise_living_room
             icon: mdi:snowflake
-            color: rgb(66, 192, 244)
-            action: toggle
-            size: 25px
             show_name: false
             state:
               - value: 'on'
@@ -343,19 +320,68 @@ views:
               - value: 'off'
                 color: rgb(227, 228, 230)
           - type: "custom:button-card"
-            entity: script.nurse
-            icon: mdi:baby
+            entity: light.hallway
+            name: 'Hall'
+            icon: mdi:ceiling-light
+            color: rgb(254, 255, 63)
             action: toggle
-            size: 25px
-            show_name: false
-            state:
-              - value: 'off'
-                color: rgb(227, 228, 230)
-###### ROOMS/AREA -------------------------------------------------------------------
+            size: 17px
+###### COMPUTER DESK
+        - type: picture-glance
+          title: " "
+          state_image:
+            "on": /local/lovelace/pc.jpg
+            "off": /local/lovelace/pc_off.jpg
+          entity: switch.office_pc
+          entities:
+            - switch.office_pc
+            - switch.office_powerbar
+            - light.hue_go
+  ### KODI FOR TV
+        - type: conditional
+          conditions:
+            - entity: switch.tv_custom
+              state: "on"
+          card:
+            type: custom:mini-media-player
+            entity: media_player.kodi_livingroom
+            icon: mdi:kodi
+            artwork: cover
+            name: Living Room
+            replace_mute: stop
+            volume_stateless: true
+            show_source: false
+            show_progress: true
+            hide_controls: true
+            hide:
+              power: true
+              icon: true
+  ### HIDE GOOGLE HOME
+        - type: conditional
+          conditions:
+            - entity: media_player.google_home
+              state: "playing"
+          card:
+            type: custom:mini-media-player
+            entity: media_player.google_home
+            icon: mdi:google-home
+            artwork: cover
+            name: Google Home
+            volume_stateless: true
+            show_source: false
+            show_progress: true
+            hide_controls: true
+            replace_mute: stop
+            hide:
+              power: true
+              icon: true
 ###### CHILDREN
 ###### FINDLAYS ROOM
       - type: vertical-stack
         cards:
+        - type: "custom:button-card"
+          name: 'FINDLAY'
+          template: header
         - type: picture-glance
           title: " "
           camera_image: camera.findlay
@@ -385,16 +411,59 @@ views:
             hide_power: true
             hide_controls: true
             replace_mute: stop
-      - type: horizontal-stack
-        cards:
 ###### NURSERY
+      - type: vertical-stack
+        cards:
+        - type: "custom:button-card"
+          name: 'NURSERY'
+          show_state: false
+          show_icon: false
+          template: header
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            entity: light.aurora
+            name: 'Aurora'
+            show_name: false
+            icon: mdi:triangle-outline
+            color: auto
+            tap_action:
+              action: more-info
+            size: 25px
+          - type: "custom:button-card"
+            entity: switch.office_lightswitch
+            name: 'Nursery'
+            show_name: false
+            icon: mdi:ceiling-light
+            color: rgb(254, 255, 63)
+            action: toggle
+            size: 25px
+          - type: "custom:button-card"
+            entity: switch.white_noise_nursery
+            icon: mdi:snowflake
+            color: rgb(66, 192, 244)
+            action: toggle
+            size: 25px
+            show_name: false
+            state:
+              - value: 'on'
+                color: rgb(4, 96, 224)
+                spin: true
+              - value: 'off'
+                color: rgb(227, 228, 230)
+          - type: "custom:button-card"
+            entity: script.nurse
+            icon: mdi:baby
+            action: toggle
+            size: 25px
+            show_name: false
+            state:
+              - value: 'off'
+                color: rgb(227, 228, 230)
         - type: picture-glance
           title: " "
           camera_image: camera.nursery
-          entities:
-            - light.aurora
-            - switch.office_lightswitch
-            - switch.white_noise_nursery
+          entities: []
   ## HIDE NURSERY SPEAKER IF NOT PLAYING
       - type: conditional
         conditions:
@@ -415,6 +484,9 @@ views:
 ###### OUTSIDE
       - type: vertical-stack
         cards:
+        - type: "custom:button-card"
+          name: 'FRONTYARD'
+          template: header
         - type: picture-glance
           title: " "
           camera_image: camera.driveway
@@ -513,124 +585,47 @@ views:
             show_progress: true
             hide_power: true
             idle_view: true
-###### LIVINGROOM
+###### BASEMENT
       - type: vertical-stack
         cards:
         - type: "custom:button-card"
-          name: 'LIVING ROOM'
+          name: 'BASEMENT'
           template: header
-## LIVINGROOM BUTTONS
         - type: horizontal-stack
           cards:
           - type: "custom:button-card"
-            entity: switch.tv
-            icon: mdi:monitor
-            show_state: false
-            show_name: false
-            name: TV
-            state:
-              - value: 'on'
-                color: rgb(255, 183, 18)
-              - value: 'off'
-                color: rgb(227, 228, 230)
+            entity: light.couch
+            name: 'Desk'
+            icon: mdi:lightbulb
+            color: auto
+            tap_action:
+              action: more-info
+            size: 23px
           - type: "custom:button-card"
-            entity: switch.receiver
-            show_state: false
-            show_name: false
-            name: RECEIVER
-            state:
-              - value: 'on'
-                color: rgb(255, 183, 18)
-              - value: 'off'
-                color: rgb(227, 228, 230)
+            entity: light.zigbee_1
+            name: 'Spot Light'
+            icon: mdi:lightbulb
+            color: auto
+            tap_action:
+              action: more-info
+            size: 23px
           - type: "custom:button-card"
-            entity: light.living_room
-            show_state: false
-            show_name: false
-            name: LIGHTS
-            state:
-              - value: 'on'
-                color: rgb(29, 189, 229)
-              - value: 'off'
-                color: rgb(227, 228, 230)
-          - type: "custom:button-card"
-            entity: automation.night_light
-            show_state: false
-            show_name: false
-            name: NIGHTLIGHT
-            state:
-              - value: 'on'
-                color: rgb(29, 189, 229)
-              - value: 'off'
-                color: rgb(227, 228, 230)
-          - type: "custom:button-card"
-            entity: switch.white_noise_living_room
-            icon: mdi:snowflake
-            show_name: false
-            state:
-              - value: 'on'
-                color: rgb(4, 96, 224)
-                spin: true
-              - value: 'off'
-                color: rgb(227, 228, 230)
-  ### KODI FOR TV
-        - type: conditional
-          conditions:
-            - entity: switch.tv_custom
-              state: "on"
-          card:
-            type: custom:mini-media-player
-            entity: media_player.kodi_livingroom
-            icon: mdi:kodi
-            artwork: cover
-            name: Living Room
-            replace_mute: stop
-            volume_stateless: true
-            show_source: false
-            show_progress: true
-            hide_controls: true
-            hide:
-              power: true
-              icon: true
-  ### HIDE GOOGLE HOME
-        - type: conditional
-          conditions:
-            - entity: media_player.google_home
-              state: "playing"
-          card:
-            type: custom:mini-media-player
-            entity: media_player.google_home
-            icon: mdi:google-home
-            artwork: cover
-            name: Google Home
-            volume_stateless: true
-            show_source: false
-            show_progress: true
-            hide_controls: true
-            replace_mute: stop
-            hide:
-              power: true
-              icon: true
-###### COMPUTER DESK
-      - type: picture-glance
-        title: " "
-        state_image:
-          "on": /local/lovelace/pc.jpg
-          "off": /local/lovelace/pc_off.jpg
-        entity: switch.office_pc
-        entities:
-          - switch.office_pc
-          - switch.office_powerbar
-          - light.hue_go
-###### LAUNDRY ROOM
-      - type: picture-glance
-        title: " "
-        state_image:
-          "on": /local/lovelace/laundry_on.gif
-          "off": /local/lovelace/laundry_off.jpg
-        entity: switch.washing_machine
-        aspect_ratio: 16x6
-        entities: []
+            entity: light.couch
+            name: 'RGB'
+            icon: mdi:lightbulb
+            color: auto
+            tap_action:
+              action: more-info
+            size: 23px
+## LAUNDRY ROOM
+        - type: picture-glance
+          title: " "
+          state_image:
+            "on": /local/lovelace/laundry_on.gif
+            "off": /local/lovelace/laundry_off.jpg
+          entity: switch.washing_machine
+          aspect_ratio: 16x6
+          entities: []
 ###### BASEMENT
 ## HIDE SPEAKER IF NOT PLAYING
       - type: conditional
@@ -825,21 +820,24 @@ views:
                     - height: 24px
             - type: horizontal-stack
               cards:
-              - type: custom:bignumber-card
+              - type: custom:bar-card
                 entity: sensor.battery_roomba
-                scale: 12px
-                from: left
-                min: 0
-                max: 100
+                align: left
+                title: ' '
+                title_position: inside
+                height: 24px
+                padding: 0px
                 severity:
                 - value: 30
-                  style: 'var(--label-badge-red)'
+                  color: 'var(--label-badge-red)'
                 - value: 70
-                  style: 'var(--label-badge-yellow)'
+                  color: 'var(--label-badge-yellow)'
                 - value: 100
-                  style: 'var(--label-badge-green)'
+                  color: 'var(--label-badge-green)'
                 - value: 'Unknown'
-                  style: 'var(--label-badge-red)'
+                  color: 'var(--label-badge-red)'
+                - value: 0
+                  color: 'var(--label-badge-red)'
               - type: "custom:button-card"
                 color_type: card
                 entity: sensor.roomba_runtime
@@ -1328,38 +1326,38 @@ views:
 ### USG CPU/RAM USAGE
             - type: horizontal-stack
               cards:
-              - type: custom:bignumber-card
+              - type: custom:bar-card
                 entity: sensor.unifi_gateway_www_cpu
                 title: CPU
-                scale: 18px
-                from: left
-                min: 0
-                max: 100
+                title_position: inside
+                align: left
+                height: 36px
+                padding: 0px
                 severity:
                 - value: 30
-                  style: 'var(--label-badge-green)'
+                  color: 'var(--label-badge-green)'
                 - value: 70
-                  style: 'var(--label-badge-yellow)'
+                  color: 'var(--label-badge-yellow)'
                 - value: 100
-                  style: 'var(--label-badge-red)'
+                  color: 'var(--label-badge-red)'
                 - value: 'Unknown'
-                  style: 'var(--label-badge-red)'
-              - type: custom:bignumber-card
+                  color: 'var(--label-badge-red)'
+              - type: custom:bar-card
                 entity: sensor.unifi_gateway_www_mem
                 title: MEMORY
-                scale: 18px
-                from: left
-                min: 0
-                max: 100
+                title_position: inside
+                align: left
+                height: 36px
+                padding: 0px
                 severity:
                 - value: 30
-                  style: 'var(--label-badge-green)'
+                  color: 'var(--label-badge-green)'
                 - value: 70
-                  style: 'var(--label-badge-yellow)'
+                  color: 'var(--label-badge-yellow)'
                 - value: 100
-                  style: 'var(--label-badge-red)'
+                  color: 'var(--label-badge-red)'
                 - value: 'Unknown'
-                  style: 'var(--label-badge-red)'
+                  color: 'var(--label-badge-red)'
 ##Network Usage Graphs
             - type: custom:mini-graph-card
               name: Current Network Usage
@@ -1586,6 +1584,11 @@ views:
               tap_action:
                 action: url
                 url: 'https://github.com/home-assistant/home-assistant/releases'
+              state:
+                - value: '0'
+                  operator: regex
+                  value: '.A'
+                  color: rgb(255, 0, 0)
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
@@ -1612,6 +1615,16 @@ views:
               tap_action:
                 action: url
                 url: 'https://github.com/Norien/Home-Assistant-Config/stargazers'
+            - type: "custom:button-card"
+              entity: sensor.potential_breaking_changes
+              name: 'Breaking Changes'
+              template: sensor_label
+              tap_action:
+                action: more-info
+              state:
+                - value: '0'
+                  operator: '>'
+                  color: rgb(255, 0, 0)
 #Component Counts
           - type: horizontal-stack
             cards:
