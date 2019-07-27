@@ -65,7 +65,6 @@ switch:
 script:
   bedroom_media_on:
     sequence:
-      - service: shell_command.bedroom_hdmi_off
       - service: switch.turn_on
         entity_id: switch.bedroom_tv
       - delay: '00:00:10'
@@ -88,38 +87,3 @@ script:
           entity_id: media_player.master_bedroom_speaker
           media_content_id: "http://192.168.1.115/white_noise/blizzard.mp3"
           media_content_type: "audio/mp3"
-
-  # - alias: 'bedroom flic single'
-  #   initial_state: 'on'
-  #   trigger:
-  #     platform: event
-  #     event_type: flic_click
-  #     event_data:
-  #       button_name: flic_80e4da71b68e
-  #       click_type: single
-  #   action:
-  #     service: switch.toggle
-  #     entity_id: switch.bedroom_fan
-  #
-  # - alias: 'bedroom flic double'
-  #   initial_state: 'on'
-  #   trigger:
-  #     platform: event
-  #     event_type: flic_click
-  #     event_data:
-  #       button_name: flic_80e4da71b68e
-  #       click_type: double
-  #   action:
-  #     - service: switch.toggle
-  #       entity_id: switch.bedroom_lamps
-  #
-  # - alias: 'bedroom flic hold'
-  #   initial_state: 'on'
-  #   trigger:
-  #     platform: event
-  #     event_type: flic_click
-  #     event_data:
-  #       button_name: flic_80e4da71b68e
-  #       click_type: hold
-  #   action:
-  #     - service: script.bedroom_flic_hold

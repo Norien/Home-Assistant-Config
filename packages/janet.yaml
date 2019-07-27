@@ -27,7 +27,7 @@ input_number:
     min: 0.0
     max: 1.0
     step: 0.01
-    initial: 1.0
+    initial: 0.6
 
   janet_notification_witty:
     name: Witty
@@ -43,6 +43,7 @@ input_select:
     icon: mdi:speaker
     options:
       - "Google Home"
+      - "Master Bedroom Speaker"
     initial: "Google Home"
 
 
@@ -82,6 +83,7 @@ script:
                 "I just want to inform you that ",
                 "I just want to let you know that ",
                 "You asked me to inform you when ",
+                "Okay. I've hacked into the mainframe and",
                 "I thought you'd like to know that "
               ] %}
               {{ inform|random }}

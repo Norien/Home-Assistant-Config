@@ -71,6 +71,15 @@ sensor:
     value_template: '{{ value_json.ip }}'
     scan_interval: 14400
 ###### CUSTOM DATA USAGE PYTHON SCRIPT
+  # - platform: ssh
+  #   name: usage_test
+  #   host: !secret skullcanyon_host
+  #   username: !secret skullcanyon_user
+  #   password: !secret skullcanyon_pass
+  #   command: !secret internet_usage_test
+  #   value_template: >-
+  #     {{value.split("\r\n")[1]}}
+
   - platform: command_line
     command: !secret internet_usage
     name: 'usage'

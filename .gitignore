@@ -70,3 +70,4 @@ custom_components
 packages/zones.yaml
 www/ssl.txt
 www/ssl.txt
+ip_bans.yaml

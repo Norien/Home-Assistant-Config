@@ -13,7 +13,7 @@ automation:
     trigger:
       - platform: state
         entity_id: binary_sensor.living_room_sensor_motion, binary_sensor.dining_room_sensor_motion
-        to: 'True'
+        to: 'on'
     condition:
       - condition: state
         entity_id: 'sun.sun'
@@ -56,7 +56,7 @@ script:
       - delay:
           minutes: 4
       - service_template: >
-          {% if is_state_attr('light.living_room', 'rgb_color', (255, 104, 21)) %}
+          {% if is_state_attr('light.kitchen_sink', 'rgb_color', (255, 104, 21)) %}
             script.nightlight_off
           {% else %}
             script.nightlight

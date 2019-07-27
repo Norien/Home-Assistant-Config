@@ -8,26 +8,43 @@ homeassistant:
       icon: mdi:amplifier
 
 automation:
-###### NOTIFY IF FILTER IS CLOGGED
-  - alias: 'Pool Filter is clogged'
+###### TURN ON THE LIGHTS AT NIGHT
+  - alias: 'light_backyard'
     initial_state: 'on'
     trigger:
-      - platform: numeric_state
-        entity_id: sensor.pool_draw
-        below: 37
-        for: '00:00:05'
+      - platform: state
+        entity_id: binary_sensor.door_back
+        from: 'off'
+        to: 'on'
+        for: '00:00:03'
     condition:
-      - condition: numeric_state
-        entity_id: sensor.pool_draw
-        above: 20
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizion'
     action:
-      - service: switch.turn_off
-        entity_id: switch.pool_pump
-      - service: script.janet_speech_engine
-        data:
-          call_greeting: 1
-        data_template:
-          CustomMessage: 'The Pool Filter needs Cleaning!'
+      - service: light.turn_on
+        entity_id: light.deck_lights
+
+###### NOTIFY IF FILTER IS CLOGGED
+  # - alias: 'Pool Filter is clogged'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: numeric_state
+  #       entity_id: sensor.pool_draw
+  #       below: 37
+  #       for: '00:00:05'
+  #   condition:
+  #     - condition: numeric_state
+  #       entity_id: sensor.pool_draw
+  #       above: 20
+  #   action:
+  #     - service: switch.turn_off
+  #       entity_id: switch.pool_pump
+  #     - service: script.janet_speech_engine
+  #       data:
+  #         call_greeting: 1
+  #       data_template:
+  #         CustomMessage: 'The Pool Filter needs Cleaning!'
 ####### AUTOMATIC CONTROL OF AMPLIFIER
   - alias: "Backyard Amp Off"
     initial_state: 'on'

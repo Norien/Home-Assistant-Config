@@ -4,9 +4,6 @@
 homeassistant:
   customize:
 #Nest Thermostat
-    climate.hallway:
-      friendly_name: Nest Thermostat
-      entity_picture: /local/custom_icons/nest.png
     binary_sensor.hallway_thermostat_fan:
       friendly_name: Thermostat Fan
       icon: mdi:fan
@@ -89,24 +86,69 @@ switch:
             fan_mode: 'off'
       nest_away:
         value_template: >-
-          {%-set away = states.climate.hallway.attributes.away_mode-%}
-          {%-if away == 'on' -%}
+          {%-set away = states.climate.hallway.attributes.preset_mode-%}
+          {%-if away == 'away' -%}
             on
           {%- else -%}
             off
           {%- endif -%}
         turn_on:
-          service: climate.set_away_mode
+          service: climate.set_preset_mode
           data:
             entity_id: climate.hallway
-            away_mode: 'true'
+            preset_mode: 'away'
         turn_off:
-          service: climate.set_away_mode
+          service: climate.set_preset_mode
           data:
             entity_id: climate.hallway
-            away_mode: 'false'
+            preset_mode: 'none'
+input_text:
+  # A variable to store Nest's current mode - used when we restore from away mode
+  nest_mode:
+    name: Heating/Cooling Mode
 
 automation:
+  ###### SET STATE WHEN WINDOWS TOGGLED
+  - alias: 'nest_to_off_windows_open'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.kitchen_window
+        from: 'off'
+        to: 'on'
+    action:
+        # Save the current mode for Nest so we can restore it later
+      - service: input_text.set_value
+        data_template:
+          entity_id: input_text.nest_mode
+          value: '{{ states.climate.hallway.state }}'
+      # Set Nest to Eco mode
+      - service: climate.set_preset_mode
+        data:
+          entity_id: climate.hallway
+          preset_mode: 'eco'
+  - alias: 'nest_to_on_windows_closed'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.kitchen_window
+        from: 'on'
+        to: 'off'
+    condition:
+      condition: and
+      conditions:
+        # House is currently in eco mode
+        - condition: template
+          value_template: '{{ is_state_attr("climate.hallway", "preset_mode", "eco") }}'
+        # The last state was successfully saved/set
+        - condition: template
+          value_template: '{{ states.input_text.nest_mode.state != "unknown" }}'
+    action:
+      # Restore Nest to the orgional mode
+      - service: climate.set_hvac_mode
+        data_template:
+          entity_id: climate.hallway
+          operation_mode: '{{ states.input_text.nest_mode.state }}'
   ###### Nest protect states are - ok warning emergency
   - alias: 'notify if nest protect is not ok'
     initial_state: 'on'
@@ -154,31 +196,8 @@ sensor:
         nest_operation_mode:
           friendly_name: "Operation Mode"
           entity_id: climate.hallway
-          value_template: "{{states.climate.hallway.attributes.operation_mode}}"
+          value_template: "{{states.climate.hallway.state}}"
         nest_away_mode:
           friendly_name: "Operation Mode"
           entity_id: climate.hallway
           value_template: "{{states.climate.hallway.attributes.away_mode}}"
-
-  # - alias: 'nest open a window'
-  #   initial_state: 'on'
-  #   trigger:
-  #     - platform: state
-  #       entity_id: sensor.weather_inside_vs_outside
-  #       from: 'false'
-  #       to: 'true'
-  #   condition:
-  #     - condition: state
-  #       entity_id: climate.hallway
-  #       state: 'cool'
-  #   action:
-  #     - service: notify.html5
-  #       data:
-  #         message: 'It is cooler outside then inside and the AC is on. You should open a window!'
-  #     - service: automation.turn_off
-  #       data:
-  #         entity_id: automation.nest_open_a_window
-  #     - delay: '01:00:00'
-  #     - service: automation.turn_on
-  #       data:
-  #         entity_id: automation.nest_open_a_window

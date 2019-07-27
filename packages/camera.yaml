@@ -8,12 +8,12 @@ homeassistant:
 
 #stream:
 camera:
-  # - platform: mjpeg
-  #   name: findlay
-  #   mjpeg_url: !secret dlink_camera_mjpeg
-  #   still_image_url: !secret dlink_still_image_url
-  #   username: !secret dlink_camera_username
-  #   password: !secret dlink_camera_password
+  - platform: mjpeg
+    name: octoprint
+    mjpeg_url: !secret dlink_camera_mjpeg
+    still_image_url: !secret dlink_still_image_url
+    username: !secret dlink_camera_username
+    password: !secret dlink_camera_password
 
   - platform: mjpeg
     name: nursery

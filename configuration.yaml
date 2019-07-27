@@ -1,5 +1,9 @@
 ###### Configuration
 homeassistant:
+  auth_providers:
+    - type: trusted_networks
+      trusted_networks:
+        - 192.168.1.1
   name: " "
   whitelist_external_dirs:
   - /docker/database-home_assistant/
@@ -132,6 +136,8 @@ tplink:
     - host: 192.168.1.108
   switch:
     - host: 192.168.1.211
+    - host: 192.168.1.239
+    - host: 192.168.1.238
 
 mqtt:
   broker: !secret mqtt_url
@@ -175,10 +181,8 @@ cast:
 media_player:
   - platform: plex
     entity_namespace: 'plex'
-    include_non_clients: true
     scan_interval: 5
     show_all_controls: false
-    use_custom_entity_ids: true
     use_episode_art: true
     remove_unavailable_clients: true
     client_remove_interval: 600

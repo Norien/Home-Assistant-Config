@@ -1,21 +1,56 @@
 title: Assistant
 resources:
-  - url: /local/lovelace/cards/mini-media-player-bundle.js?track=true
-    type: module
-  - url: /local/lovelace/cards/compact-custom-header.js?track=true
-    type: module
-  - url: /local/lovelace/cards/gauge-card.js
-    type: js
-  - url: /local/lovelace/cards/mini-graph-card-bundle.js?track=true
-    type: module
 ###### HACS
+  - url: /community_plugin/compact-custom-header/compact-custom-header.js
+    type: module
   - url: /community_plugin/button-card/button-card.js
     type: module
   - url: /community_plugin/monster-card/monster-card.js
-  - url: /community_plugin/upcoming-media-card/upcoming-media-card.js
+    type: module
+  - url: /community_plugin/gauge-card/gauge-card.js
     type: js
   - url: /community_plugin/bar-card/bar-card.js
     type: js
+  - url: /community_plugin/mini-media-player/mini-media-player.js
+    type: module
+  - url: /community_plugin/mini-graph-card/mini-graph-card.js
+    type: module
+
+###### CUSTOM HEADER -----------------------------------------------
+cch:
+  background: "rgb(34, 35, 58) url('/local/lovelace/header2.png')"
+  tab_indicator_color: rgb(255, 183, 18)
+  main_config: true
+  menu: overflow
+  options: clock
+  voice: hide
+  clock_format: 12
+  swipe: true
+  swipe_animate: flip
+  conditional_styles:
+    template:
+      - tab:
+          1:
+          - icon: >
+              if (states["sensor.home_assistant_config_issues"].state == "0") "mdi:death-star";
+              else "mdi:death-star-variant";
+      - tab:
+          2:
+          - color: >
+              if (states["sensor.octoprint_current_state"].state == "Printing") "rgb(21, 158, 56)";
+              else if (states["sensor.octoprint_current_state"].state == "Error") "rgb(255, 0, 0)";
+              else "var(--disabled-text-color)";
+          - icon: >
+              if (states["sensor.octoprint_current_state"].state == "Printing") "mdi:printer-3d-nozzle";
+              else if (states["sensor.octoprint_current_state"].state == "Error") "mdi:alert-circle";
+              else "mdi:printer-3d-nozzle-outline";
+      - tab:
+          4:
+          - color: >
+              if (states["sensor.electricity_price"].state == "6.5") "rgb(21, 158, 56)";
+              else if (states["sensor.electricity_price"].state == "9.4") "rgb(255, 183, 18)";
+              else "rgb(224, 0, 45)";
+
 ###### STYLE TEMPLATES FOR BUTTON CARD
 button_card_templates:
   header:
@@ -53,6 +88,15 @@ button_card_templates:
         - font-size: 14px
         - font-weight: bold
         - padding: 6px
+  nest:
+    color_type: card
+    color: rgb(34, 35, 37)
+    show_icon: false
+    styles:
+      card:
+        - padding: 3px
+        - font-size: 12px
+        - background-color: rgb(34, 35, 37)
 
 views:
   - title: Home
@@ -60,30 +104,6 @@ views:
     background: center / cover no-repeat url("/local/lovelace/bg.jpg") fixed
     theme: Night
     cards:
-###### CUSTOM HEADER -----------------------------------------------
-      - type: custom:compact-custom-header
-        background: "rgb(34, 35, 58) url('/local/lovelace/header2.png')"
-        tab_indicator_color: rgb(255, 183, 18)
-        main_config: true
-        menu: overflow
-        options: clock
-        voice: hide
-        clock_format: 12
-        swipe: true
-        swipe_animate: flip
-        conditional_styles:
-          template:
-            - tab:
-                1:
-                - icon: >
-                    if (states["sensor.home_assistant_config_issues"].state == "0") "mdi:death-star";
-                    else "mdi:death-star-variant";
-            - tab:
-                3:
-                - color: >
-                    if (states["sensor.electricity_price"].state == "6.5") "rgb(21, 158, 56)";
-                    else if (states["sensor.electricity_price"].state == "9.4") "rgb(255, 183, 18)";
-                    else "rgb(224, 0, 45)";
 ##### POP UP NOTIFICATIONS
       - type: vertical-stack
         cards:
@@ -149,35 +169,75 @@ views:
       - type: vertical-stack
         cards:
         - type: "custom:button-card"
-          name: 'PEOPLE'
+          name: 'PRESENCE'
           template: header
         - type: horizontal-stack
           cards:
-            - type: picture-glance
-              title: " "
-              state_image:
-                "on": /local/lovelace/boy_home.png
-                "off": /local/lovelace/boy_away.png
-              entity: input_boolean.justin
-              aspect_ratio: 2:1
-              entities:
-                - device_tracker.life360_justin
-                - input_boolean.justin
-                - input_boolean.map_justin
-                - sensor.justin_battery_template
-            - type: picture-glance
-              title: " "
-              state_image:
-                "on": /local/lovelace/girl_home.png
-                "off": /local/lovelace/girl_away.png
-              entity: input_boolean.nicole
-              aspect_ratio: 2:1
-              entities:
-                - device_tracker.life360_nicole
-                - input_boolean.nicole
-                - input_boolean.map_nicole
-                - sensor.nicole_phone_to_home
-                - sensor.nicole_battery_template
+#Justin
+          - type: "custom:button-card"
+            entity: person.justin
+            color_type: card
+            icon: mdi:human-male
+            show_state: false
+            show_name: false
+            name: Justin
+            show_label: true
+            layout: icon_label
+            tap_action:
+              action: more-info
+            hold_action:
+              action: call-service
+              service: input_boolean.toggle
+              service_data:
+                entity_id: input_boolean.map_justin
+            label_template: >
+              return '🚗 ' + states['sensor.justin_phone_to_home'].state + ' mins' +
+              '<br>' + '🔋 ' + states['sensor.justin_battery_template'].state + '%'
+            state:
+              - value: 'home'
+                color: rgb(255, 183, 18)
+              - value: 'not_home'
+                color: rgb(34, 35, 37)
+            styles:
+              card:
+                 - font-size: 14px
+              icon:
+                - color: navy
+                - size: 120%
+              label:
+                - font-weight: bold
+#Nicole
+          - type: "custom:button-card"
+            entity: person.nicole
+            color_type: card
+            icon: mdi:human-female
+            show_state: false
+            show_name: false
+            name: Nicole
+            show_label: true
+            layout: icon_label
+            tap_action:
+              action: more-info
+            hold_action:
+              action: call-service
+              service: input_boolean.toggle
+              service_data:
+                entity_id: input_boolean.map_nicole
+            label_template: >
+              return '🚗 ' + states['sensor.nicole_phone_to_home'].state + ' mins' +
+              '<br>' + '🔋 ' + states['sensor.nicole_battery_template'].state + '%'
+            state:
+              - value: 'home'
+                color: rgb(255, 183, 18)
+              - value: 'not_home'
+                color: rgb(34, 35, 37)
+            styles:
+              card:
+                - font-size: 14px
+              icon:
+                - color: rgb(140, 5, 171)
+              label:
+                - font-weight: bold
         - type: conditional
           conditions:
             - entity: input_boolean.map_justin
@@ -187,7 +247,7 @@ views:
             aspect_ratio: 16:9
             default_zoom: 14
             entities:
-              - device_tracker.justin_justin
+              - device_tracker.life360_justin
               - zone.home
         - type: conditional
           conditions:
@@ -198,8 +258,53 @@ views:
             aspect_ratio: 16:9
             default_zoom: 14
             entities:
-              - device_tracker.nicole_nicole
+              - device_tracker.life360_nicole
               - zone.home
+###### HOUSE MODE -----------------------------------------------
+        - type: horizontal-stack
+          cards:
+          - type: "custom:button-card"
+            entity: input_boolean.away
+            icon: mdi:account-off
+            show_state: false
+            show_name: true
+            name: AWAY
+            lock: true
+            unlock_users: Justin
+            size: 20px
+            state:
+              - value: 'on'
+                color: rgb(255, 183, 18)
+              - value: 'off'
+                color: rgb(227, 228, 230)
+          - type: "custom:button-card"
+            entity: input_boolean.guest
+            icon: mdi:account-box
+            show_state: false
+            show_name: true
+            name: GUEST
+            lock: true
+            unlock_users: Justin
+            size: 20px
+            state:
+              - value: 'on'
+                color: rgb(255, 183, 18)
+              - value: 'off'
+                color: rgb(227, 228, 230)
+          - type: "custom:button-card"
+            entity: input_boolean.vacation
+            icon: mdi:sunglasses
+            show_state: false
+            show_name: true
+            name: VACATION
+            lock: true
+            unlock_users: Justin
+            size: 20px
+            state:
+              - value: 'on'
+                color: rgb(255, 183, 18)
+              - value: 'off'
+                color: rgb(227, 228, 230)
 ###### ROOMS/AREA -------------------------------------------------------------------
 ###### LIVINGROOM
       - type: vertical-stack
@@ -326,17 +431,6 @@ views:
             color: rgb(254, 255, 63)
             action: toggle
             size: 17px
-###### COMPUTER DESK
-        - type: picture-glance
-          title: " "
-          state_image:
-            "on": /local/lovelace/pc.jpg
-            "off": /local/lovelace/pc_off.jpg
-          entity: switch.office_pc
-          entities:
-            - switch.office_pc
-            - switch.office_powerbar
-            - light.hue_go
   ### KODI FOR TV
         - type: conditional
           conditions:
@@ -609,6 +703,10 @@ views:
             tap_action:
               action: more-info
             size: 23px
+            state:
+              - value: 'unavailable'
+                color: rgb(255, 0, 0)
+                icon: mdi:alpha-x-circle
           - type: "custom:button-card"
             entity: light.couch
             name: 'RGB'
@@ -822,7 +920,7 @@ views:
               cards:
               - type: custom:bar-card
                 entity: sensor.battery_roomba
-                align: left
+                align: center-split
                 title: ' '
                 title_position: inside
                 height: 24px
@@ -936,8 +1034,6 @@ views:
     theme: Night
     icon: mdi:death-star
     cards:
-###### CUSTOM HEADER -----------------------------------------------
-      - type: custom:compact-custom-header
 ###### NEST
       - type: vertical-stack
         cards:
@@ -968,10 +1064,7 @@ views:
                 action: more-info
               show_state: true
               show_icon: false
-              style:
-                - padding: 3px
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
+              template: nest
           - type: conditional
             conditions:
               - entity: sensor.nest_operation_mode
@@ -989,10 +1082,7 @@ views:
                 action: more-info
               show_state: true
               show_icon: false
-              style:
-                - padding: 3px
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
+              template: nest
 ################## eco/away
           - type: conditional
             conditions:
@@ -1011,10 +1101,7 @@ views:
                 action: more-info
               show_state: true
               show_icon: false
-              style:
-                - padding: 3px
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
+              template: nest
           - type: conditional
             conditions:
               - entity: sensor.nest_operation_mode
@@ -1031,10 +1118,7 @@ views:
               show_state: true
               show_icon: false
               layout: name_state
-              style:
-                - padding: 3px
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
+              template: nest
           - type: conditional
             conditions:
               - entity: sensor.nest_operation_mode
@@ -1051,10 +1135,7 @@ views:
               show_state: true
               show_icon: false
               layout: name_state
-              style:
-                - padding: 3px
-                - font-size: 14px
-                - background-color: rgb(34, 35, 37)
+              template: nest
 ### MODES
 #HEAT
         - type: horizontal-stack
@@ -1066,10 +1147,10 @@ views:
             icon: mdi:fire
             tap_action:
               action: call-service
-              service: climate.set_operation_mode
+              service: climate.set_hvac_mode
               service_data:
                 entity_id: climate.hallway
-                operation_mode: 'heat'
+                hvac_mode: 'heat'
             show_state: false
             state:
               - value: 'heat'
@@ -1086,10 +1167,10 @@ views:
             icon: mdi:snowflake
             tap_action:
               action: call-service
-              service: climate.set_operation_mode
+              service: climate.set_hvac_mode
               service_data:
                 entity_id: climate.hallway
-                operation_mode: 'cool'
+                hvac_mode: 'cool'
             show_state: false
             state:
               - value: 'cool'
@@ -1124,10 +1205,10 @@ views:
             icon: mdi:autorenew
             tap_action:
               action: call-service
-              service: climate.set_operation_mode
+              service: climate.set_hvac_mode
               service_data:
                 entity_id: climate.hallway
-                operation_mode: 'auto'
+                hvac_mode: 'auto'
             show_state: false
             state:
               - value: 'auto'
@@ -1145,10 +1226,10 @@ views:
             icon: mdi:leaf
             tap_action:
               action: call-service
-              service: climate.set_operation_mode
+              service: climate.set_hvac_mode
               service_data:
                 entity_id: climate.hallway
-                operation_mode: 'eco'
+                hvac_mode: 'eco'
             show_state: false
             state:
               - value: 'eco'
@@ -1358,7 +1439,7 @@ views:
                   color: 'var(--label-badge-red)'
                 - value: 'Unknown'
                   color: 'var(--label-badge-red)'
-##Network Usage Graphs
+#Network Usage Graphs
             - type: custom:mini-graph-card
               name: Current Network Usage
               icon: mdi:earth
@@ -1473,6 +1554,151 @@ views:
                 filter:
                   include:
                     - entity_id: switch.ha_docker*
+###### GAME PC
+      - type: horizontal-stack
+        cards:
+          - type: vertical-stack
+            cards:
+            - type: "custom:button-card"
+              name: 'GAME PC'
+              template: header
+            - type: horizontal-stack
+              cards:
+              - type: "custom:button-card"
+                entity: switch.office_pc
+                name: 'POWER'
+                icon: mdi:power
+                color: auto
+                tap_action:
+                  action: toggle
+                size: 23px
+                state:
+                  - value: 'on'
+                    color: rgb(0, 255, 0)
+                    icon: mdi:power
+                  - value: 'off'
+                    color: rgb(255, 0, 0)
+                    icon: mdi:power-off
+                  - value: 'unavailable'
+                    color: rgb(255, 0, 0)
+                    icon: mdi:alpha-x-circle
+              - type: "custom:button-card"
+                entity: switch.office_powerbar
+                name: 'POWER BAR'
+                color: auto
+                tap_action:
+                  action: toggle
+                size: 23px
+                state:
+                  - value: 'on'
+                    color: rgb(0, 255, 0)
+                    icon: mdi:power-plug
+                  - value: 'off'
+                    color: rgb(255, 0, 0)
+                    icon: mdi:power-plug-off
+                  - value: 'unavailable'
+                    color: rgb(255, 0, 0)
+                    icon: mdi:alpha-x-circle
+              - type: "custom:button-card"
+                entity: light.hue_go
+                name: 'HUE GO'
+                icon: mdi:lightbulb
+                color: auto
+                tap_action:
+                  action: more-info
+                size: 23px
+                state:
+                  - value: 'unavailable'
+                    color: rgb(255, 0, 0)
+                    icon: mdi:alpha-x-circle
+            - type: horizontal-stack
+              cards:
+              - type: conditional
+                conditions:
+                  - entity: switch.office_pc
+                    state: "on"
+                card:
+                  type: custom:bar-card
+                  entity: sensor.my_computer_cpu_usage
+                  title: CPU
+                  title_position: inside
+                  align: left
+                  height: 35px
+                  padding: 0px
+                  severity:
+                  - value: 30
+                    color: 'var(--label-badge-green)'
+                  - value: 70
+                    color: 'var(--label-badge-yellow)'
+                  - value: 100
+                    color: 'var(--label-badge-red)'
+                  - value: 'Unknown'
+                    color: 'var(--label-badge-red)'
+              - type: conditional
+                conditions:
+                  - entity: switch.office_pc
+                    state: "on"
+                card:
+                  type: custom:bar-card
+                  entity: sensor.my_computer_ram_usage
+                  title: MEMORY
+                  title_position: inside
+                  align: left
+                  height: 36px
+                  padding: 0px
+                  severity:
+                  - value: 30
+                    color: 'var(--label-badge-green)'
+                  - value: 70
+                    color: 'var(--label-badge-yellow)'
+                  - value: 100
+                    color: 'var(--label-badge-red)'
+                  - value: 'Unknown'
+                    color: 'var(--label-badge-red)'
+            - type: horizontal-stack
+              cards:
+              - type: conditional
+                conditions:
+                  - entity: switch.office_pc
+                    state: "on"
+                card:
+                  type: custom:bar-card
+                  entity: sensor.my_computer_hdd_usage_c
+                  title: MAIN DISK
+                  title_position: inside
+                  align: left
+                  height: 36px
+                  padding: 0px
+                  severity:
+                  - value: 30
+                    color: 'var(--label-badge-green)'
+                  - value: 70
+                    color: 'var(--label-badge-yellow)'
+                  - value: 100
+                    color: 'var(--label-badge-red)'
+                  - value: 'Unknown'
+                    color: 'var(--label-badge-red)'
+              - type: conditional
+                conditions:
+                  - entity: switch.office_pc
+                    state: "on"
+                card:
+                  type: custom:bar-card
+                  entity: sensor.my_computer_hdd_usage_f
+                  title: SCRATCH DISK
+                  title_position: inside
+                  align: left
+                  height: 36px
+                  padding: 0px
+                  severity:
+                  - value: 30
+                    color: 'var(--label-badge-green)'
+                  - value: 70
+                    color: 'var(--label-badge-yellow)'
+                  - value: 100
+                    color: 'var(--label-badge-red)'
+                  - value: 'Unknown'
+                    color: 'var(--label-badge-red)'
 ###### FREENAS
       - type: horizontal-stack
         cards:
@@ -1574,10 +1800,6 @@ views:
           - type: horizontal-stack
             cards:
             - type: "custom:button-card"
-              entity: sensor.ha_uptime
-              name: 'Uptime'
-              template: sensor_label
-            - type: "custom:button-card"
               entity: sensor.ha_version
               name: 'Version'
               template: sensor_label
@@ -1585,9 +1807,30 @@ views:
                 action: url
                 url: 'https://github.com/home-assistant/home-assistant/releases'
               state:
-                - value: '0'
-                  operator: regex
+                - operator: regex
                   value: '.A'
+                  color: rgb(255, 0, 0)
+            - type: "custom:button-card"
+              entity: sensor.potential_breaking_changes
+              name: 'Breaking Changes'
+              template: sensor_label
+              tap_action:
+                action: more-info
+              state:
+                - value: '0'
+                  operator: '>'
+                  color: rgb(255, 0, 0)
+          - type: horizontal-stack
+            cards:
+            - type: "custom:button-card"
+              entity: sensor.hacs
+              name: 'Custom Addons'
+              template: sensor_label
+              tap_action:
+                action: more-info
+              state:
+                - value: '0'
+                  operator: '>'
                   color: rgb(255, 0, 0)
           - type: horizontal-stack
             cards:
@@ -1616,15 +1859,9 @@ views:
                 action: url
                 url: 'https://github.com/Norien/Home-Assistant-Config/stargazers'
             - type: "custom:button-card"
-              entity: sensor.potential_breaking_changes
-              name: 'Breaking Changes'
+              entity: sensor.ha_uptime
+              name: 'Uptime'
               template: sensor_label
-              tap_action:
-                action: more-info
-              state:
-                - value: '0'
-                  operator: '>'
-                  color: rgb(255, 0, 0)
 #Component Counts
           - type: horizontal-stack
             cards:
@@ -1669,13 +1906,14 @@ views:
                 state: "on"
             card:
               type: custom:tracker-card
-###### DOORS
+
+###### DOORS&WINDOW
       - type: horizontal-stack
         cards:
         - type: vertical-stack
           cards:
           - type: "custom:button-card"
-            name: 'DOORS'
+            name: 'WINDOW & DOORS'
             template: header
           - type: horizontal-stack
             cards:
@@ -1721,6 +1959,20 @@ views:
                 - value: 'on'
                   color: rgb(0, 255, 0)
                   icon: mdi:door-open
+            - type: "custom:button-card"
+              entity: binary_sensor.kitchen_window
+              name: Kitchen
+              tap_action:
+                action: more-info
+              show_state: false
+              size: 25px
+              state:
+                - value: 'off'
+                  color: rgb(255, 0, 0)
+                  icon: mdi:window-closed
+                - value: 'on'
+                  color: rgb(0, 255, 0)
+                  icon: mdi:window-open
 ###### MOTION SENSORS
           - type: horizontal-stack
             cards:
@@ -1805,6 +2057,7 @@ views:
             - input_boolean.janet_guest_mode
             - input_boolean.janet_alert_mode
             - input_number.janet_notification_volume
+            - input_select.janet_notification_media_player
 ###### HUMIDITY
       - type: vertical-stack
         cards:
@@ -1844,6 +2097,17 @@ views:
             template: header
           - type: vertical-stack
             cards:
+            - type: custom:mini-graph-card
+              name: Nursery
+              show:
+                icon: false
+              entities:
+                - entity: sensor.nursery_temp
+                  name: Temperature
+                  color: '#e20029'
+                - entity: sensor.nursery_humidity
+                  name: Humidity
+                  color: '#eb42f4'
             - type: horizontal-stack
               cards:
                 - type: custom:mini-graph-card
@@ -1892,6 +2156,170 @@ views:
                     - entity: sensor.dining_room_sensor_light_level
                       name: Illumination
                       color: '#00c3e2'
+
+################################################################################
+###### OCTOPRINT VIEW -------------------------------------------------------------
+################################################################################
+  - title: Sensor
+    theme: Night
+    icon: mdi:printer-3d-nozzle-outline
+    background: rgb(34, 35, 37)
+    cards:
+###### OCTOPRINT
+      - type: horizontal-stack
+        cards:
+        - type: vertical-stack
+          cards:
+          - type: "custom:button-card"
+            template: header
+            name: 'OCTOPRINT'
+          - type: horizontal-stack
+            cards:
+            - type: "custom:button-card"
+              color_type: card
+              entity: switch.printer
+              name: 'Printer'
+              show_state: false
+              show_name: false
+              icon: mdi:printer-3d
+              layout: name_state
+              show_label: true
+              label_template: >
+                return states['switch.printer'].state
+              styles:
+                card:
+                  - font-size: 14px
+                  - height: 70px
+              state:
+                - value: 'on'
+                  color: rgb(255, 183, 18)
+                - value: 'off'
+                  color: rgb(34, 35, 37)
+            - type: "custom:button-card"
+              color_type: card
+              entity: switch.bench_light
+              name: 'Light'
+              show_state: false
+              show_name: false
+              icon: mdi:lightbulb
+              layout: name_state
+              show_label: true
+              label_template: >
+                return states['switch.bench_light'].state
+              styles:
+                card:
+                  - font-size: 14px
+                  - height: 70px
+              state:
+                - value: 'on'
+                  color: rgb(255, 183, 18)
+                - value: 'off'
+                  color: rgb(34, 35, 37)
+            - type: "custom:button-card"
+              entity: input_number.octoprint_level
+              show_name: true
+              name: Level
+              color: rgb(34, 35, 37)
+              show_state: false
+              show_icon: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: call-service
+                service: input_number.decrement
+                service_data:
+                  entity_id: input_number.octoprint_level
+              template: sensor_label
+              show_label: true
+              label_template: >
+                var level = states['input_number.octoprint_level'].state;
+                var round = Math.round(level);
+                return round
+              styles:
+                card:
+                  - height: 70px
+          - type: horizontal-stack
+            cards:
+            - type: "custom:button-card"
+              entity: sensor.octoprint_current_state
+              show_name: false
+              tap_action:
+                action: more-info
+              template: sensor_label
+              state:
+                - value: 'Error'
+                  color: rgb(255, 0, 0)
+                - value: 'Printing'
+                  color: rgb(21, 158, 56)
+          - type: horizontal-stack
+            cards:
+            - type: "custom:button-card"
+              entity: sensor.octoprint_actual_bed_temp
+              name: Bed Temp
+              tap_action:
+                action: more-info
+              template: sensor_label
+            - type: "custom:button-card"
+              entity: sensor.octoprint_target_bed_temp
+              name: Bed Target
+              tap_action:
+                action: more-info
+              template: sensor_label
+          - type: horizontal-stack
+            cards:
+            - type: "custom:button-card"
+              entity: sensor.octoprint_actual_tool0_temp
+              name: Tool Temp
+              tap_action:
+                action: more-info
+              template: sensor_label
+            - type: "custom:button-card"
+              entity: sensor.octoprint_target_tool0_temp
+              name: Tool Target
+              tap_action:
+                action: more-info
+              template: sensor_label
+          - type: horizontal-stack
+            cards:
+            - type: custom:bar-card
+              entity: sensor.octoprint_job_percentage
+              title: Current Print
+              title_position: inside
+              align: left
+              height: 36px
+              padding: 0px
+              severity:
+              - value: 25
+                color: 'var(--label-badge-red)'
+              - value: 50
+                color: '#ff6600'
+              - value: 70
+                color: 'var(--label-badge-yellow)'
+              - value: 100
+                color: 'var(--label-badge-green)'
+              - value: 'Unknown'
+                color: 'var(--label-badge-red)'
+          - type: horizontal-stack
+            cards:
+            - type: "custom:button-card"
+              entity: sensor.octoprint_time_elapsed_format
+              name: Elapsed
+              tap_action:
+                action: more-info
+              template: sensor_label
+            - type: "custom:button-card"
+              entity: sensor.octoprint_time_remaining_format
+              name: Remaining
+              tap_action:
+                action: more-info
+              template: sensor_label
+          - type: horizontal-stack
+            cards:
+            - type: picture-glance
+              title: " "
+              camera_image: camera.octoprint
+              aspect_ratio: 4:3
+              entities: []
 ################################################################################
 ###### KODI VIEW -------------------------------------------------------------
 ################################################################################
@@ -1900,8 +2328,6 @@ views:
     icon: mdi:kodi
     background: rgb(34, 35, 37)
     cards:
-###### CUSTOM HEADER -----------------------------------------------
-      - type: custom:compact-custom-header
       - type: vertical-stack
         cards:
 ### POWER
@@ -2037,17 +2463,11 @@ views:
           - type: "custom:button-card"
             color_type: blank-card
 
-        - type: custom:upcoming-media-card
-          entity: sensor.sonarr_upcoming_media
-          image_style: fanart
-          all_shadows: true
   - title: Energy
     icon: mdi:flash
     background: center / cover no-repeat url("/local/lovelace/bg.jpg") fixed
     theme: Night
     cards:
-###### CUSTOM HEADER -----------------------------------------------
-      - type: custom:compact-custom-header
   ###### ENERGY CONSUMPTION
       - type: horizontal-stack
         cards:

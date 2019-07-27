@@ -11,11 +11,6 @@ homeassistant:
       friendly_name: 'Nicole Home to Work'
       icon: mdi:car
 
-    script.location:
-      emulated_hue_hidden: false
-      emulated_hue_name: "location"
-      friendly_name: Location
-
 google_assistant:
   entity_config:
     script.location:
@@ -27,24 +22,17 @@ automation:
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: group.justin, group.nicole, input_boolean.guest
+        entity_id: person.justin, person.nicole, input_boolean.guest
     action:
       - service_template: >
-          {% if states.group.justin.state == 'off' and states.group.nicole.state == 'off' and states.input_boolean.guest.state == 'off' and states.input_boolean.away.state == 'off' %} input_boolean.turn_on
-          {% elif states.group.justin.state == 'on' or states.group.nicole.state == 'on' or states.input_boolean.guest.state == 'on' and states.input_boolean.away.state == 'on' %} input_boolean.turn_off
+          {% if states.person.justin.state == 'not_home' and states.person.nicole.state == 'not_home' and states.input_boolean.guest.state == 'off' and states.input_boolean.away.state == 'off' %} input_boolean.turn_on
+          {% elif states.person.justin.state == 'home' or states.person.nicole.state == 'home' or states.input_boolean.guest.state == 'on' and states.input_boolean.away.state == 'on' %} input_boolean.turn_off
           {% endif %}
         entity_id: input_boolean.away
       - service_template: >
           {% if states.input_boolean.away.state == 'on' %} script.house_mode_away
+          {% elif states.input_boolean.away.state == 'on' %} script.house_mode_away
           {% endif %}
-      - service_template: >
-            {% if (as_timestamp(now()) - as_timestamp(states.input_boolean.away.last_changed)) < 60 %} notify.html5
-            {% endif %}
-        data_template:
-          message: >
-           {% if states.input_boolean.away.state == 'off' and states.input_boolean.guest.state == 'off' %} Alarm is disarmed, Welcome Home
-           {% elif states.input_boolean.away.state == 'on' and states.input_boolean.guest.state == 'off' %} Alarm is armed, House set to Away Mode
-           {% endif %}
 
   - alias: house_mode_vacation
     initial_state: 'on'
@@ -63,46 +51,6 @@ automation:
           {% elif states.input_boolean.vacation.state == 'on' and states.input_boolean.away.state == 'off' %} homeassistant.turn_off
           {% endif %}
         entity_id: input_boolean.vacation
-      - service: notify.html5
-        data_template:
-          message: >
-           {% if states.input_boolean.vacation.state == 'off' %} Welcome Home I trust your time away was nice.
-           {% elif states.input_boolean.vacation.state == 'on'%} Vacation Mode is now activated. Have a nice time away.
-           {% endif %}
-
-  - alias: house_mode_user_justin
-    initial_state: 'on'
-    trigger:
-        - platform: state
-          entity_id: device_tracker.justin_router
-          to: 'not_home'
-          for:
-            minutes: 10
-        - platform: state
-          entity_id: device_tracker.life360_justin
-    action:
-      - service_template: >
-          {% if states.device_tracker.life360_justin.state == 'home' or states.device_tracker.justin_router.state == 'home' and states.input_boolean.justin.state == 'off' %} homeassistant.turn_on
-          {% elif states.device_tracker.life360_justin.state != 'home' or states.device_tracker.justin_router.state != 'home' and states.input_boolean.justin.state == 'off' and states.device_tracker.life360_justin.attributes.battery | int > 7 %} homeassistant.turn_off
-          {% endif %}
-        entity_id: input_boolean.justin
-
-  - alias: house_mode_user_nicole
-    initial_state: 'on'
-    trigger:
-        - platform: state
-          entity_id: device_tracker.nicole_router
-          to: 'not_home'
-          for:
-            minutes: 10
-        - platform: state
-          entity_id: device_tracker.life360_nicole
-    action:
-      - service_template: >
-          {% if states.device_tracker.life360_nicole.state == 'home' or states.device_tracker.nicole_router.state == 'home' and states.input_boolean.nicole.state == 'off' %} homeassistant.turn_on
-          {% elif states.device_tracker.life360_nicole.state != 'home' or states.device_tracker.nicole_router.state != 'home' and states.input_boolean.nicole.state == 'off' and states.device_tracker.life360_nicole.attributes.battery | int > 7%} homeassistant.turn_off
-          {% endif %}
-        entity_id: input_boolean.nicole
 
   - alias: 'welcome_home'
     initial_state: 'on'
@@ -163,22 +111,6 @@ automation:
   #              ] | random }}
 
 script:
-  location:
-    sequence:
-     - service: script.janet_speech_engine
-       data:
-         call_location_inquiry: 1
-       data_template:
-         person: >-
-           {%set nicole = states.device_tracker.life360_nicole.state%}
-           {%set justin = states.device_tracker.life360_justin.state%}
-           {%if nicole != "home" and justin == "home"%}
-           nicole
-           {%elif nicole == "home" and justin != "home"%}
-           justin
-           {%else%}
-           {%endif%}
-
   house_mode_away:
     sequence:
       - service: light.turn_off
@@ -214,8 +146,15 @@ sensor:
 ###### GOOGLE TRAVEL TIME
   - platform: google_travel_time
     name: Nicole Phone To Home
+    scan_interval: 10
     api_key: !secret google_secret
     origin: device_tracker.life360_nicole
+    destination: zone.home
+  - platform: google_travel_time
+    name: Justin Phone To Home
+    scan_interval: 10
+    api_key: !secret google_secret_justin
+    origin: device_tracker.life360_justin
     destination: zone.home
 
 device_tracker:
@@ -238,12 +177,6 @@ input_boolean:
     name: Away
     icon: mdi:account-off
     initial: off
-  justin:
-    name: Justin
-    icon: mdi:account
-  nicole:
-    name: Nicole
-    icon: mdi:account
   map_justin:
     name: map
     icon: mdi:map-search-outline

@@ -7,7 +7,87 @@ homeassistant:
       emulated_hue_hidden: false
       friendly_name: Basement Light
 
+octoprint:
+  host: 192.168.1.93
+  api_key: !secret octoprint_api
+  bed: true
+  number_of_tools: 1
+
+input_number:
+  octoprint_level:
+    name: Octoprint Level
+    min: 0
+    max: 9999999
+    step: 1
+    mode: box
+    icon: mdi:gamepad-variant
+
 sensor:
+###### OCTOPRINT FORMATED TIME
+  - platform: template
+    sensors:
+      octoprint_time_elapsed_format:
+        friendly_name: 'Printing Time Elapsed'
+        value_template: >-
+          {% set etime = states.sensor.octoprint_time_elapsed.state | int %}
+          {% set seconds = etime % 60 %}
+          {% set minutes = ((etime % 3600) / 60) | int %}
+          {% set hours = ((etime % 86400) / 3600) | int %}
+          {% set days = (etime / 86400) | int %}
+          {%- if days > 0 -%}
+            {%- if days == 1 -%}
+              1 day
+            {%- else -%}
+              {{ days }} days
+            {%- endif -%}
+            {{ ', ' }}
+          {%- endif -%}
+          {%- if hours > 0 -%}
+            {%- if hours == 1 -%}
+              1 hour
+            {%- else -%}
+              {{ hours }} hours
+            {%- endif -%}
+            {{ ', ' }}
+          {%- endif -%}
+          {%- if minutes > 0 -%}
+            {%- if minutes == 1 -%}
+              1 minute
+            {%- else -%}
+              {{ minutes }} minutes
+            {%- endif -%}
+          {%- endif -%}
+      octoprint_time_remaining_format:
+        friendly_name: 'Printing Time Remaining'
+        value_template: >-
+          {% set rtime = states.sensor.octoprint_time_remaining.state | int %}
+          {% set seconds = rtime % 60 %}
+          {% set minutes = ((rtime % 3600) / 60) | int %}
+          {% set hours = ((rtime % 86400) / 3600) | int %}
+          {% set days = (rtime / 86400) | int %}
+          {%- if days > 0 -%}
+            {%- if days == 1 -%}
+              1 day
+            {%- else -%}
+              {{ days }} days
+            {%- endif -%}
+            {{ ', ' }}
+          {%- endif -%}
+          {%- if hours > 0 -%}
+            {%- if hours == 1 -%}
+              1 hour
+            {%- else -%}
+              {{ hours }} hours
+            {%- endif -%}
+            {{ ', ' }}
+          {%- endif -%}
+          {%- if minutes > 0 -%}
+            {%- if minutes == 1 -%}
+              1 minute
+            {%- else -%}
+              {{ minutes }} minutes
+            {%- endif -%}
+          {%- endif -%}
 ###### motion SENSOR
   - platform: mqtt
     name: 'Server Room Motion'
@@ -93,10 +173,11 @@ automation:
       - platform: state
         entity_id: sensor.server_room_motion
         to: '1'
+        for: '00:00:02'
     action:
       - service: switch.turn_on
         data_template:
-          entity_id: switch.server_room_lights
+          entity_id: switch.server_room_lights, switch.bench_light
 
   - alias: 'light_server_room_off'
     initial_state: 'on'
@@ -109,4 +190,23 @@ automation:
     action:
       - service: switch.turn_off
         data_template:
-          entity_id: switch.server_room_lights
+          entity_id: switch.server_room_lights, switch.bench_light
+
+## OCTOPRINT Notifications
+  - alias: 'Notify if Print Completed'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.octoprint_current_state
+        from: 'Printing'
+        to: 'Operational'
+        for: '00:00:02'
+    action:
+      - service: input_number.increment
+        data:
+          entity_id: input_number.octoprint_level
+      - service: script.janet_speech_engine
+        data_template:
+          CustomMessage: >-
+            {% set level = states.input_number.octoprint_level.state|int %}
+            Congratulations! The printer has leveled up to {{level}}
